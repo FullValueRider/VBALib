@@ -71,7 +71,7 @@ End Function
 
 '@Enumerator
 Public Function NewEnum() As IUnknown
-Attribute NewEnum.VB_UserMemId = -4
+
 
     Dim enumerator As IUnknown
     Set enumerator = s.Host.GetEnumerator(0, s.Host.Count)
@@ -89,7 +89,7 @@ End Property
 
 '@DefaultMember
 Public Property Get Item(ByVal ipIndex As Long) As Variant
-Attribute Item.VB_UserMemId = 0
+
 
     If VBA.IsObject(s.Host.Item(ipIndex)) Then
     
@@ -131,9 +131,10 @@ Public Function Add(ByVal ipValue As Variant) As Lyst
 End Function
 
 
+
 '@Description("Adds the values of the iterable to the Lyst.  The iterable should be of type IterablItemsByEnum")
 Public Function AddRange(ByVal ipIterable As Variant) As Lyst
-Attribute AddRange.VB_Description = "Adds the values of the iterable to the Lyst.  The iterable should be of type IterablItemsByEnum"
+'Attribute AddRange.VB_Description = "Adds the values of the iterable to the Lyst.  The iterable should be of type IterablItemsByEnum"
 
     Set AddRange = Me
     
@@ -301,12 +302,19 @@ Public Function InsertRange(ByVal ipIndex As Long, ByVal ipIterable As Variant) 
 End Function
 
  
-Public Function LastIndexOf(ByVal ipValue As Variant, Optional ByVal ipStartIndex As Long = 0, Optional ByVal ipCount As Long = -1) As Long
+Public Function LastIndexOf(Optional ByVal ipValue As Variant, Optional ByVal ipStartIndex As Long = 0, Optional ByVal ipCount As Long = -1) As Long
     
+    LastIndexOf = IIf(Count = 0, 0, Count - 1)
+    If VBA.IsMissing(ipValue) Then Exit Function
+        
+    LastIndexOf = -1
     If ipStartIndex < 0 Then Exit Function
     If ipStartIndex >= s.Host.Count Then Exit Function
-    If ipCount = 0 Then Exit Function
     If ipStartIndex + ipCount - 1 >= s.Host.Count Then Exit Function
+         
+    LastIndexOf = 0
+    If ipCount = 0 Then Exit Function
+    
     
     Dim mycount As Long
     mycount = IIf(ipCount = -1, s.Host.Count, ipCount + 1) - ipStartIndex
@@ -330,6 +338,8 @@ End Function
 Public Function RemoveAt(ByVal ipIndex As Variant) As Lyst
 
     Set RemoveAt = Me
+    If Types.Group.IsNotNumber(ipIndex) Then Exit Function
+    
     If ipIndex < 0 Then Exit Function
     If ipIndex >= s.Host.Count Then Exit Function
     s.Host.RemoveAt ipIndex
@@ -411,7 +421,7 @@ End Function
 ' 1 sort from index to end
 ' 2 sort from index through count
 Public Function Sort(Optional ByVal ipStartIndex As Long = 0, Optional ByVal ipCount As Long = -1) As Lyst
-Attribute Sort.VB_Description = "Sorts the whole list. Does not support sorting part of the list"
+
     
     Set Sort = Me
     If ipStartIndex < 0 Then Exit Function
