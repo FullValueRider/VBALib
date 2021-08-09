@@ -42,8 +42,8 @@ Private Sub Test01_FromArray()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb
     myExpected.Add 10
     myExpected.Add 20
     myExpected.Add 30
@@ -57,7 +57,7 @@ Private Sub Test01_FromArray()
     myIterable(12) = 30
     myIterable(13) = 40
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
     Set myResult = Types.Iterable.ToLyst(myIterable)
@@ -79,14 +79,14 @@ Private Sub Test02_FromArrayList()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb
     myExpected.Add 10
     myExpected.Add 20
     myExpected.Add 30
     myExpected.Add 40
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     Dim myIterable As ArrayList
     Set myIterable = New ArrayList
     myIterable.Add 10
@@ -113,16 +113,16 @@ Private Sub Test03_FromLyst()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb
     myExpected.Add 10
     myExpected.Add 20
     myExpected.Add 30
     myExpected.Add 40
     
-    Dim myResult As lyst
-    Dim myIterable As lyst
-    Set myIterable = lyst.deb
+    Dim myResult As Lyst
+    Dim myIterable As Lyst
+    Set myIterable = Lyst.Deb
     myIterable.Add 10
     myIterable.Add 20
     myIterable.Add 30
@@ -147,14 +147,14 @@ Private Sub Test04_FromQueue()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb
     myExpected.Add 10
     myExpected.Add 20
     myExpected.Add 30
     myExpected.Add 40
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     Dim myIterable As Queue
     Set myIterable = New Queue
     myIterable.enqueue 10
@@ -180,14 +180,14 @@ Private Sub Test05_FromStack()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb
     myExpected.Add 10
     myExpected.Add 20
     myExpected.Add 30
     myExpected.Add 40
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     Dim myIterable As Stack
     ' To allow sequence equals we need to push onto the stack in reverse order
     ' because the last item pushed is item 1 which is significant

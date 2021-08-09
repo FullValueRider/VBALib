@@ -44,7 +44,7 @@ Public Function GetPerimeterCoordinates _
     ByVal ipColMax As Long, _
     ByVal ipType As ArrayDirections _
 ) As Variant
-Attribute GetPerimeterCoordinates.VB_Description = "Returns an array of valid coordinated based on the provided x,y coordinate and the available area."
+
 
     Dim myLyst As Lyst
     Set myLyst = Lyst.Deb
@@ -232,19 +232,17 @@ End Function
 
 '@Description("Returns -1 for an unitialised array otherwise the number of items in the array")
 Public Function GetSize(ByRef iparray As Variant, Optional ByVal ipRank As Long = 1) As Long
-Attribute GetSize.VB_Description = "Returns -1 for an unitialised array otherwise the number of items in the array"
     GetSize = TryGetSize(iparray, ipRank).value
 End Function
 
 
-Public Function IsEmpty(ByRef iparray As Variant, Optional ByVal ipRank = 1) As Boolean
+Public Function IsEmpty(ByRef iparray As Variant, Optional ByVal ipRank As Long = 1) As Boolean
     IsEmpty = GetSize(iparray, ipRank) = 0
 End Function
 
 
 '@Description("Returns false if the array is uninitialised.  If an array is uninitialised the size value is 0 to be consistent with empty collection objects.")
 Public Function TryGetSize(ByRef iparray As Variant, Optional ByVal ipRank As Long = 1, Optional ByRef iopResult As ResultLong) As ResultLong
-Attribute TryGetSize.VB_Description = "Returns false if the array is uninitialised.  If an array is uninitialised the size value is 0 to be consistent with empty collection objects."
 
     If iopResult Is Nothing Then Set iopResult = ResultLong.Deb.SetFailure
     Set TryGetSize = iopResult
@@ -364,25 +362,21 @@ Public Function TryGetUbound(ByRef iparray As Variant, ByVal ipRank As Long, Opt
     
 End Function
 
-'@Description("Returns a Lyst of Lyst where the inner lyst is a lyst the row items")
-Public Function TryToLystOfLyst(ByVal ipTableArray As Variant, ByRef iopResult As ResultLyst, Optional ByVal ipOrientation As KeyOrientation = KeyOrientation.ByRow) As ResultLyst
-Attribute TryToLystOfLyst.VB_Description = "Returns a Lyst of Lyst where the inner lyst is a lyst the row items"
 
+'@Description("Returns a Lyst of Lyst where the inner lyst is a lyst the TableArray row items")
+Public Function TryToLystOfLyst(ByVal ipTableArray As Variant, ByRef iopResult As ResultLyst, Optional ByVal ipOrientation As KeyOrientation = KeyOrientation.ByRow) As ResultLyst
+
+    ' nomeclature for Table arrays is Var(rows,columns) as this matches
+    ' data taken from excel ranges.
     If iopResult Is Nothing Then Set iopResult = ResultLyst.Deb.SetFailure
     Set TryToLystOfLyst = iopResult
 
-    If IsNotTableArray(ipTableArray) Then
+    If Types.Arrays.IsNotTableArray(ipTableArray) Then
     
         iopResult.SetFailure rcNotTableArray
         Exit Function
         
     End If
-    
-'    Dim myRowDim As Long
-'    myRowDim = IIf(ipOrientation = TableOrientation.ByRow, 1, 2)
-'
-'    Dim myColDim As Long
-'    myColDim = IIf(ipOrientation = TableOrientation.ByRow, 2, 1)
     
     Dim myFirstDim1 As Long
     myFirstDim1 = LBound(ipTableArray, 1)
@@ -438,75 +432,81 @@ Attribute TryToLystOfLyst.VB_Description = "Returns a Lyst of Lyst where the inn
 End Function
 
 
-'@Description("Returns a Lyst of Lyst wheere the inner lyst is two items, the first value of the row, thesecond is the remainder of the row items as a Lyst")
-Public Function TryToLystOfLystSplitFirst(ByVal ip2DArray As Variant, ByRef iopResult As ResultLyst, Optional ByVal ipOrientation As KeyOrientation = KeyOrientation.ByRow) As ResultLyst
-Attribute TryToLystOfLystSplitFirst.VB_Description = "Returns a Lyst of Lyst wheere the inner lyst is two items, the first value of the row, thesecond is the remainder of the row items as a Lyst"
+'@Description("Returns a Lyst of Lyst where item(0) is a list of the first items of the rank and item(1) is the lyst of the rank values
+Public Function TryToLystOfLystSplitFirst _
+( _
+    ByVal ip2DArray As Variant, _
+    ByRef iopResult As ResultLyst, _
+    Optional ByVal ipOrientation As KeyOrientation = KeyOrientation.ByRow _
+) As ResultLyst
 
     If iopResult Is Nothing Then Set iopResult = ResultLyst.Deb.SetFailure
     Set TryToLystOfLystSplitFirst = iopResult
     
     If TryToLystOfLyst(ip2DArray, iopResult, ipOrientation).Failed Then Exit Function
     
-   ' Create a new lyst of lysts because we can't edit the
-    ' current one in iopresult.value
+    Dim myFirstValues  As Lyst
+    Set myFirstValues = Lyst.Deb
     
-    Dim myLysts As Lyst
-    Set myLysts = Lyst.Deb
+    Dim myRankValues As Lyst
+    Set myRankValues = Lyst.Deb
     
-    Dim myItem As Variant
-    For Each myItem In iopResult.value
+    Dim myLystOfLyst As Lyst
+    Set myLystOfLyst = iopResult.value
     
-        Dim myLyst As Lyst
-        Set myLyst = Lyst.Deb
-            
-        myLyst.Add myItem.Item(0)
-        myItem.RemoveAt 0
-        myLyst.Add myItem.Clone
-        myLysts.Add myLyst
-        
+    Dim myInnerLyst As Lyst
+    For Each myInnerLyst In myLystOfLyst
+    
+        myFirstValues.Add myInnerLyst.Item(0)
+        myRankValues.Add myInnerLyst.RemoveAt(0).Clone
             
      Next
     
-    iopResult.SetSuccess myLysts
+     Dim myResult As Lyst
+     Set myResult = Lyst.Deb.Add(myFirstValues).Add(myRankValues)
+    iopResult.SetSuccess myResult
     
 End Function
 
 '@Description("Returns a Lyst of Lyst wheere the inner lyst is two items, the first value of the row, thesecond is the remainder of the row items as a Lyst")
-Public Function TryToLystOfLystCopyFirst(ByVal ip2DArray As Variant, ByRef iopResult As ResultLyst, Optional ByVal ipOrientation As KeyOrientation = KeyOrientation.ByRow) As ResultLyst
-Attribute TryToLystOfLystCopyFirst.VB_Description = "Returns a Lyst of Lyst wheere the inner lyst is two items, the first value of the row, thesecond is the remainder of the row items as a Lyst"
+Public Function TryToLystOfLystCopyFirst _
+( _
+    ByVal ip2DArray As Variant, _
+    ByRef iopResult As ResultLyst, _
+    Optional ByVal ipOrientation As KeyOrientation = KeyOrientation.ByRow _
+) As ResultLyst
 
     If iopResult Is Nothing Then Set iopResult = ResultLyst.Deb.SetFailure
-    Set TryToLystOfLystCopyFirst = iopResult
-    
-    If TryToLystOfLyst(ip2DArray, iopResult, ipOrientation).Failed Then Exit Function
-    
-   ' Create a new lyst of lysts because we can't edit the
-    ' current one in iopresult.value
-    
-    Dim myLysts As Lyst
-    Set myLysts = Lyst.Deb
-    
-    Dim myItem As Variant
-    For Each myItem In iopResult.value
-    
-        Dim myLyst As Lyst
-        Set myLyst = Lyst.Deb
-            
-        myLyst.Add myItem.Item(0)
-        'myItem.RemoveAt 0
-        myLyst.Add myItem.Clone
-        myLysts.Add myLyst
+        Set TryToLystOfLystCopyFirst = iopResult
         
-            
-     Next
-    
-    iopResult.SetSuccess myLysts
+        If TryToLystOfLyst(ip2DArray, iopResult, ipOrientation).Failed Then Exit Function
+        
+        Dim myFirstValues  As Lyst
+        Set myFirstValues = Lyst.Deb
+        
+        Dim myRankValues As Lyst
+        Set myRankValues = Lyst.Deb
+        
+        Dim myLystOfLyst As Lyst
+        Set myLystOfLyst = iopResult.value
+        
+        Dim myInnerLyst As Lyst
+        For Each myInnerLyst In myLystOfLyst
+        
+            myFirstValues.Add myInnerLyst.Item(0)
+            myRankValues.Add myInnerLyst.Clone
+                
+         Next
+        
+         Dim myResult As Lyst
+         Set myResult = Lyst.Deb.Add(myFirstValues).Add(myRankValues)
+        iopResult.SetSuccess myResult
     
 End Function
 
 '@Description("transposes rows and colums of a 2d array")
 Public Function TryTranspose(ByVal ipTableArray As Variant, Optional ByRef iopResult As ResultVariant) As ResultVariant
-Attribute TryTranspose.VB_Description = "transposes rows and colums of a 2d array"
+
 
     If iopResult Is Nothing Then Set iopResult = ResultVariant.Deb.SetFailure
     Set TryTranspose = iopResult
@@ -552,3 +552,4 @@ Attribute TryTranspose.VB_Description = "transposes rows and colums of a 2d arra
     
 exitfailed:
 End Function
+

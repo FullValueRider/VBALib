@@ -46,8 +46,8 @@ Private Sub Test01_NewLystIsObject()
     myExpected = True
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb
     
     Dim myResult As Boolean
     
@@ -73,8 +73,8 @@ Private Sub Test02_NewLystIsLystObject()
     myExpected = "Lyst"
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb
     
     Dim myResult As String
     
@@ -101,8 +101,8 @@ Private Sub Test03_NewLystCountIsZero()
     myExpected = 0
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb
     
     Dim myResult As Long
     
@@ -129,8 +129,8 @@ Private Sub Test04_AddFiveItemsCountIsFive()
     myExpected = 5
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb
     
     myLyst.Add 10
     myLyst.Add 20
@@ -162,8 +162,8 @@ Private Sub Test05_AddRangeArrayOfFiveFilledIsFive()
     myExpected = 5
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb
     
     myLyst.addrange Array(10, 20, 30, 40, 50)
     
@@ -191,8 +191,8 @@ Private Sub Test06_AddByDebArrayOfFiveCountIsFive()
     myExpected = 5
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult As Long
     
@@ -218,8 +218,8 @@ Private Sub Test07_AddRangeStackOfFiveCountIsFive()
     myExpected = 5
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb
     
     Dim myStack As Stack
     Set myStack = New Stack
@@ -257,8 +257,8 @@ Private Sub Test07a_AssignItemTwoPrimitive()
     myExpected = 300
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb.addrange(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb.addrange(Array(10, 20, 30, 40, 50))
     
     Dim myResult As Long
     
@@ -281,17 +281,17 @@ Private Sub Test07b_AssignItemTwoObject()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb.addrange(Array(100, 200, 300, 400, 500))
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb.addrange(Array(100, 200, 300, 400, 500))
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb.addrange(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb.addrange(Array(10, 20, 30, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
-    myLyst.Item(2) = lyst.deb.addrange(Array(100, 200, 300, 400, 500))
+    myLyst.Item(2) = Lyst.Deb.addrange(Array(100, 200, 300, 400, 500))
     Set myResult = myLyst.Item(2)
    
     'Assert:
@@ -314,8 +314,8 @@ Private Sub Test08_Clear()
     myExpected = 0
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult As Long
     
@@ -342,10 +342,10 @@ Private Sub Test09_Clone()
     myExpected = Array(10, 20, 30, 40, 50)
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
     Set myResult = myLyst.Clone
@@ -369,8 +369,8 @@ Private Sub Test10_HoldsValueTrue()
     myExpected = True
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult As Boolean
     
@@ -397,8 +397,8 @@ Private Sub Test11_HoldsValueFalse()
     myExpected = False
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult As Boolean
     
@@ -425,8 +425,8 @@ Private Sub Test12_LacksValueTrue()
     myExpected = True
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult As Boolean
     
@@ -453,8 +453,8 @@ Private Sub Test13_LacksValueFalse()
     myExpected = False
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult As Boolean
     
@@ -482,8 +482,8 @@ Private Sub Test14_CopyToAllArray()
     myExpected = Array(10, 20, 30, 40, 50)
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult(0 To 4) As Variant
     
@@ -510,8 +510,8 @@ Private Sub Test15_CopyToItem2ToEnd()
     myExpected = Array(30, 40, 50)
    
     
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult(0 To 2) As Variant
     
@@ -538,8 +538,8 @@ Private Sub Test16_CopyToItem1toItem3()
     myExpected = Array(20, 30, 40)
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult(0 To 2) As Variant
     
@@ -566,10 +566,10 @@ Private Sub Test17_GetRangeItem1ToItem3()
     myExpected = Array(20, 30, 40)
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
     Set myResult = myLyst.GetRange(1, 3)
@@ -594,8 +594,8 @@ Private Sub Test18_IndexOfWholeList()
     myExpected = 2
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult As Long
     
@@ -624,8 +624,8 @@ Private Sub Test19_IndexOfFromItem1()
     myExpected = 2
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
     Dim myResult As Long
     
@@ -653,10 +653,10 @@ Private Sub Test20_InsertAtItem1()
     myExpected = Array(10, 20, 70, 30, 40, 50)
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
      Set myResult = myLyst.InsertAt(2, 70)
@@ -683,10 +683,10 @@ Private Sub Test21_InsertRangeFivetemsFromItem1()
     myExpected = Array(10, 20, 15, 16, 17, 18, 19, 30, 40, 50)
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
      Set myResult = myLyst.InsertRange(2, Array(15, 16, 17, 18, 19))
@@ -713,8 +713,8 @@ Private Sub Test22_LastIndexOfWholeLyst()
     myExpected = 6
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
     
     Dim myResult As Long
     
@@ -742,8 +742,8 @@ Private Sub Test23_LastIndexOfStartItem4()
     myExpected = 6
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
     
     Dim myResult As Long
     
@@ -771,8 +771,8 @@ Private Sub Test24_LastIndexOfStartItem1EndItem4()
     myExpected = 4
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
     
     Dim myResult As Long
     
@@ -796,14 +796,14 @@ Private Sub Test25_RemoveValueOf40()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb.addrange(Array(10, 20, 30, 40, 40, 40, 50))
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb.addrange(Array(10, 20, 30, 40, 40, 40, 50))
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
     Set myResult = myLyst.removevalue(40)
@@ -825,14 +825,14 @@ Private Sub Test26_RemoveAtValueOf20FromItem4()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb.addrange(Array(10, 20, 30, 40, 40, 40, 50))
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb.addrange(Array(10, 20, 30, 40, 40, 40, 50))
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 20, 40, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 20, 40, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
     Set myResult = myLyst.RemoveAt(4)
@@ -854,14 +854,14 @@ Private Sub Test27_RemoveRangeItem3Count4()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb.addrange(Array(10, 20, 30, 50))
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb.addrange(Array(10, 20, 30, 50))
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
     Set myResult = myLyst.RemoveRange(3, 4)
@@ -884,14 +884,14 @@ Private Sub Test28_ReverseAll()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb.addrange(Array(50, 40, 40, 40, 40, 30, 20, 10))
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb.addrange(Array(50, 40, 40, 40, 40, 30, 20, 10))
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
     Set myResult = myLyst.Reverse
@@ -914,14 +914,14 @@ Private Sub Test29_ReverseItem1Count4()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb.addrange(Array(10, 40, 40, 30, 20, 40, 40, 50))
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb.addrange(Array(10, 40, 40, 30, 20, 40, 40, 50))
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
     Set myResult = myLyst.Reverse(1, 4)
@@ -943,14 +943,14 @@ Private Sub Test30_SetRangeItem1ToFouritems()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As lyst
-    Set myExpected = lyst.deb.addrange(Array(10, 50, 50, 50, 50, 40, 40, 50))
+    Dim myExpected  As Lyst
+    Set myExpected = Lyst.Deb.addrange(Array(10, 50, 50, 50, 50, 40, 40, 50))
    
     '@Ignore IntegerDataType
-    Dim myLyst As lyst
-    Set myLyst = lyst.deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb(Array(10, 20, 30, 40, 40, 40, 40, 50))
     
-    Dim myResult As lyst
+    Dim myResult As Lyst
     
     'Act:
     Set myResult = myLyst.SetRange(1, Array(50, 50, 50, 50))

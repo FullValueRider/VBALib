@@ -640,7 +640,7 @@ Private Sub Test21_TryGetSizeRank2Is10()
     
     Dim myArray(1 To 10, 1 To 10, 1 To 10) As Long
     Dim myIRL As resultlong
-    Set myIRL = resultlong.deb
+    Set myIRL = resultlong.Deb
     
     Dim myResultStatus As Boolean
     Dim myResultValue As Long
@@ -676,7 +676,7 @@ Private Sub Test22_TryGetLBoundEmptyArray()
     Dim myArray() As Long
     'Dim myResult As Boolean
     Dim myIRL As resultlong
-    Set myIRL = resultlong.deb
+    Set myIRL = resultlong.Deb
     
     Dim myResultStatus As Boolean
     Dim myResultValue As Long
@@ -713,7 +713,7 @@ Private Sub Test23_TryGetLBoundLboundIs5()
     Dim myArray(5 To 10, 5 To 10, 5 To 10) As Long
     'Dim myResult As Boolean
     Dim myIRL As resultlong
-    Set myIRL = resultlong.deb
+    Set myIRL = resultlong.Deb
     
     Dim myResultStatus As Boolean
     Dim myResultValue As Long
@@ -750,7 +750,7 @@ Private Sub Test24_TryGetUBoundEmptyArray()
     Dim myArray() As Long
     'Dim myResult As Boolean
     Dim myIRL As resultlong
-    Set myIRL = resultlong.deb
+    Set myIRL = resultlong.Deb
     
     Dim myResultStatus As Boolean
     Dim myResultValue As Long
@@ -787,7 +787,7 @@ Private Sub Test25_TryGetUBoundUboundIs10()
     Dim myArray(5 To 10, 5 To 10, 5 To 10) As Long
     'Dim myResult As Boolean
     Dim myIRL As resultlong
-    Set myIRL = resultlong.deb
+    Set myIRL = resultlong.Deb
     
     Dim myResultStatus As Boolean
     Dim myResultValue As Long
@@ -855,16 +855,16 @@ Public Sub Test27_ArrayToLystOfLystsByRow()
     Dim myExpectedStatus As Boolean
     myExpectedStatus = True
     
-    Dim myExpectedLyst As lyst
-    Set myExpectedLyst = lyst.deb
+    Dim myExpectedLyst As Lyst
+    Set myExpectedLyst = Lyst.Deb
     
     With myExpectedLyst
     
-        .Add lyst.deb(Array(1&, 2&, 3&, 4&))
-        .Add lyst.deb(Array(5&, 6&, 7&, 8&))
-        .Add lyst.deb(Array(9&, 10&, 11&, 12&))
-        .Add lyst.deb(Array(13&, 14&, 15&, 16&))
-        .Add lyst.deb(Array(17&, 18&, 19&, 20&))
+        .Add Lyst.Deb(Array(1&, 2&, 3&, 4&))
+        .Add Lyst.Deb(Array(5&, 6&, 7&, 8&))
+        .Add Lyst.Deb(Array(9&, 10&, 11&, 12&))
+        .Add Lyst.Deb(Array(13&, 14&, 15&, 16&))
+        .Add Lyst.Deb(Array(17&, 18&, 19&, 20&))
         
     End With
     
@@ -896,15 +896,15 @@ Public Sub Test28_ArrayToLystOfLystsByCol()
     Dim myExpectedStatus As Boolean
     myExpectedStatus = True
     
-    Dim myExpectedLyst As lyst
-    Set myExpectedLyst = lyst.deb
+    Dim myExpectedLyst As Lyst
+    Set myExpectedLyst = Lyst.Deb
     
     With myExpectedLyst
         
-        .Add lyst.deb(Array(1&, 5&, 9&, 13&, 17&))
-        .Add lyst.deb(Array(2&, 6&, 10&, 14&, 18&))
-        .Add lyst.deb(Array(3&, 7&, 11&, 15&, 19&))
-        .Add lyst.deb(Array(4&, 8&, 12&, 16&, 20&))
+        .Add Lyst.Deb(Array(1&, 5&, 9&, 13&, 17&))
+        .Add Lyst.Deb(Array(2&, 6&, 10&, 14&, 18&))
+        .Add Lyst.Deb(Array(3&, 7&, 11&, 15&, 19&))
+        .Add Lyst.Deb(Array(4&, 8&, 12&, 16&, 20&))
         
     End With
     
@@ -936,39 +936,30 @@ Public Sub Test29_ArrayToLystOfLystsSplitFirstByRow()
     Dim myExpectedStatus As Boolean
     myExpectedStatus = True
     
-    Dim myExpectedLyst As lyst
-    Set myExpectedLyst = lyst.deb
+    Dim myExpectedLyst As Lyst
+    Set myExpectedLyst = Lyst.Deb
     
     With myExpectedLyst
     
-        Dim myLyst As lyst
+        Dim myFirstValues As Lyst
+        Set myFirstValues = Lyst.Deb.Add(Array(1&, 5&, 9&, 13&, 17&))
         
-        Set myLyst = lyst.deb
-        myLyst.Add 1&
-        myLyst.Add lyst.deb(Array(2&, 3&, 4&))
-        .Add myLyst
+        .Add myFirstValues
         
-        Set myLyst = lyst.deb
-        myLyst.Add 5&
-        myLyst.Add lyst.deb(Array(6&, 7&, 8&))
-        .Add myLyst
-        
-        Set myLyst = lyst.deb
-        myLyst.Add 9&
-        myLyst.Add lyst.deb(Array(10&, 11&, 12&))
-        .Add myLyst
+        Dim myRankValues As Lyst
+        Set myRankValues = Lyst.Deb
        
+        With myRankValues
         
-        Set myLyst = lyst.deb
-        myLyst.Add 13&
-        myLyst.Add lyst.deb(Array(14&, 15&, 16&))
-        .Add myLyst
+            .Add Lyst.Deb(Array(2&, 3&, 4&))
+            .Add Lyst.Deb(Array(6&, 7&, 8&))
+            .Add Lyst.Deb(Array(10&, 11&, 12&))
+            .Add Lyst.Deb(Array(14&, 15&, 16&))
+            .Add Lyst.Deb(Array(18&, 19&, 20&))
         
-        
-        Set myLyst = lyst.deb
-        myLyst.Add 17&
-        myLyst.Add lyst.deb(Array(18&, 19&, 20&))
-        .Add myLyst
+        End With
+       
+        .Add myRankValues
         
     End With
     
@@ -982,7 +973,7 @@ Public Sub Test29_ArrayToLystOfLystsSplitFirstByRow()
     
     'Assert:
     Assert.AreEqual myExpectedStatus, myResult.Status
-    Assert.SequenceEquals myExpectedLyst.Item(2).Item(1).toarray, myResult.Value.Item(2).Item(1).toarray
+    Assert.SequenceEquals myExpectedLyst.Item(1).Item(2).toarray, myResult.Value.Item(1).Item(2).toarray
     
 TestExit:
     Exit Sub
@@ -1000,40 +991,32 @@ Public Sub Test30_ArrayToLystOfLystsSplitFirstByCol()
     Dim myExpectedStatus As Boolean
     myExpectedStatus = True
     
-    Dim myExpectedLyst As lyst
-    Set myExpectedLyst = lyst.deb
+    Dim myExpectedLyst As Lyst
+    Set myExpectedLyst = Lyst.Deb
     
     With myExpectedLyst
     
-        Dim myLyst As lyst
+        Dim myFirstValues As Lyst
+        Set myFirstValues = Lyst.Deb.Add(Array(1&, 2&, 3&, 4&))
         
-        Set myLyst = lyst.deb
-        myLyst.Add 1&
-        myLyst.Add lyst.deb(Array(5&, 9&, 13&, 17&))
-        .Add myLyst
+        .Add myFirstValues
         
-        Set myLyst = lyst.deb
-        myLyst.Add 2&
-        myLyst.Add lyst.deb(Array(6&, 10&, 14&, 18&))
-        .Add myLyst
-        
-        Set myLyst = lyst.deb
-        myLyst.Add 3&
-        myLyst.Add lyst.deb(Array(7&, 11&, 15&, 19&))
-        .Add myLyst
+        Dim myRankValues As Lyst
+        Set myRankValues = Lyst.Deb
        
+        With myRankValues
         
-        Set myLyst = lyst.deb
-        myLyst.Add 4&
-        myLyst.Add lyst.deb(Array(8&, 12&, 16&, 20&))
-        .Add myLyst
+            .Add Lyst.Deb(Array(5&, 9&, 13&, 17&))
+            .Add Lyst.Deb(Array(6&, 10&, 14&, 18&))
+            .Add Lyst.Deb(Array(7&, 11&, 15&, 19&))
+            .Add Lyst.Deb(Array(8&, 12&, 16&, 20&))
+            
         
-        
-'        Set myLyst = lyst.deb
-'        myLyst.Add 17&
-'        myLyst.Add lyst.deb(Array(18&, 19&, 20&))
-'        .Add myLyst
-        
+        End With
+       
+        .Add myRankValues
+   
+       
     End With
     
     Dim mySource As Variant
@@ -1047,7 +1030,7 @@ Public Sub Test30_ArrayToLystOfLystsSplitFirstByCol()
     
     'Assert:
     Assert.AreEqual myExpectedStatus, myResult.Status
-    Assert.SequenceEquals myExpectedLyst.Item(2).Item(1).toarray, myResult.Value.Item(2).Item(1).toarray
+    Assert.SequenceEquals myExpectedLyst.Item(1).Item(2).toarray, myResult.Value.Item(1).Item(2).toarray
     
 TestExit:
     Exit Sub
@@ -1066,39 +1049,30 @@ Public Sub Test31_ArrayToLystOfLystsCopyFirstByRow()
     Dim myExpectedStatus As Boolean
     myExpectedStatus = True
     
-    Dim myExpectedLyst As lyst
-    Set myExpectedLyst = lyst.deb
+    Dim myExpectedLyst As Lyst
+    Set myExpectedLyst = Lyst.Deb
     
-    With myExpectedLyst
+     With myExpectedLyst
     
-        Dim myLyst As lyst
+        Dim myFirstValues As Lyst
+        Set myFirstValues = Lyst.Deb.Add(Array(1&, 5&, 9&, 13&, 17&))
         
-        Set myLyst = lyst.deb
-        myLyst.Add 1&
-        myLyst.Add lyst.deb(Array(1&, 2&, 3&, 4&))
-        .Add myLyst
+        .Add myFirstValues
         
-        Set myLyst = lyst.deb
-        myLyst.Add 5&
-        myLyst.Add lyst.deb(Array(5&, 6&, 7&, 8&))
-        .Add myLyst
-        
-        Set myLyst = lyst.deb
-        myLyst.Add 9&
-        myLyst.Add lyst.deb(Array(9&, 10&, 11&, 12&))
-        .Add myLyst
+        Dim myRankValues As Lyst
+        Set myRankValues = Lyst.Deb
        
+        With myRankValues
         
-        Set myLyst = lyst.deb
-        myLyst.Add 13&
-        myLyst.Add lyst.deb(Array(13&, 14&, 15&, 16&))
-        .Add myLyst
+            .Add Lyst.Deb(Array(1&, 2&, 3&, 4&))
+            .Add Lyst.Deb(Array(5&, 6&, 7&, 8&))
+            .Add Lyst.Deb(Array(9&, 10&, 11&, 12&))
+            .Add Lyst.Deb(Array(13&, 14&, 15&, 16&))
+            .Add Lyst.Deb(Array(17&, 18&, 19&, 20&))
         
-        
-        Set myLyst = lyst.deb
-        myLyst.Add 17&
-        myLyst.Add lyst.deb(Array(17&, 18&, 19&, 20&))
-        .Add myLyst
+        End With
+       
+        .Add myRankValues
         
     End With
     
@@ -1112,7 +1086,7 @@ Public Sub Test31_ArrayToLystOfLystsCopyFirstByRow()
     
     'Assert:
     Assert.AreEqual myExpectedStatus, myResult.Status
-    Assert.SequenceEquals myExpectedLyst.Item(2).Item(1).toarray, myResult.Value.Item(2).Item(1).toarray
+    Assert.SequenceEquals myExpectedLyst.Item(1).Item(2).toarray, myResult.Value.Item(1).Item(2).toarray
     
 TestExit:
     Exit Sub
@@ -1131,40 +1105,32 @@ Public Sub Test32_ArrayToLystOfLystsSplitFirstByCol()
     Dim myExpectedStatus As Boolean
     myExpectedStatus = True
     
-    Dim myExpectedLyst As lyst
-    Set myExpectedLyst = lyst.deb
+    Dim myExpectedLyst As Lyst
+    Set myExpectedLyst = Lyst.Deb
     
-    With myExpectedLyst
+     With myExpectedLyst
     
-        Dim myLyst As lyst
+        Dim myFirstValues As Lyst
+        Set myFirstValues = Lyst.Deb.Add(Array(1&, 2&, 3&, 4&))
         
-        Set myLyst = lyst.deb
-        myLyst.Add 1&
-        myLyst.Add lyst.deb(Array(1&, 5&, 9&, 13&, 17&))
-        .Add myLyst
+        .Add myFirstValues
         
-        Set myLyst = lyst.deb
-        myLyst.Add 2&
-        myLyst.Add lyst.deb(Array(2&, 6&, 10&, 14&, 18&))
-        .Add myLyst
-        
-        Set myLyst = lyst.deb
-        myLyst.Add 3&
-        myLyst.Add lyst.deb(Array(3&, 7&, 11&, 15&, 19&))
-        .Add myLyst
+        Dim myRankValues As Lyst
+        Set myRankValues = Lyst.Deb
        
+        With myRankValues
         
-        Set myLyst = lyst.deb
-        myLyst.Add 4&
-        myLyst.Add lyst.deb(Array(4&, 8&, 12&, 16&, 20&))
-        .Add myLyst
+            .Add Lyst.Deb(Array(1&, 5&, 9&, 13&, 17&))
+            .Add Lyst.Deb(Array(2&, 6&, 10&, 14&, 18&))
+            .Add Lyst.Deb(Array(3&, 7&, 11&, 15&, 19&))
+            .Add Lyst.Deb(Array(4&, 8&, 12&, 16&, 20&))
+            
         
-        
-'        Set myLyst = lyst.deb
-'        myLyst.Add 17&
-'        myLyst.Add lyst.deb(Array(18&, 19&, 20&))
-'        .Add myLyst
-        
+        End With
+       
+        .Add myRankValues
+   
+       
     End With
     
     Dim mySource As Variant
@@ -1177,7 +1143,7 @@ Public Sub Test32_ArrayToLystOfLystsSplitFirstByCol()
     
     'Assert:
     Assert.AreEqual myExpectedStatus, myResult.Status
-    Assert.SequenceEquals myExpectedLyst.Item(2).Item(1).toarray, myResult.Value.Item(2).Item(1).toarray
+    Assert.SequenceEquals myExpectedLyst.Item(1).Item(2).toarray, myResult.Value.Item(1).Item(2).toarray
     
 TestExit:
     Exit Sub
