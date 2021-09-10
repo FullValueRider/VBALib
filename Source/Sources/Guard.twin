@@ -1,0 +1,191 @@
+Class Guard
+    '@Folder("VBALib"
+    '@PredeclaredId
+    '@Exposed
+    'Option Private Module
+    
+    Private Type State
+        
+        InspectionCode          As Long
+        Source                  As String
+        Location                As string
+        
+    End Type
+    
+    Private s                   As state
+    
+    Private Sub Class_Initialize()
+        
+       If Guard.NonDefaultInstance(Me, Guard, "VBALIb.Guard.Class_Initialize") Then Guard.RaiseError
+    
+    End Sub
+    
+    Public Function ThrowError() As Boolean
+        ' Value is false because it is used with the 'NoThrow' Parameter
+        ThrowError = False
+    End Function
+    
+    '@Description("Raises a run-time error. Defaults to error of the previously called Guard clause.")
+    Public Sub RaiseError(Optional ByVal ipInspectionResult As ResultLong, Optional ByVal ipSource As String = vbNullString, Optional ByVal ipInspection As Inspection = IsMissing)
+    
+        Dim myErrNumber As Long
+        myErrNumber = IIf(ipInspection = Enums.Inspections.AsEnum(IsMissing), ipInspectionResult.Reason, ipInspection)
+        
+        Dim mySource As String
+        mySource = IIf(VBA.Len(ipSource) = 0, ipInspectionResult.Source, ipSource)
+        
+        Dim myErrDesc As String
+        myErrDesc = IIf(ipInspection = Enums.Inspections.AsEnum(IsMissing), ipInspectionResult.Why, Enums.Inspections.ToString(ipInspection))
+        
+        VBA.Information.Err.Raise myErrNumber, _mySource, myErrDesc
+            
+            
+    End Sub
+    
+    
+    '@Description("Raises a run-time error if the specified instance isn't the default instance.")
+    Public Function NonDefaultInstance _
+    ( _
+        ByVal ipInstance As Object, _
+        ByVal ipDefaultInstance As Object, _
+        ByVal ipInspection As ResultBoolean _
+    ) As ResultBoolean
+        
+        s.Source = IIf(ipSource = vbNullString, TypeName(ipInstance), ipSource)
+        s.InspectionCode = ipInspectionCode
+        
+        NonDefaultInstance = Not DefaultInstance(ipInstance, ipDefaultInstance, ipSource, Enums.Inspections.AsEnum(IsNonDefaultInstance))
+        
+    End Function
+    
+    
+    '@Description("Raises a run-time error if the specified instance is the default instance.")
+    Public Function DefaultInstance _
+    ( _
+        ByVal ipInstance As Object, _
+        ByVal ipDefaultInstance As Object, _
+        Optional ByVal ipSource As String = vbNullString, _
+        Optional ByVal ipInspectionEnum As Inspection = Inspection.IsDefaultInstance _
+    ) As Boolean
+    
+        s.Source = IIf(ipSource = vbNullString, TypeName(ipInstance), ipSource)
+        s.InspectionCode = ipInspectionEnum
+        DefaultInstance = ipInstance Is ipDefaultInstance
+        
+    End Function
+    
+    '@Description("Raises a run-time error if the specified object reference is already set.")
+    Public Function DoubleInitialization _
+    ( _
+        ByVal ipValue As Variant, _
+        Optional ByVal ipSource As String = vbnullstring, _
+        Optional ByVal ipInspectionCode As Inspection = inspection.IsDoubleInitialisation _
+    ) As Boolean
+    
+        s.Source = ipSource
+        s.InspectionCode = ipInspectionCode
+        
+        If VBA.IsObject(ipValue) Then
+            
+            DoubleInitialization = Not ipValue Is Nothing
+            
+        Else
+            
+            DoubleInitialization = ipValue <> Types.GetDefaultValue(ipValue)
+            
+        End If
+        
+    End Function
+    
+    
+    
+    '@Description("Raises a run-time error if the specified object reference is Nothing.")
+    Public Function NullReference _
+    ( _
+        ByVal ipInstance As Object, _
+        Optional ByVal ipSource As String = vbNullString, _
+        Optional ByVal ipInspectionCode As Inspection = inspection.IsNullReference _
+    ) As Boolean
+    
+        s.Source = ipSource
+        s.InspectionCode = ipInspectionCode
+        NullReference = ipInstance Is Nothing
+        
+    End Function
+    
+    '@Description("Raises a run-time error if the specified string is empty.")
+    Public Function StringCannotBeEmpty _
+    ( _
+        ByVal ipValue As String, _
+        Optional ByVal ipSource As String = vbNullString, _
+        Optional ByVal ipInspectionCode As Inspection = Inspection.IsStringCannotBeEmpty _
+    ) As Boolean
+    
+        s.Source = ipSource
+        s.InspectionCode = ipInspectionCode
+        StringCannotBeEmpty = ipValue = vbNullString
+        
+    End Function
+    
+    Public Function IsNotTableArray _
+    ( _
+        ByVal ipTablearray As Variant, _
+        Optional ipSource As String = vbnullstring, _
+        Optional ipInspection As Inspection = inspection.IsNotTableArray _
+    ) As Boolean
+        
+        s.Source = ipSource
+        s.InspectionCode = ipInspection
+        IsNotTableArray = Arrays.IsNotTableArray(ipTablearray)
+        
+    End Function
+    
+    Public Function ActionNotExecutable _
+    ( _
+        ByVal ipValue As Variant, _
+        Optional ipSource As String = vbNullString, _
+        Optional ipInspection As Inspection = inspection.IsActionNotExecutable _
+    ) As Boolean
+    
+        s.Source = ipSource
+        s.InspectionCode = ipInspection
+        
+        ActionNotExecutable = Not VBA.IsObject(ipValue)
+        
+    End Function
+    
+    Public Function NotEnumerationMember _
+    ( _
+        ByVal ipMember As Long, _
+        ByVal ipEnumeration As IEnum, _
+        Optional ipSource As String = vbNullString, _
+        Optional ipInspection As Inspection = inspection.IsNotEnumerationMember _
+    ) As Boolean
+    
+        s.Source = ipSource
+        s.InspectionCode = ipInspection
+        NotEnumerationMember = Not ipEnumeration.IsMember(ipMember)
+        
+    End Function
+    
+    Public Function NotNumber _
+    ( _
+        ByVal ipNumber As Variant, _
+        Optional ipSource As String = vbNullString, _
+        Optional ipInspection As Inspection = inspection.IsNotEnumerationMember _
+    ) As Boolean
+        
+        s.Source = ipSource
+        s.InspectionCode = ipInspection
+        NotNumber = Types.Group.IsNotNumber(ipNumber)
+        
+    End Function
+        
+    Public Function EnumerationMemberNotAllowed(ByVal ipEnum As Long, ByVal ipsource As String = vbNullString, ParamArray ipDisallowedEnums() As Variant) As ResultBoolean
+        
+        Dim myLyst As Lyst
+        Set myLyst = Types.Iterable.ToLyst(CVar(ipDisallowedEnums))
+        EnumerationMemberNotAllowed = myLyst.HoldsValue(ipEnum)
+    End Function
+End Class
+

@@ -1,0 +1,104 @@
+Class AssertClass
+    '@PredeclaredId
+    '@Exposed
+    
+    Public Sub New()
+        
+    End Sub
+    
+    Public Sub IsTrue(ByVal ipArg1 As Variant, ByVal ipmethod As String, Optional ipNotEqualMessage As String = "Failed")
+        
+        If ipArg1 = False Then
+            
+            Fail ipmethod, ipNotEqualMessage, " Expected True Found " & CStr(ipArg1)
+            
+        End If
+        
+    End Sub
+    
+    Public Sub IsFalse(ByVal ipArg1 As Variant, ByVal ipmethod As String, Optional ipNotEqualMessage As String = "Failed")
+        
+        If ipArg1 = True Then
+            
+            Fail ipmethod, ipNotEqualMessage, " Expected False Found " & CStr(ipArg1)
+            
+        End If
+        
+    End Sub
+    
+    Public Sub AreEqual(ByRef ipArg1 As Variant, ByRef ipArg2 As Variant, ByVal ipmethod As String, Optional ipNotEqualMessage As String = "Failed")
+        
+        If TypeName(ipArg1) <> TypeName(ipArg2) Then
+                
+            Fail ipmethod, ipNotEqualMessage, " Expected type '" & TypeName(ipArg1) & "' does not match Result type '" & TypeName(ipArg2) & "'"
+            Exit Sub
+            
+        End If
+        
+        If ipArg1 <> ipArg2 Then
+            
+            Fail ipmethod, ipNotEqualMessage, " Expected value '" & CStr(ipArg1) & "' does not match Result value '" & CStr(ipArg2) & "'"
+            Exit Sub
+            
+        End If
+        
+    End Sub
+    
+    Private Sub Fail(ByRef ipMethod As String, ByRef ipItem As String, ByRef ipmessage As String)
+        
+            Debug.Print ipMethod, ipItem, "failed", ipmessage
+            
+    End Sub
+
+    Public Sub SequenceEquals(ByRef ipArg1 As Variant, ByRef ipArg2 As Variant, ByVal ipMethod As String, Optional ByVal ipMessage As String = vbnullstring)
+        
+        If Not VBA.IsArray(ipArg1) Then
+            
+            Fail ipMethod, ipMessage, ": Expected is not an array"
+            Exit Sub
+            
+        End If
+        
+        If Not VBA.IsArray(ipArg2) Then
+            
+            Fail ipMethod, ipMessage, ": Result is not an array"
+            Exit Sub
+            
+        End If
+        
+        If LBound(ipArg1) <> LBound(ipArg2) Then
+            
+            Fail ipMethod, ipMessage, ": Expected Lbound of " & LBound(ipArg1) & " does not match Result Lbound of " & LBound(ipArg2)
+            Exit Sub
+            
+        End If
+        
+        If UBound(ipArg1) <> UBound(ipArg2) Then
+            
+            Fail ipMethod, ipMessage, ": Expected Ubound of " & UBound(ipArg1) & " does not match Result Ubound of " & UBound(ipArg2)
+            Exit Sub
+            
+        End If
+        
+        Dim myIndex As Long
+        For myIndex = LBound(ipArg1) To UBound(ipArg1)
+        
+            If TypeName(ipArg1) <> TypeName(ipArg2) Then
+                
+                Fail ipMethod, ipMessage, ": At Index " & CStr(myIndex) & " Expected type '" & TypeName(ipArg1) & "' does not match Result type '" & TypeName(ipArg2) & "'"
+                Exit Sub
+            
+            End If
+            
+            If ipArg1 <> ipArg2 Then
+                
+                Fail ipMethod, ipMessage, ": At Index " & CStr(myIndex) & " Expected value '" & CStr(ipArg1) & "' does not match Result value '" & CStr(ipArg2) & "'"
+                Exit Sub
+            
+            End If
+            
+        Next
+        
+    End Sub
+    
+End Class

@@ -1,0 +1,178 @@
+Class EnumInspections
+    
+    '@Folder("Enums")
+    '@PredeclaredId
+    '@Exposed
+    Option Explicit
+    
+    Public Enum Inspection
+		
+       ' IsBaseError = CustomErrors.Base
+        IsMissing = VBASystem.MinLong
+        IsNotOkay = -1
+        IsOkay = 0
+        IsNoItemMethod
+        IsNoCountMethod
+        IsNotSingleDim
+        IsToArray
+        IsKeys
+        IsItems
+        IsNotArray
+        IsArrayNotInitialised
+        IsInvalidRank
+        IsNotIterable
+        IsNotTableArray
+        IsInvalidArrayMarkup
+        IsHasNoItems
+        IsNotSameInstance
+        IsSameInsstance
+        IsDoubleInitialisation
+        IsNullReference
+        IsStringCannotBeEmpty
+        IsActionNotExecutable
+        IsNotEnumerationMember
+        
+	End Enum
+    
+    
+    Private Type state
+        
+        Actions                 As Scripting.Dictionary
+        Strings                 As Scripting.dictionary
+        Location                As String
+        
+    End Type
+    
+    
+    Private s                   As state
+    
+    
+    Private Sub Class_Initialise()
+        
+        ' Not sensible to call yourself whilst you are initialising so we
+        ' use the raiseerror Guardclause
+        
+        Types.IsNotSameInstance Me, Enums.Inspections, Guard.ThrowError
+        SetupDictionaries
+        s.Location = "VBALib." & TypeName(Me) & Char.Period
+        
+    End Sub
+    
+    
+    Private Sub SetupDictionaries()
+        
+        ' Set s.Actions = CreateObject("Scripting.DIctionary")
+        ' With s.Actions
+        
+        '     ' I refer to a PredeclaredId with a single (.Exec) method as  a 'FunctionClass'
+        '     .Add Member1, Action1FunctionClass
+        '     .Add Member2, Action2FunctionClass
+        '     .Add Member3, Action2FunctionClass
+		'     .Add Member4, Action2FunctionClass
+		'     .Add Member5, Action2FunctionClass
+		'     .Add Member7, Action2FunctionClass
+        '     .Add Member8, Action2FunctionClass
+        '     .Add Member9, Action2FunctionClass
+        '     .Add Member10, Action2FunctionClass
+            
+        ' End With
+        
+        Set s.Strings = CreateObject("Scripting.Dictionary")
+        With s.Strings
+        
+            .Add IsMissing, "No enumeration memeber was provided"
+            .Add IsNotOkay, "Failed"
+            .Add IsOkay, "Succeeded"
+            .Add IsNoItemMethod, "Object '{0}' has no Item method"
+            .Add IsNoCountMethod, "Object '{0}' has no Count method"
+            .Add IsNotSingleDim, "Iterable '{0}' is not a single dimension array"
+            .Add IsToArray, vbNullString
+            .Add IsKeys, vbNullString
+            .Add IsItems, vbNullString
+            .Add IsArrayNotInitialised, "Array is not initialised"
+            .Add IsInvalidRank, "The array does not have dimension '{0}'"
+            .Add IsNotIterable, "The Parameter is not an Iterable Type"
+            .Add IsNotTableArray, "Array dimensions are not 2D"
+            .Add IsInvalidArrayMarkup, "The Array Markup was invalid"
+            .Add IsHasNoItems, "The iterable does not cintain any items"
+            .Add IsNonDefaultInstance, "Method should be invoked from the default/predeclared instance of this class."
+            .Add IsDefaultInstance, "Method should be invoked from a new instance of this class."
+            .Add IsDoubleInitialisation, "Raises a run-time error if the specified object reference is already set."
+            .Add IsNullReference, "Object reference cannot be Nothing."
+            .Add IsStringCannotBeEmpty, "String cannot be empty."
+            .Add IsActionNotExecutable, "The enumeration action is not an executable object"
+            .Add IsNotEnumerationMember, "Not a member of Enumeration '{0}'"
+        End With
+        
+    End Sub
+    
+    Public Function Strings() As Variant
+        Strings = s.Strings.Items
+    End Function
+    
+    
+    Public Function Members() As Variant
+        Members = s.Strings.Keys
+    End Function
+    
+    
+    Public Function Actions() As Variant
+        Actions = s.Actions.Items
+    End Function
+    
+    
+    Public Function Ord(ByVal ipEnum As Inspection) As Long
+        
+        Dim myItem As Variant
+        Dim myOrd As Long
+        myOrd = 1
+        For Each myItem In s.Strings.Keys
+            
+            If myItem = ipEnum Then
+                
+                Ord = myOrd
+                Exit Function
+                
+            Else
+            
+                myOrd = myOrd + 1
+                
+            End If
+            
+        Next
+        
+    End Function
+    
+    Public Property Get AsEnum(ByVal ipEnum As Inspection) As Inspection
+        AsEnum = ipEnum
+    End Property
+    
+    Public Function CanExec(ByVal ipEnum As Inspection) As Boolean
+        CanExec = False
+        If s.Actions Is Nothing Then Exit Function
+        CanExec = VBA.IsObject(s.Actions.Item(ipEnum))
+    End Function
+    
+    Public Property Get ToString(ByVal ipEnum As Inspection) As String
+        ToString = s.Strings.Item(ipEnum)
+    End Property
+        
+    ' Public Property Get Exec(ByVal ipEnum As Inspections, ByVal ipTableArray As Variant) As Variant
+    '     ' if Guard.ActionNotExecutable() s.Actions.Item(ipEnum), s.Location & "Exec") then guard.raiseerror
+    '     If Not VBA.IsObject(s.Actions.Item(ipEnum)) Then Vba.information.err.raise 17, s.location & "Exec", "The enumeration does not have an associated Action")
+    '     Set Exec = s.Actions.Item(ipEnum).exec(ipTableArray)
+    ' End Property
+    
+    Public Property Get IsMember(ByVal ipValue As Long) As Boolean
+        IsMember = s.Strings.Exists(ipValue)
+    End Property
+    
+    Public Property Get Name() As String
+        Name = TypeName(Me)
+    End Property
+    
+    Public Property Get Count() As Long
+        Count = s.Strings.Count
+    End Property
+    
+End Class

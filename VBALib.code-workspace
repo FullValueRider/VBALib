@@ -121,10 +121,10 @@
                     "basicLiteralDate": {
                         "foreground": "#c495d3"
                     },
-                    "basicConditionalCompilationDirective": {
+                    "basicThrowIf GuardClausealCompilationDirective": {
                         "foreground": "#ad8c98"
                     },
-                    "basicConditionalCompilationExcludedCode": {
+                    "basicThrowIf GuardClausealCompilationExcludedCode": {
                         "foreground": "#989599",
                         "italic": true
                     },
@@ -229,7 +229,7 @@
                         "foreground": "#74384c"
                     },
                     "basicMultiLineSeperator": {
-                        "foreground": "#74384c"
+                        "foreground": "#eeda83"
                     },
                     "basicLateBoundFunction": {
                         "foreground": "#e7ac5f"
@@ -260,10 +260,10 @@
                     "basicLiteralDate": {
                         "foreground": "#c495d3"
                     },
-                    "basicConditionalCompilationDirective": {
+                    "basicThrowIf GuardClausealCompilationDirective": {
                         "foreground": "#ad8c98"
                     },
-                    "basicConditionalCompilationExcludedCode": {
+                    "basicThrowIf GuardClausealCompilationExcludedCode": {
                         "foreground": "#989599",
                         "italic": true
                     },
@@ -401,10 +401,10 @@
                     "basicLiteralDate": {
                         "foreground": "#000000"
                     },
-                    "basicConditionalCompilationDirective": {
+                    "basicThrowIf GuardClausealCompilationDirective": {
                         "foreground": "#315dbb"
                     },
-                    "basicConditionalCompilationExcludedCode": {
+                    "basicThrowIf GuardClausealCompilationExcludedCode": {
                         "foreground": "#d2cdd3"
                     },
                     "basicVariableUndeclared": {
@@ -458,9 +458,12 @@
         ],
         "workbench.tree.indent": 20,
         "workbench.iconTheme": "twinbasic",
-        "debug.openDebug": "openOnFirstSessionStart",
+        "debug.openDebug": "neverOpen",
         "twinbasic.hasCheckedOpenDebugSetting": true,
-        "twinbasic.hasCheckedCompactFolders": true
+        "twinbasic.hasCheckedCompactFolders": true,
+        "twinbasic.hasCheckedOpenDebugSetting2": true,
+        "debug.console.historySuggestions": false,
+        "twinbasic.hasSetDebugConsoleHistorySuggestionsOff": true
     },
     "launch": {
         "version": "0.2.0",

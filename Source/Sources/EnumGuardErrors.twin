@@ -1,0 +1,121 @@
+Class EnumGuardErrors
+    ' '@predeclaredId
+    ' '@Exposed
+    ' Public Enum GuardError
+        
+    '     IsMissing = VBASystem.MinLong
+    '     IsBaseError = CustomErrors.Base
+    '     IsNonDefaultInstance
+    '     IsDefaultInstance
+    '     IsDoubleInitialisation
+    '     IsNullReference
+    '     IsStringCannotBeEmpty
+    '     IsNotTableArray
+    '     IsActionNotExecutable
+    '     IsNotEnumerationMember
+        
+    ' End Enum
+    
+    ' Private Type state
+        
+    '     Actions                 As Scripting.Dictionary
+    '     Descriptions            As Scripting.dictionary
+    '     Location                As string
+        
+    ' End Type
+    
+    
+    ' Private s As state
+    
+    
+    ' Private Sub Class_Initialise()
+        
+    '     Guard.NonDefaultInstance Me, Enums.GuardErrors, TypeName(Me)
+    '     SetupDictionaries
+    '     s.Location = "VBALib." & TypeName(Me)
+        
+    ' End Sub
+    
+    
+    ' Private Sub SetupDictionaries()
+        
+    '     Set s.Descriptions = CreateObject("Scripting.Dictionary")
+    '     With s.Descriptions
+        
+    '         .Add IsBaseError = VBAlib.CustomErrors.Base, "Invalid procedure call or argument."
+    '         .Add IsNonDefaultInstance, "Method should be invoked from the default/predeclared instance of this class."
+    '         .Add IsDefaultInstance, "Method should be invoked from a new instance of this class."
+    '         .Add IsDoubleInitialisation, "Raises a run-time error if the specified object reference is already set."
+    '         .Add IsNullReference, "Object reference cannot be Nothing."
+    '         .Add IsStringCannotBeEmpty, "String cannot be empty."
+    '         .Add IsNotTableArray, "RankIsRowSplitFirstItem"
+    '         .Add IsActionNotExecutable, "The enumeration action is not an executable object"
+    '         .Add IsNotEnumerationMember, "Not a member of Enumeration '{0}'"
+            
+    '     End With
+        
+    ' End Sub
+    
+    ' Public Function Strings() As Variant
+    '     Strings = s.Descriptions.Items
+    ' End Function
+    
+    ' Public Function Members() As Variant
+    '     Members = s.Actions.Keys
+    ' End Function
+    
+    ' Public Function Actions() As Variant
+    '     Actions = s.Actions.Items
+    ' End Function
+    
+    ' Public Function Ord(ByVal ipEnum As GuardError) As Long
+        
+    '     Dim myOrd As Long
+    '     myOrd = 0
+        
+    '     Dim myItem As Variant
+    '     For Each myItem In s.Actions.Keys
+            
+    '         If myItem = ipEnum Then
+                
+    '             Ord = myOrd
+    '             Exit Function
+                
+    '         End If
+            
+    '         myOrd = myOrd + 1
+            
+    '     Next
+        
+    ' End Function
+    
+    ' Public Property Get AsEnum(ByVal ipEnum As GuardError) As GuardError
+    '     AsEnum = ipEnum
+    ' End Property
+    
+    ' Public Function CanExec(ByVal ipEnum As GuardError) As Boolean
+    '     CanExec = VBA.IsObject(s.Actions.Item(ipEnum))
+    ' End Function
+    
+    ' Public Property Get ToString(ByVal ipEnum As GuardError) As String
+    '     ToString = s.Descriptions.Item(ipEnum)
+    ' End Property
+        
+    ' Public Property Get Exec(ByVal ipEnum As GuardError, ByVal ipTableArray As Variant) As Object
+    '     Guard.ActionNotExecutable s.Actions.Item(ipEnum), s.Location & ".Exec"
+    '     Set Exec = s.Actions.Item(ipEnum).exec(ipTableArray)
+    ' End Property
+    
+    ' Public Property Get IsMember(ByVal ipValue As Long) As Boolean
+    '     IsMember = s.Actions.Exists(ipValue)
+    ' End Property
+    
+    ' Public Property Get Name() As String
+    '     Name = TypeName(Me)
+    ' End Property
+    
+    ' Public Property Get Count() As Long
+    '     Count = s.Actions.Count
+    ' End Property
+    
+End Class

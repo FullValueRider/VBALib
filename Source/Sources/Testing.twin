@@ -1,0 +1,21 @@
+Module Testing
+    
+   ' Public Assert As AssertClass
+    Public Sub Tester()
+        
+        'Set Assert = New AssertClass
+        
+        Debug.Print "Testing started"
+       
+        TestStringifier.Test
+        TestFmt.Test
+        TestLyst.Test
+        TestArrays.Test
+        TestTypes.Test
+        TestKvp.Test
+        
+        Debug.Print "Testing completed"
+        
+    End Sub
+    
+End Module
