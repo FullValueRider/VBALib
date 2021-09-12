@@ -1,0 +1,49 @@
+Class TableArrayToColumnLysts
+    
+    '@PredeclaredId
+    '@exposed
+    Option Explicit
+    'Option Private Module
+    
+    Public Function ExecAction(ByVal ipTableArray As Variant) As Lyst
+        
+        Guard NotTableArray, Arrays.IsNotTableArray(ipTableArray), "VBALib.TableArrayToColumnLysts.ExecAction", TypeName(Me)
+        
+        Dim myFirstDim1 As Long
+        myFirstDim1 = LBound(ipTableArray, 1)
+        
+        Dim myLastDim1 As Long
+        myLastDim1 = UBound(ipTableArray, 1)
+        
+        Dim myFirstDim2 As Long
+        myFirstDim2 = LBound(ipTableArray, 2)
+        
+        Dim myLastDIm2 As Long
+        myLastDIm2 = UBound(ipTableArray, 2)
+        
+        Dim myLystOfLyst As Lyst
+        Set myLystOfLyst = Lyst.Deb
+        Dim myDim1 As Long
+        Dim myDim2 As Long
+        For myDim2 = myFirstDim2 To myLastDIm2
+             
+            Dim myInnerLyst As Lyst
+            Set myInnerLyst = Lyst.Deb
+            'myLystOfLyst.Add Lyst.Deb
+            
+            For myDim1 = myFirstDim1 To myLastDim1
+            
+                myInnerLyst.Add ipTableArray(myDim1, myDim2)
+                'myLystOfLyst.Item(myDim2 - myFirstDim2).Add ipTableArray(myDim1, myDim2)
+                
+            Next
+        
+            myLystOfLyst.Add myInnerLyst.Clone
+            
+        Next
+        
+        Set ExecAction = myLystOfLyst
+        
+    End Function
+    
+End Class

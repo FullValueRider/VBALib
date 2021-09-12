@@ -1,0 +1,37 @@
+Module Pootle
+    Private Sub Test54_LastIndexTryGetFromArrayList()
+        ''On Error GoTo TestFail
+        Dim myPlace As String
+        myPlace = "VBALib.Pootle."
+        'Arrange:
+        Dim myExpectedStatus  As Boolean
+        myExpectedStatus = True
+        
+        Dim myExpected As Long
+        myExpected = 3
+        
+        Dim myIterable As ArrayList
+        Set myIterable = New ArrayList
+        myIterable.Add 10
+        myIterable.Add 20
+        myIterable.Add 30
+        myIterable.Add 40
+        
+        Dim myResult As Long
+        Dim myResultStatus  As Boolean
+        
+        'Act:
+        myResultStatus = Types.Iterable.TryLastIndex(myIterable, myResult)
+    
+        'Assert:
+        Assert.Exact.AreEqual myExpectedStatus, myResultStatus, myPlace & CurrentProcedureName & ":Status"
+        Assert.Exact.AreEqual myExpected, myResult, myPlace & CurrentProcedureName & ":Value"
+        
+    TestExit:
+    Debug.Print "Completed OK"
+        Exit Sub
+    TestFail:
+        Debug.Print myPlace & CurrentProcedureName & "   raised an error: #" & Err.Number & " - " & Err.Description
+        Resume TestExit
+    End Sub
+End Module

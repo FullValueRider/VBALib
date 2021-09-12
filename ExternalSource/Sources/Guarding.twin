@@ -1,0 +1,50 @@
+Module Guarding
+    '@Folder("VBALib"
+    Option Explicit
+    
+    Public Sub Guard _
+    ( _
+        ByVal ipGuardClause As GuardClause, _
+        ByVal ipThrow As Boolean, _
+        ByVal ipLocation As String, _
+        Optional ByVal ipArgs As Variant = Empty, _
+        Optional ByVal ipAltMessage As String = vbnullstring _
+    )
+            
+        If ipThrow Then
+            
+            Dim myArgs As Variant
+            If Arrays.IsValidArray(ipArgs) Then
+                
+                myArgs = ipArgs
+                
+            Else
+                
+                myArgs = Array(ipArgs)
+                
+            End If
+            
+            Dim myMessage As String
+            If VBA.Len(ipAltMessage) = 0 Then
+            
+                myMessage = Enums.GuardClauses.ToString(ipGuardClause)
+                
+            Else
+                
+                myMessage = ipAltMessage
+                
+            End If
+            
+            If Arrays.IsValidArray(ipArgs) Then
+                
+                myMessage = Fmt.TxtArr(myMessage, myArgs)
+                
+            End If
+
+            VBA.Information.Err.Raise ipGuardClause, ipLocation, myMessage
+                        
+        End If
+        
+    End Sub
+
+End Module

@@ -30,7 +30,7 @@ SET twinproj=%%F
 REM Set the destination folder to a \Source\ subfolder in current folder
 REM   - you could override this with a different destination path
 
-SET outfolder=%~dp0Source
+SET outfolder=%~dp0ExternalSource
 
 
 REM Export to \Source\ subfolder in current folder

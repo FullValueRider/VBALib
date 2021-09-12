@@ -463,7 +463,8 @@
         "twinbasic.hasCheckedCompactFolders": true,
         "twinbasic.hasCheckedOpenDebugSetting2": true,
         "debug.console.historySuggestions": false,
-        "twinbasic.hasSetDebugConsoleHistorySuggestionsOff": true
+        "twinbasic.hasSetDebugConsoleHistorySuggestionsOff": true,
+        "editor.formatOnType": true
     },
     "launch": {
         "version": "0.2.0",
