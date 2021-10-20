@@ -1,0 +1,22 @@
+Module Sys
+    
+    '@ModuleDescription("A place for useful VBA things not explicitly provided by VBA")
+    Option Explicit
+
+    Public Const MaxLong                    As long = &H7FFFFFFF
+    Public Const MinLong                    As long = &HFFFFFFFF
+   
+    Public Const Failed              As Long = -1
+    
+    'Arrays supppoert
+    Public Const ParamArrayIsEmpty          As long = -1
+   
+    
+    'TypesIterables Support
+    Public Const ThisLib                    As String = "VBALib"
+    
+    Public Function AsOneItem(ByVal ipIterable As Variant) As Variant
+        AsOneItem = Array(ipIterable)
+    End Function
+    
+End Module
