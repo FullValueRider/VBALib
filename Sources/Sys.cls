@@ -28,3 +28,10 @@ Public Function AsOneItem(ByVal ipIterable As Variant) As Variant
     AsOneItem = Array(ipIterable)
 End Function
 
+Public Function IsTrue(ByVal ipexpression As Boolean) As Boolean
+    IsTrue = ipexpression
+End Function
+
+Public Function IsNotTrue(ByVal ipexpression As Boolean) As Boolean
+    IsNotTrue = Not IsTrue(ipexpression)
+End Function

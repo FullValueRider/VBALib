@@ -20,7 +20,7 @@ Attribute VB_Exposed = True
 ' *  limitation, damages for loss of business profits, business interruption, *
 ' *  loss of information or other pecuniary loss).                            *
 ' *****************************************************************************
-
+'@IgnoreModule
 Option Explicit
 
 Private Const OPTION_BASE                  As Long = 0

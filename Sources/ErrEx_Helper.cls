@@ -22,7 +22,7 @@ Attribute VB_Exposed = True
 ' *****************************************************************************
 
 Option Explicit
-
+'@IgnoreModule
 
 #If Win64 = False Then
 Public Sub NATIVECODE0000_EVERYTHINGACCESS(): End Sub

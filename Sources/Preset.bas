@@ -1,4 +1,6 @@
-Attribute VB_Name = "Constant"
+Attribute VB_Name = "Preset"
+' We are using Preset to mean constant
+' this is because the Name Constant is already used by VBA
 Option Explicit
 
 Public Const NotANumber As String = "NaN"

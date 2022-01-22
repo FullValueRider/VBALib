@@ -13,23 +13,16 @@ Option Explicit
 '@Folder("VBALib.Types")
 
 
-Private Sub Class_Initialize()
-    'ExitWhen InvalidNew, Types.IsNotSameInstance(Me, TypesIterables), r.Location & "New"
-   
-    
-End Sub
-
 '@Description("Returns the firstindex,lastindex and count in Items.  If the iterable has no items status is false.")
 Public Function TryExtent _
 ( _
-ByVal ipIterable As Variant, _
-Optional ByVal ipRank As Long = Constant.ArrayFirstRank _
+    ByVal ipIterable As Variant, _
+    Optional ByVal ipRank As Long = Preset.ArrayFirstRank _
 ) As Result
 Attribute TryExtent.VB_Description = "Returns the firstindex,lastindex and count in Items.  If the iterable has no items status is false."
     
     'Items should be accessed using Item(ResultItemsEnums.ItemExtent(enum))
     Set TryExtent = Globals.Res.SetNotOkay
- '   If ExitWhen.RankLessThanOne(ipRank) Then Exit Function
     If BailOut.When(Types.Group.IsNotIterable(ipIterable), Msg.IsNotIterable) Then Exit Function
         
     Select Case True
@@ -40,9 +33,7 @@ Attribute TryExtent.VB_Description = "Returns the firstindex,lastindex and count
                 
 
         Case VBA.IsArray(ipIterable)
-                
-           'If BailOut.When(Arrays.IsNotValid(ipIterable, ipRank), Msg.ArrayLacksRank) Then Exit Function
-                
+            ' Does not yet deal with dimensions of more than one.
             Arrays.TryExtent ipIterable, ipRank
             
 
@@ -51,11 +42,10 @@ Attribute TryExtent.VB_Description = "Returns the firstindex,lastindex and count
                     
             If BailOut.When(Types.Iterable.HasNoItems(ipIterable), Msg.IterableHasNoItems) Then Exit Function
             If BailOut.When(ipRank <> 1, Msg.ItemDoesNotSupportRanks) Then Exit Function
-            'Globals.Res.Init(Msg.Okay).SetItems(Array(Empty, Empty, ipIterable.Count))
             
             If Types.Group.IsIterableByMethod(ipIterable) Then
                 
-                Globals.Res.SetOkay.SetItems Empty, Empty, ipIterable.Count
+                Globals.Res.SetOkay(Msg.DoesNotIterateByIndex).SetItems Empty, Empty, ipIterable.Count
                 
             ElseIf Types.Group.IsIterableOneBased(ipIterable) Then
                     
@@ -81,7 +71,7 @@ Set TryExtent = Globals.Res
 End Function
 
 '@Description("Returns the number of items in a valid array or iterable object. An unitialised array returns -1. A collection object returns -1 if nothing and 0 if unpoulated0")")
-Public Function Count(ByVal ipIterable As Variant, Optional ByVal ipRank As Long = Constant.ArrayFirstRank) As Long
+Public Function Count(ByVal ipIterable As Variant, Optional ByVal ipRank As Long = Preset.ArrayFirstRank) As Long
 
     Count = -1
     
@@ -100,10 +90,10 @@ Attribute GetByForEach.VB_Description = "Gets  items from an Iterable that does 
     Set myLyst = Lyst.Deb
     
     Dim myCount As Long
-    Dim myitem As Variant
-    For Each myitem In ipIterable
+    Dim myItem As Variant
+    For Each myItem In ipIterable
     
-        myLyst.Add myitem
+        myLyst.Add myItem
         myCount = myCount + 1
         If (ipCount > 0) And (myCount > ipCount) Then Exit For
         
@@ -124,11 +114,11 @@ Public Function Sum(ByVal ipIterable As Variant) As Variant
             
     End If
         
-    Dim myitem As Variant
+    Dim myItem As Variant
     Dim mySum As Double
-    For Each myitem In ipIterable
+    For Each myItem In ipIterable
         
-        mySum = mySum + myitem
+        mySum = mySum + myItem
             
     Next
         
@@ -147,20 +137,20 @@ Public Function MinMax(ByVal ipIterable As Variant) As Variant
             
     End If
     
-    Dim myitem As Variant
+    Dim myItem As Variant
     Dim myMax As Variant
     Dim myMin As Variant
-    For Each myitem In ipIterable
+    For Each myItem In ipIterable
             
         If VBA.IsEmpty(myMin) Then
             
-            myMax = myitem
-            myMin = myitem
+            myMax = myItem
+            myMin = myItem
                 
         End If
             
-        If myitem < myMin Then myMin = myitem
-        If myitem > myMax Then myMax = myitem
+        If myItem < myMin Then myMin = myItem
+        If myItem > myMax Then myMax = myItem
             
     Next
 
@@ -251,10 +241,10 @@ Attribute IsHomogeneous.VB_Description = "Returns true if each item in the itera
     Dim myType  As String
     myType = TypeName(ipIterable(0))
         
-    Dim myitem As Variant
-    For Each myitem In ipIterable
+    Dim myItem As Variant
+    For Each myItem In ipIterable
         
-        If TypeName(myitem) <> myType Then Exit Function
+        If TypeName(myItem) <> myType Then Exit Function
         
     Next
         
@@ -286,12 +276,9 @@ Attribute HasItems.VB_Description = "Returns true if arg is an array and has ubo
 
     If VBA.IsArray(ipArg) Then
         
-        If Arrays.HasNoItems(ipArg) Then Exit Function
+        If Arrays.HasNoItems(ipArg) Then Exit Function  '  Need to something about ipRank here
             
     Else
-        
-            
-        'Guard IsNotArray, ipRank <> 1, mcLocation & "HasItems", Array(TypeName(ipArg))
             
         If ipArg.Count <= 0 Then Exit Function
 
@@ -301,347 +288,229 @@ Attribute HasItems.VB_Description = "Returns true if arg is an array and has ubo
         
 End Function
 
+'@Description("Takes a list of values or an iterable and returns a variant containing an Array")
 Public Function ToArray(ParamArray ipArgArray() As Variant) As Variant
+Attribute ToArray.VB_Description = "Takes a list of values or an iterable and returns a variant containing an Array"
+    ToArray = ToArraybyFPA(ipArgArray)
+End Function
 
-    ToArray = Empty
+
+'Description("Performs the ToArray method but taking forwarded paramarray")
+Friend Function ToArraybyFPA(ByVal ipArgArray As Variant) As Variant
+
+    ToArraybyFPA = Empty
         
     If BailOut.When(Arrays.HasNoItems(ipArgArray), Msg.ArrayHasNoItems) Then Exit Function
             
     Dim myArrayList As ArrayList
     Set myArrayList = New ArrayList
-    Dim myitem As Variant
+    Dim myItem As Variant
         
-    If UBound(ipArgArray) > 0 Then
+    If Arrays.HasMoreThanOneItem(ipArgArray) Then
             
-        For Each myitem In ipArgArray
+        For Each myItem In ipArgArray
             
-            myArrayList.Add myitem
+            myArrayList.Add myItem
                 
         Next
-            
-            
-    ElseIf VBA.IsArray(ipArgArray(0)) Then
-            
-        ToArray = ipArgArray(0)
+        
+        ToArraybyFPA = myArrayList.ToArray
         Exit Function
-            
-            
-    ElseIf Types.Group.IsIterableItemsByEnum(ipArgArray(0)) Then
         
-        Dim myargs As Variant
-        myargs = CVar(ipArgArray(0))
-        For Each myitem In myargs
-                
-            myArrayList.Add myitem
-                
-        Next
-            
-            
-    Else
-        
-        myArrayList.Add ipArgArray(0)
-            
-            
-    End If
-        
-    '@Ignore MemberNotOnInterface
-    ToArray = myArrayList.ToArray
-        
-End Function
-
-Public Function ToQueue(ParamArray ipArgArray() As Variant) As Queue
-        
-    Dim myQueue As Queue
-    Set myQueue = New Queue
-    Set ToQueue = myQueue
-
-    If Arrays.HasNoItems(ipArgArray) Then Exit Function
-        
-    Dim myitem As Variant
-    If UBound(ipArgArray) > 0 Then
-                
-        For Each myitem In ipArgArray
-                
-            '@Ignore MemberNotOnInterface
-            myQueue.Enqueue myitem
-                    
-        Next
-                
-        Exit Function
-                
     End If
             
-    ' There is only one argument in ipArgArray
-    If Types.IsTypeByName(Types.Name.OfQueue, ipArgArray(0)) Then
-                
-        Set ToQueue = ipArgArray(0).Clone
-        Exit Function
-                
-    End If
-            
-    If Types.Group.IsIterableItemsByEnum(ipArgArray(0)) Then
-            
-        Dim myargs As Variant
-        myargs = CVar(ipArgArray(0))
-        For Each myitem In myargs
-                    
-            '@Ignore MemberNotOnInterface
-            myQueue.Enqueue myitem
-                    
-        Next
-                
-        Exit Function
-                
-    End If
-            
-    '@Ignore MemberNotOnInterface
-    myQueue.Enqueue ipArgArray(0)
-                
-End Function
-
-Public Function ToStack(ParamArray ipArgArray() As Variant) As Stack
-        
-    Dim myStack As Stack
-    Set myStack = New Stack
-    Set ToStack = myStack
-
-    If Arrays.HasNoItems(ipArgArray) Then Exit Function
-        
-    Dim myitem As Variant
-    If UBound(ipArgArray) > 0 Then
-                
-        For Each myitem In ipArgArray
-                
-            '@Ignore MemberNotOnInterface
-            myStack.Push myitem
-                    
-        Next
-                
-        Exit Function
-                
-    End If
-            
-    ' There is only one argument in ipArgArray
-    If Types.IsTypeByName(Types.Name.OfStack, ipArgArray(0)) Then
-                
-        Set ToStack = ipArgArray(0).Clone
-        Exit Function
-                
-    End If
-            
-    If Types.Group.IsIterableItemsByEnum(ipArgArray(0)) Then
-            
-        Dim myargs As Variant
-        myargs = CVar(ipArgArray(0))
-        For Each myitem In myargs
-                    
-            '@Ignore MemberNotOnInterface
-            myStack.Push myitem
-                    
-        Next
-                
-        Exit Function
-                
-    End If
-            
-    '@Ignore MemberNotOnInterface
-    myStack.Push ipArgArray(0)
-                
-End Function
-
-''@Description("For the rare case where we wish to have a single iterable as a single iterable)
-'Public Function SingleItemList(ByVal ipValue As Variant) As VBALib.Lyst
-'
-'    Dim myList As VBALib.Lyst
-'    Set myList = New VBALib.Lyst
-'    myList.Add ipValue
-'    Set SingleItemList = myList
-'End Function
-
-Public Function ToArrayList(ParamArray ipArgArray() As Variant) As ArrayList
-
-    Dim myAL As ArrayList
-    Set myAL = New ArrayList
-    Set ToArrayList = myAL
-    If VBA.IsMissing(ipArgArray) Then Exit Function
-    If VBA.IsEmpty(ipArgArray) Then Exit Function
-        
-    Dim myInterim As ArrayList
-    Set myInterim = New ArrayList
-        
+    ' There is only one item in ipArgsArray
     Select Case True
+    
+        Case Types.Group.IsNotIterable(ipArgArray(0))
+        
+            ToArraybyFPA = ipArgArray
             
-      Case Arrays.IsNotSingleItem(ipArgArray)
-              
-          myInterim.Add CVar(ipArgArray)
-          
-          
-      Case Types.Group.IsNotIterable(ipArgArray(0))
-              
-          myInterim.Add CVar(ipArgArray)
-                  
-                  
-      Case Arrays.IsTableArray(ipArgArray(0))
-                      
-          myInterim.Add Arrays.ToLystOfRanksAsLyst(ipArgArray(0), RankIsRowFirstItemActionIsNoAction)
-                      
-                  
-      Case Arrays.IsMDArray(ipArgArray(0))
-                      
-          myInterim.Add ipArgArray(0)
-                          
-              
-      Case Types.Group.IsIterableItemsByEnum(ipArgArray(0))
-              
-          myInterim.Add ipArgArray(0)
-                  
-                  
-      Case Types.Group.IsIterableKeysByEnum(ipArgArray(0))
-              
-          myInterim.Add ipArgArray(0).Items
-          'myInterim.Add ipArgArray(0).Keys
-              
-              
-      Case Else
-              
-          Globals.Res.SetNotOkay Msg.UnexpectedItemInParamArray
-          Exit Function
-                
+            
+        Case Types.IsTypeByName(Types.Name.OfArrayList, ipArgArray(0))
+        
+            ToArraybyFPA = ipArgArray(0).ToArray
+            
+    
+        Case VBA.IsArray(ipArgArray(0))
+        
+            ToArraybyFPA = ipArgArray(0)
+            
+        
+        Case Types.Group.IsIterableItemsByEnum(ipArgArray(0))
+        
+            For Each myItem In ipArgArray(0)
+                    
+                myArrayList.Add myItem
+                    
+            Next
+            
+            ToArraybyFPA = myArrayList.ToArray
+            
+            
+        Case Types.Group.IsIterableKeysByEnum(ipArgArray(0))
+        
+            ToArraybyFPA = ipArgArray(0).Items
+            
+            
+        Case Else
+        
+            If BailOut.When(True, Msg.UnexpectedItemInParamArray) Then Exit Function
+            
             
     End Select
         
-    Dim myitem As Variant
-    For Each myitem In myInterim.Item(0)
+ 
+End Function
+
+
+'@Description("Takes a list of values or an iterable and returns a Queue")
+Public Function ToQueue(ParamArray ipArgArray() As Variant) As Queue
+Attribute ToQueue.VB_Description = "Takes a list of values or an iterable and returns a Queue"
+        
+    Dim myArray As Variant
+    myArray = ToArraybyFPA(ipArgArray)
+    If BailOut.When(VBA.IsEmpty(myArray), Msg.ParamArrayIsNotValid) Then Exit Function
+    
+    Dim myQueue As Queue
+    Set myQueue = New Queue
+    
+    Dim myItem As Variant
+    For Each myItem In myArray
             
-        myAL.Add myitem
-            
+        myQueue.Enqueue myItem
+                
     Next
-              
+            
+    Set ToQueue = myQueue
+                
+End Function
+
+
+'@Description("Takes a list of values or an iterable and returns a Stack")
+Public Function ToStack(ParamArray ipArgArray() As Variant) As Stack
+Attribute ToStack.VB_Description = "Takes a list of values or an iterable and returns a Stack"
+        
+    Dim myArray As Variant
+    myArray = ToArraybyFPA(ipArgArray)
+    If BailOut.When(VBA.IsEmpty(myArray), Msg.ParamArrayIsNotValid) Then Exit Function
+    
+    Dim myStack As Stack
+    Set myStack = New Stack
+    
+    ' For each on a stack returns numbers in the opposite order to which we
+    ' added them to the stack, so a strightforward for each here
+    ' actually reverses the number on the stack.
+    ' This is why the myIndex with step -1 is required
+    
+    Dim myIndex As Long
+    For myIndex = UBound(myArray) To LBound(myArray) Step -1
+
+        
+        myStack.Push CVar(myArray(myIndex))
+                
+    Next
+            
+    Set ToStack = myStack
+                
+End Function
+
+'@Description("Takes a list of values or an iterable and returns an ArrayList")
+Public Function ToArrayList(ParamArray ipArgArray() As Variant) As ArrayList
+Attribute ToArrayList.VB_Description = "Takes a list of values or an iterable and returns an ArrayList"
+
+    Dim myArray As Variant
+    myArray = ToArraybyFPA(ipArgArray)
+    If BailOut.When(VBA.IsEmpty(myArray), Msg.ParamArrayIsNotValid) Then Exit Function
+    
+    Dim myAL As ArrayList
+    Set myAL = New ArrayList
+    
+    Dim myItem As Variant
+    For Each myItem In myArray
+            
+        myAL.Add myItem
+                
+    Next
+            
     Set ToArrayList = myAL
     
 End Function
 
-'@Description("Converts input to Lyst. If ipArgArray is one iterable then the individual items of the iterable are added. Thus to add one iterable as an iterable, encapsulate it in an array")
+'@Description("Takes a list of values or an iterable and returns a Lyst")
 Public Function ToLyst(ParamArray ipArgArray() As Variant) As Lyst
-Attribute ToLyst.VB_Description = "Converts input to Lyst. If ipArgArray is one iterable then the individual items of the iterable are added. Thus to add one iterable as an iterable, encapsulate it in an array"
+Attribute ToLyst.VB_Description = "Takes a list of values or an iterable and returns a Lyst"
         
+    Dim myArray As Variant
+    myArray = ToArraybyFPA(ipArgArray)
+    If BailOut.When(VBA.IsEmpty(myArray), Msg.ParamArrayIsNotValid) Then Exit Function
+    
     Dim myLyst As Lyst
     Set myLyst = Lyst.Deb
+    
+    myLyst.AddRange myArray
+            
     Set ToLyst = myLyst
         
-    If Arrays.IsNotValid(ipArgArray) Then Exit Function
-        
-    'Dim myResult As Result
-    If Arrays.HasOneItem(ipArgArray) Then
-            
-        If Types.IsTypeByName(Types.Name.OfLyst, ipArgArray(0)) Then
-                
-            Set ToLyst = ipArgArray(0)
-            Exit Function
-            
-
-        End If
-            
-        If Parser.ParseVariantWithOneItem(ipArgArray(0)).IsNotOkay Then Exit Function
-                
-        Set ToLyst = myLyst.AddKnownIterableAsItems(Globals.Res.Item(ResultItemsEnums.ParsedVariant(pvItems)))
-        
-        
-    Else
-            
-        Set ToLyst = Lyst.Deb.AddKnownIterableAsItems(ipArgArray)
-       
-            
-    End If
-        
 End Function
 
+
+'@Description("Takes a list of values or an iterable and returns a Collection)
 Public Function ToCollection(ParamArray ipArgArray() As Variant) As Collection
-        
-    Dim myCollection As Collection
-    Set myCollection = New Collection
-    Set ToCollection = myCollection
 
-    If Arrays.HasNoItems(ipArgArray) Then Exit Function
+    Dim myArray As Variant
+    myArray = ToArraybyFPA(ipArgArray)
+    If BailOut.When(VBA.IsEmpty(myArray), Msg.ParamArrayIsNotValid) Then Exit Function
+    
+    Dim myColl As Collection
+    Set myColl = New Collection
+    
+    Dim myItem As Variant
+    For Each myItem In myArray
+    
+        myColl.Add myItem
         
-    Dim myitem As Variant
-    If UBound(ipArgArray) > 0 Then
-                
-        For Each myitem In ipArgArray
-                
-            myCollection.Add myitem
-                    
-        Next
-                
-        Exit Function
-                
-    End If
+    Next
             
-    ' There is only one argument in ipArgArray
-    ' collection doesn't offer the clone method so no quick copy here
-    If Types.Group.IsIterableItemsByEnum(ipArgArray(0)) Then
-            
-        Dim myargs As Variant
-        myargs = CVar(ipArgArray(0))
-        For Each myitem In myargs
-                    
-            myCollection.Add myitem
-                    
-        Next
-                
-        Exit Function
-                
-    End If
-            
-    myCollection.Add ipArgArray(0)
+    Set ToCollection = myColl
         
 End Function
 
-' Public Function pvGetToThingArray(ByVal ipArgArray As Variant) As Variant
+'@Description("Takes a list of values or an iterable and returns a Scriting with number keys starting at 0")
+Public Function ToDictionary(ParamArray ipArgArray() As Variant) As Scripting.Dictionary
+Attribute ToDictionary.VB_Description = "Takes a list of values or an iterable and returns a Scriting with number keys starting at 0"
         
-'     ' ipArgArray has already been triaged for empty
-'     ' ipArgArray is a parameter list from a 'ToThing' method where thing is an iterable array/object
-'     ' the intent of this function is to process ipArgArray to an array
-'     ' in item 1 of the list.
-'     ' In the case of a single item being provided to ipArgArray, and the single item is an
-'     ' iterable type, the contents of the iterable type are added item by item
-'     '
-'     ' In the odd case where a single item is an iterable, which we want to add as
-'     ' as single item, then that item should be encapsulated into an array
-'     ' when provided as a parameter
+    Dim myArray As Variant
+    myArray = ToArraybyFPA(ipArgArray)
+    If BailOut.When(VBA.IsEmpty(myArray), Msg.ParamArrayIsNotValid) Then Exit Function
+    
+    Dim myDic As Scripting.Dictionary
+    Set myDic = New Scripting.Dictionary
+    
+    Dim myItem As Variant
+    For Each myItem In myArray
+    
+        myDic.Add myDic.Count, myItem
         
-'     Dim myList As ArrayList
-'     Set myList = New ArrayList
+    Next
+    
+    Set ToDictionary = myDic
         
-'     ' if ipArgArray is a single item
-'     If UBound(ipArgArray) = 0 Then
-        
-'         If Types.Group.IsPrimitive(ipArgArray(0)) Then
-            
-'             myList.Add Array(ipArgArray(0))
-                
-'         ElseIf Types.Group.IsIterableByMethod(ipArgArray(0)) Then
-'             ' captures object like stack and queue
-'             Dim myarray As Variant
-'             myarray = ipArgArray(0).ToArray
-'             myList.Add myarray
-                
-'         ElseIf Types.Group.IsIterableKeysByEnum(ipArgArray(0)) Then
-'             ' captures objects like Scripting.Dictionary and Kvp
-'             myList.Add ipArgArray(0).Items
-                
-'         ElseIf Types.Group.IsIterableItemsByEnum(ipArgArray(0)) Then
-'             ' Captures arrays and other object that can be enumerated
-'             myList.Add ipArgArray(0)
-                
-'         End If
-            
-'     Else
-        
-'         myList.Add ipArgArray
-            
-'     End If
-        
-'     pvGetToThingArray = myList.ToArray
+End Function
 
-' End Function
+'@Description("Takes a list of values or an iterable and returns a Kvp with Long keys starting at 0&")
+Public Function ToKvp(ParamArray ipArgArray() As Variant) As Kvp
+Attribute ToKvp.VB_Description = "Takes a list of values or an iterable and returns a Kvp with Long keys starting at 0&"
+
+    Dim myArray As Variant
+    myArray = ToArraybyFPA(ipArgArray)
+    If BailOut.When(VBA.IsEmpty(myArray), Msg.ParamArrayIsNotValid) Then Exit Function
+    
+    Dim myKvp As Kvp
+    Set myKvp = Kvp.Deb
+    
+    myKvp.Add myArray
+        
+    Set ToKvp = myKvp
+    
+End Function

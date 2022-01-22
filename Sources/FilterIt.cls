@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "rdCountIt"
+Attribute VB_Name = "FilterIt"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -11,7 +11,7 @@ Option Explicit
 '@PredeclaredId
 '@Exposed
 '@Folder("VBALib.Filters")
-Implements IReduce
+Implements IFilter
     
 Private Type State
         
@@ -22,9 +22,9 @@ End Type
 
 Private s                           As State
 
-Public Function Deb(ByRef ipComparer As IComparer) As rdCountIt
+Public Function Deb(ByRef ipComparer As IComparer) As FilterIt
         
-    With New rdCountIt
+    With New FilterIt
         
         Set Deb = .ReadyToUseInstance(ipComparer)
             
@@ -32,7 +32,7 @@ Public Function Deb(ByRef ipComparer As IComparer) As rdCountIt
         
 End Function
 
-Friend Function ReadyToUseInstance(ByRef ipComparer As IComparer) As rdCountIt
+Friend Function ReadyToUseInstance(ByRef ipComparer As IComparer) As FilterIt
         
     Set s.Comparer = ipComparer
     Set ReadyToUseInstance = Me
@@ -40,23 +40,24 @@ Friend Function ReadyToUseInstance(ByRef ipComparer As IComparer) As rdCountIt
 End Function
 
 '@Description("Adds the value in ipArgsArray(0) to each item in the Lyst.  If the host item is not a number the string NAN is returned")
-Private Function IReduce_ExecRed(ByVal ipHostItems As Lyst) As Variant
-Attribute IReduce_ExecRed.VB_Description = "Adds the value in ipArgsArray(0) to each item in the Lyst.  If the host item is not a number the string NAN is returned"
-    IReduce_ExecRed = ExecRed(ipHostItems)
+Private Function IFilter_ExecFilter(ByRef ipHostItems As Lyst) As Lyst
+Attribute IFilter_ExecFilter.VB_Description = "Adds the value in ipArgsArray(0) to each item in the Lyst.  If the host item is not a number the string NAN is returned"
+
+    Set IFilter_ExecFilter = ExecRed(ipHostItems)
 End Function
 
-Public Function ExecRed(ByVal ipHostItems As Lyst) As Variant
+Public Function ExecRed(ByVal ipHostItems As Lyst) As Lyst
         
-    Dim myCounter As Long
-    myCounter = 0
+    Dim myLyst As Lyst
+    Set myLyst = Lyst.Deb
         
    Dim myItem As Variant
    For Each myItem In ipHostItems
    
-        If s.Comparer.ExecCmp(myItem) Then myCounter = myCounter + 1
+        If s.Comparer.ExecCmp(myItem) Then myLyst.Add myItem
    
    Next
    
-   ExecRed = myCounter
+   Set ExecRed = myLyst
         
 End Function

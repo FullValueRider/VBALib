@@ -15,7 +15,7 @@ Implements IReduce
 
 Private Type State
 
-    Comparer                        As IComparer
+    Comparer                        As Variant 'IComparer
 
 
 End Type
@@ -23,7 +23,7 @@ End Type
 Private s                           As State
 
 
-Public Function Deb(Optional ByRef ipComparer As IComparer) As rdSum
+Public Function Deb(Optional ByVal ipComparer As IComparer = Nothing) As rdSum
 
     With New rdSum
 
@@ -33,10 +33,14 @@ Public Function Deb(Optional ByRef ipComparer As IComparer) As rdSum
 
 End Function
 
-Friend Function ReadyToUseInstance(ByRef ipComparer As IComparer) As rdSum
+Friend Function ReadyToUseInstance(ByVal ipComparer As IComparer) As rdSum
 
-    If Not (IComparer Is Nothing) Then
-      
+    If ipComparer Is Nothing Then
+    
+        s.Comparer = Empty ' nothing causes a problem later on
+        
+    Else
+    
         Set s.Comparer = ipComparer
         
     End If
@@ -46,30 +50,35 @@ Friend Function ReadyToUseInstance(ByRef ipComparer As IComparer) As rdSum
 End Function
 
 '@Description("Adds the value in ipArgsArray(0) to each item in the Lyst.  If the host item is not a number the string NAN is returned")
-Private Function IReduce_ExecRed(ByRef ipHostItems As Lyst) As Variant
+Private Function IReduce_ExecRed(ByVal ipHostItems As Lyst) As Variant
 Attribute IReduce_ExecRed.VB_Description = "Adds the value in ipArgsArray(0) to each item in the Lyst.  If the host item is not a number the string NAN is returned"
     IReduce_ExecRed = ExecRed(ipHostItems)
 End Function
 
-Public Function ExecRed(ByRef ipHostItems As Lyst) As Variant
+Public Function ExecRed(ByVal ipHostItems As Lyst) As Variant
 
-  Dim mySum As LongLong
-  mySum = 0
-   Dim myitem As Variant
-   For Each myitem In ipHostItems
+    Dim mySum As LongLong
+    mySum = 0
+    Dim myItem As Variant
+    
+    If VBA.IsEmpty(s.Comparer) Then
+    
+        For Each myItem In ipHostItems
+    
+            mySum = mySum + myItem
+         
+        Next
+           
+    Else
+        
+        For Each myItem In ipHostItems
+           
+           If s.Comparer.ExecCmp(myItem) Then mySum = mySum + myItem
+           
+        Next
+             
+    End If
 
-        If s.Comparer Is Nothing Then
-          
-          mySum = mySum + myitem
-          
-        Else
-          
-          If s.Comparer.ExecCmp(myitem) Then mySum = mySum + myitem
-            
-        End If
-
-   Next
-
-   ExecRed = mySum
+    ExecRed = mySum
 
 End Function

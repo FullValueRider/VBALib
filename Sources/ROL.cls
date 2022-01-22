@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ROC"
+Attribute VB_Name = "ROL"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -32,9 +32,9 @@ End Type
 
 Private s                   As State
 
-Public Function Deb(ByVal ipIterable As Variant) As ROC
+Public Function Deb(ByVal ipIterable As Variant) As ROL
   
-  With New ROC
+  With New ROL
   
     Set Deb = .ReadyToUseInstance(ipIterable)
   
@@ -43,12 +43,15 @@ Public Function Deb(ByVal ipIterable As Variant) As ROC
 End Function
 
 
-Friend Function ReadyToUseInstance(ByVal ipIterable As Variant) As ROC
+Friend Function ReadyToUseInstance(ByVal ipIterable As Variant) As ROL
   
   If Types.IsTypeByName(Types.Name.OfArrayList, ipIterable) Then
     
-    
     Set s.Items = ipIterable
+    
+If Types.IsTypeByName(Array(Types.Name.OfLyst, Types.Name.OfROL), ipIterable) Then
+    Set s.Items = ipIterable.ToArrayList
+End If
     
   ElseIf Types.IsString(ipIterable) Then
     

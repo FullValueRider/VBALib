@@ -36,7 +36,7 @@ Public Function ExecMap(ByVal ipHostItem As Variant) As Variant
 End Function
 
 '@Description("Takes a jagged array of find/replacepairs")
-Public Function Deb(ByRef ipFindReplaceItems As Variant) As mpMultiReplace
+Public Function Deb(ParamArray ipFindReplaceItems() As Variant) As mpMultiReplace
 Attribute Deb.VB_Description = "Takes a jagged array of find/replacepairs"
 
     With New mpMultiReplace
@@ -47,7 +47,7 @@ Attribute Deb.VB_Description = "Takes a jagged array of find/replacepairs"
             
 End Function
 
-Friend Function ReadyToUseInstance(ByRef ipFindReplaceItems As Variant) As mpMultiReplace
+Friend Function ReadyToUseInstance(ByVal ipFindReplaceItems As Variant) As mpMultiReplace
         
     s.FindReplaceItems = ipFindReplaceItems
     Set ReadyToUseInstance = Me

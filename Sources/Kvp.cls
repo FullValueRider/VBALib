@@ -31,70 +31,49 @@ Option Explicit
 '    is used and the initial key is set to "0000"
 ' 3. List based: Allowed values are provided to the Autokey as a Lyst of values.  The first key index may be specified
 '    so that it does not need to be the index in the first item position of the key list.
+' 4. A user defined autokey may be provided and injected into the kvp.  The autokey must implement IAutokey.
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
  
 Public Enum KvpAdmin
+    
     noindex = 0          '
-    inputisadd          'Used as a flag to the InputItems private method rather than overloading any Index for insert requests
-    InputIsInsert       'Used as a flag to the InputItems private method rather than overloading any Index for insert requests
     SelectByIndex       ' Where a Kvp is being returned as multiple Kvp, set the keys of the sub kvp to be the index from the host Kvp
     SelectByKey         ' Where a Kvp is being returned as multiple Kvp, set the keys of the sub kvp to be the key from the host Kvp
-    'AfterKey = 1
-    'BeforeKey = 0
     
 End Enum
 
-' Public Enum RemoveType
+Public Enum KvpInput
     
-'     AsArray
-'     AsLyst
-'     AsKvp
+    IsAdd          ' Used as a flag to the InputItems private method rather than overloading any Index for insert requests
+    IsInsert       ' Used as a flag to the InputItems private method rather than overloading any Index for insert requests
     
-' End Enum
-
-' Add and Insert methods have a lot of commonality in the preprocessing of the input param array.
-' To simplify coding such preprocessing is consolidated into the InputItems method which takes
-' a forwarded ParamArray and a long value to indicate an add or insert.
-' Indexing for Kvp (and Lyst) objects is 1 based.  This a long value of 0 is used to indicate an add
-' operation.  Values other than 0 indicate the index at which to start the insert operation
-' i.e. the value at index will be the first item to appear after the insert
+End Enum
 
 
-Private Type ReadOnly
-
-    DefaultSeparator                            As String 'char.comma
-    DefaultAdjustAmount                         As Long
-    CountIsInvalid                              As Long ' -1
-    'Const i.KvpError                           As Long = 17 + vbObjectError
-    'Const i.ParamArrayIsEmpty                  As Long = -1
-    'Const OptionalDefault                      As Long = -1
-    'FlagAddItems                                As Long '-1
-    
-
-End Type
-
-Private r                       As ReadOnly
-
+Const DefaultSeparator                  As String = "," ' can't use asciicode.twcomma
+Const Defaultadjustamount               As Long = 1
+Const DefaultFirstNumberKey             As Long = 1
+Const DefaultFirstStringKey             As String = "0000"
 
 Private Type Properties
   
-  Keys                            As Lyst
-  Items                           As Lyst
-  AutoKey                         As IAutoKey
-  Separator                       As String
+  Keys                                  As Lyst
+  Items                                 As Lyst
+  AutoKey                               As IAutoKey
+  Separator                             As String
   
 End Type
 
-Private p                         As Properties
+Private p                               As Properties
 
 
 Private Type State
   
-    FirstUse                        As Boolean
+    FirstUse                            As Boolean
     
 End Type
 
-Private s                           As State
+Private s                               As State
 
 
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
@@ -103,18 +82,8 @@ Private s                           As State
 '
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 Private Sub Class_Initialize()
-
-        'Guard InvalidNew, Types.IsNotSameInstance(Me, Kvp), r.Location & "Class_Initialize"
-    
-  With r
-    
-    .DefaultSeparator = Char.twComma
-    '.CountIsInvalid = -1
-    '.FlagAddItems = -1
-      
-  End With
-    
-    
+    Set p.Keys = Lyst.Deb
+    Set p.Items = Lyst.Deb
 End Sub
 
 '@Description("Returns a new instnce of a Kvp Class")
@@ -144,14 +113,8 @@ End Function
 
 Public Function ReadyToUseInstance() As Kvp
 
-    'Guard UsePredeclaredIdInstance, Types.IsNotSameInstance(Me, Kvp), i.Location & "Deb"
-    
-    
-    Set p.Keys = Lyst.Deb
-    Set p.Items = Lyst.Deb
-    Set p.AutoKey = AutoKeyByNumber.Deb
-    p.Separator = r.DefaultSeparator
-    's.FirstUse = True
+    Set p.AutoKey = Nothing
+    s.FirstUse = True
 
     Set ReadyToUseInstance = Me
         
@@ -160,14 +123,36 @@ End Function
 
 Public Function ReadyToUseClone(ByVal ipKvp As Kvp) As Kvp
     
-    Set p.Keys = ipKvp.GetKeys.Clone
+    Set p.Keys = ipKvp.KeysRef.Clone
     Set p.Items = ipKvp.ItemsRef.Clone
-    Set p.AutoKey = ipKvp.AutoKey
+    If Types.IsNotNothing(p.AutoKey) Then
+        Set p.AutoKey = ipKvp.AutoKey.Clone
+    Else
+        Set p.AutoKey = Nothing
+    End If
     p.Separator = ipKvp.Separator
-    's.FirstUse = IIf(ipKvp.AutoKey Is Nothing, True, False)
+    s.FirstUse = ipKvp.FirstUse
     Set ReadyToUseClone = Me
 
 End Function
+
+
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
+'
+' class friend members
+'
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
+
+' Used internally when inputting.
+Friend Property Get FirstUse() As Boolean
+    FirstUse = s.FirstUse
+End Property
+
+' Used when cloning the kvp.
+Friend Property Let FirstUse(ByVal ipBoolean As Boolean)
+    s.FirstUse = ipBoolean
+End Property
+
 
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 '
@@ -205,10 +190,14 @@ End Function
 ' More than 2 items                     Lyst(AutoKeys), ParamArray
 '
 '
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
+' Add and Insert methods have a lot of commonality in the preprocessing of the input param array.
+' To simplify coding such preprocessing is consolidated into the InputItems method
+
 '@Description("Adds items in the ParamArray, returns the updated kvp. If ParamArray is 1 or 2 items the items are parsed as potential key/value pairs.")
 Public Function Add(ParamArray ipArgArray() As Variant) As Kvp
 Attribute Add.VB_Description = "Adds items in the ParamArray, returns the updated kvp. If ParamArray is 1 or 2 items the items are parsed as potential key/value pairs."
-    InputItems KvpAdmin.inputisadd, ipArgArray
+    InputItems KvpInput.IsAdd, ipArgArray
     Set Add = Me
 End Function
 
@@ -216,14 +205,15 @@ End Function
 '@Description("Sugar for Add")
 Public Function Enqueue(ParamArray ipArgArray() As Variant) As Kvp
 Attribute Enqueue.VB_Description = "Sugar for Add"
-    InputItems KvpAdmin.inputisadd, ipArgArray
+    InputItems KvpInput.IsAdd, ipArgArray
     Set Enqueue = Me
 End Function
 
 
+
 '@Description("Returns the updated Kvp. All Items are inserted Before the specified Index. Order of the ParamArray is preserved.)
 Public Function InsertAt(ByVal ipInsertIndex As Long, ParamArray ipArgArray() As Variant) As Kvp
-    InputItems KvpAdmin.InputIsInsert, ipArgArray, ipInsertIndex
+    InputItems KvpInput.IsInsert, ipArgArray, ipInsertIndex
     Set InsertAt = Me
 End Function
 
@@ -239,11 +229,11 @@ Attribute InsertAfterKey.VB_Description = "Returns the updated Kvp.  All Items a
     
     If myIndex = p.Keys.LastIndex Then
         
-        InputItems KvpAdmin.inputisadd, ipArgArray
+        InputItems KvpInput.IsAdd, ipArgArray
         
     Else
     
-        InputItems KvpAdmin.InputIsInsert, ipArgArray, myIndex
+        InputItems KvpInput.IsInsert, ipArgArray, myIndex
         
     End If
     
@@ -259,7 +249,7 @@ Attribute InsertBeforeKey.VB_Description = "Returns the Modified Kvp.  All Items
     Dim myIndex As Long
     myIndex = p.Keys.IndexOf(ipKey)
     
-    InputItems KvpAdmin.InputIsInsert, ipArgArray, myIndex
+    InputItems KvpInput.IsInsert, ipArgArray, myIndex
         
     Set InsertBeforeKey = Me
 End Function
@@ -270,7 +260,7 @@ Private Function InsertByKey(ByVal ipArgArray As Variant, ByRef ipKey As Variant
     Set InsertByKey = Me
     Globals.Res.SetNotOkay
     
-    If BailOut.When(Arrays.IsNotValid(ipArgArray), Msg.ParamArrayIsEmpty) Then Exit Function
+    If BailOut.When(Arrays.IsNotValid(ipArgArray), Msg.ParamArrayIsNotValid) Then Exit Function
         
         
     If VBA.IsEmpty(ipKey) Then Exit Function
@@ -293,7 +283,7 @@ End Function
 '@Description("Returns the the modified Kvp. Items are added at LastIndex. The order in ParamArray is preserved")
 Public Function Push(ParamArray ipArgArray() As Variant) As Kvp
 Attribute Push.VB_Description = "Returns the the modified Kvp. Items are added at LastIndex. The order in ParamArray is preserved"
-    InputItems KvpAdmin.inputisadd, ipArgArray
+    InputItems KvpInput.IsAdd, ipArgArray
     Set Push = Me
 End Function
 '#End Region
@@ -372,6 +362,7 @@ Attribute Pop.VB_Description = "Items are popped from Last index of the host.  R
 '
 '    End If
 '
+    '@Ignore EmptyIfBlock
     If ipCount > p.Keys.Count Then
 ''
 ''        Reverse
@@ -488,10 +479,13 @@ Attribute Dequeue.VB_Description = "Returns a Kvp removed items.  Items are remo
     
     Dim myIndex As Long
     For myIndex = 1 To ipCount
+
+        myKvp.Add p.Keys.Dequeue.First, p.Items.Dequeue.First
         
-        myKvp.Add p.Keys.Dequeue.Item(0), p.Items.Dequeue.Item(0)
         
     Next
+    
+    Set Dequeue = myKvp
     
 End Function
 
@@ -530,13 +524,13 @@ Attribute Pull.VB_Description = "Returns a KVPair of the Key and Item from the s
         myIndex = p.Keys.IndexOf(ipKey)
         
     End If
-    
 
     Set Pull = KVPair.Deb(ipKey, p.Items.Item(myIndex))
     p.Keys.RemoveAt myIndex
     p.Items.RemoveAt myIndex
 
 End Function
+
 
 '@Description("Returns a KVPair of the Key and Item from the specified index. Deletes the Key and Item from the host Kvp")
 Public Function PullAt(ByVal ipIndex As Long) As KVPair
@@ -556,6 +550,7 @@ Attribute PullAt.VB_Description = "Returns a KVPair of the Key and Item from the
 
 End Function
 
+
 '@Description("Returns a KVPair of the Key and Item at Index 0. Deletes the Key and Item from the host Kvp")
 Public Function PullFirst() As KVPair
 Attribute PullFirst.VB_Description = "Returns a KVPair of the Key and Item at Index 0. Deletes the Key and Item from the host Kvp"
@@ -563,6 +558,7 @@ Attribute PullFirst.VB_Description = "Returns a KVPair of the Key and Item at In
     Set PullFirst = PullAt(FirstIndex)
     
 End Function
+
 
 '@Description("Returns a KVPair of the Key and Item at Last Index. Deletes the Key and Item from the host Kvp")
 Public Function PullLast() As KVPair
@@ -646,7 +642,6 @@ End Function
 
 Public Function RemoveAt(ByVal ipIndex As Long) As Kvp
     
-    
     p.Items.RemoveAt ipIndex
     p.Keys.RemoveAt ipIndex
     
@@ -661,6 +656,7 @@ Attribute RemoveFirst.VB_Description = "Returns the modified host Kvp after remo
     Set RemoveFirst = RemoveAt(FirstIndex)
 End Function
 
+
 '@Description("Returns the modified host Kvp after removing the Key and Item at LastIndex")
 Public Function RemoveLast() As Kvp
 Attribute RemoveLast.VB_Description = "Returns the modified host Kvp after removing the Key and Item at LastIndex"
@@ -669,13 +665,15 @@ End Function
 
 '#End Region
 
+
 Public Function Clear() As Kvp
     p.Keys.Clear
     p.Items.Clear
-    p.AutoKey.CurrentKey = Empty
+    p.AutoKey.SetCurrentKey Empty
     Set Clear = Me
     
 End Function
+
 
 ' The Kvp (and Lyst) classes use 1 based indexing
 ' To differentiate between a count of items and an object having no items
@@ -690,16 +688,37 @@ Attribute Count.VB_Description = "Returns the number of key/item pairs in the Kv
 End Function
 
 
+    
+'@Description "Returns the number of Items in the Lyst instance equal to ipValue)"
+Public Function CountIt(ByRef ipComparer As IComparer) As Long
+Attribute CountIt.VB_Description = "Returns the number of Items in the Lyst instance equal to ipValue)"
+  
+    Dim myCounter As Long
+    myCounter = 0
+    Dim myItem As Variant
+    For Each myItem In p.Items
+
+        If ipComparer.ExecCmp(myItem) Then myCounter = myCounter + 1
+        
+            
+    Next
+
+    CountIt = myCounter
+  
+End Function
+
+
 '@Description("Returns a copy of the Kvp. If Items are objects then a shallow copy is made unless the object supports a clone Method.")
 Public Function Clone() As Kvp
 Attribute Clone.VB_Description = "Returns a copy of the Kvp. If Items are objects then a shallow copy is made unless the object supports a clone Method."
     
-    Set Clone = Me.Deb(Me)
+    Set Clone = Kvp.Deb(Me)
     
 End Function
 
+
 '@Description("Decrements the Items  at the given Keys by the specified amount if the Items are Numbers")
-Public Function Dec(Optional ByVal ipKeys As Variant = Empty, Optional ByVal ipDecrement As Variant = Constant.DefaultDec) As Kvp
+Public Function Dec(Optional ByVal ipKeys As Variant = Empty, Optional ByVal ipDecrement As Variant = Preset.DefaultDec) As Kvp
 Attribute Dec.VB_Description = "Decrements the Items  at the given Keys by the specified amount if the Items are Numbers"
 
     Globals.Res.Init (Msg.Okay)
@@ -712,17 +731,20 @@ Attribute Dec.VB_Description = "Decrements the Items  at the given Keys by the s
     
 End Function
 
+
 '@Description("Decrements the Items at the given indexes by the specified amount if the Items are Numbers")
 Public Function DecAt(ByVal ipIndexes As Variant, Optional ByVal ipDecrement As Single) As Kvp
 Attribute DecAt.VB_Description = "Decrements the Items at the given indexes by the specified amount if the Items are Numbers"
-    If ipDecrement = 0 Then ipDecrement = r.DefaultAdjustAmount
+    If ipDecrement = 0 Then ipDecrement = Defaultadjustamount
     AdjustByIndex ipIndexes, -ipDecrement
     Set DecAt = Me
 End Function
 
+
 Public Function FirstIndex() As Long
     FirstIndex = 1
 End Function
+
 
 '@Description("Returns a Kvp comprised of Key/Item pairs where the Key appears in both the Host Kvp and the input parameter")
 Public Function FilterByKeys(ByVal ipKeysIterable As Variant) As Kvp
@@ -760,9 +782,10 @@ Attribute FilterByKeys.VB_Description = "Returns a Kvp comprised of Key/Item pai
     
 End Function
 
-'@Description("Returns a KVPair of the Key and Item at Index 0")
+
+'@Description("Returns a KVPair of the Key and Item at FirstIndex")
 Public Function GetFirst() As KVPair
-Attribute GetFirst.VB_Description = "Returns a KVPair of the Key and Item at Index 0"
+Attribute GetFirst.VB_Description = "Returns a KVPair of the Key and Item at FirstIndex"
     
     If p.Keys.Count = 0 Then
         
@@ -770,11 +793,12 @@ Attribute GetFirst.VB_Description = "Returns a KVPair of the Key and Item at Ind
         
     Else
         
-        Set GetFirst = KVPair.Deb(p.Keys.Item(0), p.Items.Item(0))
+        Set GetFirst = KVPair.Deb(p.Keys.Item(1), p.Items.Item(1))
         
     End If
     
 End Function
+
 
 '@Description("Returns a Kvp of Key vs Index at which the key is found")
 Public Function GetKeysWithValue(ByVal ipValue As Variant, Optional ByVal ipIndexer As KvpAdmin = KvpAdmin.SelectByIndex) As Kvp
@@ -813,9 +837,9 @@ Attribute GetKeysWithValue.VB_Description = "Returns a Kvp of Key vs Index at wh
     
 End Function
 
-'@Description("Returns the zero based index of the Key")
+'@Description("Returns the 1 based index of the Key")
 Public Function GetIndexOfKey(ByVal ipKey As Variant) As Long
-Attribute GetIndexOfKey.VB_Description = "Returns the zero based index of the Key"
+Attribute GetIndexOfKey.VB_Description = "Returns the 1 based index of the Key"
 
     If Types.IsEmpty(ipKey) Then
     
@@ -837,21 +861,21 @@ Attribute GetIndexOfValue.VB_Description = "Returns a kvp of Index vs Key"
     Set GetIndexOfValue = Me.MirrorByValue(ipOrganiseby).Item(ipValue)
 End Function
 
-'@Description("Returns a shallow copy of the Keys")
-Public Function GetKeys() As Lyst
-Attribute GetKeys.VB_Description = "Returns a shallow copy of the Keys"
+' '@Description("Returns a shallow copy of the Keys")
+' Public Function GetKeys() As Lyst
+' Attribute GetKeys.VB_Description = "Returns a shallow copy of the Keys"
     
-    If p.Keys Is Nothing Then
+'     If p.Keys Is Nothing Then
     
-        Set GetKeys = Lyst.Deb
+'         Set GetKeys = Lyst.Deb
         
-    Else
+'     Else
     
-        Set GetKeys = p.Keys
+'         Set GetKeys = p.Keys
         
-    End If
+'     End If
     
-End Function
+' End Function
 
 '@Description("Returns a KVPair of the Key and Item at LastIndex")
 Public Function GetLast() As KVPair
@@ -859,109 +883,30 @@ Attribute GetLast.VB_Description = "Returns a KVPair of the Key and Item at Last
     Set GetLast = KVPair.Deb(p.Keys.Item(Me.LastIndex), p.Items.Item(Me.LastIndex))
 End Function
 
-'@Description("Returns a Lyst of the specified Items. An empty Paramarray will return all Iems. If the item is an object the Clone methos will be used if available. ")
-' Public Function GetItems(ParamArray ipKeys() As Variant) As Lyst
 
-'     Dim myLyst As Lyst
-'     Set myLyst = Lyst.Deb
-'     Set GetItems = myLyst
-'     Dim myKeys As Variant
-    
-'     Select Case True
-        
-'         ' In the case of an empty paramarray we return all items
-'         Case Arrays.HasNoItems(ipKeys)
-
-'             Set myKeys = p.Keys
-            
-    
-'         Case Arrays.IsNotSingleItem(ipKeys)
-        
-'             myKeys = ipKeys
-        
-'         ' From here onwards we have a single item paramarray
-'         Case Types.Group.IsNotIterable(ipKeys(0))
-            
-'             myKeys = Array(ipKeys(0))
-            
-'         ' If the single item is an array, only accept a ListArray
-'         Case VBA.IsArray(ipKeys(0))
-                
-'             Guard Id.IsNotAListArray, Arrays.IsNotListArray(ipKeys(0)), r.Location & "GetItems"
-'             myKeys = ipKeys(0)
-            
-        
-'         Case Types.Group.IsIterableItemsByEnum(ipKeys(0))
-            
-'                 Set myKeys = ipKeys(0)
-                
-                
-'         Case Types.Group.IsIterableKeysByEnum(ipKeys(0))
-            
-'             Set myKeys = ipKeys(0).Keys
-            
-            
-'         Case Else
-        
-'             Guard _
-'                 Id.InvalidKey, _
-'                 True, _
-'                 r.Location & "Items", _
-'                 ipAltMessage:=Fmt.Txt("The Key '{0}' is unexpected", TypeName(ipKeys(0)))
-            
-'     End Select
-    
-'     ' if items have a clone method then we call the clone method
-    
-'     Dim myKey As Variant
-'     For Each myKey In myKeys
-        
-'         If Types.HasCloneMethod(myKey) Then
-            
-'             myLyst.Add Me.Item(myKey).Clone
-            
-'         Else
-            
-'             myLyst.Add Me.Item(myKey)
-            
-'         End If
-        
-'     Next
-    
-' End Function
-
-
-
-' <summary> NextPair/PrevPair get the indicated KVPair from the Host
-' Dictionary. These methods are not intended to be used as iterators
-' but as ad hoc requests for the next/prev KVPair in the Kvp. If the
-' supplied key is the last/first key in the Dictionary then ipLoop
-' will determine if the KVPair returned will be null:null (ipLoop =
-' false) or the first/last KVPair in the Dictionary (ipLoop=True)
-' </summary> <paramname="ipKey">The Key for which the next/prev
-' KVPair should be returned. <paramname="ipLoop">Wraps around the
-' Dictionary if True </param> <returns>The Indicated KVPair</returns></param>
 Public Function NextPair(ByVal ipKey As Variant, Optional ByVal ipTreatKeysArrayAsLoop As Boolean = True) As KVPair
-Attribute NextPair.VB_Description = "Returns a Lyst of the specified Items. An empty Paramarray will return all Iems. If the item is an object the Clone methos will be used if available. "
 
     Dim myIndex As Long
     myIndex = p.Keys.IndexOf(ipKey) + 1
 
-    If myIndex >= p.Keys.Count Then
+    If myIndex > p.Keys.LastIndex Then
     
         If ipTreatKeysArrayAsLoop Then
         
-            Set NextPair = KVPair.Deb(p.Keys.Item(0), p.Items.Item(0))
+            Set NextPair = GetFirst
+            
             
         Else
         
             Set NextPair = Nothing
+            
             
         End If
         
     Else
     
         Set NextPair = KVPair.Deb(p.Keys.Item(myIndex), p.Items.Item(myIndex))
+        
         
     End If
     
@@ -1000,15 +945,15 @@ Attribute HoldsKey.VB_Description = "Returns True if the value is a Key of the K
 End Function
 
 '@Description("Returns True if the value is an Item of the Kvp")
-Public Function HoldsValue(ByVal ipValue As Variant) As Boolean
-Attribute HoldsValue.VB_Description = "Returns True if the value is an Item of the Kvp"
-    HoldsValue = p.Items.HoldsItem(ipValue)
+Public Function HoldsItem(ByVal ipValue As Variant) As Boolean
+Attribute HoldsItem.VB_Description = "Returns True if the value is an Item of the Kvp"
+    HoldsItem = p.Items.HoldsItem(ipValue)
 End Function
 
 '@Description("Increments the Items  at the given Keys by the specified amount if the Items are Numbers")
 Public Function Inc(Optional ByVal ipKeys As Variant = Empty, Optional ByVal ipIncrement As Double) As Kvp
 Attribute Inc.VB_Description = "Increments the Items  at the given Keys by the specified amount if the Items are Numbers"
-    If ipIncrement = 0 Then ipIncrement = r.DefaultAdjustAmount
+    If ipIncrement = 0 Then ipIncrement = Defaultadjustamount
     
     AdjustbyKey ipKeys, ipIncrement
     Set Inc = Me
@@ -1016,7 +961,7 @@ End Function
 
 
 Public Function IncAt(Optional ByVal ipIndexes As Variant = Empty, Optional ByVal ipIncrement As Double) As Kvp
-    If ipIncrement = 0 Then ipIncrement = r.DefaultAdjustAmount
+    If ipIncrement = 0 Then ipIncrement = Defaultadjustamount
    
     AdjustByIndex ipIndexes, ipIncrement
     Set IncAt = Me
@@ -1025,7 +970,21 @@ End Function
 '@Description("True if Count = 0, added to match terminology in Lyst and Group Iterable/Arrays")
 Public Function HasNoItems() As Boolean
 Attribute HasNoItems.VB_Description = "True if Count = 0, added to match terminology in Lyst and Group Iterable/Arrays"
-    HasNoItems = p.Keys.Count = 0
+
+    If p.Keys Is Nothing Then
+        
+        HasNoItems = True
+        
+    ElseIf p.Keys.Count = 0 Then
+    
+        HasNoItems = True
+        
+    Else
+        
+        HasNoItems = False
+        
+    End If
+    
 End Function
 
 
@@ -1038,7 +997,7 @@ End Function
 '@Description("Returns true if the items values onlu occur once")
 Public Function IsUnique() As Boolean
 Attribute IsUnique.VB_Description = "Returns true if the items values onlu occur once"
-    IsUnique = Me.MirrorFirstValues.Item(1&).Count = 0
+    IsUnique = Me.MirrorFirstValues.Item(2&).Count = 0
 End Function
 
 '@Description("Returns True is Item values occur more than once")
@@ -1139,11 +1098,9 @@ End Function
 Public Function Keys() As Variant
 Attribute Keys.VB_Description = "Returns a variant containing an array of the keys. For alignment with Scripting.Dictionaries. See Method KeysRef for a reference to the Keys lyst"
 
-    Keys = p.Keys.ToArray               'this works fine
-    'Return p.Keys.ToArray              'this works fine
-   ' Return (p.Keys.ToArray)            'this works fine
-    
-End Function 'fails at this step on second iteration
+    Keys = p.Keys.ToArray
+  
+End Function
 
 '@Description("Returns a reference to the Host Keys")
 Public Function KeysRef() As Lyst
@@ -1179,7 +1136,7 @@ Public Function KeysInBOnly(ByVal ipB As Variant) As Kvp
     Set myResult = Me.Deb
 
     Dim myKey As Variant
-    For Each myKey In ipB.GetKeys
+    For Each myKey In ipB.Keys
 
         If Me.LacksKey(myKey) Then
         
@@ -1201,7 +1158,7 @@ Public Function KeysAllAandOnlyB(ByVal ipB As Variant) As Kvp
     
     Dim myResultB As Kvp
     Set myResultB = Me.KeysInBOnly(ipB)
-    myResult.Add myResultB.GetKeys, myResultB.ItemsRef
+    myResult.Add myResultB.KeysRef, myResultB.ItemsRef
     
     Set KeysAllAandOnlyB = myResult
     
@@ -1284,8 +1241,8 @@ Public Function LacksKey(ByVal ipKey As Variant) As Boolean
 End Function
 
 
-Public Function LacksValue(ByVal ipValue As Variant) As Boolean
-    LacksValue = Not HoldsValue(ipValue)
+Public Function LacksItem(ByVal ipValue As Variant) As Boolean
+    LacksItem = Not HoldsItem(ipValue)
 End Function
 
 
@@ -1362,15 +1319,26 @@ Public Function MirrorFirstValues(Optional ByVal ipOrganiseby As KvpAdmin = KvpA
     Set myDupValues = Me.Deb
 
     Dim myIndex As Long
-    For myIndex = 0 To p.Keys.Count - 1
+    For myIndex = p.Keys.FirstIndex To p.Keys.LastIndex
     
         If myFirstValues.LacksKey(p.Items.Item(myIndex)) Then
-        
-            myFirstValues.Add p.Keys.Item(myIndex), p.Items.Item(myIndex)
             
+            If ipOrganiseby = KvpAdmin.SelectByIndex Then
+                
+                myFirstValues.Add p.Items.Item(myIndex), p.Keys.Item(myIndex)
+                
+                
+            Else
+                
+                myFirstValues.Add p.Keys.Item(myIndex), p.Items.Item(myIndex)
+
+
+            End If
+        
         Else
         
             myDupValues.Add p.Items.Item(myIndex), p.Keys.Item(myIndex)
+
             
         End If
         
@@ -1380,21 +1348,32 @@ Public Function MirrorFirstValues(Optional ByVal ipOrganiseby As KvpAdmin = KvpA
     
 End Function
 
+' '@Enumerator
+' Friend Function NewEnum() As Variant
+'     Attribute NewEnum.VB_UserMemId = -4
+'     Dim KeysEnumerator As IUnknown
+'     Set KeysEnumerator = p.Keys.Host.GetEnumerator(0, p.Keys.Count - 1)
+    
+'     Dim ItemsENumerator as IUNknown
+'     Set ItemsEnumerator = p.Items.Host.GetEnumerator(0, p.Items.Count - 1)
+    
+'     Set NewEnum = cvar(kvpair.deb(cvar(KeysEnumerator),cvar(Itemsenumerator)))
+    
+' End Function
 
 '@Enumerator
-'@Ignore EmptyMethod
-Public Function NewEnum() As IUnknown
-Attribute NewEnum.VB_UserMemId = -4
+Friend Function NewEnum() As IUnknown
     Dim enumerator As IUnknown
     '@Ignore DefaultMemberRequired
-    Set enumerator = p.Keys.Host.GetEnumerator(0, p.Keys.Count - 1)
+    Set enumerator = p.Keys.Host.GetEnumerator(0, p.Keys.Count)
     Set NewEnum = enumerator
     
 End Function
 
-Public Function GetEnumerator() As Variant
+Friend Function GetEnumerator() As Variant
     GetEnumerator = p.Keys.GetEnumerator
 End Function
+
 'Public Function MissingKeys(ByVal ipKeysIterable As Variant) As Kvp
 '
 '    Dim myKeysList As ArrayList
@@ -1431,80 +1410,68 @@ End Function
 'End Function
 
 '@Description("Returns the string 'Kvp'")
-Public Function Name() As String
+Public Property Get Name() As String
 Attribute Name.VB_Description = "Returns the string 'Kvp'"
-    Name = TypeName(Me)
-End Function
+    Name = "Kvp"
+End Property
 
 '@Description("Returns a Kvp of maximum and minimum values.  Keys are the max and min value, associated with the keys is a Kvp of Index vs Key for each value corresponding to the parent key.")
 Public Function NumMaxMin() As Kvp
 Attribute NumMaxMin.VB_Description = "Returns a Kvp of maximum and minimum values.  Keys are the max and min value, associated with the keys is a Kvp of Index vs Key for each value corresponding to the parent key."
     
+    Globals.Res.SetNotOkay
+    Set NumMaxMin = Nothing
     If BailOut.When(Types.Group.IsNotNumber(p.Items.First), Msg.IsNotNumber) Then Exit Function
-    
-    Dim myResult As Kvp
-    Set myResult = Kvp.Deb
-    
+        
     Dim myValues As Lyst
     Set myValues = p.Items.Clone
     myValues.Sort
     
-    'Item 0 of the KVp is the minimum values
-    Const maMin As Long = 0
-    myResult.Add maMin, Me.Deb
+    Dim myMinItem As Variant
+    myMinItem = myValues.First
     
-    'Item 1 of the Kvp is the maximum values
-    Const maMax As Long = 1
-    myResult.Add maMax, Me.Deb
+    Dim mymaxitem As Variant
+    mymaxitem = myValues.Last
+    
+    Dim myMinKvp As Kvp
+    Set myMinKvp = Kvp.Deb
+    
+    Dim myMaxKvp As Kvp
+    Set myMaxKvp = Kvp.Deb
 
     ' A maximum or minimum value may occur more than once
     ' so we populate the max and min kvp  with the key vs value
     ' of each found max or min value
     
-    Dim myLbound As Long
-    myLbound = 0
+    ' Dim myFirstIndex As Long
+    ' myFirstIndex myValues
     
-    Dim myUBound As Long
-    myUBound = Me.LastIndex
+    ' Dim myUBound As Long
+    ' myUBound = Me.LastIndex
     
-    Dim myIndex As Long
-    For myIndex = myLbound To myUBound
+    Dim myIndex As Variant
+    For myIndex = p.Items.FirstIndex To p.Items.LastIndex
 
-        Select Case p.Items.Item(myIndex)
+        If p.Items.Item(myIndex) = myMinItem Then
+                
+            myMinKvp.Add p.Keys.Item(myIndex), p.Items.Item(myIndex)
+
+
+        ElseIf p.Items.Item(myIndex) = mymaxitem Then
         
-            Case myValues.Item(myLbound)
-                
-                myResult.Item(maMin).Add p.Items.Item(myIndex), p.Keys.Item(myIndex)
-                
-        
-            Case myValues.Item(myUBound)
-                
-                myResult.Item(maMax).Add p.Items.Item(myIndex), p.Keys.Item(myIndex)
-                
-        End Select
+            myMaxKvp.Add p.Keys.Item(myIndex), p.Items.Item(myIndex)
+
+
+        End If
         
     Next
 
-    Set NumMaxMin = myResult
-    
-    
+    Set NumMaxMin = Kvp.Deb.Add(myMinItem, myMinKvp).Add(mymaxitem, myMaxKvp)
     
 End Function
 
 
-'Public Function PushAt(ByVal ipIndex As Long, ByVal ipValue As Variant, Optional ByVal ipKey As Variant = Empty)
-'
-'
-'End Function
-'
-'public function PushByKey( byval ipKey as Variant, byval ipValue)
-
-'@Description("Sugar for InsertFirst")
-
-
-
 Public Function Reverse() As Kvp
-Attribute Reverse.VB_Description = "Sugar for InsertFirst"
 
     p.Keys.Reverse
     p.Items.Reverse
@@ -1522,78 +1489,80 @@ Public Property Let Separator(ByVal ipSeparator As String)
     p.Separator = ipSeparator
 End Property
 
-
-Public Function SetAutoKeyToAutoKeyByNumber(Optional ByVal ipFirstKey As Variant = 0&) As Kvp
-
-    'Guard AutoKeyResetNotAllowed, Not s.FirstUse, r.Location & "SetAutoKeyByNumber"
-    'Guard IsNotNumber, Types.Group.IsNotNumber(ipFirstKey), r.Location & "SetAutoKeyByNumvber"
+Friend Sub SetAutoKey(Optional ByVal ipFirstKey As Variant)
     
-    
-    Set p.AutoKey = AutoKeyByNumber.Deb(ipFirstKey)
-    s.FirstUse = False
-    Set SetAutoKeyToAutoKeyByNumber = Me
-    
-End Function
-
-
-Public Function SetAutoKeyToAutoKeyByString _
-( _
-    Optional ByVal ipFirstKey As String, _
-    Optional ByVal ipCharSequence As String _
-) As Kvp
-    
-    'Guard AutoKeyResetNotAllowed, Not s.FirstUse, r.Location & "SetAutoKeyByString"
-    'Guard IsNotString, Types.IsNotString(ipFirstKey), r.Location & "SetAutoKeyByString"
+    If BailOut.When(Types.IsNotNothing(p.AutoKey)) Then Exit Sub
         
-    Set p.AutoKey = AutoKeyByString.Deb(ipFirstKey, ipCharSequence)
-    s.FirstUse = False
-    Set SetAutoKeyToAutoKeyByString = Me
-    
-End Function
-
-
-Public Function SetAutoKeyToAutoKeyByIndex(ByVal ipKeysIterable As Variant, Optional ByVal ipStartIndex As Variant) As Kvp
-    
-    Set SetAutoKeyToAutoKeyByIndex = Me
-    
-    If BailOut.When(Not s.FirstUse, Msg.AutoKeyResetNotAllowed) Then Exit Function
-    If BailOut.When(Types.Group.IsNotIterable(ipKeysIterable), Msg.IsNotIterable) Then Exit Function
-    If BailOut.When(Types.Iterable.HasNoItems(ipKeysIterable), HasNoItems) Then Exit Function
-
-
-    Dim myLyst As Lyst
-    Set myLyst = Types.Iterable.ToLyst(ipKeysIterable)
-    
-    'Dim myResult As Result
-    'Guard GuardClause.IndexLessThanFirstIndex, VBA.IsEmpty(Types.Iterable.TryExtent(ipKeysIterable, myResult).Item(Extent.IsFirstIndex)), myPlace
-    Dim myKeysFirstIndex As Long
-    If Types.Iterable.TryExtent(ipKeysIterable).IsNotOkay Then Exit Function
-    myKeysFirstIndex = Globals.Res.Item(ResultItemsEnums.ItemExtent(ieFirstIndex))
-    ' Normalise ipStartIndex for use when ipKeysIterable is converted to an ArrayList
-    ' An arraylist is required to get access to the 'IndexOf' method
-    ' ipStartIndex is the first index to use with ipKeysIterable and is not necessarily
-    ' the first item in the iterable
-    
-    Dim myStartIndex As Long
     Select Case True
-            
-        Case Types.Group.IsNotNumber(ipStartIndex)
         
-            ' case where a value has been provided rather than an index
-            ' only valid for when ipFirstIndex is not a number
+        Case VBA.IsMissing(ipFirstKey)
+        
+            SetKeysToNumber DefaultFirstNumberKey
             
-            myStartIndex = myLyst.IndexOf(ipStartIndex) - myKeysFirstIndex + 1
+        
+        Case VBA.IsEmpty(ipFirstKey)
+
+            SetKeysToNumber DefaultFirstNumberKey
+                
+        
+        Case Types.Group.IsNumber(ipFirstKey)
+        
+            SetKeysToNumber ipFirstKey
+            
+        
+        Case Types.IsString(ipFirstKey)
+        
+            SetKeysToString ipFirstKey
+            
             
         Case Else
         
-            myStartIndex = ipStartIndex - myKeysFirstIndex ' + 1
+            Globals.Res.SetNotOkay
         
     End Select
     
-    Set p.AutoKey = AutoKeyByIndex.Deb(myLyst, myStartIndex)
+    Globals.Res.SetOkay
     s.FirstUse = False
-    Set SetAutoKeyToAutoKeyByIndex = Me
+    
+End Sub
+
+
+Public Function SetKeysToNumber(Optional ByVal ipFirstKey As Variant = DefaultFirstNumberKey) As Kvp
+    
+    Set p.AutoKey = Nothing
+    If BailOut.When(Types.Group.IsNotNumber(ipFirstKey)) Then Exit Function
         
+    Set p.AutoKey = AutoKeyByNumber.Deb(ipFirstKey)
+    s.FirstUse = True
+    Set SetKeysToNumber = Me
+    
+End Function
+
+
+Public Function SetKeysToString(Optional ByVal ipFirstUseKey As String = DefaultFirstStringKey, Optional ByVal ipAllowedKeyChars As String) As Kvp
+  
+    Set p.AutoKey = Nothing
+    If BailOut.When(Types.IsNotString(ipFirstUseKey), Msg.IsNotString) Then Exit Function
+    
+    Set p.AutoKey = AutoKeyByString.Deb(ipFirstUseKey, ipAllowedKeyChars)
+    If Globals.Res.IsNotOkay Then Exit Function
+        
+    s.FirstUse = True
+    Set SetKeysToString = Me
+    
+End Function
+
+
+Public Function SetKeysToIterable(ByVal ipKeysIterable As Variant, Optional ByVal ipFirstUseIndex As Variant) As Kvp
+    
+    Set p.AutoKey = Nothing
+    If BailOut.When(Types.Group.IsNotIterable(ipKeysIterable), Msg.IsNotIterable) Then Exit Function
+    
+    Set p.AutoKey = AutoKeyByIndex.Deb(Types.Iterable.ToLyst(ipKeysIterable), ipFirstUseIndex)
+    If Globals.Res.IsNotOkay Then Exit Function
+        
+    s.FirstUse = True
+    Set SetKeysToIterable = Me
         
 End Function
 
@@ -1642,22 +1611,32 @@ End Function
 ' from the last key used by the method
 
 'Description("Adds.Inserts the forwarded ParamArray based on the ParamArray having 1,2, or more tthan 2 items. If Input action is 0 the paramarray is added otherwise inserted ))")
-Friend Sub InputItems(ByVal ipInputType As Long, ByVal ipFPA As Variant, Optional ipIndex As Long = KvpAdmin.noindex)
-    'ipIFP is Forwarded ParamArray
-   ' do we need a first use test
-    If BailOut.When(VBA.Abs(ipIndex) > p.Keys.LastIndex + 1, Msg.IndexAfterLastIndex) Then Exit Sub
-    If BailOut.When((ipIndex = 0) And (ipInputType = InputIsInsert), Msg.IndexBeforeFirstIndex) Then Exit Sub
+Friend Sub InputItems(ByVal ipInputType As KvpInput, ByVal ipFPA As Variant, Optional ipIndex As Long = KvpAdmin.noindex)
+    'ipFPA  is Forwarded ParamArray
+   
+    If BailOut.When(p.Keys.HasItems And (VBA.Abs(ipIndex) > p.Keys.LastIndex + 1), Msg.IndexAfterLastIndex) Then Exit Sub
+    If BailOut.When((ipIndex = 0) And (ipInputType = KvpInput.IsInsert), Msg.IndexBeforeFirstIndex) Then Exit Sub
         
-    
-        Select Case Arrays.Count(ipFPA)
-    
-            Case Is < 1: Globals.Res.SetNotOkay
-            Case 1: InputWhenFPAHasOneItem ipInputType, ipFPA(0), ipIndex
-            Case 2: InputWhenFPAHasTwoItems ipInputType, ipFPA(0), ipFPA(1), ipIndex
-            Case Is > 2: IputWhenFPAIsListOfItems ipInputType, ipFPA, ipIndex
-    
-        End Select
-'
+    Select Case Arrays.Count(ipFPA)
+
+        Case Is < 1
+            Globals.Res.SetNotOkay
+            
+            
+        Case 1
+            InputWhenFPAHasOneItem ipInputType, ipFPA(0), ipIndex
+            
+            
+        Case 2
+            InputWhenFPAHasTwoItems ipInputType, ipFPA(0), ipFPA(1), ipIndex
+            
+            
+        Case Is > 2
+            IputWhenFPAIsListOfItems ipInputType, ipFPA, ipIndex
+
+        
+    End Select
+
 End Sub
 
     
@@ -1668,24 +1647,26 @@ Friend Sub InputWhenFPAHasOneItem(ByVal ipInputAction As Long, ByVal ipItem As V
     Dim myParsed As ResultParsedVariant
     Set myParsed = Globals.Res.GetResultParsedVariant
     
-    Dim myKeys As Lyst
-    Set myKeys = p.AutoKey.GetKeySequence(myParsed.GetItems.Count)
+    If s.FirstUse Then SetAutoKey
         
-    If ipInputAction = KvpAdmin.inputisadd Then
+    Dim myKeys As Lyst
+    Set myKeys = p.AutoKey.NextKeys(myParsed.GetItems.Count)
+        
+    If ipInputAction = KvpInput.IsAdd Then
     
         p.Keys.Host.AddRange myKeys.ToArrayList
         p.Items.Host.AddRange myParsed.GetItems.ToArrayList
         
     Else
         
-        Dim mystartrun As ResultStartRun
+        Dim myStartRun As ResultStartRun
         ' remember that ipindex may be negative
        If Ranges.TryStartRunFromAnyStartRunEnd(p.Keys, ipIndex).IsNotOkay Then Exit Sub
         
         '@Ignore DefaultMemberRequired
-        Set mystartrun = Globals.Res.GetResultStartRun
-        p.Keys.InsertRange mystartrun.StartIndex, myKeys
-        p.Items.InsertRange mystartrun.StartIndex, myParsed.GetItems
+        Set myStartRun = Globals.Res.GetResultStartRun
+        p.Keys.InsertRange myStartRun.StartIndex, myKeys
+        p.Items.InsertRange myStartRun.StartIndex, myParsed.GetItems
         
     End If
         
@@ -1697,22 +1678,24 @@ Friend Sub InputWhenFPAHasTwoItems(ByVal ipInputAction As KvpAdmin, ByVal ipfirs
         
     Dim myParsed As ResultParsedVariant
     Set myParsed = Globals.Res.GetResultParsedVariant
-        
-    If ipInputAction = KvpAdmin.inputisadd Then
+    
+    If s.FirstUse Then SetAutoKey
+    
+    If ipInputAction = KvpInput.IsAdd Then
     
         p.Keys.AddRange myParsed.GetKeys
         p.Items.AddRange myParsed.GetItems
         
     Else
         
-        Dim mystartrun As ResultStartRun
+        Dim myStartRun As ResultStartRun
         ' remember that ipindex may be negative
         If Ranges.TryStartRunFromAnyStartRunEnd(p.Keys, ipIndex).IsNotOkay Then Exit Sub
         
         '@Ignore DefaultMemberRequired
-        Set mystartrun = Globals.Res.GetResultStartRun
-        p.Keys.InsertRange mystartrun.StartIndex, myParsed.GetKeys
-        p.Items.InsertRange mystartrun.StartIndex, myParsed.GetItems
+        Set myStartRun = Globals.Res.GetResultStartRun
+        p.Keys.InsertRange myStartRun.StartIndex, myParsed.GetKeys
+        p.Items.InsertRange myStartRun.StartIndex, myParsed.GetItems
         
     End If
     
@@ -1724,11 +1707,13 @@ Friend Sub IputWhenFPAIsListOfItems(ByVal ipInsertAt As Long, ByVal ipList As Va
     Dim myCount As Long
     myCount = Arrays.Count(ipList)
     If BailOut.When(VBA.Abs(ipInsertAt) > myCount, Msg.IndexAfterLastIndex) Then Exit Sub
+       
+    If s.FirstUse Then SetAutoKey
         
     Dim myKeys As Lyst
-    Set myKeys = p.AutoKey.GetKeySequence(myCount)
+    Set myKeys = p.AutoKey.NextKeys(myCount)
     
-    If ipInsertAt = KvpAdmin.inputisadd Then
+    If ipInsertAt = KvpInput.IsAdd Then
           
         p.Keys.AddRange myKeys
         p.Items.AddRange ipList
@@ -1747,107 +1732,8 @@ Friend Sub IputWhenFPAIsListOfItems(ByVal ipInsertAt As Long, ByVal ipList As Va
     
 End Sub
 
-' Friend Sub InputItemsTwoParams(ByVal ipParamOne As Variant, ByVal ipParamTwo As Variant, ByVal ipStartIndex As Long)
-
-' ' To add two iterables as objects, rather than as their component items,
-' ' combine the two iterables into an array so that the ParamArray
-' ' consists of a single argument which is processed by the else clause
-' ' in the Case 1 branch of pvAddorInsert
-'     Guard Id.InvalidType, Types.Group.IsAdmin(ipParamOne), r.Location & "pvAddOrInsertTwoParams", Array(TypeName(ipParamOne)), "Admin types cannot be keys '{0}'"
-    
-    
-'     Select Case True
-                
-'         Case Types.Group.IsPrimitive(ipParamOne) 'Imlemented
-    
-'             ' for two parameters when ipParamOne is a primitive
-'             ' a Key:Value pair is being presented
-'             InputItemsAsIterableIterable Array(ipParamOne), Array(ipParamTwo), ipStartIndex
-        
-            
-'         Case Arrays.IsTableArray(ipParamOne)
-            
-'             CaseTwoParamsAsTableArrayvsParamTwo ipParamOne, ipParamTwo, ipStartIndex
-        
-        
-'         Case Types.Group.IsIterableKeysByEnum(ipParamOne) ' Implemented
-        
-'             CaseTwoParamsAsIterableKeysByEnumvsParamTwo ipParamOne, ipParamTwo, ipStartIndex
-            
-        
-'         Case Types.Group.IsIterableItemsByEnum(ipParamOne) 'Implemented
-        
-'             CaseTwoParamsAsIterableItemsByEnumVsParamTwo ipParamOne, ipParamTwo, ipStartIndex
-    
-        
-'         Case Else
-        
-'             Guard Id.InvalidType, True, r.Location & "pvAddOrInsertTwoParams", TypeName(ipParamOne)
-
-        
-'     End Select
-
-' End Sub
-
-
-' '@Description("Adds the items of ipArgArray as individual items")
-'  Friend Sub InputItemsThreeOrMoreParams(ByVal ipArgArray As Variant, ByVal ipStartIndex As Long)
-    
-'     If s.FirstUse Then InjectAutoKey
-    
-'     InputItemsAsIterableIterable GetAutoKeySequence(UBound(ipArgArray) - LBound(ipArgArray) + 1), ipArgArray, ipStartIndex
-    
-' End Sub
-
-'@Description("Adds or Inserts the items and keys Lysts contained in Globals.Res")
-' Private Sub InputItemsInGlobalRes(ByVal ipInsertAtIndex As Long)
-' Attribute InputItemsInGlobalRes.VB_Description = "Adds or Inserts the items and keys Lysts contained in Globals.Res"
-
-'   '@Ignore DefaultMemberRequired
-'   Dim myParsedVariant As ResultParsedVariant
-'   Set myParsedVariant = Globals.Res.GetResultParsedVariant
-  
-'   Dim myKeys As Lyst
-'   If myParsedVariant.ResultItems.Count = 1 Then
-'     ' myParsedVariant only contains an items iterable
-'     ' so we need to generate a seuqence of keys from the autokey
-'     '@Ignore ValueRequired
-    
-'     Set myKeys = p.AutoKey.GetKeySequence(myParsedVariant.GetItems.Count)
-    
-'   Else
-    
-'     Set myKeys = Lyst.Deb.AddKnownIterableAsItems(myParsedVariant.GetKeys)
-    
-'   End If
-  
-'   Dim myItems As Lyst
-'   Set myItems = Lyst.Deb.AddKnownIterableAsItems(myParsedVariant.GetItems)
-  
-'   If ipInsertAtIndex = KvpAdmin.AddInput Then
-    
-'         '@Ignore DefaultMemberRequired
-'         p.Keys.Host.AddRange myKeys.ToArrayList
-'         p.Items.Host.AddRange myItems.ToArrayList
-        
-'     Else
-        
-'         Dim mystartrun As ResultStartRun
-'         ' remember that ipstartindexindex may be negative
-'         Ranges.TryStartRunFromAnyStartRunEnd p.Keys, ipInsertAtIndex
-'         '@Ignore DefaultMemberRequired
-'         Set mystartrun = Globals.Res.GetResultStartRun
-'         p.Keys.Host.InsertRange mystartrun.StartIndex - 1, myKeys.ToArrayList
-'         p.Items.Host.InsertRange mystartrun.StartIndex - 1, myItems.ToArrayList
-        
-'     End If
-    
-' End Sub
-
-
 
 Friend Sub AdjustAllItems(ByVal ipAdjustAmount As Variant)
-Attribute AdjustAllItems.VB_Description = "Adds or Inserts the items and keys Lysts contained in Globals.Res"
     
     With p.Items
     
@@ -1861,224 +1747,11 @@ Attribute AdjustAllItems.VB_Description = "Adds or Inserts the items and keys Ly
     End With
     
 End Sub
-' Private Sub pvCase2Arg0IsPrimitive(ByVal ipArgArray As Variant, ByVal ipIndex As Long)
 
-'     ' If two parameters and ipParamOne is a primitive we are adding
-'     ' a Key:Value pair
-    
-'     pvAddOrInsertIterableIterable Array(ipArgArray(0)), Array(ipArgArray(1)), ipIndex
-                        
-' End Sub
 
 Public Property Get AutoKey() As IAutoKey
     Set AutoKey = p.AutoKey
 End Property
-
-' Public Property Set AutoKey(ByVal ipAutoKey As IAutoKey)
-    
-'     Guard DisallowedOverwrite, Types.IsNotSameInstance(p.AutoKey, Nothing), i.Location & "Set pvAutoKey"
-'     Set p.AutoKey = ipAutoKey
-    
-' End Property
-
-' Private Sub CaseTwoParamsAsIterableKeysByEnumvsParamTwo(ByVal ipParamOne As Variant, ByVal ipParamTwo As Variant, ByVal ipStartIndex As Long)
-
-'     Select Case True
-                                    
-'         Case Types.Group.IsPrimitive(ipParamTwo), Types.Group.IsAdmin(ipParamTwo)
-        
-'             'add row first items vs primitive in ipParamTwo
-'             InputItemsAsIterableIterable _
-'                 ipParamOne.Keys, _
-'                 Ranges.GetConstSeries(Types.Iterable.Count(ipParamOne), ipParamTwo), _
-'                 ipStartIndex
-            
-            
-'         Case Types.Group.IsIterableItemsByEnum(ipParamTwo)
-        
-'             ' arg0 first value of rows pairs with  arg1 item
-'             InputItemsAsIterableIterable _
-'                 ipParamOne.Keys, _
-'                 ipParamTwo, _
-'                 ipStartIndex
-            
-                
-'         Case Arrays.IsTableArray(ipParamTwo)
-        
-'             'Pair arg0 firstvalues with split first rank values
-'             Dim myArg1RankLysts As Lyst
-'             Set myArg1RankLysts = Arrays.ToLystOfRanksAsLyst(ipParamTwo, Enums.TableToLystActions.AsEnum(RankIsRowFirstItemActionIsSplit))
-    
-'             InputItemsAsIterableIterable _
-'                 ipParamOne.Keys, _
-'                 myArg1RankLysts.Item(Enums.TableToLystActions..RankLysts), _
-'                 ipStartIndex
-            
-            
-'         Case Types.Group.IsIterableKeysByEnum(ipParamTwo)
-'             ' first value of arg0 rows with arg1 items
-'             InputItemsAsIterableIterable _
-'             ipParamOne.Keys, _
-'             ipParamTwo.Items, _
-'             ipStartIndex
-            
-            
-'         Case Else
-'             'todo we can't just add object as each item will point to the same object
-'             ' so rethink this code
-'             InputItemsAsIterableIterable _
-'                 ipParamOne, _
-'                 Ranges.GetConstSeries(TypesIterables.Count(ipParamOne), ipParamTwo), _
-'                 ipStartIndex
-'             ' CustomErrors.Throw _
-'             '     InvalidType, _
-'             '     i.Location & "pvCase2TableArrayvsArg1", _
-'             '     Fmt.Txt(Enums.TableToLystActions.ToString(GuardClause.IsInvalidType), "Iterable", TypeName(ipParamTwo))
-            
-                
-'     End Select
-    
-' End Sub
-
-
-' Private Sub CaseTwoParamsAsTableArrayvsParamTwo(ByVal iparray As Variant, ByVal ipTableToLystAction As Variant, ByVal ipStartIndex As Long)
-    
-'     'For use when ipParamTwo is not a primitive number
-'     Dim myArg0RankLysts As Lyst
-'     Set myArg0RankLysts = Arrays.ToLystOfRanksAsLyst(iparray, Enums.TableToLystActions.AsEnum(RankIsRowFirstItemActionIsSplit))
-    
-'     Select Case True
-                        
-'         Case Enums.TableToLystActions.HoldsMember(ipTableToLystAction)
-        
-'             'Add table according to TableLystAction enum in ipParamTwo
-'             InputItemsAsTableArray iparray, ipTableToLystAction, ipStartIndex
-            
-        
-'         Case Types.Group.IsPrimitive(ipTableToLystAction), Types.Group.IsAdmin(ipTableToLystAction)
-        
-'             'add row first items vs primitive in ipParamTwo
-'             InputItemsAsIterableIterable _
-'                 myArg0RankLysts.Item(Enums.TableToLystActions.FirstItems), _
-'                 Ranges.GetConstSeries(myArg0RankLysts.Count, ipTableToLystAction), _
-'                 ipStartIndex
-            
-            
-'         Case Types.Group.IsIterableItemsByEnum(ipTableToLystAction)
-        
-'             ' arg0 first value of rows pairs with  arg1 item
-'             InputItemsAsIterableIterable _
-'                 myArg0RankLysts.Item(Enums.TableToLystActions.FirstItems), _
-'                 ipTableToLystAction, _
-'                 ipStartIndex
-            
-                
-'         Case Arrays.IsTableArray(ipTableToLystAction)
-        
-'             'Pair arg0 firstvalues with split first rank values
-'             Dim myArg1RankLysts As Lyst
-'             Set myArg1RankLysts = Arrays.ToLystOfRanksAsLyst(ipTableToLystAction, Enums.TableToLystActions.AsEnum(RankIsRowFirstItemActionIsSplit))
-    
-'             InputItemsAsIterableIterable _
-'                 myArg0RankLysts.Item(Enums.TableToLystActions.FirstItems), _
-'                 myArg1RankLysts.Item(Enums.TableToLystActions.RankLysts), _
-'                 ipStartIndex
-            
-            
-'         Case Types.Group.IsIterableKeysByEnum(ipTableToLystAction)
-'             ' first value of arg0 rows with arg1 items
-'             InputItemsAsIterableIterable _
-'             myArg0RankLysts.Item(Enums.TableToLystActions.FirstItems), _
-'             ipTableToLystAction.Items, _
-'             ipStartIndex
-            
-            
-'         Case Else
-'             'todo we can't just add object as each item will point to the same object
-'             ' so rethink this code
-'             'Assume we have a. n. other object
-    
-'             InputItemsAsIterableIterable _
-'             myArg0RankLysts.Item(Enums.TableToLystActions.FirstItems), _
-'             Ranges.GetConstSeries(myArg0RankLysts.Count, ipTableToLystAction), _
-'             ipStartIndex
-'             ' CustomErrors.Throw _
-'             '     InvalidType, _
-'             '     i.Location & "pvCase2TableArrayvsArg1", _
-'             '     Fmt.Txt(Enums.TableToLystActions.ToString(GuardClause.IsInvalidType), "Iterable", TypeName(ipParamTwo))
-            
-                
-'     End Select
-    
-' End Sub
-
-
-' Private Sub CaseTwoParamsAsIterableItemsByEnumVsParamTwo(ByVal ipParamOne As Variant, ByVal ipParamTwo As Variant, ByVal ipStartIndex As Long)
-    
-'     Select Case True
-                        
-'         ' Case Types.Group.IsNumber(ipParamTwo)
-        
-'         '     'Add table according to TableLystAction enum in ipParamTwo
-'         '     pvAddOrInsertIterableIterable _
-'         '         ipParamOne, _
-'         '         Ranges.GetConstSeries(Types.Iterable.GetSize(ipParamOne), ipParamTwo), _
-'         '         ipStartIndex
-            
-        
-'         Case Types.Group.IsPrimitive(ipParamTwo), Types.Group.IsAdmin(ipParamTwo)
-        
-'             'add row first items vs primitive in ipParamTwo
-'             InputItemsAsIterableIterable _
-'                 ipParamOne, _
-'                 Ranges.GetConstSeries(Types.Iterable.Count(ipParamOne), ipParamTwo), _
-'                 ipStartIndex
-            
-            
-'         Case Types.Group.IsIterableItemsByEnum(ipParamTwo)
-        
-'             ' arg0 first value of rows pairs with  arg1 item
-'             InputItemsAsIterableIterable _
-'                 ipParamOne, _
-'                 ipParamTwo, _
-'                 ipStartIndex
-            
-                
-'         Case Arrays.IsTableArray(ipParamTwo)
-        
-'             'Pair arg0 firstvalues with split first rank values
-'             Dim myArg1RankLysts As Lyst
-'             Set myArg1RankLysts = Arrays.ToLystOfRanksAsLyst(ipParamTwo, Enums.TableToLystActions.AsEnum(RankIsRowFirstItemActionIsSplit))
-    
-'             InputItemsAsIterableIterable _
-'                 ipParamOne, _
-'                 myArg1RankLysts.Item(Enums.TableToLystActions.RankLysts), _
-'                 ipStartIndex
-            
-            
-'         Case Types.Group.IsIterableKeysByEnum(ipParamTwo)
-'             ' first value of arg0 rows with arg1 items
-'             InputItemsAsIterableIterable _
-'             ipParamOne, _
-'             ipParamTwo.Items, _
-'             ipStartIndex
-            
-            
-'         Case Else
-'             'todo we can't just add object as each item will point to the same object
-'             ' so rethink this code
-'             ' A. n. other object
-'             InputItemsAsIterableIterable _
-'                 ipParamOne, _
-'                 Ranges.GetConstSeries(TypesIterables.Count(ipParamOne), ipParamTwo), _
-'                 ipStartIndex
-            
-                
-'     End Select
-    
-' End Sub
-
-
 
 
 Friend Sub AdjustByIndex(ByVal ipIndexes As Variant, ByVal ipAmount As Single)
@@ -2095,8 +1768,6 @@ Friend Sub AdjustByIndex(ByVal ipIndexes As Variant, ByVal ipAmount As Single)
         Exit Sub
         
     End If
-
-    ' Guard InvalidType, Types.IsTypeByName(Types.Name.OfLong, ipIndexes), myLocation, Array("Long", TypeName(s.Values.First), "ipIndexes")
     
     Dim myIndexes As Lyst
     Set myIndexes = Types.Iterable.ToLyst(ipIndexes)
@@ -2134,26 +1805,27 @@ Attribute AdjustbyKey.VB_Description = "Common code for IncByKey and DecByKey"
         
         Set myKeys = p.Keys
         
+        
     ElseIf Types.Group.IsIterable(ipKeys) Then
     
-        Set myKeys = p.Keys
+        Set myKeys = Lyst.Deb.AddKnownIterableAsItems(ipKeys)
+        
         
     Else
     
         Set myKeys = Array(ipKeys)
         
-    End If
         
-    
+    End If
 
-    Dim myitem As Variant
-    For Each myitem In myKeys
+    Dim myItem As Variant
+    For Each myItem In myKeys
 
         ' We choose to ignore any key that is not in p.keys
-        If p.Keys.HoldsItem(myitem) Then
+        If p.Keys.HoldsItem(myItem) Then
             
             Dim myIndex As Long
-            myIndex = p.Keys.IndexOf(myitem)
+            myIndex = p.Keys.IndexOf(myItem)
             
             ' The code below preserves the Type of the variable stored at ipIndex
             ' e.g. a Decimal Type is classed as a number But decimal +1 yeilds Double Type (or long Type)
@@ -2163,6 +1835,7 @@ Attribute AdjustbyKey.VB_Description = "Common code for IncByKey and DecByKey"
             myType = VarType(p.Items.Item(myIndex))
             p.Items.Item(myIndex) = Types.ToVarTypePrimitive(myType, p.Items.Item(myIndex) + ipAmount)
             
+            
         End If
         
     Next
@@ -2170,60 +1843,49 @@ Attribute AdjustbyKey.VB_Description = "Common code for IncByKey and DecByKey"
 End Sub
 
 
+'@Ignore EmptyMethod
 Private Sub DoNothing()
 
 End Sub
 
 
-Friend Function GetAutoKeySequence(ByVal ipCount As Long) As Lyst
+' Friend Function GetAutoKeySequence(ByVal ipCount As Long) As Lyst
     
-    Dim myLyst As Lyst
-    Set myLyst = Lyst.Deb
+'     Dim myLyst As Lyst
+'     Set myLyst = Lyst.Deb
     
-    Dim myCount As Long
-    For myCount = 1 To ipCount
+'     Dim myCount As Long
+'     For myCount = 1 To ipCount
     
-        myLyst.Add p.AutoKey.GetNextKey
+'         myLyst.Add p.AutoKey.NextKey
         
-    Next
+'     Next
     
-    Set GetAutoKeySequence = myLyst
+'     Set GetAutoKeySequence = myLyst
         
-End Function
+' End Function
 
 
-Private Function pvGetStringKeys() As ArrayList
+' Private Function pvGetStringKeys() As ArrayList
 
-    Dim myKeys As ArrayList
-    Set myKeys = New ArrayList
+'     Dim myKeys As ArrayList
+'     Set myKeys = New ArrayList
 
-    Dim myitem As Variant
-    For Each myitem In p.Keys
+'     Dim myitem As Variant
+'     For Each myitem In p.Keys
 
-        myKeys.Add CStr(myitem)
+'         myKeys.Add CStr(myitem)
 
-    Next
+'     Next
 
-    Set pvGetStringKeys = myKeys
+'     Set pvGetStringKeys = myKeys
 
-End Function
+' End Function
 
 
 Public Sub InjectAutoKey(ByRef ipAutokey As IAutoKey)
     
-    Globals.Res.Init (Msg.Okay)
-  'Debug.Print ipAutokey.Name
-  Select Case ipAutokey.Name
-    'Debug.Print Types.Name.OfAutoKeyByIndex, Types.Name.OfAutoKeyByNumber, Types.Name.OfAutoKeybyString
-    Case Types.Name.OfAutoKeyByIndex, Types.Name.OfAutoKeyByNumber, Types.Name.OfAutoKeybyString
-    
-      Set p.AutoKey = ipAutokey
-      
-    Case Else
-    
-        Globals.Res.SetNotOkay
-        Globals.Res.MsgEnum = enums.Message.AsEnum(Msg.AutoKeyIsNotValid)
-        
-  End Select
+   Set p.AutoKey = ipAutokey
+   s.FirstUse = True
         
 End Sub

@@ -20,6 +20,7 @@ Option Explicit
 ' for this reason the exit when class decouples setting the result
 ' from the return value and so we can just return a simple
 ' boolean
+'@Ignore EmptyMethod
 Private Sub Class_Initialize()
 End Sub
 
@@ -81,3 +82,4 @@ Friend Sub SetGlobalResNotOkay _
     Globals.Res.SetNotOkay
     
 End Sub
+

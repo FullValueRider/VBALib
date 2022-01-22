@@ -15,11 +15,11 @@ Option Explicit
 Private Type Properties
         
     Separator               As String
-    Nums                    As ROC
-    Upper                   As ROC
-    Lower                   As ROC
-    Alphanum                As ROC
-    WhiteSpace              As ROC
+    Nums                    As ROL
+    Upper                   As ROL
+    Lower                   As ROL
+    Alphanum                As ROL
+    WhiteSpace              As ROL
     
 End Type
 
@@ -28,26 +28,26 @@ Private p                   As Properties
 Private Sub Class_Initialize()
   
     p.Separator = Char.twComma
-    Set p.WhiteSpace = ROC.Deb(ToCharLyst(WhiteSpaceChars).ToArrayList)
-    Set p.Nums = ROC.Deb(ToCharLyst(NumberChars).ToArrayList)
-    Set p.Upper = ROC.Deb(ToCharLyst(UCaseChars).ToArrayList)
-    Set p.Lower = ROC.Deb(ToCharLyst(LCaseChars).ToArrayList)
-    Set p.Alphanum = ROC.Deb(ToCharLyst(AlphanumChars).ToArrayList)
+    Set p.WhiteSpace = ROL.Deb(ToCharLyst(WhiteSpaceChars).ToArrayList)
+    Set p.Nums = ROL.Deb(ToCharLyst(NumberChars).ToArrayList)
+    Set p.Upper = ROL.Deb(ToCharLyst(UCaseChars).ToArrayList)
+    Set p.Lower = ROL.Deb(ToCharLyst(LCaseChars).ToArrayList)
+    Set p.Alphanum = ROL.Deb(ToCharLyst(AlphanumChars).ToArrayList)
     
 End Sub
 
 Public Function WhiteSpaceChars() As String: WhiteSpaceChars = Char.twSpace & Char.twPeriod & Char.twSemiColon & Char.twColon & Char.twComma & vbTab & vbCrLf: End Function
-Public Function WhitespaceList() As ROC: Set WhitespaceList = p.WhiteSpace: End Function
+Public Function WhitespaceList() As ROL: Set WhitespaceList = p.WhiteSpace: End Function
   
 Public Function NumberChars() As Variant: NumberChars = "0123456789": End Function
 Public Function LCaseChars() As Variant: LCaseChars = "abcdefghijklmnopqrstuvwxyz": End Function
 Public Function UCaseChars() As Variant: UCaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ": End Function
 Public Function AlphanumChars() As Variant: AlphanumChars = NumberChars & UCaseChars & LCaseChars: End Function
  
-Public Function NumbersList() As ROC: Set NumbersList = p.Nums: End Function
-Public Function LCaseList() As ROC: Set LCaseList = p.Lower: End Function
-Public Function UCaseList() As ROC: Set UCaseList = p.Upper: End Function
-Public Function AlphaNumList() As ROC: Set AlphaNumList = p.Alphanum: End Function
+Public Function NumbersList() As ROL: Set NumbersList = p.Nums: End Function
+Public Function LCaseList() As ROL: Set LCaseList = p.Lower: End Function
+Public Function UCaseList() As ROL: Set UCaseList = p.Upper: End Function
+Public Function AlphaNumRoc() As ROL: Set AlphaNumRoc = p.Alphanum: End Function
   
 ' Friend Function TryExtent(ByVal ipItem As String) As Result
         
@@ -288,12 +288,12 @@ Attribute ToSubStrLyst.VB_Description = "Converts a string to an Lyst of trimmed
             
     End If
         
-    Dim myitem As Variant
+    Dim myItem As Variant
     Dim myLyst As Lyst
     Set myLyst = Lyst.Deb
-    For Each myitem In myArray
+    For Each myItem In myArray
         
-        myLyst.Add myitem
+        myLyst.Add myItem
             
     Next
 
@@ -352,19 +352,27 @@ End Function
 
 
 
-
+'@dewcription("Takes an array of find/replace pairs  an repeat replaces each pair.  Default for ipFindReplaceItems is Array(array(" ",vbnullstring))")
 Public Function MultiReplacer(ByVal ipHost As String, Optional ByVal ipFindReplaceItems As Variant) As String
     
     MultiReplacer = ipHost
-    If VBA.Len(ipHost) = 0 Then Exit Function
+    If BailOut.When(VBA.Len(ipHost) = 0, Msg.StringIsEmpty) Then Exit Function
 
     'Dim myFindReplaceItems As Variant
-    If VBA.IsMissing(ipFindReplaceItems) Or Arrays.HasNoItems(ipFindReplaceItems) Then ipFindReplaceItems = Array(Char.twSpace, vbNullString)
+    If VBA.IsMissing(ipFindReplaceItems) Then
         
-    Dim myitem As Variant
-    For Each myitem In ipFindReplaceItems
+        ipFindReplaceItems = Array(Array(Char.twSpace, vbNullString))
         
-        ipHost = RepeatReplacer(ipHost, myitem(0), myitem(1))
+    ElseIf Arrays.HasNoItems(ipFindReplaceItems) Then
+        
+        ipFindReplaceItems = Array(Array(Char.twSpace, vbNullString))
+        
+    End If
+        
+    Dim myFindReplaceArray As Variant
+    For Each myFindReplaceArray In ipFindReplaceItems
+        
+        ipHost = RepeatReplacer(ipHost, myFindReplaceArray(0), myFindReplaceArray(1))
         
     Next
     
@@ -424,7 +432,7 @@ Public Function ToCharLyst(ByVal ipString As String) As Lyst
 
 End Function
 '@Description("increments characters based on thier position in the ipAllowedChar list")
-Public Function Inc(ByVal ipString As String, Optional ByRef ipAllowedChar As ROC) As String
+Public Function Inc(ByVal ipString As String, Optional ByRef ipAllowedChar As ROL) As String
 Attribute Inc.VB_Description = "increments characters based on thier position in the ipAllowedChar list"
   
   If VBA.Len(ipString) = 0 Then
@@ -434,7 +442,7 @@ Attribute Inc.VB_Description = "increments characters based on thier position in
       
   End If
   
-  Dim myAllowedChar As ROC
+  Dim myAllowedChar As ROL
   If ipAllowedChar Is Nothing Then
     
     Set myAllowedChar = p.Alphanum
@@ -551,7 +559,7 @@ Attribute Inc.VB_Description = "increments characters based on thier position in
 End Function
 
 
-Friend Function IncChar(ByVal ipChar As String, ByRef ipAllowedChars As ROC) As String
+Friend Function IncChar(ByVal ipChar As String, ByRef ipAllowedChars As ROL) As String
   
   IncChar = ipChar
   If ipAllowedChars.LacksItem(ipChar) Then Exit Function

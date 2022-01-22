@@ -179,8 +179,8 @@ Attribute Log.VB_Description = "Log to base 10.  nb native VBA uses Log to give 
     Log = Log(ipX) / Log(10#)
 End Function
 
-Public Function SumOfInt(ByVal ipLast As LongLong, Optional ByVal ipfirst As LongLong = 1) As LongLong
-  SumOfInt = ipLast * (ipfirst + ipLast) / 2
+Public Function TriangularNumber(ByVal ipLast As LongLong, Optional ByVal ipfirst As LongLong = 1) As LongLong
+  TriangularNumber = ipLast * (ipfirst + ipLast) / 2
 End Function
 
 

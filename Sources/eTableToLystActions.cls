@@ -93,13 +93,13 @@ End Function
 
 Public Function Ord(ByVal ipEnum As TableToLystAction) As Long
         
-    Dim myitem As Variant
+    Dim myItem As Variant
     Dim myOrd As Long
     myOrd = 1
     Ord = -1
-    For Each myitem In s.Strings.Keys
+    For Each myItem In s.Strings.Keys
             
-        If myitem = ipEnum Then
+        If myItem = ipEnum Then
                 
             Ord = myOrd
             Exit Function

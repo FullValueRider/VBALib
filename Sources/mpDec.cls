@@ -47,6 +47,7 @@ End Function
 
 Public Function ExecMapper(ByVal ipHostItem As Variant) As Variant
         
+    '@Ignore VariableNotAssigned
     If Types.Group.IsNotNumber(ipHostItem) Then
             
         ExecMapper = ipHostItem

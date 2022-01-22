@@ -23,12 +23,6 @@ End Type
 
 Private p                                        As Properties
 
-Private Sub Class_Initialize()
-    
-    If p.Result Is Nothing Then Set p.Result = Result.Deb
-        
-End Sub
-
 Friend Property Get Res() As Result
     If p.Result Is Nothing Then
          Set p.Result = Result.Deb

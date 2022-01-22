@@ -14,7 +14,7 @@ Option Explicit
 
 Private Type State
 
-    Mapper                  As IMapper
+    Mapper                  As Object
         
 End Type
 
@@ -25,31 +25,50 @@ Implements IMapper
 '@Description("if the lyst item is a Kvp or Lyst calls the map method with ipmapper")
 Private Function IMapper_ExecMapper(ByVal ipHostItem As Variant) As Variant
 Attribute IMapper_ExecMapper.VB_Description = "if the lyst item is a Kvp or Lyst calls the map method with ipmapper"
-    IMapper_ExecMapper = ExecMapper(ipHostItem)
+
+    Dim myResult As Variant
+    myResult = Array(ExecMapper(ipHostItem))
+    If VBA.IsObject(myResult(0)) Then
+    
+        Set IMapper_ExecMapper = ExecMapper(ipHostItem)
+    
+    Else
+    
+        IMapper_ExecMapper = ExecMapper(ipHostItem)
+    
+    End If
+    
 End Function
 
 Public Function ExecMapper(ByVal ipHostItem As Variant) As Variant
 
-    Dim myTypeName As String
-    myTypeName = TypeName(ipHostItem)
-    Select Case myTypeName
+    Dim myResult As Variant
+    Select Case TypeName(ipHostItem)
         
-    Case "Kvp", "Lyst"
-            
-        ExecMapper = ipHostItem.MapIt(s.Mapper)
+        Case "Kvp", "Lyst"
                 
+            myResult = Array(ipHostItem.MapIt(mpInner.Deb(s.Mapper)))
+                    
+        Case Else
             
-    Case Else
+            myResult = Array(s.Mapper.ExecMapper(ipHostItem))
         
-        ExecMapper = ipHostItem
-        
-            
     End Select
+    
+    If VBA.IsObject(myResult(0)) Then
+    
+        Set ExecMapper = myResult(0)
+        
+    Else
+    
+        ExecMapper = myResult(0)
+        
+    End If
         
 End Function
 
 '@DefaultMember
-Public Function Deb(ByVal ipMapper As IMapper) As IMapper
+Public Function Deb(ByVal ipMapper As Object) As mpInner
 Attribute Deb.VB_UserMemId = 0
     
     With New mpInner
@@ -60,7 +79,7 @@ Attribute Deb.VB_UserMemId = 0
 
 End Function
 
-Friend Function ReadyToUseInstance(ByRef ipMapper As IMapper) As mpInner
+Friend Function ReadyToUseInstance(ByRef ipMapper As Object) As mpInner
         
     Set s.Mapper = ipMapper
     Set ReadyToUseInstance = Me

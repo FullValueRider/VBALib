@@ -91,10 +91,10 @@ Public Function MakeLyst(ByVal ipString As String) As Lyst
     Dim myAL As ArrayList
     Set myAL = New ArrayList
                 
-    Dim myitem As Variant
-    For Each myitem In myArray
+    Dim myItem As Variant
+    For Each myItem In myArray
             
-        myAL.Add myitem
+        myAL.Add myItem
             
     Next
         
@@ -155,7 +155,7 @@ Public Property Get IterableByIndexTypes() As String
                        & Types.Name.OfArrayList & Char.twComma _
                        & Types.Name.OfLyst & Char.twComma _
                        & Types.Name.OfCollection & Char.twComma _
-                       & Types.Name.OfRoc & Char.twComma _
+                       & Types.Name.OfROL & Char.twComma _
                        & IterablePrimitiveTypes
     'Debug.Print IterableByIndexTypes
 End Property
@@ -412,10 +412,10 @@ Friend Function IsIterablePrimitiveByCvar(ByVal ipArgs As Variant) As Boolean
 
     IsIterablePrimitiveByCvar = False
         
-    Dim myitem As Variant
-    For Each myitem In ipArgs
+    Dim myItem As Variant
+    For Each myItem In ipArgs
         
-        If Types.Group.IterablePrimitives.LacksItem(TypeName(myitem)) Then Exit Function
+        If Types.Group.IterablePrimitives.LacksItem(TypeName(myItem)) Then Exit Function
         
     Next
         
@@ -435,10 +435,10 @@ Friend Function IsIterableByIndexByCVar(ByVal ipArgs As Variant) As Boolean
 
     IsIterableByIndexByCVar = False
         
-    Dim myitem As Variant
-    For Each myitem In ipArgs
+    Dim myItem As Variant
+    For Each myItem In ipArgs
         
-        If Types.Group.IterableByIndex.LacksItem(TypeName(myitem)) Then Exit Function
+        If Types.Group.IterableByIndex.LacksItem(TypeName(myItem)) Then Exit Function
         
     Next
         
@@ -458,10 +458,10 @@ Friend Function IsIterableByMethodByCvar(ByVal ipArgs As Variant) As Boolean
 
     IsIterableByMethodByCvar = False
         
-    Dim myitem As Variant
-    For Each myitem In ipArgs
+    Dim myItem As Variant
+    For Each myItem In ipArgs
         
-        If Types.Group.IterableByMethod.LacksItem(TypeName(myitem)) Then Exit Function
+        If Types.Group.IterableByMethod.LacksItem(TypeName(myItem)) Then Exit Function
         
     Next
         
@@ -481,10 +481,10 @@ Friend Function IsIterableItemsByEnumByCvar(ByVal ipArgs As Variant) As Boolean
 
     IsIterableItemsByEnumByCvar = False
         
-    Dim myitem As Variant
-    For Each myitem In ipArgs
+    Dim myItem As Variant
+    For Each myItem In ipArgs
         
-        If Types.Group.IterableItemsByEnum.LacksItem(TypeName(myitem)) Then Exit Function
+        If Types.Group.IterableItemsByEnum.LacksItem(TypeName(myItem)) Then Exit Function
         'ToDO:Figure out how to do a generic n by m array
         ' If Arrays.HasItems(myItem) Then
                 
@@ -510,10 +510,10 @@ Friend Function IsIterableByKeyByCvar(ByVal ipArgs As Variant) As Boolean
 
     IsIterableByKeyByCvar = False
         
-    Dim myitem As Variant
-    For Each myitem In ipArgs
+    Dim myItem As Variant
+    For Each myItem In ipArgs
         
-        If IterableKeysByEnum.LacksItem(TypeName(myitem)) Then Exit Function
+        If IterableKeysByEnum.LacksItem(TypeName(myItem)) Then Exit Function
         
     Next
         

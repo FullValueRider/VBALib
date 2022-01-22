@@ -14,7 +14,7 @@ Option Explicit
     
 Implements IMapper
 
-Public Enum Func
+Public Enum Fx
   
   vbAbs
   Atn
@@ -28,7 +28,7 @@ Public Enum Func
   Ln
   Log
   Rnd
-  SumOfInt
+  TriangularNumber
   Power
   Round
   vbSgn
@@ -41,7 +41,8 @@ End Enum
 
 Private Type State
   
-  Fx                            As Func
+  '@Ignore KeywordsUsedAsMember
+  Function                      As Fx
   OptionalParam                 As Variant
   
   
@@ -51,7 +52,7 @@ Private s                     As State
 
 
 '@Description("Applies the specified function. Check with the equivalent VBA function to determine if the option argument should be used")
-Public Function Deb(ByVal ipFx As Func, Optional ByVal ipOptionalParam As Variant = 0) As mpMath
+Public Function Deb(ByVal ipFx As Fx, Optional ByVal ipOptionalParam As Variant = 0) As mpMath
 Attribute Deb.VB_Description = "Applies the specified function. Check with the equivalent VBA function to determine if the option argument should be used"
         
     With New mpMath
@@ -62,10 +63,10 @@ Attribute Deb.VB_Description = "Applies the specified function. Check with the e
         
 End Function
 
-Friend Function ReadyToUseInstance(ByVal ipFx As Func, ByVal ipOptionalParam As Variant) As mpMath
+Friend Function ReadyToUseInstance(ByVal ipFx As Fx, ByVal ipOptionalParam As Variant) As mpMath
   
     s.OptionalParam = ipOptionalParam
-    s.Fx = ipFx
+    s.Function = ipFx
     Set ReadyToUseInstance = Me
         
 End Function
@@ -77,7 +78,7 @@ End Function
 
 Public Function ExecMapper(ByVal ipHostItem As Variant) As Variant
      
-  Select Case s.Fx
+  Select Case s.Function
     
     Case vbAbs: ExecMapper = VBA.Abs(ipHostItem)
     Case Atn: ExecMapper = VBA.Atn(ipHostItem)
@@ -95,7 +96,7 @@ Public Function ExecMapper(ByVal ipHostItem As Variant) As Variant
     Case Factorial: ExecMapper = Maths.Factorial(ipHostItem)
     Case Ln: ExecMapper = Maths.Ln(ipHostItem)
     Case Log: ExecMapper = Maths.Log(ipHostItem)
-    Case SumOfInt: ExecMapper = Maths.SumOfInt(ipHostItem, s.OptionalParam)
+    Case TriangularNumber: ExecMapper = Maths.TriangularNumber(ipHostItem, 1)
     
     
   End Select

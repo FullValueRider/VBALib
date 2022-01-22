@@ -22,7 +22,7 @@ Attribute VB_Exposed = True
 ' *****************************************************************************
 
 Option Explicit
-
+'@IgnoreModule
 Enum DefaultButtonActions
     BUTTONACTION_ONERRORRESUMENEXT = &H2
     BUTTONACTION_ONERROREND = &H4

@@ -75,7 +75,15 @@ Public Property Let Key(ByVal ipKey As Variant)
 End Property
 
 Public Property Get Item() As Variant
-    Item = p.Item.Item(0)
+    If VBA.IsObject(p.Item.Item(0)) Then
+        
+        Set Item = p.Item.Item(0)
+   
+    Else
+        
+        Item = p.Item.Item(0)
+        
+    End If
 End Property
 
 Public Property Let Item(ByVal ipItem As Variant)
@@ -97,6 +105,7 @@ End Property
 
 Public Function ToString(Optional ByVal ipSeparator As Variant) As String
     If VBA.IsMissing(ipSeparator) Then ipSeparator = Char.twComma
+        'Debug.Print ipSeparator, p.Key.Item(0), p.Item.Item(0)
     ToString = Fmt.Txt("{1}{0}{2}", ipSeparator, p.Key.Item(0), p.Item.Item(0))
 End Function
 

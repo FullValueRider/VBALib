@@ -157,7 +157,7 @@ Public Property Get OfAutoKeyByIndex() As String
     OfAutoKeyByIndex = "AutoKeyByIndex"
 End Property
 
-Public Property Get OfRoc() As String
-  OfRoc = "ROC"
+Public Property Get OfROL() As String
+  OfROL = "ROL"
 End Property
 

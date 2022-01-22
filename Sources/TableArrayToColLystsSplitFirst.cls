@@ -33,12 +33,12 @@ Public Function ExecAction(ByVal ipTablearray As Variant) As Lyst
     Dim myRankLysts As Lyst
     Set myRankLysts = Lyst.Deb
         
-    Dim myitem As Variant
+    Dim myItem As Variant
         
-    For Each myitem In myLystOfRankLysts
+    For Each myItem In myLystOfRankLysts
             
         Dim myInnerLyst As Lyst
-        Set myInnerLyst = myitem
+        Set myInnerLyst = myItem
         myRankFirstItemsLyst.AddKnownItemsAsItems myInnerLyst.First
         myRankLysts.AddKnownItemsAsItems myInnerLyst.GetRange(myInnerLyst.FirstIndex + 1, ipEndIndex:=myInnerLyst.LastIndex)
             

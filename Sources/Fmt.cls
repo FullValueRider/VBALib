@@ -69,16 +69,6 @@ End Type
 Private s                                       As State
 
 
-'Private Type Using
-'
-'    Cvt                                         As Stringifier
-'
-'End Type
-'
-'Private u                                       As Using
-
-
-
 'Field openers - definitions
 Private Const NEWLINES                           As String = "{nl"
 Private Const TABS                               As String = "{tb"
@@ -213,13 +203,13 @@ Friend Function ConvertFormatFieldXX0ToNoString(ByVal ipLayoutTemplate As String
 Attribute ConvertFormatFieldXX0ToNoString.VB_Description = "Replace formatting fields of the form '{XX0}' with NoString"
 
     Dim myLayoutTemplate                        As String
-    Dim myitem                                  As Variant
+    Dim myItem                                  As Variant
 
     myLayoutTemplate = ipLayoutTemplate
         
-    For Each myitem In s.FormatFields.Keys
+    For Each myItem In s.FormatFields.Keys
         
-        myLayoutTemplate = VBA.Replace(myLayoutTemplate, myitem & FIELD_COUNT_IS_ZERO, Char.twNoString)
+        myLayoutTemplate = VBA.Replace(myLayoutTemplate, myItem & FIELD_COUNT_IS_ZERO, Char.twNoString)
             
     Next
 
@@ -232,11 +222,11 @@ End Function
 Friend Function pvConvertFormatFieldWithNoCountToCountOfOne(ByVal ipFormatTemplate As String) As String
 Attribute pvConvertFormatFieldWithNoCountToCountOfOne.VB_Description = "Convert non numbered LayoutObj.Format fields {XX} to {XX1}"
 
-    Dim myitem                              As Variant
+    Dim myItem                              As Variant
 
-    For Each myitem In s.FormatFields.Keys
+    For Each myItem In s.FormatFields.Keys
         
-        ipFormatTemplate = VBA.Replace(ipFormatTemplate, myitem & FIELD_COUNT_IS_NONE, myitem & FIELD_COUNT_IS_ONE)
+        ipFormatTemplate = VBA.Replace(ipFormatTemplate, myItem & FIELD_COUNT_IS_NONE, myItem & FIELD_COUNT_IS_ONE)
             
     Next
         
@@ -268,18 +258,18 @@ End Function
 Friend Function ConvertFormatFieldWithCountToFormatCharacters(ByRef ipFormatTemplate As String) As String
 Attribute ConvertFormatFieldWithCountToFormatCharacters.VB_Description = "Convert {XXn} layout field to fomatting characters 'XX' repeated 'n' times"
 
-    Dim myitem                              As Variant
+    Dim myItem                              As Variant
     Dim myReplace                           As String
     Dim myField                             As String
     Dim myCount                             As Long
 
-    For Each myitem In s.FormatFields.Keys
+    For Each myItem In s.FormatFields.Keys
                 
-        If InStr(ipFormatTemplate, myitem) > 0 Then
+        If InStr(ipFormatTemplate, myItem) > 0 Then
             
-            myCount = GetRepeatCountForFormatField(ipFormatTemplate, myitem)
-            myField = myitem & CStr(myCount) & "}"
-            myReplace = pvGetFormattingReplaceString(myitem, myCount)
+            myCount = GetRepeatCountForFormatField(ipFormatTemplate, myItem)
+            myField = myItem & CStr(myCount) & "}"
+            myReplace = pvGetFormattingReplaceString(myItem, myCount)
             ipFormatTemplate = VBA.Replace(ipFormatTemplate, myField, myReplace)
                 
         End If
@@ -316,7 +306,7 @@ Friend Function pvConvertVariableFieldsToStringRepresentations _
 Attribute pvConvertVariableFieldsToStringRepresentations.VB_Description = "Replace each ocurrence of '{<number>}' with the corresponding stringified item from the parameters list"
 
     Dim myIndex                         As Variant
-    Dim myargs                     As Variant
+    Dim myargs                          As Variant
     Dim myReturn                        As String
 
     myargs = ipArgs

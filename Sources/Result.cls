@@ -51,7 +51,7 @@ Private Sub Class_Initialize()
   
     '/If Me Is Result Then
         
-        p.Status = Constant.ResultStatusOkay
+        p.Status = Preset.ResultStatusOkay
         p.MsgId = Msg.Okay
         Set p.ResultItems = New ArrayList
         
@@ -236,16 +236,47 @@ End Function
 Public Function SetItems(ParamArray ipResultItems() As Variant) As Result
 Attribute SetItems.VB_Description = "Sets the values of p.ResultItems "
 
+    p.ResultItems.Clear
+    Set SetItems = Me
     
-    Dim myResultItems As Lyst
-    Set myResultItems = Lyst.Deb
+    If BailOut.When(Arrays.IsNotValid(ipResultItems), Msg.UnexpectedEmpty) Then Exit Function
     
-    If Arrays.IsNotValid(ipResultItems) Then Exit Function
+    ' If Arrays.HasOneItem(ipResultItems) Then
         
-    myResultItems.AddKnownIterableAsItems ipResultItems ' should this be addknowniterable as items
+    '     If Types.Group.IsIterable(ipResultItems(0)) Then
+            
+    '         p.ResultItems.add ipResultItems(0)
+            
+    '     Else
+            
+    '        p.ResultItems.add ipResultItems
+            
+    '     End If
+ 
+    ' Else
+        
+    Dim myItem As Variant
+    For Each myItem In ipResultItems
+        
+      '  If Types.Group.IsNotIterable(myItem) Then
+            
+        '    p.ResultItems.add Array(myItem)
+            
+            
+      '  Else
+    
+            p.ResultItems.Add myItem
+            
+        
+       ' End If
+    
+    Next
+            
+ '   End If
+    
+    'myResultItems.AddKnownIterableAsItems ipResultItems ' should this be addknowniterable as items
     'If myResultItems.HasNoItems Then Exit Function
     
-    Set p.ResultItems = myResultItems.Host
     Set SetItems = Me
             
 End Function
@@ -256,7 +287,7 @@ Attribute SetOkay.VB_Description = "Sets Status and Messageenum"
         
     If p.MsgId = Msg.NotOkay Or p.MsgId = Msg.Okay Then p.MsgId = ipMessageEnum
     
-    p.Status = Constant.ResultStatusOkay
+    p.Status = Preset.ResultStatusOkay
     Set SetOkay = Me
     
 End Function
@@ -267,7 +298,7 @@ Attribute SetNotOkay.VB_Description = "Sets Status and Messageenum"
         
 If p.MsgId = Msg.NotOkay Or p.MsgId = Msg.Okay Then p.MsgId = ipMessageEnum
     
-    p.Status = Constant.ResultStatusNotOkay
+    p.Status = Preset.ResultStatusNotOkay
     Set SetNotOkay = Me
     
 End Function
@@ -281,12 +312,12 @@ Attribute Init.VB_Description = "Sets the Result to the 'NotOkay' or 'Failed' Re
         Case Msg.Okay
         
             p.MsgId = Msg.Okay
-            p.Status = Constant.ResultStatusOkay
+            p.Status = Preset.ResultStatusOkay
         
         Case Msg.NotOkay
         
             p.MsgId = Msg.NotOkay
-            p.Status = Constant.ResultStatusNotOkay
+            p.Status = Preset.ResultStatusNotOkay
         
     End Select
    

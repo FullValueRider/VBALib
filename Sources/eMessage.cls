@@ -167,7 +167,7 @@ Public Enum Msg
     UsePredeclaredIdInstance
     InvalidNew
     UseNewInstance
-
+    HasNoInstance
     InvalidInstanceCreation
     DisallowedOverwrite
     
@@ -190,7 +190,7 @@ Public Enum Msg
     NotSameSize
         
     'Array Issues
-    ParamArrayIsEmpty
+    ParamArrayIsNotValid
     ArrayHasNoItems
     ArrayLacksRank
     HasNoRanks
@@ -215,6 +215,7 @@ Public Enum Msg
     'General messages
     notequal
     Unspecified
+   
 
     StartIndexWasZeroResetToOne
     StartIndexExceedsItemCount
@@ -226,7 +227,7 @@ Public Enum Msg
     
     InvalidInsertCountZero
     RunLengthIsZero
-
+    CountCannotBeLessThanOne
 
 
     'Enumeration issues
@@ -764,14 +765,14 @@ Private Sub SetupDictionaries()
         'Class Messages
         .Add InvalidMethod, "Object '{0}' does not have a '{1}' method"
         '.Add NoCountMethod, "Object '{0}' has no Count method"
-        
+        .Add HasNoInstance, "The object has no instance"
         
         .Add UnexpectedEmpty, "Unexpected Empty in '{0}'"
         .Add MissingParameter, "An expected parameter is missing"
         .Add DisallowedOverwrite, "The current instance of '{0}' cannot be overridden by a new instance"
 
         'Array Messages
-        .Add ParamArrayIsEmpty, "The paramter array was empty"
+        .Add ParamArrayIsNotValid, "The paramter array was empty"
         .Add ArrayHasNoItems, "Uninitialised array '{0}'"
         .Add ArrayLacksRank, "Array does not have Rank {0}"
         .Add HasNoRanks, "Item has no Ranks"
@@ -848,7 +849,7 @@ Private Sub SetupDictionaries()
         'General Messages
         .Add notequal, "Not equal"
         .Add Unspecified, "The type of error was not specified"
-        
+        .Add CountCannotBeLessThanOne, "Count cannot be zero"
     End With
         
 End Sub
@@ -867,12 +868,12 @@ End Function
 
 Public Function Ord(ByVal ipEnum As Msg) As Long
         
-    Dim myitem As Variant
+    Dim myItem As Variant
     Dim myOrd As Long
     myOrd = 1
-    For Each myitem In s.Strings.Keys
+    For Each myItem In s.Strings.Keys
             
-        If myitem = ipEnum Then
+        If myItem = ipEnum Then
                 
             Ord = myOrd
             Exit Function

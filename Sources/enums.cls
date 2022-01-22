@@ -13,6 +13,7 @@ Option Explicit
 '@Folder("Enums")
 '@PredeclaredId
 '@exposed
+'@Ignore EmptyMethod
 Private Sub Class_Initialize()
 End Sub
 

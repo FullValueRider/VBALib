@@ -62,46 +62,6 @@ Friend Function ParseVariantWithOneItem(ByVal ipItem As Variant) As Result
         
             Globals.Res.SetOkay.SetItems ipItem
             
-    '   Case Types.Group.IsNotIterable(ipItem)
-                  
-    '       '@Ignore ValueRequired
-    '     Globals.Res.SetOkay.SetItems(ipItem)
-          
-              
-    ' '   Case Types.Group.IsNotIterable(ipItem)
-              
-    ' '       '@Ignore ValueRequired
-    ' '       Globals.Res.SetOkay.SetItems(ipItem(FPAItems.ParamOne))
-          
-    '   Case Arrays.IsMDArray(ipItem)
-    '       ' There is no special iterable action for arrays
-    '       ' with more then two dimensions so return as single item
-              
-    '       '@Ignore ValueRequired
-    '       Globals.Res.SetOkay.SetItems(ipItem)
-          
-          
-      
-          
-        
-    '   Case Arrays.IsListArray(ipItem)
-    '     ' Note: Not a Net ArrayList
-    '     '@Ignore ValueRequired
-    '     Globals.Res.SetOkay.SetItems(ipItem)
-          
-              
-    '   Case Types.Group.IsIterableItemsByEnum(ipItem)
-    '     ' includes collection class so we cannot use .Items to cast to an array
-    '     ' Debug.Print TypeName(ipForwardedParamArray(ParseAdmin.ParamOne))
-    '     '@Ignore ValueRequired
-    '     Globals.Res.SetOkay.SetItems(ipItem)
-                  
-     
-          
-                  
-    '   Case Else
-              
-    '     Globals.Res.SetNotOkay enums.Message.AsEnum(UnexpectedItemInParamArray)
                         
     End Select
     

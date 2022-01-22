@@ -22,7 +22,7 @@ Attribute VB_Exposed = True
 ' *****************************************************************************
 
 Option Explicit
-
+'@IgnoreModule
 Enum VarScope
     LocalVariable = &H0
     ParameterVariable = &H1

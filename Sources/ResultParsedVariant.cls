@@ -52,39 +52,16 @@ End Function
 
 
 Public Function GetItems() As Lyst
-
-    If Types.IsTypeByName(Types.Name.OfLyst, p.Items.Item(0)) Then
     
-        Set GetItems = p.Items.Item(0)
-        
-    ElseIf Types.Group.IsNotIterable(p.Items.Item(0)) Then
-    
-        Set GetItems = Lyst.Deb.AddKnownItemsAsItems(p.Items.Item(0))
-        
-    Else
-    
-        Set GetItems = Lyst.Deb.AddKnownIterableAsItems(p.Items.Item(0))
-        
-    End If
-    
+    '@Ignore DefaultMemberRequired
+    Set GetItems = Lyst.Deb.AddKnownIterableAsItems(p.Items(0))
+   
 End Function
 
 
 Public Function GetKeys() As Lyst
 
-   If Types.IsTypeByName(Types.Name.OfLyst, p.Items.Item(1)) Then
-    
-        Set GetKeys = p.Items.Item(1)
-        
-    ElseIf Types.Group.IsNotIterable(p.Items.Item(1)) Then
-    
-        Set GetKeys = Lyst.Deb.AddKnownItemsAsItems(p.Items.Item(1))
-        
-    Else
-    
-        Set GetKeys = Lyst.Deb.AddKnownIterableAsItems(p.Items.Item(1))
-        
-    End If
+    Set GetKeys = Lyst.Deb.AddKnownIterableAsItems(p.Items.Item(1))
     
 End Function
 

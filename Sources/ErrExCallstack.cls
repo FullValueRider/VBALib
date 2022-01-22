@@ -22,7 +22,7 @@ Attribute VB_Exposed = True
 ' *****************************************************************************
 
 Option Explicit
-
+'@IgnoreModule
 Enum CallstackProcKind
     CALLSTACK_PROCKIND_SUB = &H1
     CALLSTACK_PROCKIND_FUNCTION = &H2

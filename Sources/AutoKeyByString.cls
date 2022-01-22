@@ -33,71 +33,63 @@ Attribute VB_Exposed = True
 Option Explicit
 
 Implements IAutoKey
-Private Type ReadOnly
-  
-  DefaultFirstUseKey                        As String
-  DefaultAllowedCharListForKey              As ROC
-  
-End Type
 
-Private r                                   As ReadOnly
+Const DefaultFirstUseKey                    As String = "0000"
+Const AutoKeyByStringName                   As String = "AutoKeyByString"
+
 Private Type Properties
 
     FirstUseKey                             As Variant
     CurrentKey                              As Variant
-    FirstUse                                As Boolean
-    KeyAllowedChars                         As ROC
-    KeyAsChars                              As Lyst
+    KeyAllowedChars                         As ROL
+  '  KeyAsChars                              As Lyst
     FirstUseKeyType                         As String
-    Result                                  As Result
+  '  Result                                  As Result
 End Type
 
 Private p                                   As Properties
 
+'@Ignore EmptyMethod
 Private Sub Class_Initialise()
 
-   r.DefaultFirstUseKey = "0000"
-   Set r.DefaultAllowedCharListForKey = Strs.AlphaNumList
+'    r.DefaultFirstUseKey = "0000"
+'    Set r.DefaultAllowedCharListForKey = Strs.AlphaNumList
 
 End Sub
 
-Public Function Deb _
-( _
-    Optional ByVal ipFirstUseKey As String, _
-    Optional ByVal ipKeyCharList As String _
-) As AutoKeyByString
+Public Function Deb(Optional ByVal ipFirstUseKey As String, Optional ByVal ipAllowedKeyChars As String) As AutoKeyByString
 
+    If VBA.Len(ipFirstUseKey) = 0 Then
+        
+        ipFirstUseKey = DefaultFirstUseKey
+        
+    End If
+    
+    If VBA.Len(ipAllowedKeyChars) = 0 Then
+        ipAllowedKeyChars = Strs.AlphanumChars
+    End If
+        
     With New AutoKeyByString
         
-        Set Deb = .ReadyToUseInstance(ipFirstUseKey, ipKeyCharList) ' Why is ipKeyCharsequence a null string
+        Set Deb = .ReadyToUseInstance(ipFirstUseKey, ipAllowedKeyChars) ' Why is ipKeyCharsequence a null string
             
     End With
         
 End Function
 
-Public Function ReadyToUseInstance _
-( _
-    ByVal ipFirstUseKey As String, _
-    ByVal ipKeyCharList As String _
-) As AutoKeyByString
-    r.DefaultFirstUseKey = "0000"
-    p.FirstUseKey = IIf(VBA.Len(ipFirstUseKey) = 0, r.DefaultFirstUseKey, ipFirstUseKey)
-    If VBA.Len(ipKeyCharList) = 0 Then
-   
-      Set p.KeyAllowedChars = r.DefaultAllowedCharListForKey
-      
-      
-    Else
-      
-      Set p.KeyAllowedChars = ROC.Deb(ipKeyCharList)
-      
-      
-    End If
-  
-    Set p.Result = Result.Deb
-    p.CurrentKey = Empty
-    p.FirstUseKeyType = TypeName(p.FirstUseKey)
 
+Public Function ReadyToUseInstance(ByVal ipFirstUseKey As String, ByVal ipKeyCharList As String) As AutoKeyByString
+   
+    Globals.Res.SetNotOkay
+    Set ReadyToUseInstance = Nothing
+    
+    SetFirstUseKey ipFirstUseKey
+    If Globals.Res.IsNotOkay Then Exit Function
+   
+    SetKeyAllowedChars ROL.Deb(ipKeyCharList)
+    If Globals.Res.IsNotOkay Then Exit Function
+    
+    Globals.Res.SetOkay
     Set ReadyToUseInstance = Me
         
 End Function
@@ -107,103 +99,111 @@ End Function
 ' Interface
 '
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
-Private Property Get IAutoKey_FirstUseKey() As Variant
-    IAutoKey_FirstUseKey = FirstUseKey
-End Property
+Private Function IAutoKey_GetFirstUseKey() As Variant
+    IAutoKey_GetFirstUseKey = GetFirstUseKey
+End Function
 
-Private Property Let IAutoKey_FirstUseKey(ByVal ipValue As Variant)
-    FirstUseKey = ipValue
-End Property
+Private Function IAutoKey_SetFirstUseKey(ByVal ipValue As Variant) As IAutoKey
+    Set IAutoKey_SetFirstUseKey = SetFirstUseKey(ipValue)
+End Function
 
-Private Property Get IAutoKey_CurrentKey() As Variant
-    IAutoKey_CurrentKey = CurrentKey
-End Property
+Private Function IAutoKey_GetCurrentKey() As Variant
+    IAutoKey_GetCurrentKey = GetCurrentKey
+End Function
 
-Private Property Let IAutoKey_CurrentKey(ByVal ipValue As Variant)
-    CurrentKey = ipValue
-End Property
-
-Public Property Get IAutoKey_FirstUseKeyType() As String
-    IAutoKey_FirstUseKeyType = p.FirstUseKeyType
-End Property
+Friend Function IAutoKey_SetCurrentKey(ByVal ipValue As Variant) As IAutoKey
+    Set IAutoKey_SetCurrentKey = SetCurrentKey(ipValue)
+End Function
 
 Private Function IAutoKey_Clone() As IAutoKey
     Set IAutoKey_Clone = Clone
 End Function
 
-Private Function IAutoKey_GetNextKey() As Variant
-    IAutoKey_GetNextKey = GetNextKey
+Private Function IAutoKey_NextKey() As Variant
+    IAutoKey_NextKey = NextKey
 End Function
 
-Private Function IAutoKey_Name() As String
-    IAutoKey_Name = TypeName(Me)
+Public Property Get IAutoKey_FirstUseKeyType() As String
+    IAutoKey_FirstUseKeyType = p.FirstUseKeyType
+End Property
+
+Private Function IAutoKey_NextKeys(ByVal ipCount As Long) As Lyst
+    Set IAutoKey_NextKeys = NextKeys(ipCount)
 End Function
 
-Private Function IAutoKey_GetKeySequence(ByVal ipCount As Long) As Lyst
-    Set IAutoKey_GetKeySequence = GetKeySequence(ipCount)
-End Function
-
-Private Function IAutoKey_Res() As Result
-  Set IAutoKey_Res = Res
-End Function
+Private Property Get IAutoKey_Name() As String
+    IAutoKey_Name = Name
+End Property
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 '
 ' class public members
 '
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 
-Public Property Get FirstUseKey() As Variant
-    FirstUseKey = p.FirstUseKey
-End Property
+Public Function GetFirstUseKey() As Variant
+    GetFirstUseKey = p.FirstUseKey
+End Function
 
-Public Property Let FirstUseKey(ByVal ipValue As Variant)
+Friend Function SetFirstUseKey(ByVal ipValue As Variant) As AutoKeyByString
+    
+    Set SetFirstUseKey = Me
+    
+    If BailOut.When(VBA.IsEmpty(ipValue), Msg.UnexpectedEmpty) Then Exit Function
+
     p.FirstUseKey = ipValue
-End Property
+    p.FirstUseKeyType = TypeName(ipValue)
+    p.CurrentKey = Empty
+    
+    Globals.Res.SetOkay
+    Set SetFirstUseKey = Me
+    
+End Function
 
-Public Property Get CurrentKey() As Variant
-    CurrentKey = p.CurrentKey
-End Property
+Public Function GetCurrentKey() As Variant
+    GetCurrentKey = p.CurrentKey
+End Function
 
-Public Property Let CurrentKey(ByVal ipValue As Variant)
+Friend Function SetCurrentKey(ByVal ipValue As Variant) As IAutoKey
     p.CurrentKey = ipValue
-End Property
+End Function
 
-Public Property Get KeyCharList() As ROC
-    Set KeyCharList = p.KeyAllowedChars
-End Property
+Public Function GetKeyAllowedChars() As ROL
+    Set GetKeyAllowedChars = p.KeyAllowedChars
+End Function
 
-Public Property Let KeyCharList(ByVal ipValue As ROC)
+Friend Function SetKeyAllowedChars(ByVal ipValue As ROL) As AutoKeyByString
+    Globals.Res.SetNotOkay
+    Set SetKeyAllowedChars = Nothing
+    
+    If BailOut.When(ipValue Is Nothing, Msg.HasNoInstance) Then Exit Function
+    If BailOut.When(ipValue.HasNoItems, Msg.HasNoItems) Then Exit Function
+    
     Set p.KeyAllowedChars = ipValue
-End Property
+    
+    Globals.Res.SetOkay
+    Set SetKeyAllowedChars = Me
+    
+End Function
+
 
 Public Property Get FirstUseKeyType() As String
     FirstUseKeyType = p.FirstUseKeyType
 End Property
 
-'Public Property Get FirstUse() As Boolean
-'    FirstUse = p.FirstUse
-'End Property
-'
-'Public Property Let FirstUse(ByVal ipValue As Boolean)
-'    p.FirstUse = ipValue
-'End Property
-
 
 Public Function Clone() As AutoKeyByString
-    ' we don't use current key as the first key in the clone becuase
-    ' this will already exist in the Host ordered Dictionary
-
+    
     Dim myAutoKey As AutoKeyByString
-    Set myAutoKey = Me.Deb(p.FirstUseKey, p.KeyAllowedChars.ToString)
-    'myAutoKey.CurrentKey = p.CurrentKey
-    'myAutoKey.FirstUse = p.FirstUse
-    myAutoKey.FirstUseKey = p.FirstUseKey
-        
+    Set myAutoKey = Me.Deb(p.FirstUseKey)
+    myAutoKey.SetKeyAllowedChars p.KeyAllowedChars
+    myAutoKey.SetCurrentKey p.CurrentKey
+
     Set Clone = myAutoKey
         
 End Function
 
-Public Property Get GetNextKey() As Variant
+
+Public Property Get NextKey() As Variant
 
     If VBA.IsEmpty(p.CurrentKey) Then
         
@@ -215,31 +215,28 @@ Public Property Get GetNextKey() As Variant
             
     End If
         
-    GetNextKey = p.CurrentKey
+    NextKey = p.CurrentKey
         
 End Property
 
-Public Function Name() As String
-    Name = TypeName(Me)
-End Function
+Public Property Get Name() As String
+    Name = AutoKeyByStringName
+End Property
 
-Public Function GetKeySequence(ByVal ipCount As Long) As Lyst
+Public Function NextKeys(ByVal ipCount As Long) As Lyst
         
     Dim myList As Lyst
     Set myList = Lyst.Deb
-    Set GetKeySequence = myList
+    Set NextKeys = myList
         
     If ipCount <= 0 Then Exit Function
             
     Dim myCounter As Long
     For myCounter = 1 To ipCount
             
-        myList.Add GetNextKey
+        myList.Add NextKey
             
     Next
         
 End Function
 
-Public Function Res() As Result
-  Set Res = p.Result
-End Function
