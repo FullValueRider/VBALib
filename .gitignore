@@ -1,0 +1,14 @@
+*.zip
+Packages/
+Archive/
+Temp/
+~*
+*.twinproj
+Sources/*.exe
+Sources/*.dll
+.vscode/
+Settings.*
+.vs/
+obj/
+*.json
+Debug/
