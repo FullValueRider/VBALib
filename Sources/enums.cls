@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "enums"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Provides a central location for providing complex enumerations"
@@ -26,6 +26,9 @@ Public Property Get TableToLystActions() As eTableToLystActions
     Set TableToLystActions = eTableToLystActions
 End Property
 
+Public Property Get Preset() As ePresets
+    Set Preset = ePresets
+End Property
 ' Public Property Get LookupConst() As eLookupConst
 '     Set LookupConst = eLookupConst
 ' End Property

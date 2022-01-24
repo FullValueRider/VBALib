@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "TableArrayToRowLysts"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@Exposed
@@ -61,7 +61,7 @@ Public Function ExecAction(ByVal ipTablearray As Variant) As Lyst
             
     Next
     
-    Globals.Res.Init (Msg.Okay)
+    Globals.Res.Init (Msg.okay)
     Set ExecAction = myLystOfLyst
         
 End Function

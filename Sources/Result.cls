@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Result"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -47,15 +47,11 @@ End Type
 Private p                               As Properties
 
 Private Sub Class_Initialize()
-    
-  
-    '/If Me Is Result Then
         
-        p.Status = Preset.ResultStatusOkay
-        p.MsgId = Msg.Okay
-        Set p.ResultItems = New ArrayList
+    p.Status = enums.Preset.Value(PresetId.ResultStatusOkay)
+    p.MsgId = Msg.okay
+    Set p.ResultItems = New ArrayList
         
-'/End If
     
 End Sub
 
@@ -76,8 +72,6 @@ End Function
 Friend Function ReadyToUseInstance() As Result
 Attribute ReadyToUseInstance.VB_Description = "Returns a Result object in its full NotOkey state"
         
-    ' s.Status = enums.LookupConst.Value(lcOkay)
-    ' s.MsgId = enums.Message.AsEnum(Msg.Okay)
     Set p.ResultItems = New ArrayList
         
     Set ReadyToUseInstance = Me
@@ -98,7 +92,6 @@ End Property
 Friend Property Let Status(ByVal ipStatus As Boolean)
         
     p.Status = ipStatus
-    'p.MsgId = IIf(p.Status, enums.Message.AsEnum(IsOkay), enums.Message.AsEnum(IsTrue))
             
 End Property
 
@@ -193,7 +186,7 @@ End Function
 '@Description("returns true if the globals.res object returns Okay=True and MsgId=resultstatusOkay")
 Public Function AllOkay() As Boolean
 Attribute AllOkay.VB_Description = "returns true if the globals.res object returns Okay=True and MsgId=resultstatusOkay"
-    AllOkay = Globals.Res.IsOkay And (Globals.Res.MsgEnum = Msg.Okay)
+    AllOkay = Globals.Res.IsOkay And (Globals.Res.MsgEnum = Msg.okay)
 End Function
 
 '@Description("Sugarfor 'Result.Status')
@@ -241,53 +234,24 @@ Attribute SetItems.VB_Description = "Sets the values of p.ResultItems "
     
     If BailOut.When(Arrays.IsNotValid(ipResultItems), Msg.UnexpectedEmpty) Then Exit Function
     
-    ' If Arrays.HasOneItem(ipResultItems) Then
-        
-    '     If Types.Group.IsIterable(ipResultItems(0)) Then
-            
-    '         p.ResultItems.add ipResultItems(0)
-            
-    '     Else
-            
-    '        p.ResultItems.add ipResultItems
-            
-    '     End If
- 
-    ' Else
-        
     Dim myItem As Variant
     For Each myItem In ipResultItems
-        
-      '  If Types.Group.IsNotIterable(myItem) Then
-            
-        '    p.ResultItems.add Array(myItem)
-            
-            
-      '  Else
-    
-            p.ResultItems.Add myItem
-            
-        
-       ' End If
-    
+   
+        p.ResultItems.Add myItem
+   
     Next
-            
- '   End If
-    
-    'myResultItems.AddKnownIterableAsItems ipResultItems ' should this be addknowniterable as items
-    'If myResultItems.HasNoItems Then Exit Function
-    
+ 
     Set SetItems = Me
             
 End Function
 
 '@Description("Sets Status and Messageenum")
-Public Function SetOkay(Optional ByVal ipMessageEnum As Msg = Msg.Okay) As Result  'eMessage.Msg = Msg.NotOkay
+Public Function SetOkay(Optional ByVal ipMessageEnum As Msg = Msg.okay) As Result  'eMessage.Msg = Msg.NotOkay
 Attribute SetOkay.VB_Description = "Sets Status and Messageenum"
         
-    If p.MsgId = Msg.NotOkay Or p.MsgId = Msg.Okay Then p.MsgId = ipMessageEnum
+    If p.MsgId = Msg.NotOkay Or p.MsgId = Msg.okay Then p.MsgId = ipMessageEnum
     
-    p.Status = Preset.ResultStatusOkay
+    p.Status = enums.Preset.Value(PresetId.ResultStatusOkay)
     Set SetOkay = Me
     
 End Function
@@ -296,9 +260,9 @@ End Function
 Public Function SetNotOkay(Optional ByVal ipMessageEnum As Msg = Msg.NotOkay) As Result  'eMessage.Msg = Msg.NotOkay
 Attribute SetNotOkay.VB_Description = "Sets Status and Messageenum"
         
-If p.MsgId = Msg.NotOkay Or p.MsgId = Msg.Okay Then p.MsgId = ipMessageEnum
+If p.MsgId = Msg.NotOkay Or p.MsgId = Msg.okay Then p.MsgId = ipMessageEnum
     
-    p.Status = Preset.ResultStatusNotOkay
+    p.Status = enums.Preset.Value(PresetId.ResultStatusNotOkay)
     Set SetNotOkay = Me
     
 End Function
@@ -309,15 +273,15 @@ Attribute Init.VB_Description = "Sets the Result to the 'NotOkay' or 'Failed' Re
     
     Select Case ipMsg
         
-        Case Msg.Okay
+        Case Msg.okay
         
-            p.MsgId = Msg.Okay
-            p.Status = Preset.ResultStatusOkay
+            p.MsgId = Msg.okay
+            p.Status = enums.Preset.Value(PresetId.ResultStatusOkay)
         
         Case Msg.NotOkay
         
             p.MsgId = Msg.NotOkay
-            p.Status = Preset.ResultStatusNotOkay
+            p.Status = enums.Preset.Value(PresetId.ResultStatusNotOkay)
         
     End Select
    

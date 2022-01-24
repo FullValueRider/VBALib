@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "AutoKeyByString"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "eMessage"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -17,7 +17,7 @@ Option Explicit
 Public Enum Msg
         
     NotOkay = -1
-    Okay = 0
+    okay = 0
         
     vbReturnWithoutGoSub = 3
     vbInvalidProcedureCall = 5
@@ -178,6 +178,7 @@ Public Enum Msg
     ' Dictionary Issues
     AutoKeyResetNotAllowed
     InvalidKey
+    AdjusterIsZero
 
     ' Iterable issues
     IsNotIterable
@@ -796,9 +797,9 @@ Private Sub SetupDictionaries()
         .Add InvalidKey, "The specified key Type '{0}' does not mast the Host Kvp Key Type '{1}'"
 
         '.Add NotIterableType, "Type '{0}' is not iterable"
-        
+        .Add AdjusterIsZero, "The Increment/Decrement value is zero"
         'Range  Messages
-        
+       
         
         .Add RunLengthIsZero, "Invalid Run of 0"
         .Add DestinationTooSmall, "Cannot copy {0} items to array of {1}"

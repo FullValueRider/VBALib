@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Parser"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Parses a ParamArray (or a variant containing an array). Typically used for inputs to the Lyst and Kvp objects"
@@ -250,7 +250,7 @@ Friend Sub SetGlobalsResWhenFirstParamIsIterableKeysByENum(ByVal ipfirst As Vari
                 
         Case Types.Group.IsIterableItemsByEnum(ipsecond)
             'dictionary to iterable Is  dictionary keys to iterabl
-            Globals.Res.Init(Msg.Okay).SetItems ipsecond, ipfirst.Keys
+            Globals.Res.Init(Msg.okay).SetItems ipsecond, ipfirst.Keys
                     
         Case Else
                 

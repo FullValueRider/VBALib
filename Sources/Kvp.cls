@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Kvp"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Kvp is a flexible Key/Value pair dictionary targeted at VB/VBA. It facilitates data input, direct content manipulation of items and keys, and indirect manipulation of data via Map and Comparer objects"
@@ -718,26 +718,36 @@ End Function
 
 
 '@Description("Decrements the Items  at the given Keys by the specified amount if the Items are Numbers")
-Public Function Dec(Optional ByVal ipKeys As Variant = Empty, Optional ByVal ipDecrement As Variant = Preset.DefaultDec) As Kvp
+Public Function Dec(Optional ByVal ipKeys As Variant, Optional ByVal ipDecrement As Variant) As Kvp
 Attribute Dec.VB_Description = "Decrements the Items  at the given Keys by the specified amount if the Items are Numbers"
 
-    Globals.Res.Init (Msg.Okay)
+    Globals.Res.Init Msg.okay
+    Dim myDecrement As Long
+    If VBA.IsMissing(ipDecrement) Then myDecrement = enums.Preset.Value(PresetId.DefaultDec) Else myDecrement = ipDecrement
     
-    If BailOut.When(Types.Group.IsNotNumber(ipDecrement), Msg.IsNotNumber, ipAltMessage:="The increment variable is not a number") Then Exit Function
-    If BailOut.When(ipDecrement = 0, Msg.ZeroIsInvalidParameter) Then Exit Function
-        
-    AdjustbyKey ipKeys, -ipDecrement
+    If BailOut.When(Types.Group.IsNotNumber(myDecrement), Msg.IsNotNumber, ipAltMessage:="The increment variable is not a number") Then Exit Function
+    If BailOut.When(myDecrement = 0, Msg.ZeroIsInvalidParameter) Then Exit Function
+    
+    AdjustbyKey ipKeys, -myDecrement
     Set Dec = Me
     
 End Function
 
 
 '@Description("Decrements the Items at the given indexes by the specified amount if the Items are Numbers")
-Public Function DecAt(ByVal ipIndexes As Variant, Optional ByVal ipDecrement As Single) As Kvp
+Public Function DecAt(ByVal ipIndexes As Variant, Optional ByVal ipDecrement As Variant) As Kvp
 Attribute DecAt.VB_Description = "Decrements the Items at the given indexes by the specified amount if the Items are Numbers"
-    If ipDecrement = 0 Then ipDecrement = Defaultadjustamount
-    AdjustByIndex ipIndexes, -ipDecrement
+    
+    Globals.Res.Init Msg.okay
+    Dim myDecrement As Long
+    If VBA.IsMissing(ipDecrement) Then myDecrement = enums.Preset.Value(PresetId.DefaultDec) Else myDecrement = ipDecrement
+    
+    If BailOut.When(Types.Group.IsNotNumber(ipDecrement), Msg.IsNotNumber, ipAltMessage:="The increment variable is not a number") Then Exit Function
+    If BailOut.When(ipDecrement = 0, Msg.ZeroIsInvalidParameter) Then Exit Function
+    
+    AdjustByIndex ipIndexes, -myDecrement
     Set DecAt = Me
+    
 End Function
 
 
@@ -951,20 +961,34 @@ Attribute HoldsItem.VB_Description = "Returns True if the value is an Item of th
 End Function
 
 '@Description("Increments the Items  at the given Keys by the specified amount if the Items are Numbers")
-Public Function Inc(Optional ByVal ipKeys As Variant = Empty, Optional ByVal ipIncrement As Double) As Kvp
+Public Function Inc(Optional ByVal ipKeys As Variant, Optional ByVal ipIncrement As Variant) As Kvp
 Attribute Inc.VB_Description = "Increments the Items  at the given Keys by the specified amount if the Items are Numbers"
-    If ipIncrement = 0 Then ipIncrement = Defaultadjustamount
+
+    Globals.Res.Init Msg.okay
+    Dim myIncrement As Long
+    If VBA.IsMissing(ipIncrement) Then myIncrement = enums.Preset.Value(PresetId.DefaultInc) Else myIncrement = ipIncrement
     
-    AdjustbyKey ipKeys, ipIncrement
+    If BailOut.When(Types.Group.IsNotNumber(myIncrement), Msg.IsNotNumber, ipAltMessage:="The increment variable is not a number") Then Exit Function
+    If BailOut.When(myIncrement = 0, Msg.ZeroIsInvalidParameter) Then Exit Function
+        
+    AdjustbyKey ipKeys, myIncrement
     Set Inc = Me
+    
 End Function
 
 
-Public Function IncAt(Optional ByVal ipIndexes As Variant = Empty, Optional ByVal ipIncrement As Double) As Kvp
-    If ipIncrement = 0 Then ipIncrement = Defaultadjustamount
-   
-    AdjustByIndex ipIndexes, ipIncrement
+Public Function IncAt(Optional ByVal ipIndexes As Variant, Optional ByVal ipIncrement As Variant) As Kvp
+    
+    Globals.Res.Init Msg.okay
+    Dim myIncrement As Long
+    If VBA.IsMissing(ipIncrement) Then myIncrement = enums.Preset.Value(PresetId.DefaultInc) Else myIncrement = ipIncrement
+    
+    ' If BailOut.When(Types.Group.IsNotNumber(myIncrement), Msg.IsNotNumber, ipAltMessage:="The increment variable is not a number") Then Exit Function
+    ' If BailOut.When(myIncrement = 0, Msg.ZeroIsInvalidParameter) Then Exit Function
+    
+    AdjustByIndex ipIndexes, myIncrement
     Set IncAt = Me
+    
 End Function
 
 '@Description("True if Count = 0, added to match terminology in Lyst and Group Iterable/Arrays")
@@ -1757,10 +1781,10 @@ End Property
 Friend Sub AdjustByIndex(ByVal ipIndexes As Variant, ByVal ipAmount As Single)
     
     If ipAmount = 0 Then Exit Sub
-        
-    If BailOut.When(Types.IsNotSameInstance(p.Keys, Nothing), Msg.NullReference) Then Exit Sub
+    If BailOut.When(ipAmount = 0, Msg.AdjusterIsZero) Then Exit Sub
+    If BailOut.When(p.Keys.HasNoItems, Msg.HasNoItems) Then Exit Sub
     If BailOut.When(Types.Group.IsNotNumber(ipAmount), Msg.InvalidType) Then Exit Sub
-    If BailOut.When(Types.Group.IsNotNumber(p.Items.First), Msg.InvalidType) Then Exit Sub
+        
     
     If VBA.IsEmpty(ipIndexes) Then
         
@@ -1786,7 +1810,6 @@ Friend Sub AdjustByIndex(ByVal ipIndexes As Variant, ByVal ipAmount As Single)
         End If
         
     Next
-    
             
 End Sub
 
@@ -1796,13 +1819,13 @@ Friend Sub AdjustbyKey(ByVal ipKeys As Variant, ByVal ipAmount As Variant)
 Attribute AdjustbyKey.VB_Description = "Common code for IncByKey and DecByKey"
 
     'If Guard.IsNothing(p.Keys, Msg.IterableHasNoItems).NotOkay Then Exit Sub
-    If BailOut.When(Types.Iterable.HasNoItems(p.Keys), Msg.HasNoItems) Then Exit Sub
+    If BailOut.When(p.Keys.HasNoItems, Msg.HasNoItems) Then Exit Sub
     If BailOut.When(Types.Group.IsNotNumber(ipAmount, p.Items.First), Msg.IsNotNumber) Then Exit Sub
 
     
     Dim myKeys As Variant
-    If Arrays.IsNotValid(ipKeys) Then
-        
+    If VBA.IsMissing(ipKeys) Then
+        ' if no keys are specified we do the action on all items
         Set myKeys = p.Keys
         
         
@@ -1813,7 +1836,7 @@ Attribute AdjustbyKey.VB_Description = "Common code for IncByKey and DecByKey"
         
     Else
     
-        Set myKeys = Array(ipKeys)
+        myKeys = Array(ipKeys)
         
         
     End If

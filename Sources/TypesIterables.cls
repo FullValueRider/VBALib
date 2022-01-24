@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "TypesIterables"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -17,31 +17,33 @@ Option Explicit
 Public Function TryExtent _
 ( _
     ByVal ipIterable As Variant, _
-    Optional ByVal ipRank As Long = Preset.ArrayFirstRank _
+    Optional ByVal ipRank As Variant _
 ) As Result
 Attribute TryExtent.VB_Description = "Returns the firstindex,lastindex and count in Items.  If the iterable has no items status is false."
     
     'Items should be accessed using Item(ResultItemsEnums.ItemExtent(enum))
     Set TryExtent = Globals.Res.SetNotOkay
+    Dim myRank As Long
+    If VBA.IsMissing(ipRank) Then myRank = enums.Preset.Value(PresetId.ArrayFirstRank): Else myRank = ipRank
     If BailOut.When(Types.Group.IsNotIterable(ipIterable), Msg.IsNotIterable) Then Exit Function
         
     Select Case True
       
         Case Types.IsString(ipIterable)
         
-            Strs.TryExtent ipIterable, ipRank
+            Strs.TryExtent ipIterable, myRank
                 
 
         Case VBA.IsArray(ipIterable)
-            ' Does not yet deal with dimensions of more than one.
-            Arrays.TryExtent ipIterable, ipRank
+            'ToDo: Does not yet deal with dimensions of more than one.
+            Arrays.TryExtent ipIterable, myRank
             
 
         Case Types.Group.IsIterableObject(ipIterable)
             ' Queues and stack type iterables don't allow indexes
                     
             If BailOut.When(Types.Iterable.HasNoItems(ipIterable), Msg.IterableHasNoItems) Then Exit Function
-            If BailOut.When(ipRank <> 1, Msg.ItemDoesNotSupportRanks) Then Exit Function
+            If BailOut.When(myRank <> 1, Msg.ItemDoesNotSupportRanks) Then Exit Function
             
             If Types.Group.IsIterableByMethod(ipIterable) Then
                 
@@ -71,11 +73,13 @@ Set TryExtent = Globals.Res
 End Function
 
 '@Description("Returns the number of items in a valid array or iterable object. An unitialised array returns -1. A collection object returns -1 if nothing and 0 if unpoulated0")")
-Public Function Count(ByVal ipIterable As Variant, Optional ByVal ipRank As Long = Preset.ArrayFirstRank) As Long
+Public Function Count(ByVal ipIterable As Variant, Optional ByVal ipRank As Variant) As Long
 
     Count = -1
+    Dim myRank As Long
+    If VBA.IsMissing(ipRank) Then myRank = enums.Preset.Value(PresetId.ArrayFirstRank): Else myRank = ipRank
     
-    If TryExtent(ipIterable, ipRank).IsNotOkay Then Exit Function
+    If TryExtent(ipIterable, myRank).IsNotOkay Then Exit Function
         
     Count = Globals.Res.Item(ResultItemsEnums.ItemExtent(ieCount))
 
@@ -193,7 +197,7 @@ Attribute IsSameSize.VB_Description = "True if the count of items for each itera
     
     If myTestCount = myRefCount Then
         
-        Globals.Res.Init(Msg.Okay).SetItems (Array(myTestCount, myRefCount))
+        Globals.Res.Init(Msg.okay).SetItems (Array(myTestCount, myRefCount))
     
         
     Else
@@ -256,12 +260,14 @@ Public Function IsNotHomogeneous(ByVal ipArray As Variant) As Boolean
     IsNotHomogeneous = Not IsHomogeneous(ipArray)
 End Function
 
-Public Function HasNoItems(ByVal ipArg As Variant, Optional ByVal ipRank As Long = 1) As Boolean
-    HasNoItems = Not HasItems(ipArg, ipRank)
+Public Function HasNoItems(ByVal ipArg As Variant, Optional ByVal ipRank As Variant) As Boolean
+    Dim myRank As Long
+    If VBA.IsMissing(ipRank) Then myRank = enums.Preset.Value(PresetId.ArrayFirstRank): Else myRank = ipRank
+    HasNoItems = Not HasItems(ipArg, myRank)
 End Function
 
 '@Description("Returns true if arg is an array and has ubound of 0 or more, or is an object with a count greater than 0")
-Public Function HasItems(ByVal ipArg As Variant, Optional ByVal ipRank As Long = 1) As Boolean
+Public Function HasItems(ByVal ipArg As Variant, Optional ByVal ipRank As Variant) As Boolean
 Attribute HasItems.VB_Description = "Returns true if arg is an array and has ubound of 0 or more, or is an object with a count greater than 0"
     
     ' Uninitialised variables will be objects or arrays
@@ -271,12 +277,14 @@ Attribute HasItems.VB_Description = "Returns true if arg is an array and has ubo
     ' and array that gives a ubound of -1
         
     HasItems = False
+    Dim myRank As Long
+    If VBA.IsMissing(ipRank) Then myRank = enums.Preset.Value(PresetId.ArrayFirstRank): Else myRank = ipRank
         
     If Types.Group.IsNotIterable(ipArg) Then Exit Function
 
     If VBA.IsArray(ipArg) Then
         
-        If Arrays.HasNoItems(ipArg) Then Exit Function  '  Need to something about ipRank here
+        If Arrays.HasNoItems(ipArg) Then Exit Function  '  Need to something about myRankshere
             
     Else
             

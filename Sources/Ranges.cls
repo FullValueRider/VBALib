@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Ranges"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -55,7 +55,7 @@ Friend Function TryStartRunFromAnyStartRunEnd _
     Optional ByVal ipStartIndex As Variant, _
     Optional ByVal ipRun As Variant, _
     Optional ByVal ipEndIndex As Variant, _
-    Optional ByVal ipRank As Long = Preset.ArrayFirstRank _
+    Optional ByVal ipRank As Variant _
 ) As Result
 Attribute TryStartRunFromAnyStartRunEnd.VB_Description = "Takes any iterable or string. The startindex and endindex should be specified using a 1 based index. The result.items lyst returns the startindex based on the actual indexing used by the iterable"
 ' Optional ByRef iopResult As Result, _
@@ -82,17 +82,10 @@ Attribute TryStartRunFromAnyStartRunEnd.VB_Description = "Takes an iterable or s
     
  
     Set TryStartRunFromAnyStartRunEnd = Globals.Res.SetOkay
+    Dim myRank As Long
+    If VBA.IsMissing(ipRank) Then myRank = enums.Preset.Value(PresetId.ArrayFirstRank) Else myRank = ipRank
         
-    ' If Types.Group.IsNotIterable(ipItem) Then
-    '     ' we want to allow strings because they **do** have an extent
-    '     If BailOut.When(Types.IsNotString(ipItem), Msg.IsNotIterable) Then Exit Function
-    ' End If
-        
-    ' If Types.IsNotArray(ipItem) Then
-    '     If BailOut.When(ipRank > 1, Msg.ItemDoesNotSupportRanks) Then Exit Function
-    ' End If
-        
-    If Types.TryExtent(ipItem, ipRank).IsNotOkay Then Exit Function
+    If Types.TryExtent(ipItem, myRank).IsNotOkay Then Exit Function
         
     ' Preserve the extent for later use
     Dim myItemExtent As ResultExtent
@@ -264,7 +257,7 @@ Friend Sub DeduceStartRunFromAnyStartRun _
         
     ' ' Adjust startindex to align witth the true first index
     ' myStartIndex = myStartIndex - 1 + iopResult.Item(ResultItemsEnums.ItemExtent(IsFirstIndex))
-     Globals.Res.Init(Msg.Okay).SetItems myStartIndex, myRun
+     Globals.Res.Init(Msg.okay).SetItems myStartIndex, myRun
         
 End Sub
 
@@ -295,7 +288,7 @@ Friend Sub DeduceStartRunFromAnyStartEnd _
             
     ' ' Adjust startindex to align witth the true first index
     ' myStartIndex = myStartIndex - 1 + iopResult.Item(ResultItemsEnums.ItemExtent(IsFirstIndex))
-    Globals.Res.Init(Msg.Okay).SetItems myStartIndex, myRun
+    Globals.Res.Init(Msg.okay).SetItems myStartIndex, myRun
             
 End Sub
 
@@ -321,7 +314,7 @@ Friend Sub DeduceStartRunFromAnyStartOnly _
 
     ' ' Adjust startindex to align witth the true first index
     ' myStartIndex = myStartIndex - 1 + iopResult.Item(ResultItemsEnums.ItemExtent(IsFirstIndex))
-    Globals.Res.Init(Msg.Okay).SetItems myStartIndex, myRun
+    Globals.Res.Init(Msg.okay).SetItems myStartIndex, myRun
 
 End Sub
 
@@ -346,7 +339,7 @@ Friend Sub DeduceStartRunFromAnyRunOnly(ByVal ipRun As Long, ByRef ipItemExtent 
         
     ' ' Adjust startindex to align witth the true first index
     ' myStartIndex = myStartIndex - 1 + iopResult.Item(ResultItemsEnums.ItemExtent(IsFirstIndex))
-    Globals.Res.Init(Msg.Okay).SetItems myStartIndex, myRun
+    Globals.Res.Init(Msg.okay).SetItems myStartIndex, myRun
         
 End Sub
 
@@ -371,7 +364,7 @@ Friend Sub DeduceStartRunFromAnyEndOnly(ByVal ipEndIndex As Long, ByRef ipItemEx
         
     ' Adjust startindex to align witth the true first index
         
-    Globals.Res.Init(Msg.Okay).SetItems myStartIndex, myRun
+    Globals.Res.Init(Msg.okay).SetItems myStartIndex, myRun
         
 End Sub
 
@@ -396,40 +389,24 @@ Public Function TryRange _
     Optional ByVal ipStartIndex As Variant, _
     Optional ByVal ipRun As Variant, _
     Optional ByVal ipEndIndex As Variant, _
-    Optional ByVal ipRank As Long = Preset.ArrayFirstRank _
+    Optional ByVal ipRank As Variant _
 ) As Result
 Attribute TryRange.VB_Description = "Returns the specified subrange in Item(0) of the result"
-       'ByRef iopResult As Result, _
-Attribute TryRange.VB_Description = "Returns the specified subrange in Item(0) of the result"
+   
         
     'If iopResult Is Nothing Then Set iopResult = Result.Deb
     Globals.Res.SetOkay
     Set TryRange = Globals.Res
-    
-    ' If Types.Iterable.TryExtent(ipIterable, ipRank).IsNotOkay Then Exit Function
+    Dim myRank As Long
+    If VBA.IsMissing(ipRank) Then myRank = enums.Preset.Value(PresetId.ArrayFirstRank) Else myRank = ipRank
         
-        
-    ' ' Preserve the original first index to use later when converting back from start run values
-    ' Dim myItemExtent As ResultExtent
-    ' Set myItemExtent = Globals.Res.GetResultExtent
-        
-    If Ranges.TryStartRunFromAnyStartRunEnd(ipIterable, ipStartIndex, ipRun, ipEndIndex, ipRank).IsNotOkay Then Exit Function
+    If Ranges.TryStartRunFromAnyStartRunEnd(ipIterable, ipStartIndex, ipRun, ipEndIndex, myRank).IsNotOkay Then Exit Function
  
         
     'get startrun
     Dim myRangeStartRun As ResultStartRun
     Set myRangeStartRun = Globals.Res.GetResultStartRun
     
-    ' Convert the virtual start run into actual start end
-    ' Dim myStartIndex As Long
-    ' myStartIndex = myStartRun.StartIndex + myItemExtent.FirstIndex
-        
-    ' Dim myEndIndex As Long
-    ' myEndIndex = myStartIndex + myStartRun.Run + myItemExtent.FirstIndex - 1
-        
-        
-'    Dim myList As Lyst
-'    Set myList = Lyst.Deb
    Dim myAL As ArrayList
    Set myAL = New ArrayList
    

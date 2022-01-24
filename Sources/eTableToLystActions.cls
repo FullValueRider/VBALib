@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "eTableToLystActions"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -12,16 +12,6 @@ Option Explicit
 '@PredeclaredId
 '@Exposed
 
-
-'OK, so they are not constants but you know the intent.
-Private Type InternalConstants
-        
-    Location                As String
-        
-End Type
-
-'@Ignore MoveFieldCloserToUsage
-Private ic                  As InternalConstants
 
 
 Private Type State
@@ -35,8 +25,7 @@ Private s                   As State
 
 Private Sub Class_Initialize()
         
-    ic.Location = "VBALib.EnumTableToLystActions."
-    If BailOut.When(Not (Me Is enums.TableToLystActions), Msg.InvalidNew) Then Exit Sub
+    'If BailOut.When(Not (Me Is enums.TableToLystActions), Msg.InvalidNew) Then Exit Sub
     SetupDictionaries
         
 End Sub

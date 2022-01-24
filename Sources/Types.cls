@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Types"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 
@@ -63,17 +63,19 @@ End Property
 '
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 '@Description("Global.Res.Items is populated with the first index,lastindex and count if ipItem is an iterable")
-Public Function TryExtent(ByVal ipItem As Variant, Optional ipRank As Long = 1&) As Result
+Public Function TryExtent(ByVal ipItem As Variant, Optional ipRank As Variant) As Result
 Attribute TryExtent.VB_Description = "Global.Res.Items is populated with the first index,lastindex and count if ipItem is an iterable"
     
     Set TryExtent = Globals.Res.SetNotOkay
+    Dim myRank As Long
+    If VBA.IsMissing(ipRank) Then myRank = enums.Preset.Value(PresetId.ArrayFirstRank): Else myRank = ipRank
         
     Select Case True
         
         ' string is not an iterable but it is allowed to get the 'extent' of the string
         Case Types.IsString(ipItem):
                 
-            Strs.TryExtent ipItem, ipRank
+            Strs.TryExtent ipItem, myRank
             
             
         Case Types.Group.IsNotIterable(ipItem)
@@ -83,12 +85,12 @@ Attribute TryExtent.VB_Description = "Global.Res.Items is populated with the fir
                 
         Case VBA.IsArray(ipItem)
         
-            Arrays.TryExtent ipItem, ipRank
+            Arrays.TryExtent ipItem, myRank
                         
                         
         Case Types.Group.IsIterable(ipItem)
                 
-            Types.Iterable.TryExtent ipItem, ipRank
+            Types.Iterable.TryExtent ipItem, myRank
                         
                         
         Case Else
@@ -136,7 +138,7 @@ Friend Function HasItemsByFPA(ByVal ipArgArray As Variant) As Result
         
     Next
     
-    Set HasItemsByFPA = Globals.Res.Init(Msg.Okay)
+    Set HasItemsByFPA = Globals.Res.Init(Msg.okay)
         
 End Function
 
@@ -164,7 +166,7 @@ Friend Function IsArrayByFPA(ByVal ipArgArray As Variant) As Boolean
             
     Next
     
-    Globals.Res.Init (Msg.Okay)
+    Globals.Res.Init (Msg.okay)
     IsArrayByFPA = True
         
 End Function
@@ -799,7 +801,7 @@ End Function
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 Public Function ToVarTypePrimitive(ByVal ipType As VbVarType, ByVal ipValue As Variant) As Variant
 
-    Globals.Res.Init (Msg.Okay)
+    Globals.Res.Init (Msg.okay)
     If BailOut.When(Types.Group.IsNotPrimitive(ipValue), Msg.InvalidType) Then Exit Function ' ToDo: Msg.IsNotPrimitive
             
     Dim myResult As Variant
@@ -855,7 +857,7 @@ Public Function ToVarTypePrimitive(ByVal ipType As VbVarType, ByVal ipValue As V
             
     ' End With
       
-    Globals.Res.Init(Msg.Okay).SetItems (myResult)
+    Globals.Res.Init(Msg.okay).SetItems (myResult)
     ToVarTypePrimitive = myResult
         
 End Function

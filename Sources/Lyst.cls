@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Lyst"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A Wrapper for the ArrayList object which provides intellisense and extends functionality"
@@ -86,7 +86,7 @@ End Property
 Public Function Add(ParamArray ipArgArray() As Variant) As Lyst
 
     Set Add = Me
-    Globals.Res.Init (Msg.Okay)
+    Globals.Res.Init (Msg.okay)
     
     If VBA.IsMissing(ipArgArray) Then
         Globals.Res.MsgEnum = Msg.MissingParameter
@@ -127,7 +127,7 @@ Attribute AddRange.VB_Description = "Adds the Items of a single iterable to the 
     Set AddRange = Me
     
     ' the ifs below should be bailout statement
-    Globals.Res.Init Msg.Okay
+    Globals.Res.Init Msg.okay
     'we cannot use
     If BailOut.When(VBA.IsMissing(ipIterable), Msg.MissingParameter) Then Exit Function
     If BailOut.When(VBA.IsEmpty(ipIterable), Msg.ParamArrayIsNotValid) Then Exit Function
@@ -246,7 +246,7 @@ Attribute Deduplicate.VB_Description = "Returns a new Lyst containing only uniqu
 
     Next
     
-    Globals.Res.Init Msg.Okay
+    Globals.Res.Init Msg.okay
     Set Deduplicate = Me
     
 End Function
@@ -635,7 +635,7 @@ Public Function InsertRange _
        Optional ByVal ipStartIndex As Variant, _
        Optional ByVal ipRun As Variant, _
        Optional ByVal ipEndIndex As Variant, _
-       Optional ByVal ipRank As Long = Preset.ArrayFirstRank _
+       Optional ByVal ipRank As Variant _
        ) As Lyst
 Attribute InsertRange.VB_Description = "Returns a modified Lyst with values from the defined subrange of ipIterable inserted at ipInsertIndex."
 
@@ -644,44 +644,18 @@ Attribute InsertRange.VB_Description = "Returns a modified Lyst with values from
     ' For the purposes of the ranges methods, ranges are always considered to start from one.
     ' ipInsertIndex is the index at which insertion starts
         
-    Globals.Res.Init Msg.Okay
+    Globals.Res.Init Msg.okay
     Set InsertRange = Me
-    ' If Types.Group.IsNotIterable(ipIterable) Then
-            
-    '     Globals.Res.SetNotOkay.MsgEnum = (enums.Message.AsEnum(Msg.IsNotIterable))
-    '     Set InsertRange = Me
-    '     Exit Function
-            
-    ' End If
-        
-    ' If Types.Iterable.HasNoItems(ipIterable) Then
-            
-    '     Globals.Res.Init(Msg.Okay).MsgEnum = enums.Message.AsEnum(Msg.IterableHasNoItems)
-    '     Set InsertRange = Me
-    '     Exit Function
-            
-    ' End If
-       
-    ' Get the insertion index in terms of the one based indexing used for get range
-    ' the +1 is essentially .firstindex
+    
+    Dim myRank As Long
+    If VBA.IsMissing(ipRank) Then myRank = enums.Preset.Value(PresetId.ArrayFirstRank) Else myRank = ipRank
+    
    
     If Ranges.TryStartRunFromAnyStartRunEnd(Me, ipInsertIndex).IsNotOkay Then Exit Function
     
     Dim myHostStartRun As ResultStartRun
     Set myHostStartRun = Globals.Res.GetResultStartRun
     
-  '  If Ranges.TryStartRunFromAnyStartRunEnd(ipIterable, ipStartIndex, ipRun, ipEndIndex, ipRank).IsNotOkay Then Exit Function
-    
-    ' Dim myInsertIndex As Variant
-    ' myInsertIndex = myStartRun.Item(ResultItemsEnums.StartRun(srStartIndex))
-        
-    ' Adjust start and end indexes from 0 based indexing to 1 based indexing
-    ' If Types.IsNotMissing(ipStartIndex) Then ipStartIndex = ipStartIndex + 1
-    ' If Types.IsNotMissing(ipEndIndex) Then ipEndIndex = ipEndIndex + 1
-        
-    'Get the range to insert from ipIterable
-    ' Dim myInsertStartRun As ResultStartRun
-    ' Set myInsertStartRun = Globals.Res.GetResultStartRun
     
     If Ranges.TryRange(ipIterable, ipStartIndex, ipRun, ipEndIndex, ipRank).IsNotOkay Then Exit Function
         

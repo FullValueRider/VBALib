@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "ResultItemsEnums"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "This module holds enumerations that give the indexing for the items lyst in a Result objects"
