@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Fmt"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Class Fmt enables substitution of variables and control characters in strings using fields delineated by {} markers."
@@ -128,21 +128,21 @@ Friend Function ConstructInstance() As Fmt
 End Function
 
 '@Description("True if the paramArray is allocated.  If paramarray contains a single item which is an array, it is assumend to be a forwarded paramarray, so paramarray is replaced by paramArray(0)")
-Private Function TrySplat(ByRef ipParamarray As Variant) As Boolean
+Private Function TrySplat(ByRef ipParamArray As Variant) As Boolean
 Attribute TrySplat.VB_Description = "True if the paramArray is allocated.  If paramarray contains a single item which is an array, it is assumend to be a forwarded paramarray, so paramarray is replaced by paramArray(0)"
     ' splat is a reference to the splat operator '...' used in some other languages.
     ' The splat operator allows a 'container' to be interpreted as a 'ParamArray'
     
-    If ArrayInfo.IsNotAllocated(ipParamarray) Then
+    If ArrayInfo.LacksItems(ipParamArray) Then
         TrySplat = False
         Exit Function
     End If
     
     TrySplat = True
     
-    If UBound(ipParamarray) - LBound(ipParamarray) + 1 = 1 Then
-        If VBA.IsArray(ipParamarray(0)) Then
-            ipParamarray = ipParamarray(0)
+    If UBound(ipParamArray) - LBound(ipParamArray) + 1 = 1 Then
+        If VBA.IsArray(ipParamArray(0)) Then
+            ipParamArray = ipParamArray(0)
         End If
     End If
     
@@ -150,12 +150,12 @@ End Function
 
 
 '@Description("Sends the formatted output to Debug.Print")
-Public Function Dbg(ByRef ipFormatTemplate As String, ParamArray ipParamarray() As Variant) As String
+Public Function Dbg(ByRef ipFormatTemplate As String, ParamArray ipParamArray() As Variant) As String
 Attribute Dbg.VB_Description = "Sends the formatted output to Debug.Print"
         
     
     Dim myString As String
-    myString = TextByVar(ipFormatTemplate, VBA.CVar(ipParamarray))
+    myString = TextByVar(ipFormatTemplate, VBA.CVar(ipParamArray))
     
     Debug.Print myString
     Dbg = myString
@@ -164,13 +164,13 @@ End Function
     
 
 '@Description("Returns a string representing the paramArray")
-Public Function Text(ByRef ipFormatTemplate As String, ParamArray ipParamarray() As Variant) As String
+Public Function Text(ByRef ipFormatTemplate As String, ParamArray ipParamArray() As Variant) As String
 Attribute Text.VB_Description = "Returns a string representing the paramArray"
-    Text = TextByVar(ipFormatTemplate, VBA.CVar(ipParamarray))
+    Text = TextByVar(ipFormatTemplate, VBA.CVar(ipParamArray))
 End Function
         
     
-Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray As Variant) As String
+Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamArray As Variant) As String
     
     Set s.ToString = Stringifier.Deb
 
@@ -191,7 +191,7 @@ Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray 
         s.ToString.SetItemSeparator
     End If
     
-    If Not TrySplat(ipParamarray) Then
+    If Not TrySplat(ipParamArray) Then
         TextByVar = ipFormatTemplate
         Exit Function
     End If
@@ -203,7 +203,7 @@ Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray 
     Set myS = SeqC.Deb
     
     Dim myItem As Variant
-    For Each myItem In ipParamarray
+    For Each myItem In ipParamArray
         myS.Add s.ToString.StringifyItem(myItem)
     Next
 

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "mpInner"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -39,7 +39,7 @@ Attribute IMapper_ExecMapper.VB_Description = "if the Hostitem is a SeqC or kvp 
     Dim myItem As Variant
     Select Case GroupInfo.Id(ipHostItem)
         
-        Case m_Dictionary, m_list
+        Case m_Dictionary, m_List
             
             ' mapit returns a SeqC not a single item array so we need set
             ' An mpInner instance was passed in by the original call to mapit

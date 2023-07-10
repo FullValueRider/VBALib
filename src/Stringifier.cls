@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Stringifier"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule ImplicitUnboundDefaultMemberAccess
@@ -116,7 +116,7 @@ Public Function StringifyItem(ByRef ipItem As Variant) As String
         Case e_Group.m_string:                          StringifyItem = ipItem
         Case e_Group.m_boolean, e_Group.m_number:       StringifyItem = VBA.CStr(ipItem)
         Case e_Group.m_array:                           StringifyItem = StringifyArray(ipItem)
-        Case e_Group.m_list:                            StringifyItem = StringifyItemByIndex(ipItem)
+        Case e_Group.m_List:                            StringifyItem = StringifyItemByIndex(ipItem)
         Case e_Group.m_Dictionary:                      StringifyItem = StringifyItembyKey(ipItem)
         Case e_Group.m_ItemObject:                      StringifyItem = StringifyItemObject(ipItem)
         Case e_Group.m_Admin:                           StringifyItem = StringifyAdmin(ipItem)
@@ -189,7 +189,7 @@ Friend Function StringifyArray(ByRef ipArray As Variant) As String
     ' The call to 'ToString' overwrites s.ArrayMarkup
     ' so we preserve a copy here
     
-    If ArrayInfo.IsNotQueryable(ipArray) Then
+    If ArrayInfo.LacksItems(ipArray) Then
        StringifyArray s.ArrayMarkup.Left & s.ArrayMarkup.Right
     End If
 '    Dim myMarkup As ItemMarkup

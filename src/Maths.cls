@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Maths"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -25,11 +25,13 @@ End Function
 
 '@Description("Returns 2 * Pi")
 Public Function Tau() As Double
+Attribute Tau.VB_Description = "Returns 2 * Pi"
     Tau = 2 * Pi
 End Function
 
 '@Description(" a factor to convert a value in radians to a value in Degrees")
 Public Function RadiansToDegrees() As Double
+Attribute RadiansToDegrees.VB_Description = " a factor to convert a value in radians to a value in Degrees"
     RadiansToDegrees = 180 / Pi
 End Function
 
@@ -248,4 +250,3 @@ Public Sub Permutations(ByRef ipSeq As SeqC, ByRef ipSwapIndex As Long, ByRef op
        End If
       
     End Sub
-

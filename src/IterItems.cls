@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "IterItems"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A class to iterate any single dimension containers, strings and single items"
@@ -42,17 +42,17 @@ End Type
 Private s                               As State
 
 '@Defaultmember
-Public Function Deb(ByRef ipitems As Variant) As IterItems
+Public Function Deb(ByRef ipItems As Variant) As IterItems
 Attribute Deb.VB_UserMemId = 0
     With New IterItems
-        Set Deb = .ConstructInstance(ipitems)
+        Set Deb = .ConstructInstance(ipItems)
     End With
 End Function
 
-Friend Function ConstructInstance(ByRef ipitems As Variant) As IterItems
+Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
 
-    If VBA.IsArray(ipitems) Then
-        If ArrayInfo.Ranks(ipitems) > 1 Then
+    If VBA.IsArray(ipItems) Then
+        If ArrayInfo.Ranks(ipItems) > 1 Then
             Err.Raise 17 + vbObjectError, _
                 "VBALib.Iteritems: Invalid Array", _
                 "Arrays must be 1 dimension only"
@@ -61,58 +61,58 @@ Friend Function ConstructInstance(ByRef ipitems As Variant) As IterItems
     
     Select Case True
     
-        Case GroupInfo.IsDictionary(ipitems)
+        Case GroupInfo.IsDictionary(ipItems)
             ' this is a horrible hack.
             ' Probably best to make kvp produce arrays rather than seq for Keys and Items
-            If VBA.TypeName(ipitems) = "Dictionary" Then
-                s.Keys = ipitems.Keys
+            If VBA.TypeName(ipItems) = "Dictionary" Then
+                s.Keys = ipItems.Keys
                 ReDim Preserve s.Keys(1 To UBound(s.Keys) + 1)
             Else
-                s.Keys = ipitems.Keys.ToArray
+                s.Keys = ipItems.Keys.ToArray
             End If
     
-            Set s.Host = ipitems
+            Set s.Host = ipItems
             s.FirstIndex = 1
-            s.LastIndex = ipitems.Count
+            s.LastIndex = ipItems.Count
             
-        Case GroupInfo.IsItemByToArray(ipitems)
+        Case GroupInfo.IsItemByToArray(ipItems)
         
-            s.Items = ipitems.ToArray
-            Set s.Host = ipitems
+            s.Items = ipItems.ToArray
+            Set s.Host = ipItems
             s.FirstIndex = 0
-            s.LastIndex = ipitems.Count - 1
+            s.LastIndex = ipItems.Count - 1
             
-        Case GroupInfo.IsString(ipitems)
+        Case GroupInfo.IsString(ipItems)
         
-            s.Host = ipitems
+            s.Host = ipItems
             s.FirstIndex = 1
-            s.LastIndex = VBA.Len(ipitems)
+            s.LastIndex = VBA.Len(ipItems)
             
-        Case GroupInfo.IsIndexFrom1(ipitems)
+        Case GroupInfo.IsIndexFrom1(ipItems)
         
-            Set s.Host = ipitems
+            Set s.Host = ipItems
             s.FirstIndex = 1
-            s.LastIndex = ipitems.Count
+            s.LastIndex = ipItems.Count
             
-        Case GroupInfo.IsIndexFrom0(ipitems)
+        Case GroupInfo.IsIndexFrom0(ipItems)
         
-            Set s.Host = ipitems
+            Set s.Host = ipItems
             s.FirstIndex = 0
-            s.LastIndex = ipitems.Count - 1
+            s.LastIndex = ipItems.Count - 1
             
-        Case GroupInfo.IsArray(ipitems)
+        Case GroupInfo.IsArray(ipItems)
         
-            s.Host = ipitems
-            s.FirstIndex = LBound(ipitems)
-            s.LastIndex = UBound(ipitems)
+            s.Host = ipItems
+            s.FirstIndex = LBound(ipItems)
+            s.LastIndex = UBound(ipItems)
             
         
         Case Else
         
-            If VBA.IsObject(ipitems) Then
-                Set s.Host = ipitems
+            If VBA.IsObject(ipItems) Then
+                Set s.Host = ipItems
             Else
-                s.Host = ipitems
+                s.Host = ipItems
             End If
             s.FirstIndex = 1
             s.LastIndex = 1
@@ -266,9 +266,9 @@ Attribute TryGetIndex.VB_Description = "Returns the native index of the specifie
 End Function
 
 
-''@Description("Get the items at the current 1 based offset.  Optionally specify an offset in terms of the number of steps")
+'@Description("Get the items at the current 1 based offset.  Optionally specify an offset in terms of the number of steps")
 Public Property Get CurItem(ByVal ipLocalOffset As Long) As Variant
-Attribute CurItem.VB_Description = "Get the items at the xcurrent offset.  Optionally specify an offset in terms of the number of steps"
+Attribute CurItem.VB_Description = "Get the items at the current 1 based offset.  Optionally specify an offset in terms of the number of steps"
 
     Dim myIndex As Long
     If Not TryGetIndex(ipLocalOffset, myIndex) Then
@@ -276,24 +276,24 @@ Attribute CurItem.VB_Description = "Get the items at the xcurrent offset.  Optio
         Exit Property
     End If
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     Select Case True
     
-        Case GroupInfo.IsArray(s.Host):             myResult = Array(s.Host(myIndex))
-        Case GroupInfo.IsString(s.Host):            myResult = Array(VBA.Mid$(s.Host, myIndex, 1))
-        Case GroupInfo.IsItemByToArray(s.Host):     myResult = Array(s.Items(s.FirstIndex + myIndex - 1))
-        Case GroupInfo.IsDictionary(s.Host):        myResult = Array(s.Host.Item(s.Keys(myIndex)))
-        Case GroupInfo.IsIndexFrom0(s.Host):        myResult = Array(s.Host.Item(myIndex))
-        Case GroupInfo.IsIndexFrom1(s.Host):        myResult = Array(s.Host.Item(myIndex))
-        Case Else:                                  myResult = Array(s.Host)
+        Case GroupInfo.IsArray(s.Host):             myresult = Array(s.Host(myIndex))
+        Case GroupInfo.IsString(s.Host):            myresult = Array(VBA.Mid$(s.Host, myIndex, 1))
+        Case GroupInfo.IsItemByToArray(s.Host):     myresult = Array(s.Items(s.FirstIndex + myIndex - 1))
+        Case GroupInfo.IsDictionary(s.Host):        myresult = Array(s.Host.Item(s.Keys(myIndex)))
+        Case GroupInfo.IsIndexFrom0(s.Host):        myresult = Array(s.Host.Item(myIndex))
+        Case GroupInfo.IsIndexFrom1(s.Host):        myresult = Array(s.Host.Item(myIndex))
+        Case Else:                                  myresult = Array(s.Host)
         
     End Select
     
     
-    If VBA.IsObject(myResult(0)) Then
-        Set CurItem = myResult(0)
+    If VBA.IsObject(myresult(0)) Then
+        Set CurItem = myresult(0)
     Else
-        CurItem = myResult(0)
+        CurItem = myresult(0)
     End If
      
 End Property
@@ -352,29 +352,30 @@ Public Property Get CurKey(ByVal ipLocalOffset As Long) As Variant
         Exit Property
     End If
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     Select Case True
     
-        Case GroupInfo.IsArray(s.Host):                 myResult = Array(myIndex)
-        Case GroupInfo.IsString(s.Host):                myResult = Array(myIndex)
-        Case GroupInfo.IsItemByToArray(s.Host):         myResult = Array(s.FirstIndex + myIndex)
-        Case GroupInfo.IsDictionary(s.Host):            myResult = Array(s.Keys(myIndex))
-        Case GroupInfo.IsIndexFrom0(s.Host):            myResult = Array(myIndex)
-        Case GroupInfo.IsIndexFrom1(s.Host):            myResult = Array(myIndex)
-        Case Else:                                      myResult = Array(1)
+        Case GroupInfo.IsArray(s.Host):                 myresult = Array(myIndex)
+        Case GroupInfo.IsString(s.Host):                myresult = Array(myIndex)
+        Case GroupInfo.IsItemByToArray(s.Host):         myresult = Array(s.FirstIndex + myIndex)
+        Case GroupInfo.IsDictionary(s.Host):            myresult = Array(s.Keys(myIndex))
+        Case GroupInfo.IsIndexFrom0(s.Host):            myresult = Array(myIndex)
+        Case GroupInfo.IsIndexFrom1(s.Host):            myresult = Array(myIndex)
+        Case Else:                                      myresult = Array(1)
             
     End Select
     
-    If VBA.IsObject(myResult(0)) Then
-        Set CurKey = myResult(0)
+    If VBA.IsObject(myresult(0)) Then
+        Set CurKey = myresult(0)
     Else
-        CurKey = myResult(0)
+        CurKey = myresult(0)
     End If
 
 End Property
 
 '@Description("Returns the 1 based index of the current item")
 Public Property Get CurOffset(ByVal ipLocalOffset As Long) As Variant
+Attribute CurOffset.VB_Description = "Returns the 1 based index of the current item"
 
     Dim myIndex As Long
     myIndex = s.GlobalOffset + (s.Step * ipLocalOffset) + 1

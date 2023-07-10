@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "mpByIndex"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -99,23 +99,26 @@ Private Function ExecMapperByAL(ByRef ipHostItem As Variant) As Variant
 
 End Function
 
-Private Function ExecMapperBySeqC(ByRef ipHostItem As Variant) As Variant
+Private Function ExecMapperBySeqC(ByRef ipSeq As Variant) As Variant
 
-    If s.Index < 1 Or s.Index > ipHostItem.Count Then
-        ExecMapperBySeqC = Array(ipHostItem)
+    Dim myIndex As Long
+    myIndex = VBA.CLng(s.Index)
+    
+    If myIndex < ipSeq.FirstIndex Or myIndex > ipSeq.LastIndex Then
+        ExecMapperBySeqC = Array(ipSeq)
         Exit Function
     End If
 
     Dim myItem As Variant
-    myItem = s.Mapper.ExecMapper(ipHostItem.Item(s.Index))
+    myItem = s.Mapper.ExecMapper(VBA.CVar(ipSeq.Item(myIndex)))
 
     If VBA.IsObject(myItem(0)) Then
-        Set ipHostItem.Item(s.Index) = myItem(0)
+        Set ipSeq.Item(myIndex) = myItem(0)
     Else
-        ipHostItem.Item(s.Index) = myItem(0)
+        ipSeq.Item(myIndex) = myItem(0)
     End If
 
-    ExecMapperBySeqC = Array(ipHostItem)
+    ExecMapperBySeqC = Array(ipSeq)
 
 End Function
 
@@ -139,7 +142,7 @@ Private Function ExecMapperByArray(ByRef ipHostItem As Variant) As Variant
     Dim myLbound As Long
     myLbound = LBound(ipHostItem)
 
-    If GroupInfo.InvalidRangeItem(ipHostItem) Then
+    If GroupInfo.IsNotContainer(ipHostItem) And GroupInfo.IsNotString(ipHostItem) Then
         ExecMapperByArray = Array(ipHostItem)
         Exit Function
     End If

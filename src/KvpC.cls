@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Kvp is a flexible Key/Value pair dictionary targeted at VB/VBA. It facilitates data input, direct content manipulation of items and keys, and indirect manipulation of data via Map and Comparer objects"
@@ -66,9 +66,9 @@ End Function
     
  End Function
  
-Public Function AddPairs(ByRef ipKeys As SeqC, ByRef ipitems As SeqC) As KvpC
+Public Function AddPairs(ByRef ipKeys As SeqC, ByRef ipItems As SeqC) As KvpC
    
-    If ipKeys.LacksItems Or ipitems.LacksItems Then
+    If ipKeys.LacksItems Or ipItems.LacksItems Then
         Set AddPairs = Me
         Exit Function
     End If
@@ -76,7 +76,7 @@ Public Function AddPairs(ByRef ipKeys As SeqC, ByRef ipitems As SeqC) As KvpC
     Dim myIndex As Long
     For myIndex = ipKeys.FirstIndex To ipKeys.LastIndex
     
-        If myIndex > ipitems.Count Then
+        If myIndex > ipItems.Count Then
             Exit For
         End If
         
@@ -87,7 +87,7 @@ Public Function AddPairs(ByRef ipKeys As SeqC, ByRef ipitems As SeqC) As KvpC
         End If
         
         s.Keys.Add ipKeys.Item(myIndex)
-        s.Items.Add ipitems.Item(myIndex)
+        s.Items.Add ipItems.Item(myIndex)
           
     Next
    
@@ -97,7 +97,9 @@ End Function
 
 Public Property Get Item(ByRef ipKey As Variant) As Variant
     Dim myArray As Variant
-    myArray = Array(s.Items.Item(s.Keys.IndexOf(ipKey)))
+    Dim myIndex As Long
+    myIndex = s.Keys.IndexOf(ipKey)
+    myArray = Array(s.Items.Item(myIndex))
     If VBA.IsObject(myArray(0)) Then
         Set Item = myArray(0)
     Else
@@ -114,11 +116,11 @@ Public Property Set Item(ByRef ipKey As Variant, ByVal ipItem As Variant)
 End Property
 
 '@Description("Removes Key/Value pairs that exist in the KvpC")
-Public Function Remove(ParamArray ipParamarray() As Variant) As KvpC
+Public Function Remove(ParamArray ipParamArray() As Variant) As KvpC
 Attribute Remove.VB_Description = "Removes Key/Value pairs that exist in the KvpC"
 
     Dim myItem As Variant
-    For Each myItem In ipParamarray
+    For Each myItem In ipParamArray
         Dim myIndex As Long
         myIndex = s.Keys.IndexOf(myItem)
         If myIndex > 0 Then

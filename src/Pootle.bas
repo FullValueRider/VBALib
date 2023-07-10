@@ -40,3 +40,13 @@ Sub TestRemove()
     End If
 End Sub
 
+Sub testmpExecDeb()
+
+    Dim myD As Reindeer
+    
+    Dim myS As SeqC: Set myS = SeqC("Prancer", 10, 20, 30)
+    Dim myLOng As Long: myLOng = 3
+    Debug.Print myS.Item(myLOng)
+    Set myD = Reindeer.Deb(Array("Prancer", 10, 20, 30))
+    
+End Sub

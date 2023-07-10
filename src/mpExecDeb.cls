@@ -4,16 +4,17 @@ BEGIN
 END
 Attribute VB_Name = "mpExecDeb"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Option Explicit
 '@PredeclaredId
 '@Exposed
 '@Folder("VBALib.Mappers")
+Option Explicit
+
 Implements IMapper
 
-Const MY_TYPENAME                       As String = "mpDeb"
+Const MY_TYPENAME                       As String = "mpExecDeb"
 
 Private Type State
     PredeclaredId                       As Object
@@ -23,6 +24,7 @@ Private s                               As State
 
 '@DefaultMember
 Public Function Deb(ByVal ipPredeclaredId As Object) As mpExecDeb
+Attribute Deb.VB_UserMemId = 0
     With New mpExecDeb
         Set Deb = .ConstructInstance(ipPredeclaredId)
     End With
@@ -37,6 +39,7 @@ Friend Function ConstructInstance(ByVal ipPredeclaredId As Object) As mpExecDeb
 End Function
 
 Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+    'Dim myPredeclaredId As Object: Set myPredeclaredId = ipHostItem
     IMapper_ExecMapper = Array(s.PredeclaredId.Deb(ipHostItem))
 End Function
 
@@ -47,6 +50,3 @@ End Property
 'Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Collection
 '    Set IMapper_ExecMapper = ExecMapper(ipHostItem)
 'End Function
-
-
-

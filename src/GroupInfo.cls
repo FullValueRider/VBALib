@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "GroupInfo"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -20,7 +20,7 @@ Public Enum e_Group
    m_array
    m_string
    m_Admin
-   m_list
+   m_List
    m_Dictionary
    m_ItemObject
    m_Container
@@ -81,7 +81,7 @@ Public Function Id(ByVal ipItem As Variant) As e_Group
             Case "boolean":                                                                         Id = e_Group.m_boolean
             Case "byte", "date", "decimal", "double", "integer", "long", "longlong", "single":      Id = e_Group.m_number
             Case "string":                                                                          Id = e_Group.m_string
-            Case "seq", "collection", "arraylist", "stack", "queue":                                Id = e_Group.m_list
+            Case "seq", "collection", "arraylist", "stack", "queue":                                Id = e_Group.m_List
             Case "chashd", "dictionary", "kvp", "kvpair":                                           Id = e_Group.m_Dictionary
             Case "itemobject":                                                                      Id = e_Group.m_ItemObject
             ' admin probably needs a bit more thinking about
@@ -124,7 +124,7 @@ End Function
 
 
 Public Function IsList(ByRef ipItem As Variant) As Boolean
-    IsList = Me.Id(ipItem) = e_Group.m_list
+    IsList = Me.Id(ipItem) = e_Group.m_List
 End Function
 
 Public Function IsNotList(ByRef ipItem As Variant) As Boolean
@@ -163,7 +163,7 @@ End Function
 Public Function IsContainer(ByRef ipItem As Variant) As Boolean
     
     Select Case Id(ipItem)
-        Case m_array, m_list, m_Dictionary
+        Case m_array, m_List, m_Dictionary
             IsContainer = True
         Case Else
             IsContainer = False
@@ -209,24 +209,25 @@ Public Function IsNotArray(ByRef ipItem As Variant) As Boolean
     IsNotArray = Not IsArray(ipItem)
 End Function
 
-'@Description("Return True for String len = 0, Array not allocated, or obj.Count  = 0", error on invalid Type for range")
-Public Function InvalidRangeItem(ByRef ipRange As Variant) As Boolean
-   
-    ' An empty range item returns false.
-    ' An improper item raises an error
-    
-    Select Case Me.Id(ipRange)
-     
-        Case m_string:              InvalidRangeItem = InvalidRangeItemUsingString(VBA.CStr(ipRange))
-        Case m_array:               InvalidRangeItem = InvalidRangeItemUsingArray(ipRange)
-        Case m_list, m_Dictionary:  InvalidRangeItem = InvalidRangeItemUsingCount(ipRange)
-        Case Else
-            Err.Raise 17 + vbObjectError, _
-                "SeqC.Deb: Invalid Range Type", _
-                " Type: " & VBA.TypeName(ipRange) & " is not a Range Item type"
-    End Select
-   
-End Function
+''@Description("Return True for String len = 0, Array not allocated, or obj.Count  = 0", error on invalid Type for range")
+'Public Function InvalidRangeItem(ByRef ipRange As Variant) As Boolean
+'
+'    ' An empty range item returns false.
+'    ' An improper item raises an error
+'
+'    Select Case Me.Id(ipRange)
+'
+'        Case m_string:              InvalidRangeItem = False
+'        Case m_array:               InvalidRangeItem = False
+'        Case m_list, InvalidRangeItem = False
+'
+'        Case Else
+'            Err.Raise 17 + vbObjectError, _
+'                "SeqC.Deb: Invalid Range Type", _
+'                " Type: " & VBA.TypeName(ipRange) & " is not a Range Item type"
+'    End Select
+'
+'End Function
 
 Private Function InvalidRangeItemUsingString(ByRef ipString As String) As Boolean
     InvalidRangeItemUsingString = IIf(VBA.Len(ipString) = 0, True, False)

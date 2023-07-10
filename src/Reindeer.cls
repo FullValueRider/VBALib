@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Reindeer"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -39,6 +39,7 @@ Private s                       As State
 
 '@DefaultMember
 Public Function Deb(ByRef ipInfo As SeqC) As Reindeer
+Attribute Deb.VB_UserMemId = 0
     With New Reindeer
         Set Deb = .ConstructInstance(ipInfo)
     End With
@@ -58,21 +59,20 @@ End Function
 
 Public Function Distance(ByRef ipTime As Long) As Long
     
-    Dim myResult As Long: myResult = (ipTime \ (s.FlightTime + s.RestTime)) * s.FlightSpeed * s.FlightTime
+    Dim myresult As Long: myresult = (ipTime \ (s.FlightTime + s.RestTime)) * s.FlightSpeed * s.FlightTime
     
     Dim myRemainder As Long: myRemainder = ipTime Mod (s.FlightTime + s.RestTime)
     
     If myRemainder < s.FlightTime Then
     
-        myResult = myResult + myRemainder * s.FlightSpeed
+        myresult = myresult + myRemainder * s.FlightSpeed
     
     Else
         
-        myResult = myResult + s.FlightTime * s.FlightSpeed
+        myresult = myresult + s.FlightTime * s.FlightSpeed
         
     End If
     
-    Distance = myResult
+    Distance = myresult
     
 End Function
-
