@@ -668,6 +668,7 @@ End Sub
 
 '@Description("Removes the first encountered item from the SeqA")
 Public Function Remove(ParamArray ipParamArray() As Variant) As SeqA
+Attribute Remove.VB_Description = "Removes the first encountered item from the SeqA"
 
     If s.LastIndex < 1 Then
         Set Remove = Me
@@ -698,6 +699,7 @@ End Function
 
 '@Description("Removes the first encountered item from the SeqA")
 Public Function RemoveAt(ParamArray ipParamArray() As Variant) As SeqA
+Attribute RemoveAt.VB_Description = "Removes the first encountered item from the SeqA"
 
     If s.LastIndex < 1 Then
         Set RemoveAt = Me
@@ -725,6 +727,7 @@ End Function
 
 '@Description("Remove items in the specified range of Indexes")
 Public Function RemoveRange(ByRef ipSeq As SeqA) As SeqA
+Attribute RemoveRange.VB_Description = "Remove items in the specified range of Indexes"
   
     If s.LastIndex < 1 Then
         Set RemoveRange = Me
@@ -748,6 +751,7 @@ End Function
 
 '@Description("Remove items in the specified range of Indexes. Indexes are sorted in reverse order before use")
 Public Function RemoveAtRange(ByRef ipSeq As SeqA) As SeqA
+Attribute RemoveAtRange.VB_Description = "Remove items in the specified range of Indexes. Indexes are sorted in reverse order before use"
   
     If s.LastIndex < 1 Then
         Set RemoveAtRange = Me
@@ -838,6 +842,7 @@ End Function
 
 '@Description("Returns the first N items of the SeqA, Default 1")
 Public Function Head(Optional ByVal ipSplitAfter As Long = 1) As SeqA
+Attribute Head.VB_Description = "Returns the first N items of the SeqA, Default 1"
     
     If s.LastIndex <= 1 Then
         Set Head = SeqA.Deb
@@ -861,6 +866,7 @@ End Function
 
 '@Description("Returns the Items after SplitAfter, Default is Index 2")
 Public Function Tail(Optional ByVal ipSplitAfter As Long = 1) As SeqA
+Attribute Tail.VB_Description = "Returns the Items after SplitAfter, Default is Index 2"
 
     If s.LastIndex < 1 Then
         Set Tail = SeqA.Deb
@@ -905,6 +911,14 @@ End Function
 
 Public Function LacksItem(ByRef ipItem As Variant) As Boolean
     LacksItem = Not HoldsItem(ipItem)
+End Function
+
+Public Function HoldsItems() As Boolean
+    HoldsItems = s.LastIndex > 0
+End Function
+
+Public Function LacksItems() As Boolean
+    LacksItems = s.LastIndex < 1
 End Function
 '
 '
@@ -1047,7 +1061,7 @@ End Property
 '
 'End Function
 '
-''@DescriptiPN("Splits the SeqA at the first occurence of ipItem")
+''@Description("Splits the SeqA at the first occurence of ipItem")
 'Public Function SplitAtItem(ByVal ipItem As Variant, Optional ByVal ipSplitType As e_SeqSplit = e_SeqSplit.m_Before) As SeqA
 '    Dim mySplit As SeqA
 '    Dim myItems As IterItems = IterItems(Me)
@@ -1157,6 +1171,29 @@ Public Function MapIt(ByVal ipMapper As IMapper) As SeqA
 
 End Function
 
+'@Description("Mutates the SeqC in place by applying the function in IMapper to each item")
+Public Function MappedIt(ByRef ipMapper As IMapper) As SeqA
+Attribute MappedIt.VB_Description = "Mutates the SeqC in place by applying the function in IMapper to each item"
+    'Mapped it works by reference but we allow a function return to enable fluid use of Mappedit
+    
+    Dim myIndex As Long
+    For myIndex = FIRST_INDEX To s.LastIndex
+    
+        Dim myItem As Variant
+        myItem = ipMapper.ExecMapper(s.Host(myIndex))
+        
+        If VBA.IsObject(myItem(0)) Then
+            Set Me.Item(myIndex) = myItem(0)
+        Else
+            Me.Item(myIndex) = myItem(0)
+        End If
+        
+    Next
+    
+    Set MappedIt = Me
+    
+End Function
+
 Public Function FilterIt(ByVal ipComparer As IComparer) As SeqA
 
     Dim myS As SeqA
@@ -1194,7 +1231,7 @@ Public Function CountIt(ByVal ipComparer As IComparer) As Long
 
 End Function
 
-'@DescriptiPN("Returns a single Host based on the Reducer").
+'@Description("Returns a single Host based on the Reducer").
 Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
     'ReduceIt = ipReducer.ExecReduction(Me)
     Dim myItem As Variant
@@ -1208,8 +1245,9 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
     
 End Function
 '
-'@DescriptiPN("Returns the item at FirstIndex")
+'@Description("Returns the item at FirstIndex")
 Public Property Get First() As Variant
+Attribute First.VB_Description = "Returns the item at FirstIndex"
 
     GuardInvalidIndex 1, s.LastIndex, "VBALib.SeqA.Get_First"
     
@@ -1222,7 +1260,8 @@ Public Property Get First() As Variant
 End Property
 
 '@Description("Assigns to the Item at FirstIndex")
-Public Property Let First(ByRef ipItem As Variant)
+Public Property Let First(ByVal ipItem As Variant)
+Attribute First.VB_Description = "Assigns to the Item at FirstIndex"
 
     GuardInvalidIndex 1, s.LastIndex, "VBALib.SeqA.Let_First"
     
@@ -1231,7 +1270,8 @@ Public Property Let First(ByRef ipItem As Variant)
 End Property
 
 '@Description("Assigns to the Item at FirstIndex")
-Public Property Set First(ByRef ipItem As Variant)
+Public Property Set First(ByVal ipItem As Variant)
+Attribute First.VB_Description = "Assigns to the Item at FirstIndex"
 
     GuardInvalidIndex 1, s.LastIndex, "VBALib.SeqA.Set_First"
     
@@ -1241,6 +1281,7 @@ End Property
 
 '@Description("Returns the Item at LastIndex")
 Public Property Get Last() As Variant
+Attribute Last.VB_Description = "Returns the Item at LastIndex"
 
     GuardInvalidIndex s.LastIndex, s.LastIndex, "VBALib.SeqA.Set_Last"
 
@@ -1253,7 +1294,8 @@ Public Property Get Last() As Variant
 End Property
 
 '@Description("Assigns to the Item at LastIndex")
-Public Property Let Last(ByRef ipItem As Variant)
+Public Property Let Last(ByVal ipItem As Variant)
+Attribute Last.VB_Description = "Assigns to the Item at LastIndex"
 
     GuardInvalidIndex s.LastIndex, s.LastIndex, "VBALib.SeqA.Let_Last"
 
@@ -1261,8 +1303,9 @@ Public Property Let Last(ByRef ipItem As Variant)
     
 End Property
 
-'@Descriotion("Assigns to the item at LastIndex")
-Public Property Set Last(ByRef ipItem As Variant)
+'@Description("Assigns to the item at LastIndex")
+Public Property Set Last(ByVal ipItem As Variant)
+Attribute Last.VB_Description = "Assigns to the item at LastIndex"
 
     GuardInvalidIndex s.LastIndex, s.LastIndex, "VBALib.SeqA.Set_Last"
 
@@ -1272,6 +1315,7 @@ End Property
 
 '@Description("Returns the item at First but one Index")
 Public Property Get FBO() As Variant
+Attribute FBO.VB_Description = "Returns the item at First but one Index"
 
    GuardInvalidIndex 2, s.LastIndex, "VBALib.SeqA.Get_FBO"
    
@@ -1288,6 +1332,7 @@ End Property
 
 '@Description("Assigns to the Item at First but one Index")
 Public Property Let FBO(ByVal ipItem As Variant)
+Attribute FBO.VB_Description = "Assigns to the Item at First but one Index"
 
    GuardInvalidIndex 2, s.LastIndex, "VBALib.SeqA.Let_FBO"
        
@@ -1297,6 +1342,7 @@ End Property
 
 '@Description("Assigns to the Item at First but one Index")
 Public Property Set FBO(ByVal ipItem As Variant)
+Attribute FBO.VB_Description = "Assigns to the Item at First but one Index"
 
    GuardInvalidIndex 2, s.LastIndex, "VBALib.SeqA.Set_FBO"
    
@@ -1306,6 +1352,7 @@ End Property
 
 '@Description("Returns the Item at Lastbut one Index")
 Public Property Get LBO() As Variant
+Attribute LBO.VB_Description = "Returns the Item at Lastbut one Index"
 
    GuardInvalidIndex 2, s.LastIndex, "VBALib.SeqA.Let_FBO"
    
@@ -1323,6 +1370,7 @@ End Property
 
 '@Description("Assigns to the Item at Last but one Index")
 Public Property Let LBO(ByVal ipItem As Variant)
+Attribute LBO.VB_Description = "Assigns to the Item at Last but one Index"
 
    GuardInvalidIndex 2, s.LastIndex, "VBALib.SeqA.Let_FBO"
    
@@ -1333,6 +1381,7 @@ End Property
 
 '@Description("Assigns to the item at Last but one Index")
 Public Property Set LBO(ByVal ipItem As Variant)
+Attribute LBO.VB_Description = "Assigns to the item at Last but one Index"
 
    GuardInvalidIndex 2, s.LastIndex, "VBALib.SeqA.Let_FBO"
 
@@ -1351,7 +1400,7 @@ End Property
 ''End Property
 '
 '
-'@DescriptiPN("Returns the index of the Item")
+'@Description("Returns the index of the Item")
 Public Function IndexOf _
 ( _
     ByVal ipItem As Variant, _
@@ -1837,7 +1886,7 @@ End Function
 '
 'End Function
 '
-''@DescriptiPN(creates an KvpH of collections items where the items in the collection are bucketed based on the Host at an Index)
+''@Description(creates an KvpH of collections items where the items in the collection are bucketed based on the Host at an Index)
 'Public Function Freq(ByVal ipIndex As Long) As IKvp
 '
 '    Dim myKvpH As IKvp = KvpA.Deb
@@ -2061,6 +2110,7 @@ End Function
 
 '@Description("Swaps the Items at the specified indexes")
 Public Function Swap(ByRef ipLHSIndex As Long, ByRef ipRHSIndex As Long) As SeqA
+Attribute Swap.VB_Description = "Swaps the Items at the specified indexes"
 
     Dim myTemp As Variant
     
@@ -2082,6 +2132,8 @@ Public Function Swap(ByRef ipLHSIndex As Long, ByRef ipRHSIndex As Long) As SeqA
         s.Host(ipRHSIndex) = myTemp
     End If
 
+    Set Swap = Me
+    
 End Function
 
 
@@ -2142,6 +2194,7 @@ Public Function Reverse() As SeqA
  
  '@Description("Returns the unique subset of the host SeqA")
 Public Function Unique() As SeqA
+Attribute Unique.VB_Description = "Returns the unique subset of the host SeqA"
 
     Dim myS As SeqA
     Set myS = SeqA.Deb
@@ -2317,4 +2370,3 @@ End Function
 
  End Function
 '
-

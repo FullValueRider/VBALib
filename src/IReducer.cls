@@ -12,7 +12,7 @@ Attribute VB_Exposed = True
 Option Explicit
 
 ' IReducers take the whole SeqC or Items of a Kvp so we can be specific and specify SeqC as the parameter type
-Public Function ExecReduction(ByRef ipHostItems As SeqC) As Variant
+Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant
 End Function
 
 Public Property Get TypeName() As String

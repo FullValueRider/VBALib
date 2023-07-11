@@ -31,7 +31,7 @@ Public Property Get IReducer_TypeName() As String
 End Property
 
  '@Description("Calls Mapit on the lowest level item supporting mapit on The hostItem")
-Public Function IReducer_ExecReduction(ByRef ipHostItems As SeqC) As Variant
+Public Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 Attribute IReducer_ExecReduction.VB_Description = "Calls Mapit on the lowest level item supporting mapit on The hostItem"
 
     Dim myItem As Variant

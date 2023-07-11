@@ -26,7 +26,7 @@ Private s                           As State
 
 
 '@Description("Computes the sum of the items")
-Private Function IReducer_ExecReduction(ByRef ipHostItems As SeqC) As Variant
+Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 Attribute IReducer_ExecReduction.VB_Description = "Computes the sum of the items"
     IReducer_ExecReduction = ExecReduction(ipHostItems)
 End Function
@@ -36,25 +36,28 @@ Private Property Get IReducer_TypeName() As String
 End Property
 
 
-Public Function ExecReduction(ByRef ipHostItems As SeqC) As Variant
+Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant
 
     Dim mySum As Variant
     mySum = VBA.CDec(0)
     
     Dim myItem As Variant
+    Dim myIndex As Long
     If s.Comparer Is Nothing Then
     
-        For Each myItem In ipHostItems
-            If GroupInfo.IsNumber(myItem) Then
-                mySum = mySum + myItem
+        
+        For myIndex = ipHostItems.FirstIndex To ipHostItems.LastIndex
+            If GroupInfo.IsNumber(ipHostItems.Item(myIndex)) Then
+                mySum = mySum + ipHostItems.Item(myIndex)
             End If
         Next
        
     Else
         
-        For Each myItem In ipHostItems
-            If s.Comparer.ExecCmp(myItem) Then
-                mySum = mySum + myItem
+        
+        For myIndex = ipHostItems.FirstIndex To ipHostItems.LastIndex
+            If s.Comparer.ExecCmp(ipHostItems.Item(myIndex)) Then
+                mySum = mySum + ipHostItems.Item(myIndex)
             End If
         Next
         

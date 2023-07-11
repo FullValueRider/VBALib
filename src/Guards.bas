@@ -30,7 +30,7 @@ Public Sub GuardInvalidRangeObject(ByRef myGroupId As e_Group, ByRef ipItem As V
     
 End Sub
 
-Sub GuardInvalidIndex(ByRef ipIndex As Long, ByRef ipLastIndex As Long, ByRef ipMessage As String)
+Public Sub GuardInvalidIndex(ByRef ipIndex As Long, ByRef ipLastIndex As Long, ByRef ipMessage As String)
 
     If ipIndex <= ipLastIndex Then
         Exit Sub

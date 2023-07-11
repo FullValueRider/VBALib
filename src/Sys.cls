@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+Attribute VB_Description = "A location for global helper methods"
 '@PredeclaredId
 '@Exposed
 '@Folder("VBALib")
@@ -25,6 +26,7 @@ Option Explicit
 ' e.g. Method(Item), use Method(Array(Item)).
 'ResolveParamArray returns true if the paramarray was reduced  to a single Item, false if not.
 Public Function ResolveParamArray(ByRef iopFPA As Variant) As Boolean
+Attribute ResolveParamArray.VB_Description = "Revises the FPA (forwarded ParamArray) to FPA(0) if FPA contains a single item of the Enumarable group, a number or a string."
     ResolveParamArray = False
     ' the FPA must be an allocated array i.e. not <Array>() to be processable
     If ArrayInfo.LacksItems(iopFPA) Then

@@ -40,7 +40,7 @@ Friend Function ConstructInstance(ByRef ipComparer As IComparer) As rdCountIt
 End Function
 
 '@Description("Adds the value in ipArgsArray(0) to each item in the SeqC.  If the host item is not a number the string NAN is returned")
-Private Function IReducer_ExecReduction(ByRef ipHostItems As SeqC) As Variant
+Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 Attribute IReducer_ExecReduction.VB_Description = "Adds the value in ipArgsArray(0) to each item in the SeqC.  If the host item is not a number the string NAN is returned"
     IReducer_ExecReduction = ExecReduction(ipHostItems)
 End Function
@@ -49,7 +49,7 @@ Private Property Get IReducer_TypeName() As String
     IReducer_TypeName = MY_TYPENAME
 End Property
 
-Public Function ExecReduction(ByRef ipHostItems As SeqC) As Variant
+Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant
         
     Dim myCounter As Long
     myCounter = 0

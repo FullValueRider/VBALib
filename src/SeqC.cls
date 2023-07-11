@@ -616,6 +616,7 @@ End Sub
  
 '@Description("Removes the first encountered item from the SeqC")
 Public Function Remove(ParamArray ipParamArray() As Variant) As SeqC
+Attribute Remove.VB_Description = "Removes the first encountered item from the SeqC"
 
     If s.Host.Count < 1 Then
         Set Remove = Me
@@ -646,6 +647,7 @@ End Function
 
 '@Description("Removes the items at the Indexes.  Indexes are sorted before use.")
 Public Function RemoveAt(ParamArray ipParamArray() As Variant) As SeqC
+Attribute RemoveAt.VB_Description = "Removes the items at the Indexes.  Indexes are sorted before use."
 
     If s.Host.Count < 1 Then
         Set RemoveAt = Me
@@ -698,6 +700,7 @@ End Function
 
 '@Description("Remove items in the specified range of Indexes. Indexes are sorted in reverse order before use")
 Public Function RemoveAtRange(ByRef ipSeq As SeqC) As SeqC
+Attribute RemoveAtRange.VB_Description = "Remove items in the specified range of Indexes. Indexes are sorted in reverse order before use"
   
     If s.Host.Count < 1 Then
         Set RemoveAtRange = Me
@@ -1654,4 +1657,3 @@ End Function
      Set Freq = myKvp
 
  End Function
-
