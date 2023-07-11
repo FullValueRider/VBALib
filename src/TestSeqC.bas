@@ -1005,7 +1005,7 @@ Private Sub Test11a_RemoveRange_SingleItem()
     Set mySeq = SeqC.Deb(Array(Empty, Empty, Empty, 42, Empty, Empty))
     
     'Act:
-    mySeq.RemoveRange 4
+    mySeq.RemoveRange SeqC.Deb.AddItems(42)
   
     myresult = mySeq.ToArray
     
@@ -1036,7 +1036,7 @@ Private Sub Test11b_RemoveRange_ThreeItems()
     Set mySeq = SeqC.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
     
     'Act:
-    mySeq.RemoveRange 4, 3
+    mySeq.RemoveAtRange SeqC(4, 5, 6)
   
     myresult = mySeq.ToArray
     
@@ -1054,20 +1054,20 @@ TestFail:
 End Sub
 
 '@TestMethod("SeqC")
-Private Sub Test12a_RemoveItems_SingleItem()
+Private Sub Test12a_RemoveRange_SingleItem()
     On Error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqC
     Dim myExpected As Variant
-    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
-    ReDim Preserve myExpected(1 To 5)
+    myExpected = Array(Empty, Empty, Empty, 42, 42, Empty, Empty)
+    ReDim Preserve myExpected(1 To 7)
     
     Dim myresult As Variant
-    Set mySeq = SeqC.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
+    Set mySeq = SeqC(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
     
     'Act:
-    mySeq.RemoveRange 4, 3
+    mySeq.RemoveRange SeqC.Deb.AddItems(42)
   
     myresult = mySeq.ToArray
     

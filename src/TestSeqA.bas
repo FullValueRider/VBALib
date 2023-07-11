@@ -899,1910 +899,1939 @@ TestFail:
     Resume TestExit
 End Sub
 
+'@TestMethod("SeqA")
+Private Sub Test09a0_Remove_SingleItem()
+    On Error GoTo TestFail
 
-''@TestMethod("SeqA")
-'Private Sub Test09a_RemoveAt_SingleItem()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
-'    ReDim Preserve myExpected(1 To 5)
-'
-'    Dim myresult As Variant
-'    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, Empty, Empty))
-'
-'    'Act:
-'    mySeq.RemoveAt 4
-'
-'    myresult = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test09b_Remove_ThreeItems()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
-'    ReDim Preserve myExpected(1 To 5)
-'
-'    Dim myresult As Variant
-'    Set mySeq = SeqA.Deb(Array(Empty, 42, Empty, Empty, 42, Empty, Empty, 42))
-'
-'    'Act:
-'    mySeq.RemoveAt 8, 2, 5
-'
-'    myresult = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test10a_Remove_SingleItems()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(Empty, Empty, Empty, 42, "Hello", "Hello", Empty, Empty, 42, Empty, Empty)
-'    ReDim Preserve myExpected(1 To 11)
-'
-'    Dim myresult As Variant
-'    Set mySeq = SeqA(Empty, 42, Empty, Empty, 42, "Hello", "Hello", "Hello", Empty, 3.142, Empty, 42, Empty, Empty)
-'
-'    'Act:
-'    mySeq.Remove 42, 3.142, "Hello"
-'
-'    myresult = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test11a_RemoveRange_SingleItem()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
-'    ReDim Preserve myExpected(1 To 5)
-'
-'    Dim myresult As Variant
-'    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, Empty, Empty))
-'
-'    'Act:
-'    mySeq.RemoveRange 4
-'
-'    myresult = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test11b_RemoveRange_ThreeItems()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
-'    ReDim Preserve myExpected(1 To 5)
-'
-'    Dim myresult As Variant
-'    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
-'
-'    'Act:
-'    mySeq.RemoveRange 4, 3
-'
-'    myresult = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test12a_RemoveItems_SingleItem()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
-'    ReDim Preserve myExpected(1 To 5)
-'
-'    Dim myresult As Variant
-'    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
-'
-'    'Act:
-'    mySeq.RemoveRange 4, 3
-'
-'    myresult = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test13a_RemoveAll_DefaultAll()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 0&
-'
-'    Dim myresult As Variant
-'    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
-'
-'    'Act:
-'    mySeq.RemoveAll
-'    myresult = mySeq.Count
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test13b_RemoveAll_Default_42AndHello()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
-'    ReDim myExpected(1 To 5)
-'
-'    Dim myresult As Variant
-'    Set mySeq = SeqA.Deb(Empty, "Hello", Empty, "Hello", "Hello", Empty, 42, 42, 42, Empty, Empty)
-'
-'    'Act:
-'    mySeq.RemoveAll "Hello", 42
-'    myresult = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test13c_Reset()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 0&
-'
-'    Dim myresult As Variant
-'    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
-'
-'    'Act:
-'    mySeq.Reset
-'    myresult = mySeq.Count
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test13d_Clear()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 0&
-'
-'    Dim myresult As Variant
-'    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
-'
-'    'Act:
-'    mySeq.Clear
-'    myresult = mySeq.Count
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test14a_Fill()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(True, True, True)
-'    ReDim Preserve myExpected(1 To 3)
-'
-'    Dim myresult As Variant
-'    ReDim myresult(1 To 3)
-'    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty))
-'
-'    'Act:
-'    mySeq.Fill 42, 10
-'    myresult(1) = mySeq.Count = 13
-'    myresult(2) = mySeq.Item(4) = 42&
-'    myresult(3) = mySeq.Item(13) = 42&
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test15a_Slice()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(3&, 4&, 5&)
-'    ReDim Preserve myExpected(1 To 3)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Slice(3, 3).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test15b_SliceToEnd()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'    ReDim Preserve myExpected(1 To 8)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Slice(3).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test15c_SliceRunOnly()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(1&, 2&, 3&, 4&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Slice(ipRun:=4).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test15d_Slice_Start3_End9_step2()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(3&, 5&, 7&, 9&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Slice(3, 7, 2).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test15e_Slice_Start3_End9_step2_ToCollection()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(3&, 5&, 7&, 9&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myresult As Variant
-'    ReDim myresult(1 To 4)
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    Dim myC As Collection
-'    Set myC = mySeq.Slice(3, 7, 2).ToCollection
-'    myresult(1) = myC.Item(1)
-'    myresult(2) = myC.Item(2)
-'    myresult(3) = myC.Item(3)
-'    myresult(4) = myC.Item(4)
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test15f_Slice_Start3_End9_step2_ToArray()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(3&, 5&, 7&, 9&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Slice(3, 7, 2).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test16a_Head()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(1&)
-'    ReDim Preserve myExpected(1 To 1)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Head.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test16b_Head_3Items()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(1&, 2&, 3&)
-'    ReDim Preserve myExpected(1 To 3)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Head(3).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test16c_HeadZeroItems()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 0&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Head(-2).Count
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test16d_HeadFullSeqA()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'    ReDim Preserve myExpected(1 To 10)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Head(42).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test17a_Tail()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'    ReDim Preserve myExpected(1 To 9)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Tail.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test17b_Tail_3Items()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'    ReDim Preserve myExpected(1 To 7)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Tail(3).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test17c_TailFullItems()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 0&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Tail(42).Count
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test17d_TailZeroSeqA()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'    ReDim Preserve myExpected(1 To 10)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
-'
-'    'Act:
-'    myresult = mySeq.Tail(-2).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test18a_KnownIndexes_Available()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(1&, 2&, 9&, 10&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myresult As Variant
-'    ReDim myresult(1 To 4)
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult(1) = mySeq.FirstIndex
-'    myresult(2) = mySeq.FBOIndex
-'    myresult(3) = mySeq.LBOIndex
-'    myresult(4) = mySeq.LastIndex
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test18b_KnownIndexes_Unavailable()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(-1&, -1&, -1&, -1&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myresult As Variant
-'    ReDim myresult(1 To 4)
-'
-'    Set mySeq = SeqA.Deb
-'
-'    'Act:
-'    myresult(1) = mySeq.FirstIndex
-'    myresult(2) = mySeq.FBOIndex
-'    myresult(3) = mySeq.LBOIndex
-'    myresult(4) = mySeq.LastIndex
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test19a_KnownValues_Available()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 90&, 100&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myresult As Variant
-'    ReDim myresult(1 To 4)
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult(1) = mySeq.First
-'    myresult(2) = mySeq.FBO
-'    myresult(3) = mySeq.LBO
-'    myresult(4) = mySeq.Last
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test20a_IndexOf_WholeSeq_Present()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 5&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.IndexOf(50&)
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test20b_IndexOf_WholeSeq_NotPresent()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = -1&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.IndexOf(55&)
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test20c_IndexOf_SubSeq_Present()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 5&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.IndexOf(50&, 4, 4)
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test20d_IndexOf_SubSeq_NotPresent()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = -1&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.IndexOf(20&, 4, 4)
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test21a_LastIndexOf_WholeSeq_Present()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 5&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.LastIndexOf(50&)
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test21b_LastIndexOf_WholeSeq_NotPresent()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = -1&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.LastIndexOf(55&)
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test21c_LastIndexOf_SubSeq_Present()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 5&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.LastIndexOf(50&, 4, 4)
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test21d_LastIndexOf_SubSeq_NotPresent()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = -1&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.LastIndexOf(20&, 4, 4)
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test22a_Push()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 1000&)
-'    ReDim Preserve myExpected(1 To 11)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.Push(1000&).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test22b_PushRange()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 11&, 12&, 13&, 14&, 15&)
-'    ReDim Preserve myExpected(1 To 15)
-'
-'    Dim myresult As Variant
-'
-'    Dim myArray As Variant
-'    myArray = Array(11&, 12&, 13&, 14&, 15&)
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.PushRange(myArray).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test23a_Pop()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 100&
-'
-'    Dim myExpected2 As Variant
-'    myExpected2 = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&)
-'    ReDim Preserve myExpected2(1 To 9)
-'
-'    Dim myresult As Variant
-'    Dim myResult2 As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.Pop
-'    myResult2 = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'    Assert.SequenceEquals myExpected2, myResult2
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test23b_PopRange()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(100&, 90&, 80&, 70&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myExpected2 As Variant
-'    myExpected2 = Array(10&, 20&, 30&, 50&, 50&, 60&)
-'    ReDim Preserve myExpected2(1 To 6)
-'
-'    Dim myresult As Variant
-'    Dim myResult2 As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.PopRange(4).ToArray
-'    myResult2 = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'    Assert.SequenceEquals myExpected2, myResult2
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test23c_PopRange_ExceedsHost()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(100&, 90&, 80&, 70&, 60&, 50&, 40&, 30&, 20&, 10&)
-'    ReDim Preserve myExpected(1 To 10)
-'
-'    Dim myExpected2 As Variant
-'    myExpected2 = 0&
-'
-'    Dim myresult As Variant
-'    Dim myResult2 As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.PopRange(25).ToArray
-'    myResult2 = mySeq.Count
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'    Assert.AreEqual myExpected2 = 0, myResult2 = 0
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test23d_PopRange_NegativeRun()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 0&
-'
-'    Dim myExpected2 As Variant
-'    myExpected2 = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'    ReDim Preserve myExpected2(1 To 10)
-'
-'    Dim myresult As Variant
-'    Dim myResult2 As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.PopRange(-2).Count
-'    myResult2 = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'    Assert.SequenceEquals myExpected2, myResult2
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test24a_Enqueue()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 1000&)
-'    ReDim Preserve myExpected(1 To 11)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.enQueue(1000&).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test24b_EnqueueRange()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 11&, 12&, 13&, 14&, 15&)
-'    ReDim Preserve myExpected(1 To 15)
-'
-'    Dim myresult As Variant
-'
-'    Dim myArray As Variant
-'    myArray = Array(11&, 12&, 13&, 14&, 15&)
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.EnqueueRange(myArray).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test25a_Dequeue()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 10&
-'
-'    Dim myExpected2 As Variant
-'    myExpected2 = Array(20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
-'    ReDim Preserve myExpected2(1 To 9)
-'
-'    Dim myresult As Variant
-'    Dim myResult2 As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.Dequeue
-'    myResult2 = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'    Assert.SequenceEquals myExpected2, myResult2
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test25b_DeqeueRange()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 40&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myExpected2 As Variant
-'    myExpected2 = Array(50&, 60&, 70&, 80&, 90&, 100&)
-'    ReDim Preserve myExpected2(1 To 6)
-'
-'    Dim myresult As Variant
-'    Dim myResult2 As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.DequeueRange(4).ToArray
-'    myResult2 = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'    Assert.SequenceEquals myExpected2, myResult2
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test25c_DequeueRange_ExceedsHost()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'    ReDim Preserve myExpected(1 To 10)
-'
-'    Dim myExpected2 As Variant
-'    myExpected2 = 0&
-'
-'
-'    Dim myresult As Variant
-'    Dim myResult2 As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.DequeueRange(25).ToArray
-'    myResult2 = mySeq.Count
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'    Assert.AreEqual myExpected2 = 0, myResult2 = 0
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test26a_Sort()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'    ReDim Preserve myExpected(1 To 10)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.Sort.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test26b_Sorted()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'    ReDim Preserve myExpected(1 To 10)
-'
-'    Dim myExpected2 As Variant
-'    myExpected2 = Array(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
-'    ReDim Preserve myExpected2(1 To 10)
-'
-'    Dim myresult As Variant
-'    Dim myResult2 As Variant
-'
-'    Set mySeq = SeqA.Deb(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.Sorted.ToArray
-'    myResult2 = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'    Assert.SequenceEquals myExpected2, myResult2
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test27a_Reverse()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim myExpected As Variant
-'    myExpected = Array(100&, 90&, 80&, 70&, 60&, 50&, 40&, 30&, 20&, 10&)
-'    ReDim Preserve myExpected(1 To 10)
-'
-'    Dim mySeq As SeqA
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'     Dim myresult As Variant
-'    'Act:
-'    myresult = mySeq.Reverse.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test27b_Reversed()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(100&, 90&, 80&, 70&, 60&, 50&, 40&, 30&, 20&, 10&)
-'    ReDim Preserve myExpected(1 To 10)
-'
-'    Dim myExpected2 As Variant
-'    myExpected2 = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'    ReDim Preserve myExpected2(1 To 10)
-'
-'    Dim myresult As Variant
-'    Dim myResult2 As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'
-'    'Act:
-'    myresult = mySeq.Reverse.ToArray
-'    myResult2 = mySeq.Reversed.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'    Assert.SequenceEquals myExpected2, myResult2
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test28a_Unique()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-'    ReDim Preserve myExpected(1 To 10)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(10&, 100&, 20&, 30&, 40&, 50&, 30&, 30&, 60&, 100&, 70&, 100&, 80&, 90&, 100&)
-'
-'    'Act:
-'    ' The array needs to be sorted because unique copies the first item encountered
-'    myresult = mySeq.Unique.Sorted.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test28b_Unique_SIngleItem()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&)
-'    ReDim Preserve myExpected(1 To 1)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb.AddItems(10&)
-'
-'    'Act:
-'    ' The array needs to be sorted because unique copies the first item encountered
-'    myresult = mySeq.Unique.Sorted.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test28c_Unique_NoItems()
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = 0&
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb
-'
-'    'Act:
-'    ' The array needs to be sorted because unique copies the first item encountered
-'    myresult = mySeq.Count
-'
-'    'Assert:
-'    Assert.AreEqual myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test29a_SetOfConnom()
-'
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(50&, 60&, 70&, 80&, 90&, 100&)
-'    ReDim Preserve myExpected(1 To 6)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
-'
-'    'Act:
-'    myresult = mySeq.SetOf(m_Common, SeqA(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test29b_SetOfHostOnly()
-'
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(110&, 120&, 130&, 140&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
-'
-'    'Act:
-'    myresult = mySeq.SetOf(m_HostOnly, SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test29c_SetOfParamOnly()
-'
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 40&)
-'    ReDim Preserve myExpected(1 To 4)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
-'
-'    'Act:
-'    myresult = mySeq.SetOf(m_ParamOnly, SeqA(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test29d_SetOfNotCommon()
-'
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 40&, 110&, 120&, 130&, 140&)
-'    ReDim Preserve myExpected(1 To 8)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
-'
-'    'Act:  Again we need to sort The result SeqA to get the matching array
-'    myresult = mySeq.SetOf(m_NotCommon, SeqA(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-''@TestMethod("SeqA")
-'Private Sub Test29e_SetOfUnique()
-'
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
-'    ReDim Preserve myExpected(1 To 14)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
-'
-'    'Act:  Again we need to sort The result SeqA to get the matching array
-'    myresult = mySeq.SetOf(m_Unique, SeqA(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
-'
-'
-'
-''@TestMethod("SeqA")
-'Private Sub Test30a_Swap()
-'
-'    On Error GoTo TestFail
-'
-'    'Arrange:
-'    Dim mySeq As SeqA
-'    Dim myExpected As Variant
-'    myExpected = Array(140&, 130&, 120&, 110&, 100&, 90&, 80&, 70&, 60&, 50&)
-'    ReDim Preserve myExpected(1 To 10)
-'
-'    Dim myresult As Variant
-'
-'    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
-'
-'    'Act:
-'    mySeq.Swap 1, 10
-'    mySeq.Swap 2, 9
-'    mySeq.Swap 3, 8
-'    mySeq.Swap 4, 7
-'    mySeq.Swap 5, 6
-'
-'    myresult = mySeq.ToArray
-'
-'    'Assert:
-'    Assert.SequenceEquals myExpected, myresult
-'
-'TestExit:
-'    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
-'
-'    Exit Sub
-'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-'    Resume TestExit
-'End Sub
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
+    ReDim Preserve myExpected(1 To 5)
+
+    Dim myresult As Variant
+    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, Empty, Empty))
+
+    'Act:
+    mySeq.Remove 42
+
+    myresult = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test09a_RemoveAt_SingleItem()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
+    ReDim Preserve myExpected(1 To 5)
+
+    Dim myresult As Variant
+    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, Empty, Empty))
+
+    'Act:
+    mySeq.RemoveAt 4
+
+    myresult = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+'
+'@TestMethod("SeqA")
+Private Sub Test09b_RemoveAt_ThreeItems()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
+    ReDim Preserve myExpected(1 To 5)
+
+    Dim myresult As Variant
+    Set mySeq = SeqA.Deb(Array(Empty, 42, Empty, Empty, 42, Empty, Empty, 42))
+
+    'Act:
+    mySeq.RemoveAt 8, 2, 5
+
+    myresult = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test10a_Remove_SingleItems()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(Empty, Empty, Empty, 42, "Hello", "Hello", Empty, Empty, 42, Empty, Empty)
+    ReDim Preserve myExpected(1 To 11)
+
+    Dim myresult As Variant
+    Set mySeq = SeqA(Empty, 42, Empty, Empty, 42, "Hello", "Hello", "Hello", Empty, 3.142, Empty, 42, Empty, Empty)
+
+    'Act:
+    mySeq.RemoveRange SeqA(42, 3.142, "Hello")
+
+    myresult = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test11a_RemoveRange_SingleItem()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
+    ReDim Preserve myExpected(1 To 5)
+
+    Dim myresult As Variant
+    Set mySeq = SeqA(Empty, Empty, Empty, 42, Empty, Empty)
+
+    'Act:
+    mySeq.RemoveRange SeqA.Deb.AddItems(42)
+
+    myresult = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test11b_RemoveRange_ThreeItems()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
+    ReDim Preserve myExpected(1 To 5)
+
+    Dim myresult As Variant
+    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
+
+    'Act:
+    mySeq.RemoveRange SeqA(42, 42, 42)
+
+    myresult = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+'
+'@TestMethod("SeqA")
+Private Sub Test12a_RemoveAtRange_ThreeItems()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
+    ReDim Preserve myExpected(1 To 5)
+
+    Dim myresult As Variant
+    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
+
+    'Act:
+    mySeq.RemoveAtRange SeqA(4, 5, 6)
+
+    myresult = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test13a_RemoveAll_DefaultAll()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 0&
+
+    Dim myresult As Variant
+    Set mySeq = SeqA(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
+
+    'Act:
+    mySeq.RemoveAll
+    myresult = mySeq.Count
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test13b_RemoveAll_Default_42AndHello()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
+    ReDim myExpected(1 To 5)
+
+    Dim myresult As Variant
+    Set mySeq = SeqA(Empty, "Hello", Empty, "Hello", "Hello", Empty, 42, 42, 42, Empty, Empty)
+
+    'Act:
+    mySeq.RemoveAll "Hello", 42
+    myresult = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test13c_Reset()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 0&
+
+    Dim myresult As Variant
+    Set mySeq = SeqA(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
+
+    'Act:
+    mySeq.Reset
+    myresult = mySeq.Count
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test13d_Clear()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 0&
+
+    Dim myresult As Variant
+    Set mySeq = SeqA(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
+
+    'Act:
+    mySeq.Clear
+    myresult = mySeq.Count
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test14a_Fill()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(True, True, True)
+    ReDim Preserve myExpected(1 To 3)
+
+    Dim myresult As Variant
+    ReDim myresult(1 To 3)
+    Set mySeq = SeqA.Deb(Array(Empty, Empty, Empty))
+
+    'Act:
+    mySeq.Fill 42, 10
+    myresult(1) = mySeq.Count = 13
+    myresult(2) = mySeq.Item(4) = 42&
+    myresult(3) = mySeq.Item(13) = 42&
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test15a_Slice()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(3&, 4&, 5&)
+    ReDim Preserve myExpected(1 To 3)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Slice(3, 3).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test15b_SliceToEnd()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    ReDim Preserve myExpected(1 To 8)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Slice(3).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test15c_SliceRunOnly()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(1&, 2&, 3&, 4&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Slice(ipRun:=4).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test15d_Slice_Start3_End9_step2()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(3&, 5&, 7&, 9&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Slice(3, 7, 2).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test15e_Slice_Start3_End9_step2_ToCollection()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(3&, 5&, 7&, 9&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myresult As Variant
+    ReDim myresult(1 To 4)
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    Dim myC As Collection
+    Set myC = mySeq.Slice(3, 7, 2).ToCollection
+    myresult(1) = myC.Item(1)
+    myresult(2) = myC.Item(2)
+    myresult(3) = myC.Item(3)
+    myresult(4) = myC.Item(4)
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test15f_Slice_Start3_End9_step2_ToArray()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(3&, 5&, 7&, 9&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Slice(3, 7, 2).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test16a_Head()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(1&)
+    ReDim Preserve myExpected(1 To 1)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Head.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test16b_Head_3Items()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(1&, 2&, 3&)
+    ReDim Preserve myExpected(1 To 3)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Head(3).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test16c_HeadZeroItems()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 0&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Head(-2).Count
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test16d_HeadFullSeqA()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    ReDim Preserve myExpected(1 To 10)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Head(42).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test17a_Tail()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    ReDim Preserve myExpected(1 To 9)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Tail.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test17b_Tail_3Items()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    ReDim Preserve myExpected(1 To 7)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Tail(3).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test17c_TailFullItems()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 0&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Tail(42).Count
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test17d_TailZeroSeqA()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    ReDim Preserve myExpected(1 To 10)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+
+    'Act:
+    myresult = mySeq.Tail(-2).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test18a_KnownIndexes_Available()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(1&, 2&, 9&, 10&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myresult As Variant
+    ReDim myresult(1 To 4)
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult(1) = mySeq.FirstIndex
+    myresult(2) = mySeq.FBOIndex
+    myresult(3) = mySeq.LBOIndex
+    myresult(4) = mySeq.LastIndex
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test18b_KnownIndexes_Unavailable()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(-1&, -1&, -1&, -1&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myresult As Variant
+    ReDim myresult(1 To 4)
+
+    Set mySeq = SeqA.Deb
+
+    'Act:
+    myresult(1) = mySeq.FirstIndex
+    myresult(2) = mySeq.FBOIndex
+    myresult(3) = mySeq.LBOIndex
+    myresult(4) = mySeq.LastIndex
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test19a_KnownValues_Available()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 90&, 100&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myresult As Variant
+    ReDim myresult(1 To 4)
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult(1) = mySeq.First
+    myresult(2) = mySeq.FBO
+    myresult(3) = mySeq.LBO
+    myresult(4) = mySeq.Last
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+'
+'@TestMethod("SeqA")
+Private Sub Test20a_IndexOf_WholeSeq_Present()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 5&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.IndexOf(50&)
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test20b_IndexOf_WholeSeq_NotPresent()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = -1&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.IndexOf(55&)
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test20c_IndexOf_SubSeq_Present()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 5&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.IndexOf(50&, 4, 4)
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test20d_IndexOf_SubSeq_NotPresent()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = -1&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.IndexOf(20&, 4, 4)
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test21a_LastIndexOf_WholeSeq_Present()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 5&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.LastIndexOf(50&)
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test21b_LastIndexOf_WholeSeq_NotPresent()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = -1&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.LastIndexOf(55&)
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test21c_LastIndexOf_SubSeq_Present()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 5&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.LastIndexOf(50&, 4, 4)
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test21d_LastIndexOf_SubSeq_NotPresent()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = -1&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.LastIndexOf(20&, 4, 4)
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test22a_Push()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 1000&)
+    ReDim Preserve myExpected(1 To 11)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.Push(1000&).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test22b_PushRange()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 11&, 12&, 13&, 14&, 15&)
+    ReDim Preserve myExpected(1 To 15)
+
+    Dim myresult As Variant
+
+    Dim myArray As Variant
+    myArray = Array(11&, 12&, 13&, 14&, 15&)
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.PushRange(myArray).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test23a_Pop()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 100&
+
+    Dim myExpected2 As Variant
+    myExpected2 = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&)
+    ReDim Preserve myExpected2(1 To 9)
+
+    Dim myresult As Variant
+    Dim myResult2 As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.Pop
+    myResult2 = mySeq.ToArray
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+    Assert.SequenceEquals myExpected2, myResult2
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test23b_PopRange()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(100&, 90&, 80&, 70&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myExpected2 As Variant
+    myExpected2 = Array(10&, 20&, 30&, 50&, 50&, 60&)
+    ReDim Preserve myExpected2(1 To 6)
+
+    Dim myresult As Variant
+    Dim myResult2 As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.PopRange(4).ToArray
+    myResult2 = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+    Assert.SequenceEquals myExpected2, myResult2
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test23c_PopRange_ExceedsHost()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(100&, 90&, 80&, 70&, 60&, 50&, 40&, 30&, 20&, 10&)
+    ReDim Preserve myExpected(1 To 10)
+
+    Dim myExpected2 As Variant
+    myExpected2 = 0&
+
+    Dim myresult As Variant
+    Dim myResult2 As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.PopRange(25).ToArray
+    myResult2 = mySeq.Count
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+    Assert.AreEqual myExpected2 = 0, myResult2 = 0
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test23d_PopRange_NegativeRun()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 0&
+
+    Dim myExpected2 As Variant
+    myExpected2 = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    ReDim Preserve myExpected2(1 To 10)
+
+    Dim myresult As Variant
+    Dim myResult2 As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.PopRange(-2).Count
+    myResult2 = mySeq.ToArray
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+    Assert.SequenceEquals myExpected2, myResult2
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test24a_Enqueue()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 1000&)
+    ReDim Preserve myExpected(1 To 11)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.enQueue(1000&).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test24b_EnqueueRange()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 11&, 12&, 13&, 14&, 15&)
+    ReDim Preserve myExpected(1 To 15)
+
+    Dim myresult As Variant
+
+    Dim myArray As Variant
+    myArray = Array(11&, 12&, 13&, 14&, 15&)
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.EnqueueRange(myArray).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test25a_Dequeue()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 10&
+
+    Dim myExpected2 As Variant
+    myExpected2 = Array(20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+    ReDim Preserve myExpected2(1 To 9)
+
+    Dim myresult As Variant
+    Dim myResult2 As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.Dequeue
+    myResult2 = mySeq.ToArray
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+    Assert.SequenceEquals myExpected2, myResult2
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test25b_DeqeueRange()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 40&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myExpected2 As Variant
+    myExpected2 = Array(50&, 60&, 70&, 80&, 90&, 100&)
+    ReDim Preserve myExpected2(1 To 6)
+
+    Dim myresult As Variant
+    Dim myResult2 As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.DequeueRange(4).ToArray
+    myResult2 = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+    Assert.SequenceEquals myExpected2, myResult2
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test25c_DequeueRange_ExceedsHost()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    ReDim Preserve myExpected(1 To 10)
+
+    Dim myExpected2 As Variant
+    myExpected2 = 0&
+
+
+    Dim myresult As Variant
+    Dim myResult2 As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.DequeueRange(25).ToArray
+    myResult2 = mySeq.Count
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+    Assert.AreEqual myExpected2 = 0, myResult2 = 0
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test26a_Sort()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    ReDim Preserve myExpected(1 To 10)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
+
+    'Act:
+    myresult = mySeq.Sort.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test26b_Sorted()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    ReDim Preserve myExpected(1 To 10)
+
+    Dim myExpected2 As Variant
+    myExpected2 = Array(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
+    ReDim Preserve myExpected2(1 To 10)
+
+    Dim myresult As Variant
+    Dim myResult2 As Variant
+
+    Set mySeq = SeqA.Deb(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
+
+    'Act:
+    myresult = mySeq.Sorted.ToArray
+    myResult2 = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+    Assert.SequenceEquals myExpected2, myResult2
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test27a_Reverse()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim myExpected As Variant
+    myExpected = Array(100&, 90&, 80&, 70&, 60&, 50&, 40&, 30&, 20&, 10&)
+    ReDim Preserve myExpected(1 To 10)
+
+    Dim mySeq As SeqA
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+     Dim myresult As Variant
+    'Act:
+    myresult = mySeq.Reverse.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test27b_Reversed()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(100&, 90&, 80&, 70&, 60&, 50&, 40&, 30&, 20&, 10&)
+    ReDim Preserve myExpected(1 To 10)
+
+    Dim myExpected2 As Variant
+    myExpected2 = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    ReDim Preserve myExpected2(1 To 10)
+
+    Dim myresult As Variant
+    Dim myResult2 As Variant
+
+    Set mySeq = SeqA.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+
+    'Act:
+    myresult = mySeq.Reverse.ToArray
+    myResult2 = mySeq.Reversed.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+    Assert.SequenceEquals myExpected2, myResult2
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test28a_Unique()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    ReDim Preserve myExpected(1 To 10)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(10&, 100&, 20&, 30&, 40&, 50&, 30&, 30&, 60&, 100&, 70&, 100&, 80&, 90&, 100&)
+
+    'Act:
+    ' The array needs to be sorted because unique copies the first item encountered
+    myresult = mySeq.Unique.Sorted.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test28b_Unique_SIngleItem()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&)
+    ReDim Preserve myExpected(1 To 1)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb.AddItems(10&)
+
+    'Act:
+    ' The array needs to be sorted because unique copies the first item encountered
+    myresult = mySeq.Unique.Sorted.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test28c_Unique_NoItems()
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = 0&
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb
+
+    'Act:
+    ' The array needs to be sorted because unique copies the first item encountered
+    myresult = mySeq.Count
+
+    'Assert:
+    Assert.AreEqual myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test29a_SetOfConnom()
+
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(50&, 60&, 70&, 80&, 90&, 100&)
+    ReDim Preserve myExpected(1 To 6)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+
+    'Act:
+    myresult = mySeq.SetOf(m_Common, SeqA(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("SeqA")
+Private Sub Test29b_SetOfHostOnly()
+
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(110&, 120&, 130&, 140&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+
+    'Act:
+    myresult = mySeq.SetOf(m_HostOnly, SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test29c_SetOfParamOnly()
+
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 40&)
+    ReDim Preserve myExpected(1 To 4)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+
+    'Act:
+    myresult = mySeq.SetOf(m_ParamOnly, SeqA(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test29d_SetOfNotCommon()
+
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 40&, 110&, 120&, 130&, 140&)
+    ReDim Preserve myExpected(1 To 8)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+
+    'Act:  Again we need to sort The result SeqA to get the matching array
+    myresult = mySeq.SetOf(m_NotCommon, SeqA(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqA")
+Private Sub Test29e_SetOfUnique()
+
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+    ReDim Preserve myExpected(1 To 14)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+
+    'Act:  Again we need to sort The result SeqA to get the matching array
+    myresult = mySeq.SetOf(m_Unique, SeqA(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+
+'@TestMethod("SeqA")
+Private Sub Test30a_Swap()
+
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqA
+    Dim myExpected As Variant
+    myExpected = Array(140&, 130&, 120&, 110&, 100&, 90&, 80&, 70&, 60&, 50&)
+    ReDim Preserve myExpected(1 To 10)
+
+    Dim myresult As Variant
+
+    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+
+    'Act:
+    mySeq.Swap 1, 10
+    mySeq.Swap 2, 9
+    mySeq.Swap 3, 8
+    mySeq.Swap 4, 7
+    mySeq.Swap 5, 6
+
+    myresult = mySeq.ToArray
+
+    'Assert:
+    Assert.SequenceEquals myExpected, myresult
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
 

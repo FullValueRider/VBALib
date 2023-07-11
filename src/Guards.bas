@@ -19,7 +19,7 @@ Public Sub GuardInvalidRangeObject(ByRef myGroupId As e_Group, ByRef ipItem As V
      Select Case myGroupId
     
         Case e_Group.m_string:      Exit Sub
-        Case e_Group.m_array:      Exit Sub
+        Case e_Group.m_array:       Exit Sub
         Case e_Group.m_List:        Exit Sub
         Case e_Group.m_Dictionary:  Exit Sub
         Case Else
@@ -30,6 +30,16 @@ Public Sub GuardInvalidRangeObject(ByRef myGroupId As e_Group, ByRef ipItem As V
     
 End Sub
 
+Sub GuardInvalidIndex(ByRef ipIndex As Long, ByRef ipLastIndex As Long, ByRef ipMessage As String)
+
+    If ipIndex <= ipLastIndex Then
+        Exit Sub
+    End If
+    
+    Err.Raise 17 + vbObjectError, _
+        ipMessage, _
+        Fmt.Text("Index {0} is not available.  Capacity is {1}", ipIndex, ipLastIndex)
+End Sub
 
 Public Sub GuardInsufficientCapacity(ByRef ipInitialSize As Long, ByRef ipMessage As String)
 

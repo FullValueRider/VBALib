@@ -76,30 +76,30 @@ End Function
 
 
 Public Function IsNotArray(ByRef ipArray As Variant, Optional ByRef ipArrayType As e_ArrayType = m_AnyArrayType) As Boolean
-     
-     If LacksItems(ipArray) Then
-         IsNotArray = True
-     End If
-     
-     Dim myRanks As Long
-     myRanks = Ranks(ipArray)
-     
-    Select Case ipArrayType
-        
-        Case e_ArrayType.m_AnyArrayType
-            myRanks = myRanks < 1
-            
-        Case e_ArrayType.m_ListArray
-            myRanks = myRanks <> e_ArrayRanks.m_ListArrayRanks
-            
-        Case e_ArrayType.m_TableArray
-            myRanks = myRanks <> e_ArrayRanks.m_TableArrayRanks
-            
-        Case e_ArrayType.m_MDArray
-            myRanks = myRanks <= e_ArrayRanks.m_TableArrayRanks
-            
-        
-    End Select
+     IsNotArray = Not IsArray(ipArray, ipArrayType)
+'     If LacksItems(ipArray) Then
+'         IsNotArray = True
+'     End If
+'
+'     Dim myRanks As Long
+'     myRanks = Ranks(ipArray)
+'
+'    Select Case ipArrayType
+'
+'        Case e_ArrayType.m_AnyArrayType
+'            myRanks = myRanks < 1
+'
+'        Case e_ArrayType.m_ListArray
+'            myRanks = myRanks <> e_ArrayRanks.m_ListArrayRanks
+'
+'        Case e_ArrayType.m_TableArray
+'            myRanks = myRanks <> e_ArrayRanks.m_TableArrayRanks
+'
+'        Case e_ArrayType.m_MDArray
+'            myRanks = myRanks <= e_ArrayRanks.m_TableArrayRanks
+'
+'
+'    End Select
          
 End Function
  

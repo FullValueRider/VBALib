@@ -56,20 +56,20 @@ End Function
 ' In vba it is not possible to compare a non object with an object
 ' so to be stricter, and to give a result, rather than an error,
 ' the following comparisons for equality are defined)
-Public Function Equals(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+Public Function Equals(ByRef ipLHS As Variant, ByRef ipRhs As Variant) As Boolean
     
-    If VBA.IsObject(ipLHS) And VBA.IsObject(ipRHS) Then
-        Equals = ipLHS Is ipRHS
+    If VBA.IsObject(ipLHS) And VBA.IsObject(ipRhs) Then
+        Equals = ipLHS Is ipRhs
 '    ElseIf (ipLHS Is Nothing) And (ipRHS Is Nothing) Then
 '        Equals = True
-    ElseIf VBA.IsEmpty(ipLHS) And VBA.IsEmpty(ipRHS) Then
+    ElseIf VBA.IsEmpty(ipLHS) And VBA.IsEmpty(ipRhs) Then
         Equals = True
-    ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
-        Equals = ipLHS = ipRHS
-    ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
-        Equals = ipLHS = ipRHS
-    ElseIf GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
-        Equals = ipLHS = ipRHS
+    ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRhs) Then
+        Equals = ipLHS = ipRhs
+    ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRhs) Then
+        Equals = ipLHS = ipRhs
+    ElseIf GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRhs) Then
+        Equals = ipLHS = ipRhs
     Else
         Equals = False
     End If

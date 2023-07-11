@@ -483,7 +483,7 @@ End Property
 
 Public Property Get First() As Variant
 
-    If s.Keys.Count = 0 Then
+    If s.Keys.Count < 1 Then
          Err.Raise 17 + vbObjectError, "Lib.KvpC.Get FirstItem", "Kvp has no items"
     End If
     
