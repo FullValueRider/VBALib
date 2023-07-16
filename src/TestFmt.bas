@@ -3,13 +3,15 @@ Attribute VB_Name = "TestFmt"
 '@Folder("Tests")
 '@IgnoreModule
 
-
 Option Explicit
 Option Private Module
 
 Private Assert As Object
 Private Fakes As Object
 
+#If twinbasic Then
+    'Do nothing
+#Else
 
 '@ModuleInitialize
 Private Sub ModuleInitialize()
@@ -38,11 +40,34 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
+#End If
 
+Public Sub FmtTests()
 
+    
+#If twinbasic Then
+    Debug.Print CurrentProcedureName; vbTab, vbTab,
+#Else
+    Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab, vbTab,
+#End If
 
+    
+    
+    Debug.Print "Testing completed"
+
+End Sub
+    
 '@TestMethod("Fmt")
-Private Sub Test50a_Fmt_Text_Nothing()
+Private Sub Test01a_Fmt_Text_Nothing()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
 
     On Error GoTo TestFail
     
@@ -51,14 +76,14 @@ Private Sub Test50a_Fmt_Text_Nothing()
     '@Ignore EmptyStringLiteral
     myExpected = ""
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Fmt.Text(vbNullString)
+    myResult = Fmt.Text(vbNullString)
     'Assert:
    
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -66,12 +91,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Fmt")
-Private Sub Test50b_Fmt_Text_NoParams()
+Private Sub Test01b_Fmt_Text_NoParams()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
 
     On Error GoTo TestFail
     
@@ -79,14 +113,14 @@ Private Sub Test50b_Fmt_Text_NoParams()
     Dim myExpected As String
     myExpected = "Hello {0} World{0}"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Fmt.Text("Hello {0} World{0}")
+    myResult = Fmt.Text("Hello {0} World{0}")
     'Assert:
    
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -94,12 +128,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Fmt")
-Private Sub Test50c_Fmt_Text_NoSubstitutions()
+Private Sub Test01c_Fmt_Text_NoSubstitutions()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
 
     On Error GoTo TestFail
     
@@ -107,14 +150,14 @@ Private Sub Test50c_Fmt_Text_NoSubstitutions()
     Dim myExpected As String
     myExpected = "Hello World"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Fmt.Text("Hello World", 1, "One", 3.142)
+    myResult = Fmt.Text("Hello World", 1, "One", 3.142)
     'Assert:
    
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -122,12 +165,20 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Fmt")
-Private Sub Test50d_Fmt_Text_Formatting_Threevbcrlf()
+Private Sub Test01d_Fmt_Text_Formatting_Threevbcrlf()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
 
     On Error GoTo TestFail
     
@@ -135,14 +186,14 @@ Private Sub Test50d_Fmt_Text_Formatting_Threevbcrlf()
     Dim myExpected As String
     myExpected = "Hello " & vbCrLf & vbCrLf & vbCrLf & " World"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Fmt.Text("Hello {nl3} World", 1, "One", 3.142)
+    myResult = Fmt.Text("Hello {nl3} World", 1, "One", 3.142)
     'Assert:
    
-    Assert.AreEqual VBA.Len(myExpected), VBA.Len(myresult)
+    AssertStrictAreEqual VBA.Len(myExpected), VBA.Len(myResult), myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -150,12 +201,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Fmt")
-Private Sub Test50e_Fmt_Text_Formatting_Threeplainquotes()
+Private Sub Test01e_Fmt_Text_Formatting_Threeplainquotes()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
 
     On Error GoTo TestFail
     
@@ -163,14 +223,14 @@ Private Sub Test50e_Fmt_Text_Formatting_Threeplainquotes()
     Dim myExpected As String
     myExpected = "Hello ''' World"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Fmt.Text("Hello {sq3} World", 1, "One", 3.142)
+    myResult = Fmt.Text("Hello {sq3} World", 1, "One", 3.142)
     'Assert:
    
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -178,12 +238,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Fmt")
-Private Sub Test50f_Fmt_Text_Formatting_Zeroplainquotes()
+Private Sub Test01f_Fmt_Text_Formatting_Zeroplainquotes()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
 
     On Error GoTo TestFail
     
@@ -191,14 +260,14 @@ Private Sub Test50f_Fmt_Text_Formatting_Zeroplainquotes()
     Dim myExpected As String
     myExpected = "Hello  World"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Fmt.Text("Hello {sq0} World", 1, "One", 3.142)
+    myResult = Fmt.Text("Hello {sq0} World", 1, "One", 3.142)
     'Assert:
    
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -206,12 +275,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Fmt")
-Private Sub Test50g_Fmt_Text_Formatting_ThreeVariables()
+Private Sub Test01g_Fmt_Text_Formatting_ThreeVariables()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
 
     On Error GoTo TestFail
     
@@ -219,14 +297,14 @@ Private Sub Test50g_Fmt_Text_Formatting_ThreeVariables()
     Dim myExpected As String
     myExpected = "Hello 1 One World [1,2,3] {3}"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Fmt.Text("Hello {0} {1} World {2} {3}", 1, "One", Array(1, 2, 3))
+    myResult = Fmt.Text("Hello {0} {1} World {2} {3}", 1, "One", Array(1, 2, 3))
     'Assert:
    
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -234,7 +312,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 

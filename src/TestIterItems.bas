@@ -9,6 +9,9 @@ Option Private Module
 Private Assert As Object
 Private Fakes As Object
 
+#If twinbasic Then
+    'Do nothing
+#Else
 
 '@ModuleInitialize
 Private Sub ModuleInitialize()
@@ -36,30 +39,82 @@ End Sub
 Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
+#End If
 
+Public Sub IterItemsTests()
+    
+#If twinbasic Then
+    Debug.Print CurrentProcedureName;
+#Else
+    Debug.Print ErrEx.LiveCallstack.ProcedureName;
+#End If
+
+    Test01a_IsObjectAndName
+    
+    Test02a_GetItem0Seq
+    Test02b_GetItem0SeqAfterThreeMovenext
+    Test02c_GetItem0SeqAfterThreeMoveNextTwoMovePrev
+    
+    Test03a_GetItemSeqAtOffset3
+    Test03b_GetItemSeqAtOffsetMinus3
+    Test03c_GetItemSeqIndexGreaterThanSize
+    Test03d_GetItemSeqIndexDeforeIndex1
+    
+    Test04a_GetKeySeq
+    Test04b_GetIndexSeq
+    
+    Test05a_GetItemArray
+    Test05b_GetKeyArray
+    Test05c_GetIndexArray
+    
+    Test06a_GetItemCollection
+    Test06b_GetKeyCollection
+    Test06c_GetIndexCollection
+    
+    Test07a_GetItemArrayList
+    Test07b_GetKeyArrayList
+    Test07c_GetIndexArrayList
+    
+    Test08a_GetItemDictionary
+    Test08b_GetKeyDictionary
+    Test08c_GetIndexDIctionary
+    
+    Test09a_GetIndexDIctionary
+    
+    Debug.Print vbTab, vbTab, "Testing completed"
+
+End Sub
+    
 
 '@TestMethod("IterItems")
 Private Sub Test01a_IsObjectAndName()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = Array(True, "IterItems", "IterItems")
     
-    Dim myresult As Variant
-    ReDim myresult(0 To 2)
+    Dim myResult As Variant
+    ReDim myResult(0 To 2)
     
     Dim myI As IterItems
     Set myI = IterItems(SeqC(1, 2, 3, 4, 5))
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult(0) = VBA.IsObject(myI)
-    myresult(1) = "IterItems"
-    myresult(2) = "IterItems"
+    myResult(0) = VBA.IsObject(myI)
+    myResult(1) = "IterItems"
+    myResult(2) = "IterItems"
    
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -67,7 +122,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -75,22 +130,29 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test02a_GetItem0Seq()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = 1
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:  Again we need to sort The result SeqC to get the matching array
     Dim myI As IterItems
     Set myI = IterItems(SeqC(1, 2, 3, 4, 5))
        
-    myresult = myI.CurItem(0)
+    myResult = myI.CurItem(0)
    
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -98,7 +160,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -106,24 +168,31 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test02b_GetItem0SeqAfterThreeMovenext()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = Array(True, True, True, 40)
     
-    Dim myresult As Variant
-    ReDim myresult(0 To 3)
+    Dim myResult As Variant
+    ReDim myResult(0 To 3)
     
     'Act:  Again we need to sort The result SeqC to get the matching array
     Dim myI As IterItems
     Set myI = IterItems(SeqC(10, 20, 30, 40, 50))
-    myresult(0) = myI.MoveNext
-    myresult(1) = myI.MoveNext
-    myresult(2) = myI.MoveNext
-    myresult(3) = myI.CurItem(0)
+    myResult(0) = myI.MoveNext
+    myResult(1) = myI.MoveNext
+    myResult(2) = myI.MoveNext
+    myResult(3) = myI.CurItem(0)
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -131,7 +200,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -139,26 +208,33 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test02c_GetItem0SeqAfterThreeMoveNextTwoMovePrev()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = Array(True, True, True, True, True, 20)
     
-    Dim myresult As Variant
-    ReDim myresult(0 To 5)
+    Dim myResult As Variant
+    ReDim myResult(0 To 5)
     
     'Act:  Again we need to sort The result SeqC to get the matching array
     Dim myI As IterItems
     Set myI = IterItems(SeqC(10, 20, 30, 40, 50))
-    myresult(0) = myI.MoveNext
-    myresult(1) = myI.MoveNext
-    myresult(2) = myI.MoveNext
-    myresult(3) = myI.MovePrev
-    myresult(4) = myI.MovePrev
-    myresult(5) = myI.CurItem(0)
+    myResult(0) = myI.MoveNext
+    myResult(1) = myI.MoveNext
+    myResult(2) = myI.MoveNext
+    myResult(3) = myI.MovePrev
+    myResult(4) = myI.MovePrev
+    myResult(5) = myI.CurItem(0)
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -166,7 +242,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -174,13 +250,20 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test03a_GetItemSeqAtOffset3()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = 80
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -191,9 +274,9 @@ Private Sub Test03a_GetItemSeqAtOffset3()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurItem(3)
+    myResult = myI.CurItem(3)
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -201,20 +284,27 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test03b_GetItemSeqAtOffsetMinus3()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = 20
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -225,9 +315,9 @@ Private Sub Test03b_GetItemSeqAtOffsetMinus3()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurItem(-3)
+    myResult = myI.CurItem(-3)
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -235,7 +325,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -243,13 +333,20 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test03c_GetItemSeqIndexGreaterThanSize()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = True
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -260,10 +357,10 @@ Private Sub Test03c_GetItemSeqIndexGreaterThanSize()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurItem(5)
+    myResult = myI.CurItem(5)
     
     'Assert:
-    Assert.AreEqual myExpected, VBA.IsNull(myresult)
+    AssertStrictAreEqual myExpected, VBA.IsNull(myResult), myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -271,7 +368,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -279,13 +376,20 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test03d_GetItemSeqIndexDeforeIndex1()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = True
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -296,10 +400,10 @@ Private Sub Test03d_GetItemSeqIndexDeforeIndex1()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurItem(-5)
+    myResult = myI.CurItem(-5)
     
     'Assert:
-    Assert.AreEqual myExpected, VBA.IsNull(myresult)
+    AssertStrictAreEqual myExpected, VBA.IsNull(myResult), myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -307,7 +411,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -315,13 +419,20 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test04a_GetKeySeq()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = 5&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -332,10 +443,10 @@ Private Sub Test04a_GetKeySeq()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurKey(0)
+    myResult = myI.CurKey(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -343,20 +454,27 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test04b_GetIndexSeq()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = 5&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -367,10 +485,10 @@ Private Sub Test04b_GetIndexSeq()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurOffset(0)
+    myResult = myI.CurOffset(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -378,14 +496,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test05a_GetItemArray()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -395,7 +520,7 @@ Private Sub Test05a_GetItemArray()
     myArray = Array(10, 20, 30, 40, 50, 60, 70, 80, 90)
     ReDim Preserve myArray(-4 To 4)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     Dim myI As IterItems
@@ -405,10 +530,10 @@ Private Sub Test05a_GetItemArray()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurItem(0)
+    myResult = myI.CurItem(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -416,14 +541,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test05b_GetKeyArray()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -433,7 +565,7 @@ Private Sub Test05b_GetKeyArray()
     myArray = Array(10, 20, 30, 40, 50, 60, 70, 80, 90)
     ReDim Preserve myArray(-4 To 4)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -444,10 +576,10 @@ Private Sub Test05b_GetKeyArray()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurKey(0)
+    myResult = myI.CurKey(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -455,14 +587,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test05c_GetIndexArray()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -472,7 +611,7 @@ Private Sub Test05c_GetIndexArray()
     myArray = Array(10, 20, 30, 40, 50, 60, 70, 80, 90)
     ReDim Preserve myArray(-4 To 4)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -483,10 +622,10 @@ Private Sub Test05c_GetIndexArray()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurOffset(0)
+    myResult = myI.CurOffset(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -494,14 +633,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test06a_GetItemCollection()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -528,13 +674,13 @@ Private Sub Test06a_GetItemCollection()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myI.CurItem(0)
+    myResult = myI.CurItem(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -542,14 +688,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test06b_GetKeyCollection()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -569,7 +722,7 @@ Private Sub Test06b_GetKeyCollection()
         .Add 90
     End With
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:
@@ -580,10 +733,10 @@ Private Sub Test06b_GetKeyCollection()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurKey(0)
+    myResult = myI.CurKey(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -591,14 +744,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test06c_GetIndexCollection()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -625,14 +785,14 @@ Private Sub Test06c_GetIndexCollection()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:
-    myresult = myI.CurOffset(0)
+    myResult = myI.CurOffset(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -640,14 +800,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test07a_GetItemArrayList()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -674,13 +841,13 @@ Private Sub Test07a_GetItemArrayList()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myI.CurItem(0)
+    myResult = myI.CurItem(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -688,14 +855,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test07b_GetKeyArrayList()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -715,7 +889,7 @@ Private Sub Test07b_GetKeyArrayList()
         .Add 90
     End With
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:
@@ -726,10 +900,10 @@ Private Sub Test07b_GetKeyArrayList()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurKey(0)
+    myResult = myI.CurKey(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -737,14 +911,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test07c_GetIndexArrayList()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -771,14 +952,14 @@ Private Sub Test07c_GetIndexArrayList()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:
-    myresult = myI.CurOffset(0)
+    myResult = myI.CurOffset(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -786,14 +967,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test08a_GetItemDictionary()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -820,13 +1008,13 @@ Private Sub Test08a_GetItemDictionary()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myI.CurItem(0)
+    myResult = myI.CurItem(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -834,14 +1022,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test08b_GetKeyDictionary()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -861,7 +1056,7 @@ Private Sub Test08b_GetKeyDictionary()
         .Add "Ninety", 90
     End With
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:
@@ -872,10 +1067,10 @@ Private Sub Test08b_GetKeyDictionary()
     myI.MoveNext
     myI.MoveNext
     
-    myresult = myI.CurKey(0)
+    myResult = myI.CurKey(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -883,14 +1078,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("IterItems")
 Private Sub Test08c_GetIndexDIctionary()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -917,14 +1119,14 @@ Private Sub Test08c_GetIndexDIctionary()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     'Act:
-    myresult = myI.CurOffset(0)
+    myResult = myI.CurOffset(0)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -932,7 +1134,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 '
@@ -940,7 +1142,14 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test09a_GetIndexDIctionary()
 
-    'On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -966,19 +1175,19 @@ Private Sub Test09a_GetIndexDIctionary()
     
     
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 9)
+    Dim myResult As Variant
+    ReDim myResult(1 To 9)
     
     'Act:
         Do
-            Debug.Print myI.CurOffset(0), myI.CurItem(0)
-            myresult(myI.CurOffset(0)) = VBA.CVar(myI.CurItem(0))
+            
+            myResult(myI.CurOffset(0)) = VBA.CVar(myI.CurItem(0))
         
         Loop While myI.MoveNext
     
     
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -986,6 +1195,6 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub

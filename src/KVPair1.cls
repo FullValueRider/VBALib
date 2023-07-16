@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "KVPair"
+Attribute VB_Name = "KVPair1"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -108,7 +108,9 @@ End Property
 '    ToString = Fmt.Txt("{1}{0}{2}", ipSeparator, p.Key.Item(0), p.Item.Item(0))
 'End Function
 
+'@DefaultMember
 Public Function Name() As String
+Attribute Name.VB_UserMemId = 0
     Name = TypeName(Me)
 End Function
 

@@ -15,29 +15,29 @@ Option Explicit
 
 Public Function GetItemAsComparerValue(ByRef ipItem As Variant) As Variant
 
-    Dim myresult As Variant
+    Dim myResult As Variant
 
     Select Case True
     
-        Case GroupInfo.IsContainer(ipItem):                        myresult = Fmt.Text("{0}", ipItem)
+        Case GroupInfo.IsContainer(ipItem):                        myResult = Fmt.Text("{0}", ipItem)
         ' Admin needs to be before Object because nothing is an object
-        Case GroupInfo.IsAdmin(ipItem):                            myresult = VBA.TypeName(ipItem)
+        Case GroupInfo.IsAdmin(ipItem):                            myResult = VBA.TypeName(ipItem)
         Case VBA.IsObject(ipItem):
             
             On Error Resume Next
-            myresult = ipItem
+            myResult = ipItem
             
             If Err.Number <> 0 Then
-                myresult = VBA.ObjPtr(ipItem)
+                myResult = VBA.ObjPtr(ipItem)
             End If
             
             On Error GoTo 0
         ' Booleans, Strings and Numbers
-        Case Else:                                                  myresult = ipItem
+        Case Else:                                                  myResult = ipItem
             
     End Select
     
-    GetItemAsComparerValue = myresult
+    GetItemAsComparerValue = myResult
 
 End Function
 

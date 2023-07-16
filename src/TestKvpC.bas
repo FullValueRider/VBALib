@@ -2,14 +2,15 @@ Attribute VB_Name = "TestKvpC"
 '@TestModule
 '@Folder("Tests")
 '@IgnoreModule
-
-
 Option Explicit
 Option Private Module
 
 Private Assert As Object
 Private Fakes As Object
 
+#If twinbasic Then
+    'Do nothing
+#Else
 
 '@ModuleInitialize
 Private Sub ModuleInitialize()
@@ -38,10 +39,60 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
+#End If
+
+Public Sub KvpCTests()
+ 
+#If twinbasic Then
+    Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab,
+#Else
+    Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab, vbTab,
+#End If
+
+    Test01_ObjAndName
+    Test02_Add_ThreeItems
+    Test03_Add_Pairs
+    Test04a_GetItem
+    Test04b_LetItem
+    Test04c_SetItem
+    Test05a_Remove
+    Test05b_Remove
+    Test06_RemoveAfter
+    Test07_RemoveBefore
+    Test08a_RemoveAll
+    Test08b_Clear
+    Test08c_Reset
+    Test09_Clone
+    Test10_Hold_Lacks_FilledSeq
+    Test11_MappedIt
+    Test12_MapIt
+    Test13_FilterIt
+    Test14_ReduceIt
+    Test15a_KeyByIndex
+    Test15b_KeyOf
+    Test16a_GetFirst
+    Test16b_LetFirst
+    Test16c_GetLast
+    Test16d_LetLast
+    Test16e_GetFirstKey
+    Test16f_LastKey
+    
+    
+    Debug.Print "Testing completed"
+
+End Sub
+
 '@TestMethod("KvpC")
 Private Sub Test01_ObjAndName()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -49,21 +100,21 @@ Private Sub Test01_ObjAndName()
     Dim myExpected As Variant
     myExpected = Array(True, "KvpC", "KvpC")
     
-    Dim myresult(0 To 2) As Variant
+    Dim myResult(0 To 2) As Variant
     
     'Act:
-    myresult(0) = VBA.IsObject(myK)
-    myresult(1) = VBA.TypeName(myK)
-    myresult(2) = myK.TypeName
+    myResult(0) = VBA.IsObject(myK)
+    myResult(1) = VBA.TypeName(myK)
+    myResult(2) = myK.TypeName
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -71,7 +122,14 @@ End Sub
 '@TestMethod("KvpC")
 Private Sub Test02_Add_ThreeItems()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -97,22 +155,29 @@ Private Sub Test02_Add_ThreeItems()
     myItemsResult = myK.Items.ToArray
     myKeysResult = myK.Keys.ToArray
     'Assert:
-    Assert.SequenceEquals myItemsExpected, myItemsResult
-    Assert.SequenceEquals myKeysExpected, myKeysResult
+    AssertStrictSequenceEquals myItemsExpected, myItemsResult, myProcedureName
+    AssertStrictSequenceEquals myKeysExpected, myKeysResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test03_Add_Pairs()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -136,15 +201,15 @@ Private Sub Test03_Add_Pairs()
     myItemsResult = myK.Items.ToArray
     myKeysResult = myK.Keys.ToArray
     'Assert:
-    Assert.SequenceEquals myItemsExpected, myItemsResult
-    Assert.SequenceEquals myKeysExpected, myKeysResult
+    AssertStrictSequenceEquals myItemsExpected, myItemsResult, myProcedureName
+    AssertStrictSequenceEquals myKeysExpected, myKeysResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -152,7 +217,14 @@ End Sub
 '@TestMethod("KvpC")
 Private Sub Test04a_GetItem()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -161,27 +233,34 @@ Private Sub Test04a_GetItem()
     Dim myExpected As String
     myExpected = "Hello"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:
-    myresult = myK.Item(2&)
+    myResult = myK.Item(2&)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test04b_LetItem()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -190,21 +269,21 @@ Private Sub Test04b_LetItem()
     Dim myExpected As String
     myExpected = "World"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:
     myK.Item(2) = "World"
-    myresult = myK.Item(2&)
+    myResult = myK.Item(2&)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -212,7 +291,14 @@ End Sub
 '@TestMethod("KvpC")
 Private Sub Test04c_SetItem()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -222,21 +308,21 @@ Private Sub Test04c_SetItem()
     myExpected = Array(1&, 2&, 3&)
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     Set myK.Item(2) = SeqC(1&, 2&, 3&)
-    myresult = myK.Item(2&).ToArray
+    myResult = myK.Item(2&).ToArray
     
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -244,7 +330,14 @@ End Sub
 '@TestMethod("KvpC")
 Private Sub Test05a_Remove()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -254,21 +347,21 @@ Private Sub Test05a_Remove()
     myExpected = Array(3&, True, 1&, 2&, 3&, 4&)
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     myK.Remove 2&
-    myresult = myK.Items.ToArray
+    myResult = myK.Items.ToArray
     
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -276,7 +369,14 @@ End Sub
 '@TestMethod("KvpC")
 Private Sub Test05b_Remove()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -286,28 +386,35 @@ Private Sub Test05b_Remove()
     myExpected = Array(3&, True, 2&, 4&)
     ReDim Preserve myExpected(1 To 4)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     myK.Remove 2&, 4&, 6&
-    myresult = myK.Items.ToArray
+    myResult = myK.Items.ToArray
     
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test06_RemoveAfter()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -317,20 +424,20 @@ Private Sub Test06_RemoveAfter()
     myExpected = Array(3&, "Hello", 3&, 4&)
     ReDim Preserve myExpected(1 To 4)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.RemoveAfter(2&, 3).Items.ToArray
+    myResult = myK.RemoveAfter(2&, 3).Items.ToArray
     
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -338,7 +445,14 @@ End Sub
 '@TestMethod("KvpC")
 Private Sub Test07_RemoveBefore()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -348,27 +462,34 @@ Private Sub Test07_RemoveBefore()
     myExpected = Array(3&, "Hello", 3&, 4&)
     ReDim Preserve myExpected(1 To 4)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.RemoveBefore(6&, 3).Items.ToArray
+    myResult = myK.RemoveBefore(6&, 3).Items.ToArray
     
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test08a_RemoveAll()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -377,27 +498,34 @@ Private Sub Test08a_RemoveAll()
     Dim myExpected As Long
     myExpected = 0
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.RemoveAll.Count
+    myResult = myK.RemoveAll.Count
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test08b_Clear()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -406,27 +534,34 @@ Private Sub Test08b_Clear()
     Dim myExpected As Long
     myExpected = 0
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.Clear.Count
+    myResult = myK.Clear.Count
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test08c_Reset()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -435,20 +570,20 @@ Private Sub Test08c_Reset()
     Dim myExpected As Long
     myExpected = 0
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.Clear.Count
+    myResult = myK.Clear.Count
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -456,7 +591,14 @@ End Sub
 '@TestMethod("KvpC")
 Private Sub Test09_Clone()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -480,8 +622,8 @@ Private Sub Test09_Clone()
     myKeysResult = myT.Keys.ToArray
     
     'Assert:
-    Assert.SequenceEquals myItemsExpected, myItemsResult
-    Assert.SequenceEquals myKeysExpected, myKeysResult
+    AssertStrictSequenceEquals myItemsExpected, myItemsResult, myProcedureName
+    AssertStrictSequenceEquals myKeysExpected, myKeysResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -489,15 +631,22 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 
 '@TestMethod("KvpC")
-Private Sub Test10_Hold_Lacks_FilledSeqC()
+Private Sub Test10_Hold_Lacks_FilledSeq()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -507,34 +656,34 @@ Private Sub Test10_Hold_Lacks_FilledSeqC()
     myExpected = Array(True, False, True, True, False, False, False, False, True, True, True, True, False, False, False, False, True, True)
     ReDim Preserve myExpected(1 To 18)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 18)
+    Dim myResult As Variant
+    ReDim myResult(1 To 18)
     'Act:
-    myresult(1) = myK.HoldsItems
-    myresult(2) = myK.LacksItems
+    myResult(1) = myK.HoldsItems
+    myResult(2) = myK.LacksItems
     
-    myresult(3) = myK.HoldsItem("Hello")
-    myresult(4) = myK.HoldsItem(4&)
-    myresult(5) = myK.HoldsItem(42&)
-    myresult(6) = myK.HoldsItem("World")
+    myResult(3) = myK.HoldsItem("Hello")
+    myResult(4) = myK.HoldsItem(4&)
+    myResult(5) = myK.HoldsItem(42&)
+    myResult(6) = myK.HoldsItem("World")
     
-    myresult(7) = myK.LacksItem("Hello")
-    myresult(8) = myK.LacksItem(4&)
-    myresult(9) = myK.LacksItem(42&)
-    myresult(10) = myK.LacksItem("World")
+    myResult(7) = myK.LacksItem("Hello")
+    myResult(8) = myK.LacksItem(4&)
+    myResult(9) = myK.LacksItem(42&)
+    myResult(10) = myK.LacksItem("World")
     
-    myresult(11) = myK.HoldsKey(2&)
-    myresult(12) = myK.HoldsKey(6&)
-    myresult(13) = myK.HoldsKey(42&)
-    myresult(14) = myK.HoldsKey("Hello")
+    myResult(11) = myK.HoldsKey(2&)
+    myResult(12) = myK.HoldsKey(6&)
+    myResult(13) = myK.HoldsKey(42&)
+    myResult(14) = myK.HoldsKey("Hello")
     
-    myresult(15) = myK.LacksKey(2&)
-    myresult(16) = myK.LacksKey(6&)
-    myresult(17) = myK.LacksKey(42&)
-    myresult(18) = myK.LacksKey("Hello")
+    myResult(15) = myK.LacksKey(2&)
+    myResult(16) = myK.LacksKey(6&)
+    myResult(17) = myK.LacksKey(42&)
+    myResult(18) = myK.LacksKey("Hello")
     
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -542,7 +691,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -550,7 +699,14 @@ End Sub
 '@TestMethod("KvpC")
 Private Sub Test11_MappedIt()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -560,13 +716,13 @@ Private Sub Test11_MappedIt()
     myExpected = Array(4&, "Hellp", True, 2&, 3&, 4&, 5&)
     ReDim Preserve myExpected(1 To 7)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.MappedIt(mpInc.Deb).Items.ToArray
+    myResult = myK.MappedIt(mpInc.Deb).Items.ToArray
     
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
    
     
 TestExit:
@@ -575,14 +731,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test12_MapIt()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -604,8 +767,8 @@ Private Sub Test12_MapIt()
     Set myMapresult = myK.MapIt(mpInc.Deb)
     
     'Assert:
-    Assert.SequenceEquals myOrigExpected, myOrigResult
-    Assert.SequenceEquals myMapExpected, myMapresult.Items.ToArray
+    AssertStrictSequenceEquals myOrigExpected, myOrigResult, myProcedureName
+    AssertStrictSequenceEquals myMapExpected, myMapresult.Items.ToArray, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -613,7 +776,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -621,7 +784,14 @@ End Sub
 '@TestMethod("KvpC")
 Private Sub Test13_FilterIt()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -631,13 +801,13 @@ Private Sub Test13_FilterIt()
     myExpected = Array(3&, 3&, 4&)
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.FilterIt(cmpMT(2)).Items.ToArray
+    myResult = myK.FilterIt(cmpMT(2)).Items.ToArray
     
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -645,14 +815,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test14_ReduceIt()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -661,13 +838,13 @@ Private Sub Test14_ReduceIt()
     Dim myExpected As LongLong
     myExpected = VBA.CLngLng(1 + 2 + 3 + 4 + 3)
     
-    Dim myresult As LongLong
+    Dim myResult As LongLong
     
     'Act:
-    myresult = myK.ReduceIt(rdSum)
+    myResult = myK.ReduceIt(rdSum)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -675,14 +852,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test15a_KeyByIndex()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -691,13 +875,13 @@ Private Sub Test15a_KeyByIndex()
     Dim myExpected As Variant
     myExpected = 30&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.KeyByIndex(3)
+    myResult = myK.KeyByIndex(3)
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -705,7 +889,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -713,7 +897,14 @@ End Sub
 '@TestMethod("KvpC")
 Private Sub Test15b_KeyOf()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -722,13 +913,13 @@ Private Sub Test15b_KeyOf()
     Dim myExpected As Variant
     myExpected = 20&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.KeyOf("Hello")
+    myResult = myK.KeyOf("Hello")
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -736,14 +927,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test16a_GetFirst()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -752,13 +950,13 @@ Private Sub Test16a_GetFirst()
     Dim myExpected As Variant
     myExpected = 3&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.First
+    myResult = myK.First
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -766,14 +964,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test16b_LetFirst()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -782,14 +987,14 @@ Private Sub Test16b_LetFirst()
     Dim myExpected As Variant
     myExpected = 42&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     myK.First = 42&
-    myresult = myK.First
+    myResult = myK.First
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -797,14 +1002,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test16c_GetLast()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -813,13 +1025,13 @@ Private Sub Test16c_GetLast()
     Dim myExpected As Variant
     myExpected = 4&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.Last
+    myResult = myK.Last
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -827,14 +1039,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test16d_LetLast()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -843,14 +1062,14 @@ Private Sub Test16d_LetLast()
     Dim myExpected As Variant
     myExpected = 42&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     myK.Last = 42&
-    myresult = myK.Last
+    myResult = myK.Last
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -858,14 +1077,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test16e_GetFirstKey()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -874,13 +1100,13 @@ Private Sub Test16e_GetFirstKey()
     Dim myExpected As Variant
     myExpected = 10&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.FirstKey
+    myResult = myK.FirstKey
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -888,14 +1114,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("KvpC")
 Private Sub Test16f_LastKey()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpC
@@ -904,13 +1137,13 @@ Private Sub Test16f_LastKey()
     Dim myExpected As Variant
     myExpected = 70&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.LastKey
+    myResult = myK.LastKey
     
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -918,6 +1151,6 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub

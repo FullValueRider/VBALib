@@ -276,24 +276,24 @@ Attribute CurItem.VB_Description = "Get the items at the current 1 based offset.
         Exit Property
     End If
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     Select Case True
     
-        Case GroupInfo.IsArray(s.Host):             myresult = Array(s.Host(myIndex))
-        Case GroupInfo.IsString(s.Host):            myresult = Array(VBA.Mid$(s.Host, myIndex, 1))
-        Case GroupInfo.IsItemByToArray(s.Host):     myresult = Array(s.Items(s.FirstIndex + myIndex - 1))
-        Case GroupInfo.IsDictionary(s.Host):        myresult = Array(s.Host.Item(s.Keys(myIndex)))
-        Case GroupInfo.IsIndexFrom0(s.Host):        myresult = Array(s.Host.Item(myIndex))
-        Case GroupInfo.IsIndexFrom1(s.Host):        myresult = Array(s.Host.Item(myIndex))
-        Case Else:                                  myresult = Array(s.Host)
+        Case GroupInfo.IsArray(s.Host):             myResult = Array(s.Host(myIndex))
+        Case GroupInfo.IsString(s.Host):            myResult = Array(VBA.Mid$(s.Host, myIndex, 1))
+        Case GroupInfo.IsItemByToArray(s.Host):     myResult = Array(s.Items(s.FirstIndex + myIndex - 1))
+        Case GroupInfo.IsDictionary(s.Host):        myResult = Array(s.Host.Item(s.Keys(myIndex)))
+        Case GroupInfo.IsIndexFrom0(s.Host):        myResult = Array(s.Host.Item(myIndex))
+        Case GroupInfo.IsIndexFrom1(s.Host):        myResult = Array(s.Host.Item(myIndex))
+        Case Else:                                  myResult = Array(s.Host)
         
     End Select
     
     
-    If VBA.IsObject(myresult(0)) Then
-        Set CurItem = myresult(0)
+    If VBA.IsObject(myResult(0)) Then
+        Set CurItem = myResult(0)
     Else
-        CurItem = myresult(0)
+        CurItem = myResult(0)
     End If
      
 End Property
@@ -352,23 +352,23 @@ Public Property Get CurKey(ByVal ipLocalOffset As Long) As Variant
         Exit Property
     End If
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     Select Case True
     
-        Case GroupInfo.IsArray(s.Host):                 myresult = Array(myIndex)
-        Case GroupInfo.IsString(s.Host):                myresult = Array(myIndex)
-        Case GroupInfo.IsItemByToArray(s.Host):         myresult = Array(s.FirstIndex + myIndex)
-        Case GroupInfo.IsDictionary(s.Host):            myresult = Array(s.Keys(myIndex))
-        Case GroupInfo.IsIndexFrom0(s.Host):            myresult = Array(myIndex)
-        Case GroupInfo.IsIndexFrom1(s.Host):            myresult = Array(myIndex)
-        Case Else:                                      myresult = Array(1)
+        Case GroupInfo.IsArray(s.Host):                 myResult = Array(myIndex)
+        Case GroupInfo.IsString(s.Host):                myResult = Array(myIndex)
+        Case GroupInfo.IsItemByToArray(s.Host):         myResult = Array(s.FirstIndex + myIndex)
+        Case GroupInfo.IsDictionary(s.Host):            myResult = Array(s.Keys(myIndex))
+        Case GroupInfo.IsIndexFrom0(s.Host):            myResult = Array(myIndex)
+        Case GroupInfo.IsIndexFrom1(s.Host):            myResult = Array(myIndex)
+        Case Else:                                      myResult = Array(1)
             
     End Select
     
-    If VBA.IsObject(myresult(0)) Then
-        Set CurKey = myresult(0)
+    If VBA.IsObject(myResult(0)) Then
+        Set CurKey = myResult(0)
     Else
-        CurKey = myresult(0)
+        CurKey = myResult(0)
     End If
 
 End Property

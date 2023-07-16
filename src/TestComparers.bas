@@ -9,6 +9,9 @@ Option Private Module
 Private Assert As Object
 'Private Fakes As Object
 
+#If twinbasic Then
+    'Do nothing
+#Else
 
 '@ModuleInitialize
 Private Sub ModuleInitialize()
@@ -37,27 +40,67 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
+#End If
 
+Public Sub ComparerTests()
 
+#If twinbasic Then
+    Debug.Print CurrentProcedureName;
+#Else
+    Debug.Print ErrEx.LiveCallstack.ProcedureName;
+#End If
+
+    Test01a_CmpEq_Long_True
+    Test01b_CmpEq_Long_False
+    
+    Test02a_CmpNEq_Long_True
+    Test02b_CmpNEq_Long_False
+    
+    Test03a_CmpMT_Long_True
+    Test03b_CmpMT_Long_False
+    
+    Test04a_CmpLT_Long_True
+    Test04b_CmpLT_Long_False
+    
+    Test05a_CmpMTEQ_Long_MTTrue
+    Test05b_CmpMTEQ_Long_EQTrue
+    Test05c_CmpMTEQ_Long_False
+    
+    Test06a_CmpLTEQ_Long_LTTrue
+    Test06b_CmpLTEQ_Long_EQTrue
+    Test06c_CmpLTEQ_Long_False
+    
+    
+    Debug.Print vbTab, vbTab, "Testing completed"
+
+End Sub
+    
 
 '@TestMethod("Comparer")
 Private Sub Test01a_CmpEq_Long_True()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = True
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpEQ(42)
     
-    myresult = myCmp.ExecCmp(42)
+    myResult = myCmp.ExecCmp(42)
     
     'Act:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -65,7 +108,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -73,22 +116,29 @@ End Sub
 '@TestMethod("Comparer")
 Private Sub Test01b_CmpEq_Long_False()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = False
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpEQ(42)
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = myCmp.ExecCmp(43)
+    myResult = myCmp.ExecCmp(43)
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -96,28 +146,35 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Comparer")
 Private Sub Test02a_CmpNEq_Long_True()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = False
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpNEQ(42)
     
-    myresult = myCmp.ExecCmp(42)
+    myResult = myCmp.ExecCmp(42)
     
     'Act:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -125,7 +182,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -133,22 +190,29 @@ End Sub
 '@TestMethod("Comparer")
 Private Sub Test02b_CmpNEq_Long_False()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = True
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpNEQ(42)
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = myCmp.ExecCmp(43)
+    myResult = myCmp.ExecCmp(43)
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -156,7 +220,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -164,21 +228,28 @@ End Sub
 '@TestMethod("Comparer")
 Private Sub Test03a_CmpMT_Long_True()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = True
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpMT(42)
     
-    myresult = myCmp.ExecCmp(43)
+    myResult = myCmp.ExecCmp(43)
     
     'Act:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -186,7 +257,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -194,22 +265,29 @@ End Sub
 '@TestMethod("Comparer")
 Private Sub Test03b_CmpMT_Long_False()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = False
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpMT(42)
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = myCmp.ExecCmp(42)
+    myResult = myCmp.ExecCmp(42)
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -217,28 +295,35 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Comparer")
 Private Sub Test04a_CmpLT_Long_True()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = True
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpLT(42)
     
-    myresult = myCmp.ExecCmp(41)
+    myResult = myCmp.ExecCmp(41)
     
     'Act:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -246,7 +331,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -254,22 +339,29 @@ End Sub
 '@TestMethod("Comparer")
 Private Sub Test04b_CmpLT_Long_False()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = False
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpLT(42)
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = myCmp.ExecCmp(42)
+    myResult = myCmp.ExecCmp(42)
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -277,28 +369,35 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Comparer")
 Private Sub Test05a_CmpMTEQ_Long_MTTrue()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = True
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpMTEQ(42)
     
-    myresult = myCmp.ExecCmp(43)
+    myResult = myCmp.ExecCmp(43)
     
     'Act:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -306,7 +405,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -314,21 +413,28 @@ End Sub
 '@TestMethod("Comparer")
 Private Sub Test05b_CmpMTEQ_Long_EQTrue()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = True
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpMTEQ(42)
     
-    myresult = myCmp.ExecCmp(42)
+    myResult = myCmp.ExecCmp(42)
     
     'Act:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -336,29 +442,36 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Comparer")
-Private Sub Test04c_CmpMTEQ_Long_False()
+Private Sub Test05c_CmpMTEQ_Long_False()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = False
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpMTEQ(42)
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = myCmp.ExecCmp(41)
+    myResult = myCmp.ExecCmp(41)
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -366,28 +479,35 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Comparer")
 Private Sub Test06a_CmpLTEQ_Long_LTTrue()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = True
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpLTEQ(42)
     
-    myresult = myCmp.ExecCmp(41)
+    myResult = myCmp.ExecCmp(41)
     
     'Act:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -395,7 +515,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -403,21 +523,28 @@ End Sub
 '@TestMethod("Comparer")
 Private Sub Test06b_CmpLTEQ_Long_EQTrue()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = True
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpLTEQ(42)
     
-    myresult = myCmp.ExecCmp(42)
+    myResult = myCmp.ExecCmp(42)
     
     'Act:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -425,29 +552,36 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Comparer")
 Private Sub Test06c_CmpLTEQ_Long_False()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
     myExpected = False
     
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     
     Dim myCmp As IComparer
     Set myCmp = cmpLTEQ(42)
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = myCmp.ExecCmp(43)
+    myResult = myCmp.ExecCmp(43)
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -455,6 +589,6 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub

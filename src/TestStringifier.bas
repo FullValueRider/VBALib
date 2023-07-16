@@ -2,14 +2,15 @@ Attribute VB_Name = "TestStringifier"
 '@TestModule
 '@Folder("Tests")
 '@IgnoreModule
-
-
 Option Explicit
 Option Private Module
 
 Private Assert As Object
 Private Fakes As Object
 
+#If twinbasic Then
+    'Do nothing
+#Else
 
 '@ModuleInitialize
 Private Sub ModuleInitialize()
@@ -17,7 +18,6 @@ Private Sub ModuleInitialize()
     Set Assert = CreateObject("Rubberduck.AssertClass")
     Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
-
 
 '@ModuleCleanup
 Private Sub ModuleCleanup()
@@ -38,22 +38,51 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
+#End If
 
+
+Public Sub StringifierTests()
+ 
+    #If twinbasic Then
+        Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab,
+    #Else
+        Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab,
+    #End If
+
+    Test01_StringifyItem_String
+    Test02_StringifyItem_Long
+    Test03_StringifyItem_Array
+    Test04_StringifyItem_SeqC
+    Test05_StringifyItem_Collection
+    Test06_StringifyItem_Dictionary
+    Test07_StringifyItem_CustomDictionaryMarkup
+    
+    
+    Debug.Print "Testing completed"
+
+End Sub
 '@TestMethod("Stringifier")
 Private Sub Test01_StringifyItem_String()
 
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
     On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
     myExpected = "Hello World!"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Stringifier.StringifyItem("Hello World!")
+    myResult = Stringifier.StringifyItem("Hello World!")
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -61,12 +90,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Stringifier")
 Private Sub Test02_StringifyItem_Long()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
 
     On Error GoTo TestFail
     
@@ -74,12 +112,12 @@ Private Sub Test02_StringifyItem_Long()
     Dim myExpected As String
     myExpected = "42"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Stringifier.StringifyItem(42)
+    myResult = Stringifier.StringifyItem(42)
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -87,7 +125,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -105,7 +143,7 @@ End Sub
 '    'Act:  Again we need to sort The result SeqC to get the matching array
 '    myresult = Stringifier.StringifyItem(42)
 '    'Assert:
-'    Assert.AreEqual myExpected, myresult
+'    AssertStrictAreEqual myExpected, myResult,myProcedureName
 '
 'TestExit:
 '    '@Ignore UnhandledOnErrorResumeNext
@@ -113,7 +151,7 @@ End Sub
 '
 '    Exit Sub
 'TestFail:
-'    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+'    Assert.Fail myProcedurename & " raised an error: #" & Err.Number & " - " & Err.Description
 '    Resume TestExit
 'End Sub
 
@@ -121,18 +159,27 @@ End Sub
 '@TestMethod("Stringifier")
 Private Sub Test03_StringifyItem_Array()
 
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
+
     On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
     myExpected = "[1,2,3,4,5,6]"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Stringifier.StringifyItem(Array(1, 2, 3, 4, 5, 6))
+    myResult = Stringifier.StringifyItem(Array(1, 2, 3, 4, 5, 6))
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -140,26 +187,35 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Stringifier")
 Private Sub Test04_StringifyItem_SeqC()
 
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
+
     On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
     myExpected = "{1,2,3,4,5,6}"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:  Again we need to sort The result SeqC to get the matching array
     Stringifier.ResetMarkup
-    myresult = Stringifier.StringifyItem(SeqC(1, 2, 3, 4, 5, 6))
+    myResult = Stringifier.StringifyItem(SeqC(1, 2, 3, 4, 5, 6))
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -167,12 +223,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Stringifier")
 Private Sub Test05_StringifyItem_Collection()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
 
     On Error GoTo TestFail
     
@@ -180,7 +245,7 @@ Private Sub Test05_StringifyItem_Collection()
     Dim myExpected As String
     myExpected = "{1,2,3,4,5,6}"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As Collection
     Set myC = New Collection
     myC.Add 1
@@ -191,9 +256,9 @@ Private Sub Test05_StringifyItem_Collection()
     myC.Add 6
     'Act:  Again we need to sort The result SeqC to get the matching array
     Stringifier.ResetMarkup
-    myresult = Stringifier.StringifyItem(myC)
+    myResult = Stringifier.StringifyItem(myC)
     'Assert:
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -201,12 +266,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Stringifier")
 Private Sub Test06_StringifyItem_Dictionary()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
 
     On Error GoTo TestFail
     
@@ -214,7 +288,7 @@ Private Sub Test06_StringifyItem_Dictionary()
     Dim myExpected As String
     myExpected = "{ 'One': 1, 'Two': 2, 'Three': 3, 'Four': 4, 'Five': 5, 'Six': 6}"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As KvpC
     Set myC = KvpC.Deb
     myC.Add "One", 1
@@ -225,11 +299,11 @@ Private Sub Test06_StringifyItem_Dictionary()
     myC.Add "Six", 6
     'Act:  Again we need to sort The result SeqC to get the matching array
     Stringifier.ResetMarkup
-    myresult = Stringifier.StringifyItem(myC)
+    myResult = Stringifier.StringifyItem(myC)
     'Assert:
     'Debug.Print myExpected
     'Debug.Print myResult
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -237,12 +311,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Stringifier")
 Private Sub Test07_StringifyItem_CustomDictionaryMarkup()
+
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
 
     On Error GoTo TestFail
     
@@ -250,7 +333,7 @@ Private Sub Test07_StringifyItem_CustomDictionaryMarkup()
     Dim myExpected As String
     myExpected = "{|One|_1?|Two|_2?|Three|_3?|Four|_4?|Five|_5?|Six|_6}"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As KvpC
     Set myC = KvpC.Deb
     myC.Add "One", 1
@@ -262,11 +345,11 @@ Private Sub Test07_StringifyItem_CustomDictionaryMarkup()
     'Act:  Again we need to sort The result SeqC to get the matching array
     Dim myToString As Stringifier
     Set myToString = Stringifier.Deb.SetObjectMarkup(ipSeparator:="?").SetDictionaryItemMarkup("|", "_", "|")
-    myresult = myToString.StringifyItem(myC)
+    myResult = myToString.StringifyItem(myC)
     'Assert:
    'Debug.Print myExpected
     'Debug.Print myResult
-    Assert.AreEqual myExpected, myresult
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -274,6 +357,6 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub

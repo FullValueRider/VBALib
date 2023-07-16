@@ -13,3 +13,22 @@ Attribute VB_Name = "AA_ReadMe"
 '- Implement initialisation with data?
 '  Probably needs to wait until auto key is reestablished
 
+'SeqA
+'
+'- Implement the external array binding stuff.  Do this only for injected arrays
+'
+'#SeqTesting
+'
+'- Add testing for MappedIt, Mapit, FilterIt, CountIt, ReduceIt
+
+
+'# Sequences
+'# Align code across seq
+
+'# Kvp
+'- Align code across KVP
+
+' SeqT and KVPT (based on Treap)
+
+
+

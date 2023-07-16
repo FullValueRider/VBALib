@@ -1,0 +1,44 @@
+Attribute VB_Name = "TestAll"
+'@IgnoreModule
+'@Folder("Tests")
+Option Explicit
+
+Public myProcedureName As String
+Public myComponentName As String
+
+Public Assert As Object
+Public Fakes As Object
+
+Public Sub Main()
+    ErrEx.Enable vbNullString
+    Dim myTime As Variant
+    myTime = Timer
+    Debug.Print "Testing started"
+    Debug.Print
+    TestArrayInfo.ArrayInfoTests
+    TestStrs.StrsTests
+    TestStringifier.StringifierTests
+    TestFmt.FmtTests
+    TestMappers.MapperTests
+    TestComparers.ComparerTests
+'    'TestReducers.ReducerTests
+    TestIterItems.IterItemsTests
+'
+'    TestHashC.cHashCTests  ' not yet complete
+    TestSeqA.SeqATests
+    TestSeqC.SeqCTests
+    TestSeqL.SeqLTests
+
+    TestKvpA.KvpATests
+    TestKvpC.KvpCTests
+    TestKvpL.KvpLTests
+    'TestKvpH.KvpHTests
+    Debug.Print
+    Debug.Print "Testing Finished  " & Timer - myTime & " seconds."
+        
+End Sub
+
+'Private Function TimeNow() As String
+'    TimeNow = Format(Time(), "hh:nn:ss")
+'End Function
+

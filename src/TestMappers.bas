@@ -2,13 +2,15 @@ Attribute VB_Name = "TestMappers"
 '@TestModule
 '@Folder("Tests")
 '@IgnoreModule
-
-
 Option Explicit
 Option Private Module
 
 Private Assert As Object
 Private Fakes As Object
+
+#If twinbasic Then
+    'Do nothing
+#Else
 
 
 '@ModuleInitialize
@@ -38,28 +40,63 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
+#End If
 
+Public Sub MapperTests()
+ 
+#If twinbasic Then
+    Debug.Print CurrentProcedureName;
+#Else
+    Debug.Print ErrEx.LiveCallstack.ProcedureName;
+#End If
 
+    Test01a_mpDec_Default
+    Test01b_mpDec_1
+    Test01c_mpDec_3
+    
+    Test02a_mpInc_Default
+    Test02b_mpInc_1
+    Test02c_mpInc_3
+    
+    Test03a_mpIndex_mpInc_SeqC
+    Test03b_mpIndex_mpInc_Collection
+    Test03c_mpIndex_mpInc_ArrayList
+    Test03d_mpIndex_mpInc_Array
+    Test03e_mpIndex_mpInc_Dictionary
+    Test03f_mpIndex_mpInc_String
+    
+    Test04a_mpInner
+    
+    Debug.Print vbTab, vbTab, "Testing completed"
+    
+End Sub
 '@TestMethod("Mapper")
 Private Sub Test01a_mpDec_Default()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
     myExpected = Array(2&, "Nan", 3&, 4&, 5&, "Nan")
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     Dim mySeq As SeqC
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = mySeq.MapIt(mpDec.Deb).ToArray
+    myResult = mySeq.MapIt(mpDec.Deb).ToArray
    
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -67,14 +104,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Mapper")
 Private Sub Test01b_mpDec_1()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -84,13 +128,13 @@ Private Sub Test01b_mpDec_1()
     Dim mySeq As SeqC
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = mySeq.MapIt(mpDec(1)).ToArray
+    myResult = mySeq.MapIt(mpDec(1)).ToArray
    
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -98,7 +142,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -107,7 +151,14 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test01c_mpDec_3()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -117,13 +168,13 @@ Private Sub Test01c_mpDec_3()
     Dim mySeq As SeqC
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = mySeq.MapIt(mpDec(3)).ToArray
+    myResult = mySeq.MapIt(mpDec(3)).ToArray
    
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -131,7 +182,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -139,7 +190,14 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test02a_mpInc_Default()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -149,13 +207,13 @@ Private Sub Test02a_mpInc_Default()
     Dim mySeq As SeqC
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = mySeq.MapIt(mpInc.Deb).ToArray
+    myResult = mySeq.MapIt(mpInc.Deb).ToArray
    
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -163,14 +221,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Mapper")
 Private Sub Test02b_mpInc_1()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqC
@@ -178,16 +243,16 @@ Private Sub Test02b_mpInc_1()
     myExpected = Array(4&, "5", 5&, 6&, 7&, "Siy")
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
 
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = mySeq.MapIt(mpInc(1)).ToArray
+    myResult = mySeq.MapIt(mpInc(1)).ToArray
    
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -195,14 +260,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Mapper")
 Private Sub Test02c_mpInc_3()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqC
@@ -210,16 +282,16 @@ Private Sub Test02c_mpInc_3()
     myExpected = Array(6&, "7", 7&, 8&, 9&, "Sj0")
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
 
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = mySeq.MapIt(mpInc(3)).ToArray
+    myResult = mySeq.MapIt(mpInc(3)).ToArray
    
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -227,14 +299,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Mapper")
 Private Sub Test03a_mpIndex_mpInc_SeqC()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     
@@ -242,8 +321,8 @@ Private Sub Test03a_mpIndex_mpInc_SeqC()
     myExpected = Array(2, 3, "4")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 3)
+    Dim myResult As Variant
+    ReDim myResult(1 To 3)
     
     Dim mySeq As SeqC
     Set mySeq = SeqC(SeqC(1, 1, 1), SeqC(2, 2, 2), SeqC(3, "3", 3))
@@ -251,11 +330,11 @@ Private Sub Test03a_mpIndex_mpInc_SeqC()
     'Act:
     Dim myTmp As Variant
     myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 2)).ToArray
-    myresult(1) = myTmp(1).Item(2)
-    myresult(2) = myTmp(2).Item(2)
-    myresult(3) = myTmp(3).Item(2)
+    myResult(1) = myTmp(1).Item(2)
+    myResult(2) = myTmp(2).Item(2)
+    myResult(3) = myTmp(3).Item(2)
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -263,7 +342,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -271,7 +350,14 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03b_mpIndex_mpInc_Collection()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     
@@ -279,8 +365,8 @@ Private Sub Test03b_mpIndex_mpInc_Collection()
     myExpected = Array(2, 3, "4")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 3)
+    Dim myResult As Variant
+    ReDim myResult(1 To 3)
     
     Dim myC1 As Collection
     Set myC1 = New Collection
@@ -306,11 +392,11 @@ Private Sub Test03b_mpIndex_mpInc_Collection()
     'Act:
     Dim myTmp As Variant
     myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 2)).ToArray
-    myresult(1) = myTmp(1).Item(2)
-    myresult(2) = myTmp(2).Item(2)
-    myresult(3) = myTmp(3).Item(2)
+    myResult(1) = myTmp(1).Item(2)
+    myResult(2) = myTmp(2).Item(2)
+    myResult(3) = myTmp(3).Item(2)
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -318,7 +404,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -326,7 +412,14 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03c_mpIndex_mpInc_ArrayList()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     
@@ -334,8 +427,8 @@ Private Sub Test03c_mpIndex_mpInc_ArrayList()
     myExpected = Array(2, 3, "4")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 3)
+    Dim myResult As Variant
+    ReDim myResult(1 To 3)
     
     Dim myAL1 As ArrayList
     Set myAL1 = New ArrayList
@@ -361,11 +454,11 @@ Private Sub Test03c_mpIndex_mpInc_ArrayList()
     'Act:
     Dim myTmp As Variant
     myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 1)).ToArray
-    myresult(1) = myTmp(1).Item(1)
-    myresult(2) = myTmp(2).Item(1)
-    myresult(3) = myTmp(3).Item(1)
+    myResult(1) = myTmp(1).Item(1)
+    myResult(2) = myTmp(2).Item(1)
+    myResult(3) = myTmp(3).Item(1)
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -373,7 +466,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -381,7 +474,14 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03d_mpIndex_mpInc_Array()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     
@@ -389,8 +489,8 @@ Private Sub Test03d_mpIndex_mpInc_Array()
     myExpected = Array(2, 3, "4")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 3)
+    Dim myResult As Variant
+    ReDim myResult(1 To 3)
     
     Dim mySeq As SeqC
     Set mySeq = SeqC(Array(1, 1, 1), Array(2, 2, 2), Array(3, "3", 3))
@@ -398,11 +498,11 @@ Private Sub Test03d_mpIndex_mpInc_Array()
     'Act:
     Dim myTmp As Variant
     myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 1)).ToArray
-    myresult(1) = myTmp(1)(1)
-    myresult(2) = myTmp(2)(1)
-    myresult(3) = myTmp(3)(1)
+    myResult(1) = myTmp(1)(1)
+    myResult(2) = myTmp(2)(1)
+    myResult(3) = myTmp(3)(1)
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -410,7 +510,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -418,7 +518,14 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03e_mpIndex_mpInc_Dictionary()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     
@@ -426,8 +533,8 @@ Private Sub Test03e_mpIndex_mpInc_Dictionary()
     myExpected = Array(2, 3, "4")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 3)
+    Dim myResult As Variant
+    ReDim myResult(1 To 3)
     
     Dim myD1 As KvpC
     Set myD1 = KvpC.Deb
@@ -453,11 +560,11 @@ Private Sub Test03e_mpIndex_mpInc_Dictionary()
     'Act:
     Dim myTmp As Variant
     myTmp = mySeq.MapIt(mpByIndex(mpInc(1), "two")).ToArray
-    myresult(1) = myTmp(1).Item("two")
-    myresult(2) = myTmp(2).Item("two")
-    myresult(3) = myTmp(3).Item("two")
+    myResult(1) = myTmp(1).Item("two")
+    myResult(2) = myTmp(2).Item("two")
+    myResult(3) = myTmp(3).Item("two")
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -465,7 +572,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -473,7 +580,14 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03f_mpIndex_mpInc_String()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     
@@ -481,17 +595,17 @@ Private Sub Test03f_mpIndex_mpInc_String()
     myExpected = Array("Iello", "Uhere", "Xorld")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     
     Dim mySeq As SeqC
     Set mySeq = SeqC("Hello", "There", "World")
     
     'Act:
-    myresult = mySeq.MapIt(mpByIndex(mpInc(1), 1)).ToArray
+    myResult = mySeq.MapIt(mpByIndex(mpInc(1), 1)).ToArray
     
     'Assert:
-    Assert.SequenceEquals myExpected, myresult
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -499,14 +613,21 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
 '@TestMethod("Mapper")
-Private Sub Test01a_mpInner()
+Private Sub Test04a_mpInner()
 
-    On Error GoTo TestFail
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+      On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -519,19 +640,19 @@ Private Sub Test01a_mpInner()
     Dim mySeq As SeqC
     Set mySeq = SeqC(SeqC(1, 2, 3), SeqC(2, 3, 4), SeqC(3, 4, 5))
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 3)
+    Dim myResult As Variant
+    ReDim myResult(1 To 3)
     Dim myTmp As SeqC
     'Act: Apply the mpInc 'function' to each item of the in the inner SeqC
     Set myTmp = mySeq.MapIt(mpInner(mpInc.Deb))
-    myresult(1) = myTmp.Item(1).ToArray
-    myresult(2) = myTmp.Item(2).ToArray
-    myresult(3) = myTmp.Item(3).ToArray
+    myResult(1) = myTmp.Item(1).ToArray
+    myResult(2) = myTmp.Item(2).ToArray
+    myResult(3) = myTmp.Item(3).ToArray
     
     'Assert:
-    Assert.SequenceEquals myExpected(1), myresult(1)
-    Assert.SequenceEquals myExpected(2), myresult(2)
-    Assert.SequenceEquals myExpected(3), myresult(3)
+    AssertStrictSequenceEquals myExpected(1), myResult(1), myProcedureName
+    AssertStrictSequenceEquals myExpected(2), myResult(2), myProcedureName
+    AssertStrictSequenceEquals myExpected(3), myResult(3), myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -539,7 +660,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 

@@ -77,30 +77,6 @@ End Function
 
 Public Function IsNotArray(ByRef ipArray As Variant, Optional ByRef ipArrayType As e_ArrayType = m_AnyArrayType) As Boolean
      IsNotArray = Not IsArray(ipArray, ipArrayType)
-'     If LacksItems(ipArray) Then
-'         IsNotArray = True
-'     End If
-'
-'     Dim myRanks As Long
-'     myRanks = Ranks(ipArray)
-'
-'    Select Case ipArrayType
-'
-'        Case e_ArrayType.m_AnyArrayType
-'            myRanks = myRanks < 1
-'
-'        Case e_ArrayType.m_ListArray
-'            myRanks = myRanks <> e_ArrayRanks.m_ListArrayRanks
-'
-'        Case e_ArrayType.m_TableArray
-'            myRanks = myRanks <> e_ArrayRanks.m_TableArrayRanks
-'
-'        Case e_ArrayType.m_MDArray
-'            myRanks = myRanks <= e_ArrayRanks.m_TableArrayRanks
-'
-'
-'    End Select
-         
 End Function
  
 Public Function GetIndex(ByRef ipArray As Variant, ParamArray ipDims() As Variant) As Long
@@ -129,24 +105,15 @@ Friend Function CountKnownArray(ByVal ipArray As Variant, Optional ByVal ipRank 
          myRanks = Me.Ranks(ipArray)
          
          For myRank = 1 To myRanks
-             
              mySize = mySize * (UBound(ipArray, myRank) - LBound(ipArray, myRank) + 1)
-             
-             
          Next
          
      Else
          
          If Me.LacksRank(ipArray, ipRank) Then
-             
              mySize = 0
-             
-             
          Else
-         
              mySize = UBound(ipArray, ipRank) - LBound(ipArray, ipRank) + 1
-         
-             
          End If
          
      End If
@@ -180,15 +147,11 @@ Attribute Ranks.VB_Description = "Returns the number of dimensions of an array. 
          myDummy = UBound(ipArray, myIndex)
          
          If Err.Number <> 0 Or myDummy = -1 Then
-             
              On Error GoTo 0
              Exit For
-             
-             
          End If
          
          Err.Clear
-         
          
      Next
      
@@ -200,24 +163,24 @@ End Function
 
 
  '@Ignore ParameterCanBeByVal
-Public Function HasRank(ByRef ipArray As Variant, ByVal ipRank As Long) As Boolean
+Public Function HoldsRank(ByRef ipArray As Variant, ByVal ipRank As Long) As Boolean
     
     Dim myRanks As Long
     myRanks = Ranks(ipArray)
     If myRanks < 1 Then
-       HasRank = False
+       HoldsRank = False
     End If
     
     If ipRank > myRanks Then
-        HasRank = False
+        HoldsRank = False
     End If
     
-    HasRank = True
+    HoldsRank = True
      
 End Function
 
 Public Function LacksRank(ByRef ipArray As Variant, ByVal ipRank As Long) As Boolean
-    LacksRank = Not HasRank(ipArray, ipRank)
+    LacksRank = Not HoldsRank(ipArray, ipRank)
 End Function
 
 
@@ -257,29 +220,4 @@ Public Function LastIndex(ByRef ipArray As Variant, Optional ByVal ipRank As Lon
 End Function
 
 
-'@Ignore ParameterCanBeByVal
-Public Function IsListArray(ByRef ipArray As Variant) As Boolean
-    IsListArray = IsArray(ipArray, e_ArrayType.m_ListArray)
-End Function
 
-Public Function IsNotListArray(ByRef ipArray As Variant) As Boolean
-    IsNotListArray = Not IsArray(ipArray, e_ArrayType.m_ListArray)
-End Function
-
-'@Ignore ParameterCanBeByVal
-Public Function IsTableArray(ByRef ipArray As Variant) As Boolean
-    IsTableArray = IsArray(ipArray, e_ArrayType.m_TableArray)
-End Function
-
-Public Function IsNotTableArray(ByRef ipArray As Variant) As Boolean
-    IsNotTableArray = Not IsArray(ipArray, e_ArrayType.m_TableArray)
-End Function
-
-'@Ignore ParameterCanBeByVal
-Public Function IsMDArray(ByRef ipArray As Variant) As Boolean
-    IsMDArray = IsArray(ipArray, e_ArrayType.m_MDArray)
-End Function
-
-Public Function IsNotMDArray(ByRef ipArray As Variant) As Boolean
-    IsNotMDArray = Not IsArray(ipArray, e_ArrayType.m_MDArray)
-End Function

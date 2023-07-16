@@ -1407,6 +1407,7 @@ Public Function IndexOf _
     Optional ByVal ipStart As Long = 1, _
     Optional ByVal ipRun As Long = -1 _
 ) As Long
+Attribute IndexOf.VB_Description = "Returns the index of the Item"
     
     If s.LastIndex < 1 Then
         IndexOf = -1
