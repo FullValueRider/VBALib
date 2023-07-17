@@ -1,7 +1,7 @@
 # VBALib:  Advent Of Code Library in VBA
 
 ## ##DANGER WILL ROBINSON DANGER##
-I'm not a professional programmer.  Code in this Library represents my best efforts following several decade of using VBA on an adnoc basis to assist with massaging technical reports written in Word.
+I'm not a professional programmer.  Code in this Library represents my best efforts following several decades of using VBA on an ad-hoc basis to assist with massaging technical reports written in Word.
 More recently I became intersted in solving Advent of Code problems and used VBA as this was the language with which I was most familiar.
 
 Hoever I quickly became frustrated by the immense amount of boiler plate needed in VBA to make useful things happen.  Eventually, and after reading and rereading the Rubberduck blogs, I began to get a better grip on Oop and saw patterns in the boilerplate code I was creating that were amenable encapsulation in classes.
