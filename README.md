@@ -2,14 +2,16 @@
 
 ## ##DANGER WILL ROBINSON DANGER##
 I'm not a professional programmer.  Code in this Library represents my best efforts following several decades of using VBA on an ad-hoc basis to assist with massaging technical reports written in Word.
-More recently I became intersted in solving Advent of Code problems and used VBA as this was the language with which I was most familiar.
+More recently I became interested in solving Advent of Code problems and used VBA as this was the language with which I was most familiar.
 
 Hoever I quickly became frustrated by the immense amount of boiler plate needed in VBA to make useful things happen.  Eventually, and after reading and rereading the Rubberduck blogs, I began to get a better grip on Oop and saw patterns in the boilerplate code I was creating that were amenable encapsulation in classes.
-And thus started the treadmill because reducing one pattern to a class,highlighted andther set of patterns and so on.
+And thus started the treadmill because reducing one pattern to a class highlighted andther set of patterns and so on.
 
 This library represent my current ' State of the art' for pure VBA.  I have a parallel project in twinBasic which is in the refactoring doldrums at present whilst I try to eliminate the use of variants.
 
-## Summary of library contents
+Run the tests from TestAll.  Do not use Rubberduck unit testing. There are currently over 400 tests and Rubberduck just grinds to a halt.
+
+## Overview of library contents
 
 The library offers
 - a degree of enhanced reflection,  e.g. GroupInfo.IsNumber, GroupInfo.IsContainer, GroupInfo.IsList etc, Similarly for Arrays, ArrayInfo.Ranks, ArrayInfo.Count, ArrayInfo.HoldsItems etc
