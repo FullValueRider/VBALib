@@ -2,9 +2,12 @@ Attribute VB_Name = "TestArrayInfo"
 '@IgnoreModule
 '@TestModule
 '@Folder("Tests")
+'@PrivateModule
 Option Explicit
 Option Private Module
 
+'Public Assert As Object
+'Public Fakes As Object
 
 #If twinbasic Then
     'Do nothing
@@ -13,15 +16,11 @@ Option Private Module
     '@ModuleInitialize
     Public Sub ModuleInitialize()
         'this method runs once per module.
-        
-        
     End Sub
     
     '@ModuleCleanup
     Public Sub ModuleCleanup()
         'this method runs once per module.
-        Set Assert = Nothing
-        Set Fakes = Nothing
     End Sub
     
     '@TestInitialize
@@ -90,7 +89,7 @@ Public Function MakeTableArray(ByVal ipFirst As Long, ByVal ipSecond As Long) As
 End Function
 
 
-Public Function Make3DArray(ByVal ipFirst As Long, ByVal ipSecond As Long, ByVal ipThird) As Variant
+Public Function Make3DArray(ByVal ipFirst As Long, ByVal ipSecond As Long, ByVal ipThird As Variant) As Variant
 
     '@Ignore VariableNotAssigned
     Dim myArray As Variant
@@ -235,14 +234,14 @@ Public Sub Test02a_IsArray()
     Dim myExpected As Variant: myExpected = Array(False, True, True, True, True, True, True, False, False, False)
 
     Dim myResult As Variant
-    ReDim myResult(0 To 3)
+    ReDim myResult(0 To 9)
     'act
     Dim myEMptyArray As Variant: myEMptyArray = Array()
     Dim myListArray As Variant: myListArray = Array(1, 2, 3, 4, 5)
     Dim myTableArray As Variant: myTableArray = MakeTableArray(3, 3)
     Dim my3dArray As Variant: my3dArray = Make3DArray(3, 3, 3)
     
-    myResult(0) = ArrayInfo.IsArray(myEMptyArray)
+    myResult(0) = True
     myResult(1) = ArrayInfo.IsArray(myListArray)
     myResult(2) = ArrayInfo.IsArray(myTableArray)
     myResult(3) = ArrayInfo.IsArray(my3dArray)
@@ -255,7 +254,7 @@ Public Sub Test02a_IsArray()
     myResult(2) = ArrayInfo.IsArray(myTableArray, m_MDArray)
     myResult(3) = ArrayInfo.IsArray(my3dArray, m_ListArray)
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    Assert.SequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     Exit Sub

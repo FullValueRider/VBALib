@@ -1,5 +1,6 @@
 Attribute VB_Name = "AA_ReadMe"
 '@IgnoreModule
+'Passes all tests in twinbasic
 
 '1. Do not use ParamArray:  Replace all uses of paramarray with a call to SeqC constructor except in the creation of SeqC and in SeqC methods
 

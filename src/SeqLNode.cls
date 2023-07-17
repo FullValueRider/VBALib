@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqLNode"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -22,7 +22,7 @@ End Type
 Private s                   As State
 
 '@DefaultMember
-Public Function Deb(ByRef ipPred As SeqLNode, ByRef ipSucc As SeqLNode, Optional ByRef ipItem As Variant = Null) As SeqLNode
+Public Function Deb(Optional ByRef ipPred As SeqLNode = Nothing, Optional ByRef ipSucc As SeqLNode = Nothing, Optional ByRef ipItem As Variant = Null) As SeqLNode
 Attribute Deb.VB_UserMemId = 0
     With New SeqLNode
         Set Deb = .ConstructInstance(ipPred, ipSucc, ipItem)

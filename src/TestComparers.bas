@@ -6,7 +6,7 @@ Attribute VB_Name = "TestComparers"
 Option Explicit
 Option Private Module
 
-Private Assert As Object
+'Private Assert As Object
 'Private Fakes As Object
 
 #If twinbasic Then
@@ -16,7 +16,7 @@ Private Assert As Object
 '@ModuleInitialize
 Private Sub ModuleInitialize()
     'this method runs once per module.
-    Set Assert = CreateObject("Rubberduck.AssertClass")
+    'Set Assert = CreateObject("Rubberduck.AssertClass")
     'Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
 
@@ -24,7 +24,7 @@ End Sub
 '@ModuleCleanup
 Private Sub ModuleCleanup()
     'this method runs once per module.
-    Set Assert = Nothing
+    'Set Assert = Nothing
     'Set Fakes = Nothing
 End Sub
 

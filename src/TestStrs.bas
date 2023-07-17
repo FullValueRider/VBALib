@@ -5,6 +5,8 @@ Attribute VB_Name = "TestStrs"
 Option Explicit
 Option Private Module
 
+'Private Assert As Object
+'Private Fakes As Object
 
 #If twinbasic Then
     'Do nothing
@@ -13,16 +15,18 @@ Option Private Module
 '@ModuleInitialize
 Private Sub ModuleInitialize()
     'this method runs once per module.
-    Set Assert = CreateObject("Rubberduck.AssertClass")
-    Set Fakes = CreateObject("Rubberduck.FakesProvider")
+    ' BUT only runs if the Testing is via rubberduck unit tests
+    '    Set Assert = CreateObject("Rubberduck.AssertClass")
+'    Set Fakes = CreateObject("Rubberduck.FakesProvider")
+
 End Sub
 
 
 '@ModuleCleanup
 Private Sub ModuleCleanup()
     'this method runs once per module.
-    Set Assert = Nothing
-    Set Fakes = Nothing
+'    Set Assert = Nothing
+'    Set Fakes = Nothing
 End Sub
 
 

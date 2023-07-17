@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Kvp is a flexible Key/Value pair dictionary targeted at VB/VBA. It facilitates data input, direct content manipulation of items and keys, and indirect manipulation of data via Map and Comparer objects"
@@ -44,11 +44,10 @@ Attribute VB_Description = "Kvp is a flexible Key/Value pair dictionary targeted
      Set ConstructInstance = Me
  End Function
 
-'@Enumerator
-Public Function NewEnum() As IUnknown
-Attribute NewEnum.VB_UserMemId = -4
-    Set NewEnum = s.Keys.NewEnum
-End Function
+''@Enumerator
+'Public Function NewEnum() As IUnknown
+'    Set NewEnum = s.Keys.NewEnum
+'End Function
 
  Public Function Add(ByRef ipKey As Variant, ByRef ipItem As Variant) As KvpC
     
@@ -115,11 +114,11 @@ Public Property Set Item(ByRef ipKey As Variant, ByVal ipItem As Variant)
 End Property
 
 '@Description("Removes Key/Value pairs that exist in the KvpC")
-Public Function Remove(ParamArray ipParamArray() As Variant) As KvpC
+Public Function Remove(ParamArray ipParamarray() As Variant) As KvpC
 Attribute Remove.VB_Description = "Removes Key/Value pairs that exist in the KvpC"
 
     Dim myItem As Variant
-    For Each myItem In ipParamArray
+    For Each myItem In ipParamarray
         Dim myIndex As Long
         myIndex = s.Keys.IndexOf(myItem)
         If myIndex > 0 Then

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "ArrayInfo"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -43,10 +43,16 @@ Attribute LacksItems.VB_Description = "Tests that an has been dimmed with valid 
   
 End Function
 
- Public Function HoldsItems(ByRef ipArray As Variant) As Boolean
-     HoldsItems = Not LacksItems(ipArray)
- End Function
+Public Function HoldsItems(ByRef ipArray As Variant) As Boolean
+    HoldsItems = Not LacksItems(ipArray)
+End Function
  
+ 
+Public Function HoldsOneItem(ByRef ipArray As Variant) As Boolean
+    HoldsOneItem = Count(ipArray) = 1
+End Function
+
+
 Public Function IsArray(ByRef ipArray As Variant, Optional ByRef ipArrayType As e_ArrayType = e_ArrayType.m_AnyArrayType) As Boolean
      
      IsArray = False

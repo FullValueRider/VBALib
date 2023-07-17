@@ -5,8 +5,8 @@ Attribute VB_Name = "TestSeqL"
 Option Explicit
 Option Private Module
 
-Private Assert As Object
-Private Fakes As Object
+'Private Assert As Object
+'Private Fakes As Object
 
 #If twinbasic Then
     'Do nothing
@@ -16,7 +16,7 @@ Private Fakes As Object
 '@ModuleInitialize
 Private Sub ModuleInitialize()
     'this method runs once per module.
-    Set Assert = CreateObject("Rubberduck.AssertClass")
+    'Set Assert = CreateObject("Rubberduck.AssertClass")
     'Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
 
@@ -24,7 +24,7 @@ End Sub
 '@ModuleCleanup
 Private Sub ModuleCleanup()
     'this method runs once per module.
-    Set Assert = Nothing
+    'Set Assert = Nothing
     'Set Fakes = Nothing
 End Sub
 
@@ -1413,7 +1413,7 @@ End Sub
 
 '@TestMethod("SeqL")
 Private Sub Test13b_RemoveAll_Default_42AndHello()
-    ErrEx.Enable vbNullString
+    
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
        myComponentName = CurrentComponentName
@@ -1426,11 +1426,11 @@ Private Sub Test13b_RemoveAll_Default_42AndHello()
     'Arrange:
     Dim mySeq As SeqL
     Dim myExpected As Variant
-    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
-    ReDim myExpected(1 To 5)
+    myExpected = Array(1, 2, 3, 4, 5)
+    ReDim Preserve myExpected(1 To 5)
 
     Dim myResult As Variant
-    Set mySeq = SeqL.Deb(Empty, "Hello", Empty, "Hello", "Hello", Empty, 42, 42, 42, Empty, Empty)
+    Set mySeq = SeqL(1, "Hello", 2, "Hello", "Hello", 3, 42, 42, 42, 4, 5)
 
     'Act:
     mySeq.RemoveAll "Hello", 42

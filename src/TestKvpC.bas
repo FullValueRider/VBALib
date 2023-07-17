@@ -4,9 +4,9 @@ Attribute VB_Name = "TestKvpC"
 '@IgnoreModule
 Option Explicit
 Option Private Module
-
-Private Assert As Object
-Private Fakes As Object
+'
+'Private Assert As Object
+'Private Fakes As Object
 
 #If twinbasic Then
     'Do nothing
@@ -15,16 +15,16 @@ Private Fakes As Object
 '@ModuleInitialize
 Private Sub ModuleInitialize()
     'this method runs once per module.
-    Set Assert = CreateObject("Rubberduck.AssertClass")
-    Set Fakes = CreateObject("Rubberduck.FakesProvider")
+'    Set Assert = CreateObject("Rubberduck.AssertClass")
+'    Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
 
 
 '@ModuleCleanup
 Private Sub ModuleCleanup()
     'this method runs once per module.
-    Set Assert = Nothing
-    Set Fakes = Nothing
+'    Set Assert = Nothing
+'    Set Fakes = Nothing
 End Sub
 
 

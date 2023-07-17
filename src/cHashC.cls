@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "cHashC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@folder("Set")
@@ -66,7 +66,7 @@ Public Sub ReInit(Optional ByVal ExpectedMaxCount As Long)  ' Optional ByVal Ens
 
   mDTUB = mLastExpectedMaxCount
   ReDim mKeys(0 To mDTUB) As Variant
-  ReDim mValues(0 To mDTUB) As Variant
+  'ReDim mValues(0 To mDTUB) As Variant
   mCount = 0
   mFCount = 0: mFUB = 16: ReDim mFIndexes(0 To mFUB)
 End Sub

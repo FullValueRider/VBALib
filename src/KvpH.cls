@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpH"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Kvp is a flexible Key/Value pair dictionary targeted at VB/VBA. It facilitates data input, direct content manipulation of items and keys, and indirect manipulation of data via Map and Comparer objects"
@@ -113,11 +113,11 @@ Public Property Set Item(ByRef ipKey As Variant, ByVal ipItem As Variant)
 End Property
 
 '@Description("Removes Key/Value pairs that exist in the KvpH")
-Public Function Remove(ParamArray ipParamArray() As Variant) As KvpH
+Public Function Remove(ParamArray ipParamarray() As Variant) As KvpH
 Attribute Remove.VB_Description = "Removes Key/Value pairs that exist in the KvpH"
 
     Dim myItem As Variant
-    For Each myItem In ipParamArray
+    For Each myItem In ipParamarray
         s.Host.Remove myItem
     Next
 

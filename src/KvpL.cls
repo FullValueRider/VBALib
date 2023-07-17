@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -113,10 +113,10 @@ Public Property Set Item(ByRef ipKey As Variant, ByVal ipItem As Variant)
 End Property
 
 '@Description("Removes Key/Value pairs that exist in the KvpL")
-Public Function Remove(ParamArray ipParamArray() As Variant) As KvpL
+Public Function Remove(ParamArray ipParamarray() As Variant) As KvpL
 
     Dim myItem As Variant
-    For Each myItem In ipParamArray
+    For Each myItem In ipParamarray
         Dim myIndex As Long
         myIndex = s.Keys.IndexOf(myItem)
         If myIndex > 0 Then

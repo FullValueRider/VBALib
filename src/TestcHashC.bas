@@ -5,7 +5,7 @@ Attribute VB_Name = "TestcHashC"
 Option Explicit
 Option Private Module
 
-Private Assert As Object
+'Private Assert As Object
 'Private Fakes As Object
 
 #If twinbasic Then
@@ -15,8 +15,8 @@ Private Assert As Object
 '@ModuleInitialize
 Private Sub ModuleInitialize()
     'this method runs once per module.
-    Set Assert = CreateObject("Rubberduck.AssertClass")
-    'Set Fakes = CreateObject("Rubberduck.FakesProvider")
+'    Set Assert = CreateObject("Rubberduck.AssertClass")
+'    Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
 
 

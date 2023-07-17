@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "IterItems"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A class to iterate any single dimension containers, strings and single items"
@@ -131,6 +131,17 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
     
     Set ConstructInstance = Me
     
+End Function
+
+Public Function Size() As Long
+    Size = s.Size
+End Function
+Public Function HoldsItems() As Boolean
+    HoldsItems = s.Size > 0
+End Function
+
+Public Function LacksItems() As Boolean
+    LacksItems = s.Size < 1
 End Function
 
 '@Description("Sets the subrange and stepping to be used when using Iteritems")
