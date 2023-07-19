@@ -163,7 +163,7 @@ TestExit:
     Exit Sub
     
 TestFail:
-    Debug.Print myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
     
 End Sub
@@ -212,7 +212,7 @@ TestExit:
     Exit Sub
     
 TestFail:
-    Debug.Print myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
     
 End Sub
@@ -259,7 +259,7 @@ Public Sub Test02a_IsArray()
 TestExit:
     Exit Sub
 TestFail:
-    Debug.Print myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
     
 End Sub
@@ -305,7 +305,7 @@ Public Sub Test02b_IsNotArray()
 TestExit:
     Exit Sub
 TestFail:
-    Debug.Print myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
     
 End Sub
@@ -355,7 +355,7 @@ TestExit:
     Exit Sub
     
 TestFail:
-    Debug.Print myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
     
 End Sub
@@ -404,7 +404,7 @@ TestExit:
     Exit Sub
     
 TestFail:
-    Debug.Print myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
     
 End Sub
@@ -454,7 +454,7 @@ TestExit:
     Exit Sub
 
 TestFail:
-    Debug.Print myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 
 End Sub
@@ -503,7 +503,7 @@ TestExit:
     Exit Sub
 
 TestFail:
-    Debug.Print myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 
 End Sub
@@ -552,7 +552,7 @@ TestExit:
     Exit Sub
     
 TestFail:
-    Debug.Print myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
     
 End Sub
@@ -601,7 +601,7 @@ TestExit:
     Exit Sub
     
 TestFail:
-    Debug.Print myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
     
 End Sub

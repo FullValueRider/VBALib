@@ -14,9 +14,9 @@ Public Sub GuardIndexOutOfBounds(ByRef ipIndex As Long, ByRef ipLowerIndex As Lo
  End Sub
 
 
-Public Sub GuardInvalidRangeObject(ByRef myGroupId As e_Group, ByRef ipItem As Variant, ByRef ipMessage As String)
+Public Sub GuardInvalidRangeItem(ByRef ipRange As Variant, ByRef ipMessage As String)
 
-     Select Case myGroupId
+     Select Case GroupInfo.Id(ipRange)
     
         Case e_Group.m_string:      Exit Sub
         Case e_Group.m_array:       Exit Sub
@@ -25,7 +25,7 @@ Public Sub GuardInvalidRangeObject(ByRef myGroupId As e_Group, ByRef ipItem As V
         Case Else
             Err.Raise 17 + vbObjectError, _
                 ipMessage, _
-                Fmt.Text("Expecting string, array, list type or dictionary type.  Got {0}", VBA.TypeName(ipItem))
+                Fmt.Text("Expecting string, array, list type or dictionary type.  Got {0}", VBA.TypeName(ipRange))
     End Select
     
 End Sub

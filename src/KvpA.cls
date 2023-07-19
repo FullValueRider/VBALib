@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Kvp is a flexible Key/Value pair dictionary targeted at VB/VBA. It facilitates data input, direct content manipulation of items and keys, and indirect manipulation of data via Map and Comparer objects"
@@ -422,14 +422,21 @@ Public Function KeyOf(ByVal ipItem As Variant) As Variant
     
 End Function
 
-
-Public Function Items() As SeqA
-    Set Items = s.Items.Clone
+Public Function Items() As Variant
+    Items = s.Items.ToArray
 End Function
 
 
-Public Function Keys() As SeqA
-    Set Keys = s.Keys.Clone
+Public Function Keys() As Variant
+    Keys = s.Keys.ToArray
+End Function
+Public Function ItemsAsSeq() As SeqA
+    Set ItemsAsSeq = s.Items.Clone
+End Function
+
+
+Public Function KeysAsSeq() As SeqA
+    Set KeysAsSeq = s.Keys.Clone
 End Function
 
 

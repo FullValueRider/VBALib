@@ -4,9 +4,10 @@ BEGIN
 END
 Attribute VB_Name = "cHashC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+'@IGNOREModule
 '@folder("Set")
 'cHashC Steven Laycock July 2023 Modified for a keyless collection class
 ' derived from
@@ -380,6 +381,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
   FindIndex = -1
 End Function
 
+'@Ignore ProcedureCanBeWrittenAsFunction
 Private Sub AdjustIndex(ByRef Idx As Long, Optional ByVal Inverse As Boolean)
   Dim i As Long
   Dim Incr As Long

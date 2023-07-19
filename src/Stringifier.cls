@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Stringifier"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule ImplicitUnboundDefaultMemberAccess
@@ -104,9 +104,18 @@ End Function
 
 Public Function StringifyItem(ByRef ipItem As Variant) As String
   
-    If s.ArrayMarkup Is Nothing Then SetArrayMarkup
-    If s.DictionaryItemMarkup Is Nothing Then SetDictionaryItemMarkup
-    If s.ObjectMarkup Is Nothing Then SetObjectMarkup
+    If s.ArrayMarkup Is Nothing Then
+        SetArrayMarkup
+    End If
+    
+    If s.ObjectMarkup Is Nothing Then
+        SetObjectMarkup
+    End If
+    
+    If s.DictionaryItemMarkup Is Nothing Then
+        SetDictionaryItemMarkup
+    End If
+    
     
     Dim myGroupId As e_Group
     myGroupId = GroupInfo.Id(ipItem)
@@ -222,10 +231,10 @@ Friend Function StringifyItemByIndex(ByRef ipItemByIndex As Variant) As String
     Dim myS As SeqC
     Set myS = SeqC.Deb
     
-    Dim myItem As Variant
-    For Each myItem In ipItemByIndex
-        myS.Add StringifyItem(myItem)
-    Next
+    Dim myItems As IterItems: Set myItems = IterItems(ipItemByIndex)
+    Do
+        myS.Add StringifyItem(myItems.CurItem(0))
+    Loop Until myItems.MoveNext
     
     StringifyItemByIndex = s.ObjectMarkup.Left & VBA.Join(myS.ToArray, s.ObjectMarkup.Separator) & s.ObjectMarkup.Right
     
@@ -261,15 +270,17 @@ Friend Function StringifyItembyKey(ByRef ipItemByKey As Variant) As String
     Set myS = SeqC.Deb
     
     Dim myKey As Variant
-    For Each myKey In ipItemByKey.Keys
+    Dim myKeys As Variant
+    myKeys = ipItemByKey.Keys
+    For Each myKey In myKeys
     
         Dim myT As String
     
-        myT = s.DictionaryItemMarkup.Left _
-            & StringifyItem(myKey) _
-            & s.DictionaryItemMarkup.Right _
-            & s.DictionaryItemMarkup.Separator _
-            & StringifyItem(ipItemByKey.Item(myKey))
+        myT = s.DictionaryItemMarkup.Left
+        myT = myT & StringifyItem(myKey)
+        myT = myT & s.DictionaryItemMarkup.Right
+        myT = myT & s.DictionaryItemMarkup.Separator
+        myT = myT & StringifyItem(ipItemByKey.Item(myKey))
         
         myS.Add myT 's.DictionaryItemMarkup.Left & ToString(myKey) & s.DictionaryItemMarkup.Right & s.DictionaryItemMarkup.Separator & ToString(ipItemByKey.item(myKey))
         

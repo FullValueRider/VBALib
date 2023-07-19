@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Fmt"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Class Fmt enables substitution of variables and control characters in strings using fields delineated by {} markers."
@@ -255,8 +255,9 @@ Attribute ReplaceFormatFieldWithZeroCountByvbNullString.VB_Description = "Replac
     Dim myItem As Variant
 
     myLayoutTemplate = ipLayoutTemplate
-        
-    For Each myItem In s.FormatFields.Keys
+    Dim myKeys As Variant
+    myKeys = s.FormatFields.Keys
+    For Each myItem In myKeys
         
         myLayoutTemplate = VBA.Replace(myLayoutTemplate, myItem & FIELD_COUNT_IS_ZERO, Chars.twNullStr)
             
@@ -274,7 +275,9 @@ Attribute ReplaceFormatFieldWithNoCountByFormatFieldWithCountOfOne.VB_Descriptio
 
     Dim myItem As Variant
 
-    For Each myItem In s.FormatFields.Keys
+    Dim myKeys As Variant
+    myKeys = s.FormatFields.Keys
+    For Each myItem In myKeys
         
         ipFormatTemplate = VBA.Replace(ipFormatTemplate, myItem & FIELD_COUNT_IS_NONE, myItem & FIELD_COUNT_IS_ONE)
             
@@ -313,7 +316,10 @@ Attribute ReplaceFormatFieldWithCountByControlCharacters.VB_Description = "Repla
     Dim myField                             As String
     Dim myCount                             As Long
 
-    For Each myKey In s.FormatFields.Keys
+    'Dim myItm As Variant
+    Dim myKeys As Variant
+    myKeys = s.FormatFields.Keys
+    For Each myKey In myKeys
                 
         If InStr(ipFormatTemplate, myKey) > 0 Then
             
@@ -352,7 +358,7 @@ End Function
 Friend Function ReplaceVariableFieldByVariableString _
 ( _
     ByVal ipFormatTemplate As String, _
-    ByVal ipSeq As SeqC _
+    ByVal ipseq As SeqC _
 ) As String
 Attribute ReplaceVariableFieldByVariableString.VB_Description = "Replace each ocurrence of '{<number>}' with the corresponding stringified item from the parameters list"
 
@@ -361,12 +367,12 @@ Attribute ReplaceVariableFieldByVariableString.VB_Description = "Replace each oc
     myReturn = ipFormatTemplate
     
     Dim myIndex As Long
-    For myIndex = ipSeq.FirstIndex To ipSeq.LastIndex
+    For myIndex = ipseq.FirstIndex To ipseq.LastIndex
     
         Dim myReplace As String
         ' Remember that {} fields start at 0
         myReplace = Chars.twLCUB & VBA.CStr(myIndex - 1) & Chars.twRCUB
-        myReturn = VBA.Replace(myReturn, myReplace, ipSeq.Item(myIndex))
+        myReturn = VBA.Replace(myReturn, myReplace, ipseq.Item(myIndex))
 
     Next
         

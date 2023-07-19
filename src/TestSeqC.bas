@@ -197,7 +197,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -234,7 +234,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -272,7 +272,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -323,7 +323,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -377,7 +377,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -431,7 +431,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -488,7 +488,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -527,7 +527,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -563,7 +563,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -602,7 +602,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -639,7 +639,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -686,7 +686,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -733,7 +733,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -781,7 +781,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -826,7 +826,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -865,7 +865,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -909,7 +909,7 @@ End Sub
 '
 '    Exit Sub
 'TestFail:
-'    Assert.Fail myProcedurename & " raised an error: #" & Err.Number & " - " & Err.Description
+'    AssertFail myCOmponentName, myProcedureName," raised an error: #" & Err.Number & " - " & Err.Description
 '    Resume TestExit
 'End Sub
 
@@ -949,7 +949,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -986,7 +986,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1034,7 +1034,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1083,7 +1083,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1134,7 +1134,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1173,7 +1173,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1198,7 +1198,7 @@ Private Sub Test09b_RemoveAt_ThreeItems()
     Set mySeq = SeqC.Deb(Array(Empty, 42, Empty, Empty, 42, Empty, Empty, 42))
 
     'Act:
-    mySeq.RemoveAt 8, 2, 5
+    mySeq.RemoveItemsAt 8, 2, 5
 
     myResult = mySeq.ToArray
 
@@ -1211,7 +1211,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1236,7 +1236,7 @@ Private Sub Test10a_Remove_SingleItems()
     Set mySeq = SeqC(Empty, 42, Empty, Empty, 42, "Hello", "Hello", "Hello", Empty, 3.142, Empty, 42, Empty, Empty)
 
     'Act:
-    mySeq.Remove 42, 3.142, "Hello"
+    mySeq.RemoveItems 42, 3.142, "Hello"
 
     myResult = mySeq.ToArray
 
@@ -1249,7 +1249,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1287,7 +1287,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1325,7 +1325,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1363,7 +1363,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1400,7 +1400,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1438,7 +1438,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1475,7 +1475,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1511,7 +1511,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1551,7 +1551,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1589,7 +1589,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1627,7 +1627,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1664,7 +1664,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1701,7 +1701,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1744,7 +1744,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1781,7 +1781,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1818,7 +1818,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1855,7 +1855,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1891,7 +1891,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1928,7 +1928,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1965,7 +1965,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2002,7 +2002,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2038,7 +2038,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2075,7 +2075,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2116,7 +2116,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2158,7 +2158,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2200,7 +2200,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2236,7 +2236,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2272,7 +2272,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2308,7 +2308,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2344,7 +2344,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2381,7 +2381,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2417,7 +2417,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2453,7 +2453,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2489,7 +2489,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2526,7 +2526,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2565,7 +2565,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2609,7 +2609,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2654,7 +2654,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2697,7 +2697,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2741,7 +2741,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2778,7 +2778,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2817,7 +2817,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2861,7 +2861,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2906,7 +2906,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2950,7 +2950,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -2987,7 +2987,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3031,7 +3031,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3067,7 +3067,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3111,7 +3111,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3138,7 +3138,9 @@ Private Sub Test28a_Unique()
 
     'Act:
     ' The array needs to be sorted because unique copies the first item encountered
-    myResult = mySeq.Unique.Sorted.ToArray
+    Set myResult = mySeq.Dedup
+    Set myResult = myResult.Sorted
+    myResult = myResult.ToArray
 
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -3149,7 +3151,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3176,7 +3178,7 @@ Private Sub Test28b_Unique_SingleItem()
 
     'Act:
     ' The array needs to be sorted because unique copies the first item encountered
-    myResult = mySeq.Unique.Sorted.ToArray
+    myResult = mySeq.Dedup.Sorted.ToArray
 
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -3187,7 +3189,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3224,7 +3226,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3262,7 +3264,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3301,7 +3303,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3339,7 +3341,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3377,7 +3379,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3401,10 +3403,10 @@ Private Sub Test29e_SetOfUnique()
 
     Dim myResult As Variant
 
-    Set mySeq = SeqC.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+    Set mySeq = SeqC(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = mySeq.SetOf(m_Unique, SeqC(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
+    myResult = mySeq.SetOf(m_Unique, SeqC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)).Sorted.ToArray
 
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -3415,7 +3417,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -3461,7 +3463,7 @@ TestExit:
 
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 

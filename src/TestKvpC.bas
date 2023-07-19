@@ -114,7 +114,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -152,8 +152,8 @@ Private Sub Test02_Add_ThreeItems()
     myK.Add 2, "Hello"
     myK.Add 3, True
     
-    myItemsResult = myK.Items.ToArray
-    myKeysResult = myK.Keys.ToArray
+    myItemsResult = myK.Items
+    myKeysResult = myK.Keys
     'Assert:
     AssertStrictSequenceEquals myItemsExpected, myItemsResult, myProcedureName
     AssertStrictSequenceEquals myKeysExpected, myKeysResult, myProcedureName
@@ -163,7 +163,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -198,8 +198,8 @@ Private Sub Test03_Add_Pairs()
     'Act:
     myK.AddPairs SeqC(1, 2, 3), SeqC(3, "Hello", True)
    
-    myItemsResult = myK.Items.ToArray
-    myKeysResult = myK.Keys.ToArray
+    myItemsResult = myK.Items
+    myKeysResult = myK.Keys
     'Assert:
     AssertStrictSequenceEquals myItemsExpected, myItemsResult, myProcedureName
     AssertStrictSequenceEquals myKeysExpected, myKeysResult, myProcedureName
@@ -209,7 +209,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -246,7 +246,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -283,7 +283,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -322,7 +322,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -351,7 +351,7 @@ Private Sub Test05a_Remove()
     
     'Act:
     myK.Remove 2&
-    myResult = myK.Items.ToArray
+    myResult = myK.Items
     
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -361,7 +361,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -390,7 +390,7 @@ Private Sub Test05b_Remove()
     
     'Act:
     myK.Remove 2&, 4&, 6&
-    myResult = myK.Items.ToArray
+    myResult = myK.Items
     
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -400,7 +400,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -427,7 +427,7 @@ Private Sub Test06_RemoveAfter()
     Dim myResult As Variant
     
     'Act:
-    myResult = myK.RemoveAfter(2&, 3).Items.ToArray
+    myResult = myK.RemoveAfter(2&, 3).Items
     
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -437,7 +437,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -465,7 +465,7 @@ Private Sub Test07_RemoveBefore()
     Dim myResult As Variant
     
     'Act:
-    myResult = myK.RemoveBefore(6&, 3).Items.ToArray
+    myResult = myK.RemoveBefore(6&, 3).Items
     
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -475,7 +475,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -511,7 +511,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -547,7 +547,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -583,7 +583,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -618,8 +618,8 @@ Private Sub Test09_Clone()
     
     Set myT = myK.AddPairs(SeqC(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqC(3&, "Hello", True, 1&, 2&, 3&, 4&)).Clone
    
-    myItemsResult = myT.Items.ToArray
-    myKeysResult = myT.Keys.ToArray
+    myItemsResult = myT.Items
+    myKeysResult = myT.Keys
     
     'Assert:
     AssertStrictSequenceEquals myItemsExpected, myItemsResult, myProcedureName
@@ -631,7 +631,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -691,7 +691,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -719,7 +719,7 @@ Private Sub Test11_MappedIt()
     Dim myResult As Variant
     
     'Act:
-    myResult = myK.MappedIt(mpInc.Deb).Items.ToArray
+    myResult = myK.MappedIt(mpInc.Deb).Items
     
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -731,7 +731,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -763,12 +763,12 @@ Private Sub Test12_MapIt()
     Dim myMapresult As KvpC
     
     'Act:
-    myOrigResult = myK.Items.ToArray
+    myOrigResult = myK.Items
     Set myMapresult = myK.MapIt(mpInc.Deb)
     
     'Assert:
     AssertStrictSequenceEquals myOrigExpected, myOrigResult, myProcedureName
-    AssertStrictSequenceEquals myMapExpected, myMapresult.Items.ToArray, myProcedureName
+    AssertStrictSequenceEquals myMapExpected, myMapresult.Items, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -776,7 +776,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -804,7 +804,7 @@ Private Sub Test13_FilterIt()
     Dim myResult As Variant
     
     'Act:
-    myResult = myK.FilterIt(cmpMT(2)).Items.ToArray
+    myResult = myK.FilterIt(cmpMT(2)).Items
     
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -815,7 +815,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -852,7 +852,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -889,7 +889,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -927,7 +927,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -964,7 +964,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1002,7 +1002,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1039,7 +1039,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1077,7 +1077,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1114,7 +1114,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -1151,6 +1151,6 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub

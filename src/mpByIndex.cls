@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "mpByIndex"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -99,26 +99,26 @@ Private Function ExecMapperByAL(ByRef ipHostItem As Variant) As Variant
 
 End Function
 
-Private Function ExecMapperBySeqC(ByRef ipSeq As Variant) As Variant
+Private Function ExecMapperBySeqC(ByRef ipseq As Variant) As Variant
 
     Dim myIndex As Long
     myIndex = VBA.CLng(s.Index)
     
-    If myIndex < ipSeq.FirstIndex Or myIndex > ipSeq.LastIndex Then
-        ExecMapperBySeqC = Array(ipSeq)
+    If myIndex < ipseq.FirstIndex Or myIndex > ipseq.LastIndex Then
+        ExecMapperBySeqC = Array(ipseq)
         Exit Function
     End If
 
     Dim myItem As Variant
-    myItem = s.Mapper.ExecMapper(VBA.CVar(ipSeq.Item(myIndex)))
+    myItem = s.Mapper.ExecMapper(VBA.CVar(ipseq.Item(myIndex)))
 
     If VBA.IsObject(myItem(0)) Then
-        Set ipSeq.Item(myIndex) = myItem(0)
+        Set ipseq.Item(myIndex) = myItem(0)
     Else
-        ipSeq.Item(myIndex) = myItem(0)
+        ipseq.Item(myIndex) = myItem(0)
     End If
 
-    ExecMapperBySeqC = Array(ipSeq)
+    ExecMapperBySeqC = Array(ipseq)
 
 End Function
 

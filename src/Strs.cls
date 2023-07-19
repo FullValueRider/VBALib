@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Strs"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule FunctionReturnValueDiscarded, IndexedDefaultMemberAccess
@@ -104,9 +104,29 @@ Public Function BinToNum(ByVal ipBinary As String, Optional ByRef ipSeperator As
         
 End Function
 
+Public Function ToChars(ByRef ipString As String) As Variant
 
+    Dim myLen As Long
+    myLen = VBA.Len(ipString)
+    
+    If myLen = 0 Then
+        ToChars = Array()
+        Exit Function
+    End If
+    
+    Dim myResult As Variant
+    ReDim myResult(1 To myLen)
+    
+    Dim myIndex As Long
+    For myIndex = 1 To myLen
+        myResult(myIndex) = VBA.Mid$(ipString, myIndex, 1)
+    Next
+    
+    ToChars = myResult
+    
+End Function
 '@Description("Removes duplicates of substrings in ipDedup.")
-Public Function Dedup(ByRef ipString As String, Optional ByRef ipDedupItems As SeqC = Nothing) As String
+Public Function Dedup(ByRef ipString As String, Optional ByRef ipDedupItems As Variant = Empty) As String
 Attribute Dedup.VB_Description = "Removes duplicates of substrings in ipDedup."
     
     If VBA.Len(ipString) = 0 Then
@@ -114,16 +134,16 @@ Attribute Dedup.VB_Description = "Removes duplicates of substrings in ipDedup."
         Exit Function
     End If
     
-    Dim myDedupItems As SeqC
-    If ipDedupItems Is Nothing Then
-      Set myDedupItems = SeqC.Deb(Chars.twSpace)
+    Dim myDedupItems As Variant
+    If VBA.IsEmpty(ipDedupItems) Then
+        myDedupItems = Array(Chars.twSpace)
     Else
-        Set myDedupItems = ipDedupItems
+        myDedupItems = ipDedupItems
     End If
     
-    If myDedupItems.LacksItems Then
-        Set myDedupItems = SeqC.Deb(Chars.twSpace)
-    End If
+'    If ArrayInfo.LacksItems(myDedupItems) Then
+'        myDedupItems = Array(Chars.twSpace)
+'    End If
     
     Dim myString As String
     myString = ipString
@@ -155,26 +175,22 @@ Attribute Trimmer.VB_Description = "Removes ipTrimchars from the ends of a strin
         Exit Function
     End If
     
-    Dim myTrimchars As SeqC
-    If VBA.Len(ipTrimChars) = 0 Then
-        Set myTrimchars = SeqC(Chars.WhiteSpace)
-    Else
-        Set myTrimchars = SeqC(ipTrimChars)
-    End If
+    Dim myTrimchars As String
+    myTrimchars = IIf(VBA.Len(ipTrimChars) = 0, Chars.WhiteSpace, ipTrimChars)
     
     Dim myString As String
     myString = ipString
     
-    ' Check for empty SeqC
-    If myTrimchars.LacksItems Then
-        Set myTrimchars = SeqC(Chars.WhiteSpace)
-    End If
+'    ' Check for empty SeqC
+'    If myTrimchars.LacksItems Then
+'        Set myTrimchars = ToChars(Chars.WhiteSpace)
+'    End If
      
     'Trim the RHS of string
     If ipRhs Then
         Do While VBA.Len(myString) > 1
             'Debug.Print Asc(VBA.Right$(myString, 1))
-            If myTrimchars.LacksItem(VBA.Right$(myString, 1)) Then
+            If InStr(myTrimchars, VBA.Right$(myString, 1)) = 0 Then
                 Exit Do
             End If
             myString = VBA.Left$(myString, VBA.Len(myString) - 1)
@@ -185,7 +201,7 @@ Attribute Trimmer.VB_Description = "Removes ipTrimchars from the ends of a strin
     'Trim the LHS of string
     If ipLHS Then
         Do While VBA.Len(myString) > 1
-            If myTrimchars.LacksItem(VBA.Left$(myString, 1)) Then
+            If InStr(myTrimchars, VBA.Left$(myString, 1)) = 0 Then
                 Exit Do
             End If
             myString = VBA.Mid$(myString, 2)
@@ -351,21 +367,19 @@ End Function
 
 
 '@Description("Applies replacer using  a SeqC of  string pairs of the form Array(Find,Repace)"
-Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindReplacePairs As SeqC) As String
+Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindReplacePairs As Variant = Empty) As String
 
     If VBA.Len(ipString) = 0 Then
         MultiReplacer = ipString
         Exit Function
     End If
     
-    Dim myFRPairs As SeqC
+    Dim myFRPairs As Variant
     
-    If ipFindReplacePairs Is Nothing Then
-        Set myFRPairs = SeqC(Array(Array(Chars.twSpace, Chars.twNullStr)))
-    ElseIf ipFindReplacePairs.LacksItems Then
-        Set myFRPairs = SeqC(Array(Array(Chars.twSpace, Chars.twNullStr)))
+    If ArrayInfo.LacksItems(ipFindReplacePairs) Then
+        myFRPairs = Array(Array(Chars.twSpace, Chars.twNullStr))
     Else
-        Set myFRPairs = ipFindReplacePairs
+        myFRPairs = ipFindReplacePairs
     End If
     
     Dim myReturn As String

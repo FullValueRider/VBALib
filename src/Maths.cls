@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Maths"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -211,9 +211,9 @@ End Function
 ' Generate permutations of the input seq using Heap's Algorithm
 ' https://www.mrexcel.com/board/threads/permutations-heaps-algorithm.959919/
 ' https://iq.opengenus.org/heaps-algorithm-for-generating-permutations/
-Public Sub Permutations(ByRef ipSeq As SeqC, ByRef ipSwapIndex As Long, ByRef opPermutations As SeqC)
+Public Sub Permutations(ByRef ipseq As SeqC, ByRef ipSwapIndex As Long, ByRef opPermutations As SeqC)
     
-        If VBA.IsObject(ipSeq.First) Then
+        If VBA.IsObject(ipseq.First) Then
             Err.Raise 17 + vbObjectError, _
                 "VBALib.Maths.Permutations", _
                 "Cannot generate permutations of objects"
@@ -221,27 +221,27 @@ Public Sub Permutations(ByRef ipSeq As SeqC, ByRef ipSwapIndex As Long, ByRef op
         
         If ipSwapIndex = 1 Then
         
-            opPermutations.Add ipSeq.Clone
+            opPermutations.Add ipseq.Clone
             Exit Sub
             
         Else
             
             Dim i As Long
-            For i = ipSeq.FirstIndex To ipSwapIndex
-                Permutations ipSeq, ipSwapIndex - 1, opPermutations
+            For i = ipseq.FirstIndex To ipSwapIndex
+                Permutations ipseq, ipSwapIndex - 1, opPermutations
     
                 ' if SwapIndex is odd, swap 0th i.e (first) and
                 ' (SwapIndex-1)th i.e (last) element
                 'Dim temp As Variant
                 If Maths.IsEven(ipSwapIndex) Then
                 
-                    ipSeq.Swap i, ipSwapIndex
+                    ipseq.Swap i, ipSwapIndex
                     
                 ' If SwapIndex is even, swap ith
                 ' and (SwapIndex-1)th i.e last element
                 Else
                 
-                    ipSeq.Swap 1, ipSwapIndex
+                    ipseq.Swap 1, ipSwapIndex
                   
                 End If
                 

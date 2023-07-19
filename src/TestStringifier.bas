@@ -90,7 +90,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -125,7 +125,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -151,7 +151,7 @@ End Sub
 '
 '    Exit Sub
 'TestFail:
-'    Assert.Fail myProcedurename & " raised an error: #" & Err.Number & " - " & Err.Description
+'    AssertFail myCOmponentName, myProcedureName," raised an error: #" & Err.Number & " - " & Err.Description
 '    Resume TestExit
 'End Sub
 
@@ -187,7 +187,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -223,7 +223,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -266,7 +266,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -289,17 +289,17 @@ Private Sub Test06_StringifyItem_Dictionary()
     myExpected = "{ 'One': 1, 'Two': 2, 'Three': 3, 'Four': 4, 'Five': 5, 'Six': 6}"
     
     Dim myResult As String
-    Dim myC As KvpC
-    Set myC = KvpC.Deb
-    myC.Add "One", 1
-    myC.Add "Two", 2
-    myC.Add "Three", 3
-    myC.Add "Four", 4
-    myC.Add "Five", 5
-    myC.Add "Six", 6
+    Dim myK As KvpC
+    Set myK = KvpC.Deb
+    myK.Add "One", 1
+    myK.Add "Two", 2
+    myK.Add "Three", 3
+    myK.Add "Four", 4
+    myK.Add "Five", 5
+    myK.Add "Six", 6
     'Act:  Again we need to sort The result SeqC to get the matching array
-    Stringifier.ResetMarkup
-    myResult = Stringifier.StringifyItem(myC)
+    'Stringifier.ResetMarkup
+    myResult = Stringifier.StringifyItem(myK)
     'Assert:
     'Debug.Print myExpected
     'Debug.Print myResult
@@ -311,7 +311,7 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
@@ -357,6 +357,6 @@ TestExit:
     
     Exit Sub
 TestFail:
-    Assert.Fail myProcedureName & " raised an error: #" & Err.Number & " - " & Err.Description
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub

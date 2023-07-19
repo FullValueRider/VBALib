@@ -4,10 +4,11 @@ BEGIN
 END
 Attribute VB_Name = "cHashD"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
- 'cHashD, Olaf Schmidt in August 2016 (enhanced about mixed, variable KeyTypes and Remove-functions in 2020)
+'@IgnoreModule
+'cHashD, Olaf Schmidt in August 2016 (enhanced about mixed, variable KeyTypes and Remove-functions in 2020)
  ' Reformatted and Rubberducked by Steven Laycock July 2023
 Option Explicit
 
@@ -743,6 +744,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
 End Function
 
 
+'@Ignore ProcedureCanBeWrittenAsFunction
 Private Sub AdjustIndex(ByRef Idx As Long, Optional ByVal Inverse As Boolean)
 
     Dim i As Long
@@ -779,5 +781,4 @@ Friend Sub CheckHashDistribution()
     Debug.Print "Min-Entries:"; Min
     Debug.Print "Max-Entries:"; Max
 End Sub
-
 

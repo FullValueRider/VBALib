@@ -4,9 +4,10 @@ BEGIN
 END
 Attribute VB_Name = "KvpL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+Attribute VB_Description = "Kvp is a flexible Key/Value pair dictionary targeted at VB/VBA. It facilitates data input, direct content manipulation of items and keys, and indirect manipulation of data via Map and Comparer objects"
 '@PredeclaredId
 '@Exposed
 '@Folder("Kvp")
@@ -114,6 +115,7 @@ End Property
 
 '@Description("Removes Key/Value pairs that exist in the KvpL")
 Public Function Remove(ParamArray ipParamarray() As Variant) As KvpL
+Attribute Remove.VB_Description = "Removes Key/Value pairs that exist in the KvpL"
 
     Dim myItem As Variant
     For Each myItem In ipParamarray
@@ -280,6 +282,7 @@ End Property
   
 '@Description("Mutates the KvpL in place by applying the function in IMapper to each item")
 Public Function MappedIt(ByVal ipMapper As IMapper) As KvpL
+Attribute MappedIt.VB_Description = "Mutates the KvpL in place by applying the function in IMapper to each item"
 
    s.Items.MappedIt ipMapper
    Set MappedIt = Me
@@ -288,6 +291,7 @@ End Function
 
 '@Description("Returns a KvpL.Deb by applying the function in IMapper to each Item")
 Public Function MapIt(ByVal ipMapper As IMapper) As KvpL
+Attribute MapIt.VB_Description = "Returns a KvpL.Deb by applying the function in IMapper to each Item"
 
       Dim myS As SeqL
       Set myS = s.Items.MapIt(ipMapper)
@@ -298,6 +302,7 @@ Public Function MapIt(ByVal ipMapper As IMapper) As KvpL
 
 '@Description("Returns a KvpL.Deb where the ICOmparer has been applied to the Items of the original Kvp")
 Public Function FilterIt(ByVal ipComparer As IComparer) As KvpL
+Attribute FilterIt.VB_Description = "Returns a KvpL.Deb where the ICOmparer has been applied to the Items of the original Kvp"
 
     Dim myK As KvpL
     Set myK = KvpL.Deb
@@ -415,13 +420,22 @@ Public Function KeyOf(ByVal ipItem As Variant) As Variant
 End Function
 
 
-Public Function Items() As SeqL
-    Set Items = s.Items.Clone
+Public Function Items() As Variant
+    Items = s.Items.ToArray
 End Function
 
 
-Public Function Keys() As SeqL
-    Set Keys = s.Keys.Clone
+Public Function Keys() As Variant
+    Keys = s.Keys.ToArray
+End Function
+
+Public Function ItemsAsSeq() As SeqL
+    Set ItemsAsSeq = s.Items.Clone
+End Function
+
+
+Public Function KeysAsSeq() As SeqL
+    Set KeysAsSeq = s.Keys.Clone
 End Function
 
 

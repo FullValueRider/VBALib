@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "GroupInfo"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -84,7 +84,9 @@ Public Function Id(ByVal ipItem As Variant) As e_Group
             Case "seq", "collection", "arraylist", "stack", "queue":                                Id = e_Group.m_List
             Case "chashd", "dictionary", "kvp", "kvpair":                                           Id = e_Group.m_Dictionary
             Case "itemobject":                                                                      Id = e_Group.m_ItemObject
-            ' admin probably needs a bit more thinking about
+            ' Tempted to group Empty, null, errors and nothing under an unbralla of m_Admin
+            ' so that there is a clear group for items/values that are not part of the
+            ' other defined groups.
             Case "admin":                                                                           Id = e_Group.m_Admin
             Case Else:                                                                              Id = e_Group.m_Other
                 Err.Raise 17 + vbObjectError, _

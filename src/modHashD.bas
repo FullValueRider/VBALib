@@ -1,4 +1,5 @@
 Attribute VB_Name = "modHashD"
+'@IgnoreModule
 Option Explicit
  
 Public Type SAFEARRAY1D
@@ -18,6 +19,7 @@ Public Declare PtrSafe Function VariantCopyInd Lib "oleaut32" (Dst As Any, Src A
 Private Declare PtrSafe Function CharLowerBuffW Lib "user32" (lpsz As Any, ByVal cchLength As Long) As Long
 
 ' we need to define a variable as VBA doesn't support lenB(of Type)
+'@Ignore VariableNotAssigned
 Private myPtrLen As LongPtr
 Public LWC(-32768 To 32767) As Integer
 
@@ -27,5 +29,4 @@ Public Sub InitLWC()
   For i = -32768 To 32767: LWC(i) = i: Next 'init the Lookup-Array to the full WChar-range
   CharLowerBuffW LWC(-32768), 65536 '<-- and convert its whole content to LowerCase-WChars
 End Sub
-
 

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "IterItems"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A class to iterate any single dimension containers, strings and single items"
@@ -68,7 +68,7 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
                 s.Keys = ipItems.Keys
                 ReDim Preserve s.Keys(1 To UBound(s.Keys) + 1)
             Else
-                s.Keys = ipItems.Keys.ToArray
+                s.Keys = ipItems.Keys
             End If
     
             Set s.Host = ipItems
@@ -77,7 +77,7 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
             
         Case GroupInfo.IsItemByToArray(ipItems)
         
-            s.Items = ipItems.ToArray
+            s.Items = ipItems
             Set s.Host = ipItems
             s.FirstIndex = 0
             s.LastIndex = ipItems.Count - 1
@@ -101,7 +101,11 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
             s.LastIndex = ipItems.Count - 1
             
         Case GroupInfo.IsArray(ipItems)
-        
+            If ArrayInfo.Ranks(ipItems) > 1 Then
+                Err.Raise 17 + vbObjectError, _
+                    "VBALib.IterItems", _
+                    "IterItems does not currently support Arrays with more than one dimension"
+            End If
             s.Host = ipItems
             s.FirstIndex = LBound(ipItems)
             s.LastIndex = UBound(ipItems)
@@ -166,7 +170,7 @@ Attribute FTS.VB_Description = "Sets the subrange and stepping to be used when u
         AlertInvalidFTs "EndIndex", s.EndIndex
     End If
     
-    s.GlobalOffset = s.StartIndex
+    s.GlobalOffset = s.StartIndex - 1
     
     Set FTS = Me
     

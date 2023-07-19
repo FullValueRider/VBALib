@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "ArrayInfo"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -52,6 +52,23 @@ Public Function HoldsOneItem(ByRef ipArray As Variant) As Boolean
     HoldsOneItem = Count(ipArray) = 1
 End Function
 
+Public Function HoldsItem(ByRef ipArray As Variant, ByRef ipItem As Variant) As Boolean
+
+    Dim myItem As Variant
+    For Each myItem In ipArray
+        If ComparerHelpers.Equals(myItem, ipItem) Then
+            HoldsItem = True
+            Exit Function
+        End If
+    Next
+    
+    HoldsItem = False
+    
+End Function
+
+Public Function LacksItem(ByRef ipArray As Variant, ByRef ipItem As Variant) As Boolean
+    LacksItem = Not HoldsItem(ipArray, ipItem)
+End Function
 
 Public Function IsArray(ByRef ipArray As Variant, Optional ByRef ipArrayType As e_ArrayType = e_ArrayType.m_AnyArrayType) As Boolean
      
@@ -87,6 +104,11 @@ End Function
  
 Public Function GetIndex(ByRef ipArray As Variant, ParamArray ipDims() As Variant) As Long
 ' ToDo: this is where conversion from multi dimension to linear dimension occurs.
+' some dummy statements to pacify rubberduck
+    Dim myDummy As Long
+    ipDims(0) = ipArray
+    myDummy = ipDims(0)
+    GetIndex = myDummy
 End Function
 
 Public Function Count(ByRef ipArray As Variant, Optional ByVal ipRank As Long = 0) As Long

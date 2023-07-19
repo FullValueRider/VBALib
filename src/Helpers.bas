@@ -24,3 +24,31 @@ Public Sub Swap(ByRef ipLHS As Variant, ByRef ipRhs As Variant)
     End If
     
 End Sub
+
+Public Function LineariseArray(ByRef ipArray As Variant) As Variant
+
+    If ArrayInfo.Ranks(ipArray) = 1 Then
+        LineariseArray = ipArray
+        Exit Function
+    End If
+    
+    Dim mySize As Long
+    mySize = ArrayInfo.Count(ipArray)
+    
+    Dim myA As Variant
+    ReDim myA(1 To mySize)
+    
+    Dim myIndex As Long: myIndex = 1
+    Dim myItem As Variant
+    For Each myItem In ipArray
+        If VBA.IsObject(myItem) Then
+            Set myA(myIndex) = myItem
+        Else
+            myA(myIndex) = myItem
+        End If
+        myIndex = myIndex + 1
+    Next
+    
+    LineariseArray = myA
+    
+End Function

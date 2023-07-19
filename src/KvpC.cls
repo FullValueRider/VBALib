@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Kvp is a flexible Key/Value pair dictionary targeted at VB/VBA. It facilitates data input, direct content manipulation of items and keys, and indirect manipulation of data via Map and Comparer objects"
@@ -51,23 +51,25 @@ Attribute VB_Description = "Kvp is a flexible Key/Value pair dictionary targeted
 
  Public Function Add(ByRef ipKey As Variant, ByRef ipItem As Variant) As KvpC
     
-     If s.Keys.HoldsItem(ipKey) Then
-         Err.Raise 17 + vbObjectError, _
-             "VBALib.KvpC.Add", _
-             Fmt.Text("Duplicate key: {0}", ipKey)
-     End If
+    If Me.HoldsItems Then
+        If s.Keys.HoldsItem(ipKey) Then
+            Err.Raise 17 + vbObjectError, _
+                "VBALib.KvpC.Add", _
+                Fmt.Text("Duplicate key: {0}", ipKey)
+        End If
+    End If
     
-     s.Keys.Add ipKey
-     s.Items.Add ipItem
+    s.Keys.Add ipKey
+    s.Items.Add ipItem
     
-     Set Add = Me
+    Set Add = Me
     
  End Function
  
 Public Function AddPairs(ByRef ipKeys As SeqC, ByRef ipItems As SeqC) As KvpC
    
+    Set AddPairs = Me
     If ipKeys.LacksItems Or ipItems.LacksItems Then
-        Set AddPairs = Me
         Exit Function
     End If
     
@@ -88,8 +90,6 @@ Public Function AddPairs(ByRef ipKeys As SeqC, ByRef ipItems As SeqC) As KvpC
         s.Items.Add ipItems.Item(myIndex)
           
     Next
-   
-   Set AddPairs = Me
    
 End Function
 
@@ -420,16 +420,23 @@ Public Function KeyOf(ByVal ipItem As Variant) As Variant
 End Function
 
 
-Public Function Items() As SeqC
-    Set Items = s.Items.Clone
+Public Function Items() As Variant
+    Items = s.Items.ToArray
 End Function
 
 
-Public Function Keys() As SeqC
-    Set Keys = s.Keys.Clone
+Public Function Keys() As Variant
+    Keys = s.Keys.ToArray
+End Function
+
+Public Function ItemsAsSeq() As SeqC
+    Set ItemsAsSeq = s.Items.Clone
 End Function
 
 
+Public Function KeysAsSeq() As SeqC
+    Set KeysAsSeq = s.Keys.Clone
+End Function
 Public Function Pairs() As SeqC
 
     If s.Keys.LacksItems Then
