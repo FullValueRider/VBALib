@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "GroupInfo"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -69,7 +69,7 @@ End Function
 Public Function Id(ByVal ipItem As Variant) As e_Group
 
         'There are other groups possible, the most obvious being m_Container
-        ' but these do not easily lend themselves to an id so we devole such classifications to
+        ' but these do not easily lend themselves to an id so we devolve such classifications to
         ' a specific method rather than an Id value
         
         Dim myGroupName As String

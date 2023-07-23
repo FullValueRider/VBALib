@@ -80,7 +80,6 @@ Public Sub SeqATests()
     
     Test09a0_Remove_SingleItem
     
-    
     Test09a_RemoveAt_SingleItem
     Test09b_RemoveAt_ThreeItems
     
@@ -88,6 +87,7 @@ Public Sub SeqATests()
     
     Test11a_RemoveRange_SingleItem
     Test11b_RemoveRange_ThreeItems
+    
     Test12a_RemoveAtRange_ThreeItems
     
     Test13a_RemoveAll_DefaultAll
@@ -176,7 +176,7 @@ Private Sub Test01_SeqObj()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -194,7 +194,7 @@ Private Sub Test01_SeqObj()
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -212,7 +212,7 @@ Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -231,7 +231,7 @@ Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
     AssertStrictAreEqual 10&, mySeq.Count, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -249,7 +249,7 @@ Private Sub Test02b_InitByString()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -269,7 +269,7 @@ Private Sub Test02b_InitByString()
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -287,7 +287,7 @@ Private Sub Test02c_InitByForEachArray()
 '        myProcedureName = ErrEx.LiveCallstack.ProcedureName
 '        myComponentName = ErrEx.LiveCallstack.ModuleName
 '    #End If
-'      On Error GoTo TestFail
+'      ' On error GoTo TestFail
 '
 '    'Arrange:
 '    Dim myArray(1 To 3, 1 To 3) As Variant
@@ -322,7 +322,7 @@ Private Sub Test02c_InitByForEachArray()
 '    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 'TestExit:
 '    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
+'    ' On error Resume Next
 '
 '    Exit Sub
 'TestFail:
@@ -340,7 +340,7 @@ Private Sub Test02d_InitByForEachArrayList()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim myAL As Object
@@ -376,7 +376,7 @@ Private Sub Test02d_InitByForEachArrayList()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -394,7 +394,7 @@ Private Sub Test02e_InitByForEachCollection()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim myC As Collection
@@ -430,7 +430,7 @@ Private Sub Test02e_InitByForEachCollection()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -448,7 +448,7 @@ Private Sub Test02f_InitByDictionary()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim myD As Scripting.Dictionary
@@ -487,7 +487,7 @@ Private Sub Test02f_InitByDictionary()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -504,7 +504,7 @@ Private Sub Test03a_WriteItem()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -526,7 +526,7 @@ Private Sub Test03a_WriteItem()
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -543,7 +543,7 @@ Private Sub Test04a_Add_MultipleItems()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -562,7 +562,7 @@ Private Sub Test04a_Add_MultipleItems()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -581,7 +581,7 @@ Private Sub Test06a_AddRange_String()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -600,7 +600,7 @@ Private Sub Test06a_AddRange_String()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -618,7 +618,7 @@ Private Sub Test06b_AddRange_Array()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -637,7 +637,7 @@ Private Sub Test06b_AddRange_Array()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -655,7 +655,7 @@ Private Sub Test06c_AddRange_Collection()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -684,7 +684,7 @@ Private Sub Test06c_AddRange_Collection()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -702,7 +702,7 @@ Private Sub Test06d_AddRange_ArrayList()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -731,7 +731,7 @@ Private Sub Test06d_AddRange_ArrayList()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -749,7 +749,7 @@ Private Sub Test06e_AddRange_Dictionary()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -779,7 +779,7 @@ Private Sub Test06e_AddRange_Dictionary()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -797,7 +797,7 @@ Private Sub Test07a_Insert_SingleItems()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -824,7 +824,7 @@ Private Sub Test07a_Insert_SingleItems()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -841,7 +841,7 @@ Private Sub Test07b_Insert_MultipleItems()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -863,7 +863,7 @@ Private Sub Test07b_Insert_MultipleItems()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -880,7 +880,7 @@ End Sub
 '        myProcedureName = ErrEx.LiveCallstack.ProcedureName
 '        myComponentName = ErrEx.LiveCallstack.ModuleName
 '    #End If
-'      On Error GoTo TestFail
+'      ' On error GoTo TestFail
 '
 '    'Arrange:
 '    Dim mySeq As SeqA
@@ -907,7 +907,7 @@ End Sub
 '
 'TestExit:
 '    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
+'    ' On error Resume Next
 '
 '    Exit Sub
 'TestFail:
@@ -925,7 +925,7 @@ Private Sub Test08a_InsertRange_String()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -947,7 +947,7 @@ Private Sub Test08a_InsertRange_String()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -964,7 +964,7 @@ Private Sub Test08b_InsertRange_Array()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -984,7 +984,7 @@ Private Sub Test08b_InsertRange_Array()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -1001,7 +1001,7 @@ Private Sub Test08c_InsertRange_Collection()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -1032,7 +1032,7 @@ Private Sub Test08c_InsertRange_Collection()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -1049,7 +1049,7 @@ Private Sub Test08d_InsertRange_ArrayList()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -1081,7 +1081,7 @@ Private Sub Test08d_InsertRange_ArrayList()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -1098,7 +1098,7 @@ Private Sub Test08e_InsertRange_Dictionary()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqA
@@ -1132,7 +1132,7 @@ Private Sub Test08e_InsertRange_Dictionary()
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
     
     Exit Sub
 TestFail:
@@ -1149,7 +1149,7 @@ Private Sub Test09a0_Remove_SingleItem()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1170,7 +1170,7 @@ Private Sub Test09a0_Remove_SingleItem()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1187,7 +1187,7 @@ Private Sub Test09a_RemoveAt_SingleItem()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1208,7 +1208,7 @@ Private Sub Test09a_RemoveAt_SingleItem()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1225,7 +1225,7 @@ Private Sub Test09b_RemoveAt_ThreeItems()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1246,7 +1246,7 @@ Private Sub Test09b_RemoveAt_ThreeItems()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1263,7 +1263,7 @@ Private Sub Test10a_Remove_SingleItems()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1284,7 +1284,7 @@ Private Sub Test10a_Remove_SingleItems()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1301,7 +1301,7 @@ Private Sub Test11a_RemoveRange_SingleItem()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1321,7 +1321,7 @@ Private Sub Test11a_RemoveRange_SingleItem()
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 
 TestExit:
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1338,7 +1338,7 @@ Private Sub Test11b_RemoveRange_ThreeItems()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1359,7 +1359,7 @@ Private Sub Test11b_RemoveRange_ThreeItems()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1376,7 +1376,7 @@ Private Sub Test12a_RemoveAtRange_ThreeItems()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1397,7 +1397,7 @@ Private Sub Test12a_RemoveAtRange_ThreeItems()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1415,7 +1415,7 @@ Private Sub Test13a_RemoveAll_DefaultAll()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1434,7 +1434,7 @@ Private Sub Test13a_RemoveAll_DefaultAll()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1452,7 +1452,7 @@ Private Sub Test13b_RemoveAll_Default_42AndHello()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1472,7 +1472,7 @@ Private Sub Test13b_RemoveAll_Default_42AndHello()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1490,7 +1490,7 @@ Private Sub Test13c_Reset()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1509,7 +1509,7 @@ Private Sub Test13c_Reset()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1526,7 +1526,7 @@ Private Sub Test13d_Clear()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1545,7 +1545,7 @@ Private Sub Test13d_Clear()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1562,7 +1562,7 @@ Private Sub Test14a_Fill()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1585,7 +1585,7 @@ Private Sub Test14a_Fill()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1603,7 +1603,7 @@ Private Sub Test15a_Slice()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1623,7 +1623,7 @@ Private Sub Test15a_Slice()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1641,7 +1641,7 @@ Private Sub Test15b_SliceToEnd()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1661,7 +1661,7 @@ Private Sub Test15b_SliceToEnd()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1678,7 +1678,7 @@ Private Sub Test15c_SliceRunOnly()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1698,7 +1698,7 @@ Private Sub Test15c_SliceRunOnly()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1715,7 +1715,7 @@ Private Sub Test15d_Slice_Start3_End9_step2()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1735,7 +1735,7 @@ Private Sub Test15d_Slice_Start3_End9_step2()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1752,7 +1752,7 @@ Private Sub Test15e_Slice_Start3_End9_step2_ToCollection()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1778,7 +1778,7 @@ Private Sub Test15e_Slice_Start3_End9_step2_ToCollection()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1795,7 +1795,7 @@ Private Sub Test15f_Slice_Start3_End9_step2_ToArray()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1815,7 +1815,7 @@ Private Sub Test15f_Slice_Start3_End9_step2_ToArray()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1832,7 +1832,7 @@ Private Sub Test16a_Head()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1852,7 +1852,7 @@ Private Sub Test16a_Head()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1869,7 +1869,7 @@ Private Sub Test16b_Head_3Items()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1889,7 +1889,7 @@ Private Sub Test16b_Head_3Items()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1906,7 +1906,7 @@ Private Sub Test16c_HeadZeroItems()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1925,7 +1925,7 @@ Private Sub Test16c_HeadZeroItems()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1942,7 +1942,7 @@ Private Sub Test16d_HeadFullSeq()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1962,7 +1962,7 @@ Private Sub Test16d_HeadFullSeq()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -1979,7 +1979,7 @@ Private Sub Test17a_Tail()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -1999,7 +1999,7 @@ Private Sub Test17a_Tail()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2016,7 +2016,7 @@ Private Sub Test17b_Tail_3Items()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2036,7 +2036,7 @@ Private Sub Test17b_Tail_3Items()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2053,7 +2053,7 @@ Private Sub Test17c_TailFullItems()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2072,7 +2072,7 @@ Private Sub Test17c_TailFullItems()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2089,7 +2089,7 @@ Private Sub Test17d_TailZeroSeq()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2109,7 +2109,7 @@ Private Sub Test17d_TailZeroSeq()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2126,7 +2126,7 @@ Private Sub Test18a_KnownIndexes_Available()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2150,7 +2150,7 @@ Private Sub Test18a_KnownIndexes_Available()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2168,7 +2168,7 @@ Private Sub Test18b_KnownIndexes_Unavailable()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2192,7 +2192,7 @@ Private Sub Test18b_KnownIndexes_Unavailable()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2210,7 +2210,7 @@ Private Sub Test19a_KnownValues_Available()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2234,7 +2234,7 @@ Private Sub Test19a_KnownValues_Available()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2251,7 +2251,7 @@ Private Sub Test20a_IndexOf_WholeSeq_Present()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2270,7 +2270,7 @@ Private Sub Test20a_IndexOf_WholeSeq_Present()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2287,7 +2287,7 @@ Private Sub Test20b_IndexOf_WholeSeq_NotPresent()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2306,7 +2306,7 @@ Private Sub Test20b_IndexOf_WholeSeq_NotPresent()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2323,7 +2323,7 @@ Private Sub Test20c_IndexOf_SubSeq_Present()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2342,7 +2342,7 @@ Private Sub Test20c_IndexOf_SubSeq_Present()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2359,7 +2359,7 @@ Private Sub Test20d_IndexOf_SubSeq_NotPresent()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2378,7 +2378,7 @@ Private Sub Test20d_IndexOf_SubSeq_NotPresent()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2396,7 +2396,7 @@ Private Sub Test21a_LastIndexOf_WholeSeq_Present()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2415,7 +2415,7 @@ Private Sub Test21a_LastIndexOf_WholeSeq_Present()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2432,7 +2432,7 @@ Private Sub Test21b_LastIndexOf_WholeSeq_NotPresent()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2451,7 +2451,7 @@ Private Sub Test21b_LastIndexOf_WholeSeq_NotPresent()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2468,7 +2468,7 @@ Private Sub Test21c_LastIndexOf_SubSeq_Present()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2487,7 +2487,7 @@ Private Sub Test21c_LastIndexOf_SubSeq_Present()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2504,7 +2504,7 @@ Private Sub Test21d_LastIndexOf_SubSeq_NotPresent()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2523,7 +2523,7 @@ Private Sub Test21d_LastIndexOf_SubSeq_NotPresent()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2540,7 +2540,7 @@ Private Sub Test22a_Push()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2560,7 +2560,7 @@ Private Sub Test22a_Push()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2577,7 +2577,7 @@ Private Sub Test22b_PushRange()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2599,7 +2599,7 @@ Private Sub Test22b_PushRange()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2617,7 +2617,7 @@ Private Sub Test23a_Pop()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2643,7 +2643,7 @@ Private Sub Test23a_Pop()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2661,7 +2661,7 @@ Private Sub Test23b_PopRange()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2688,7 +2688,7 @@ Private Sub Test23b_PopRange()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2705,7 +2705,7 @@ Private Sub Test23c_PopRange_ExceedsHost()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2731,7 +2731,7 @@ Private Sub Test23c_PopRange_ExceedsHost()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2749,7 +2749,7 @@ Private Sub Test23d_PopRange_NegativeRun()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2775,7 +2775,7 @@ Private Sub Test23d_PopRange_NegativeRun()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2792,7 +2792,7 @@ Private Sub Test24a_Enqueue()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2812,7 +2812,7 @@ Private Sub Test24a_Enqueue()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2829,7 +2829,7 @@ Private Sub Test24b_EnqueueRange()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2851,7 +2851,7 @@ Private Sub Test24b_EnqueueRange()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2869,7 +2869,7 @@ Private Sub Test25a_Dequeue()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2895,7 +2895,7 @@ Private Sub Test25a_Dequeue()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2913,7 +2913,7 @@ Private Sub Test25b_DeqeueRange()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2940,7 +2940,7 @@ Private Sub Test25b_DeqeueRange()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -2957,7 +2957,7 @@ Private Sub Test25c_DequeueRange_ExceedsHost()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -2984,7 +2984,7 @@ Private Sub Test25c_DequeueRange_ExceedsHost()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3001,7 +3001,7 @@ Private Sub Test26a_Sort()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -3021,7 +3021,7 @@ Private Sub Test26a_Sort()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3038,7 +3038,7 @@ Private Sub Test26b_Sorted()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -3046,9 +3046,7 @@ Private Sub Test26b_Sorted()
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myExpected2 As Variant
-    myExpected2 = Array(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
-    ReDim Preserve myExpected2(1 To 10)
+   
 
     Dim myResult As Variant
     Dim myResult2 As Variant
@@ -3061,11 +3059,11 @@ Private Sub Test26b_Sorted()
 
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
-    AssertStrictSequenceEquals myExpected2, myResult2, myProcedureName
+    
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3082,7 +3080,7 @@ Private Sub Test27a_Reverse()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim myExpected As Variant
@@ -3101,7 +3099,7 @@ Private Sub Test27a_Reverse()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3118,7 +3116,7 @@ Private Sub Test27b_Reversed()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -3145,7 +3143,7 @@ Private Sub Test27b_Reversed()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3162,7 +3160,7 @@ Private Sub Test28a_Unique()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -3183,7 +3181,7 @@ Private Sub Test28a_Unique()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3200,7 +3198,7 @@ Private Sub Test28b_Unique_SingleItem()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -3221,7 +3219,7 @@ Private Sub Test28b_Unique_SingleItem()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3238,7 +3236,7 @@ Private Sub Test28c_Unique_NoItems()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -3258,7 +3256,7 @@ Private Sub Test28c_Unique_NoItems()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3276,27 +3274,28 @@ Private Sub Test29a_SetOfCommon()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqA
+   
     Dim myExpected As Variant
     myExpected = Array(50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 6)
 
     Dim myResult As Variant
-
-    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+    Dim myLS As SeqA: Set myLS = SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Dim myRS As SeqA: Set myRS = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:
-    myResult = mySeq.SetOf(m_Common, SeqA(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).ToArray
+    Set myResult = myLS.SetOf(m_Common, myRS)
+    myResult = myResult.ToArray
 
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3315,27 +3314,27 @@ Private Sub Test29b_SetOfHostOnly()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqA
+    
     Dim myExpected As Variant
     myExpected = Array(110&, 120&, 130&, 140&)
     ReDim Preserve myExpected(1 To 4)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
-
+    Dim myLS As SeqA:     Set myLS = SeqA.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+    Dim myRS As SeqA: Set myRS = SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     'Act:
-    myResult = mySeq.SetOf(m_HostOnly, SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)).ToArray
+    myResult = myLS.SetOf(m_HostOnly, myRS).ToArray
 
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3353,7 +3352,7 @@ Private Sub Test29c_SetOfParamOnly()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -3373,7 +3372,7 @@ Private Sub Test29c_SetOfParamOnly()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3391,7 +3390,7 @@ Private Sub Test29d_SetOfNotCommon()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -3411,7 +3410,7 @@ Private Sub Test29d_SetOfNotCommon()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3429,7 +3428,7 @@ Private Sub Test29e_SetOfUnique()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -3449,7 +3448,7 @@ Private Sub Test29e_SetOfUnique()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:
@@ -3469,7 +3468,7 @@ Private Sub Test30a_Swap()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+      ' On error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqA
@@ -3495,7 +3494,7 @@ Private Sub Test30a_Swap()
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    ' On error Resume Next
 
     Exit Sub
 TestFail:

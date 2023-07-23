@@ -213,7 +213,8 @@ Private Sub Test04_StringifyItem_SeqC()
     
     'Act:  Again we need to sort The result SeqC to get the matching array
     Stringifier.ResetMarkup
-    myResult = Stringifier.StringifyItem(SeqC(1, 2, 3, 4, 5, 6))
+    Dim myC As SeqC: Set myC = SeqC(1, 2, 3, 4, 5, 6)
+    myResult = Stringifier.StringifyItem(myC)
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
     

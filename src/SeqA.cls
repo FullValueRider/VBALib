@@ -4,16 +4,16 @@ BEGIN
 END
 Attribute VB_Name = "SeqA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Attribute VB_Description = "SeqA is a multipurpose Collection/ArrayList replacement.  It uses a one dimensional array to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayInfo.GetIndex. For a Keyed collection, use one of the Kvp classes"
+Attribute VB_Description = "SeqA is a multipurpose Collection/ArrayList replacement.  It uses a one dimensional array to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayOp.GetIndex. For a Keyed collection, use one of the Kvp classes"
 '@PredeclaredId
 '@Exposed
 '@Folder("Seq")
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 
-'@ModuleDescription("SeqA is a multipurpose Collection/ArrayList replacement.  It uses a one dimensional array to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayInfo.GetIndex. For a Keyed collection, use one of the Kvp classes")
+'@ModuleDescription("SeqA is a multipurpose Collection/ArrayList replacement.  It uses a one dimensional array to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayOp.GetIndex. For a Keyed collection, use one of the Kvp classes")
 ' SeqA uses the VBA Collection class as a host for the items
 ' Other versions of SeqA are available (SeqA, SeqAL, SeqAH, SeqAT)
 
@@ -76,7 +76,7 @@ Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqA
     Resize
         
     ' Check to see if we return a default 'empty' seq
-    If ArrayInfo.LacksItems(ipFPA) Then
+    If ArrayOp.LacksItems(ipFPA) Then
         Set ConstructInstance = Me
         Exit Function
     End If
@@ -194,7 +194,7 @@ End Function
 Public Function Slice _
 ( _
     Optional ByRef ipStart As Long = 1, _
-    Optional ByRef ipRun As Long = -1, _
+    Optional ByRef ipRun As Long = 0, _
     Optional ByRef ipStep As Long = 1 _
 ) As SeqA
 Attribute Slice.VB_Description = "Returns a subset of the SeqA"
@@ -207,12 +207,17 @@ Attribute Slice.VB_Description = "Returns a subset of the SeqA"
     GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.LastIndex, "VBALib.SeqA.Sice"
     
     Dim myRun As Long
-    myRun = ipRun
-    If myRun = -1 Then
-        myRun = s.LastIndex - ipStart + 1
+    If ipRun = 0 Then
+        myRun = s.Size
     Else
-        GuardIndexOutOfBounds myRun + ipStart, FIRST_INDEX, s.LastIndex, "VBALib.SeqA.Sice"
+        myRun = ipRun
     End If
+   
+   If myRun + ipStart - 1 > s.LastIndex Then
+    myRun = s.LastIndex - ipStart + 1
+    End If
+        'GuardIndexOutOfBounds myRun + ipStart, FIRST_INDEX, s.LastIndex, "VBALib.SeqA.Sice"
+    
 
     Dim myS As SeqA
     Set myS = SeqA.Deb
@@ -231,7 +236,7 @@ End Function
 Public Function ToArray() As Variant
 Attribute ToArray.VB_Description = "Returns a shallow copy of the SeqA as an Array.  The Lbound of the array is 1"
     
-    If s.LastIndex <= 1 Then
+    If s.LastIndex < FIRST_INDEX Then
         ToArray = Array()
         Exit Function
     End If
@@ -626,7 +631,7 @@ End Function
 '@Description("Add Items in the paramarray to the  )
 Public Function AddItems(ParamArray ipParamarray() As Variant) As SeqA
 
-    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
         Set AddItems = Me
         Exit Function
     End If
@@ -734,8 +739,7 @@ Public Function InsertRange(ByVal ipIndex As Long, ByRef ipRange As Variant) As 
 
     GuardInvalidRangeItem ipRange, "VBALib.SeqA.InsertRange"
     
-    Dim myItems As IterItems
-    Set myItems = IterItems(ipRange)
+    Dim myItems As IterItems:  Set myItems = IterItems(ipRange).MoveToEndIndex
     
     If myItems.LacksItems Then
         Set InsertRange = Me
@@ -748,9 +752,9 @@ Public Function InsertRange(ByVal ipIndex As Long, ByRef ipRange As Variant) As 
         If GroupInfo.IsDictionary(ipRange) Then
             Insert myIndex, Array(myItems.CurKey(0), myItems.CurItem(0))
         Else
-            Insert myIndex, Array(myItems.CurKey(0), myItems.CurItem(0))
+            Insert myIndex, myItems.CurItem(0)
         End If
-    Loop While myItems.MoveNext
+    Loop While myItems.MovePrev
     
     Set InsertRange = Me
     
@@ -808,7 +812,7 @@ Attribute RemoveItems.VB_Description = "Removes the first encountered item for e
         Exit Function
     End If
     
-    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
         Set RemoveItems = Me
         Exit Function
     End If
@@ -843,17 +847,17 @@ Attribute RemoveItemsAt.VB_Description = "Removes the first encountered item fro
     Dim myParams As Variant
     myParams = ipParamarray
     
-    If ArrayInfo.LacksItems(myParams) Then
+    If ArrayOp.LacksItems(myParams) Then
         Exit Function
     End If
     
     ' The indexes may be in any order so need sorting
     Sorters.ShakerSortArray myParams
     
-    Dim myItems As IterItems: Set myItems = IterItems(myParams)
+    Dim myItems As IterItems: Set myItems = IterItems(myParams).MoveToEndIndex
     Do
-        MoveDown myItems.CurOffset(0) + 1, 1
-    Loop While myItems.MoveNext
+        MoveDown myItems.CurItem(0), 1
+    Loop While myItems.MovePrev
     
     
 End Function
@@ -908,9 +912,9 @@ Attribute RemoveAtRange.VB_Description = "Remove items in the specified range of
         Dim myItem As Variant
         myItem = Array(myItems.CurItem(0))
         If VBA.IsObject(myItem(0)) Then
-            Set myA(myItems.CurOffset(0)) = myItem(0)
+            Set myA(myItems.CurKey(0)) = myItem(0)
         Else
-            myA(myItems.CurOffset(0)) = myItem(0)
+            myA(myItems.CurKey(0)) = myItem(0)
         End If
         
     Loop While myItems.MoveNext
@@ -918,11 +922,11 @@ Attribute RemoveAtRange.VB_Description = "Remove items in the specified range of
     Sorters.ShakerSortArray myA
     
     '@Ignore AssignmentNotUsed
-    Set myItems = IterItems(myA)
+    Set myItems = IterItems(myA).MoveToEndIndex
     
     Do
-        MoveDown myItems.CurOffset(0), 1
-    Loop While myItems.MoveNext
+        MoveDown myItems.CurItem(0), 1
+    Loop While myItems.MovePrev
         
 End Function
 
@@ -935,7 +939,7 @@ Public Function RemoveAll(ParamArray ipParamarray() As Variant) As SeqA
         Exit Function
     End If
     
-    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
         s.LastIndex = 0
         s.Size = DEFAULT_CHUNK
         Resize
@@ -1083,7 +1087,7 @@ End Function
 ''     If Guard.IsNotArray(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 ''     If Guard.LacksItems(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 ''     If Guard.TooManyRanks(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
-''     'If Guard.SizeMismatch(s.lastindex > ArrayInfo.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
+''     'If Guard.SizeMismatch(s.lastindex > ArrayOp.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
 '    If Var.LacksItems(ipArray.Cargo) Then
 '        Return Me
 '    End If
@@ -1115,7 +1119,7 @@ End Function
 '    ' If Guard.IsNotArray(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 '    ' If Guard.LacksItems(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 '    ' If Guard.TooManyRanks(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
-'    ' 'If Guard.SizeMismatch(s.lastindex > ArrayInfo.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
+'    ' 'If Guard.SizeMismatch(s.lastindex > ArrayOp.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
 '
 '    Dim myArrayIndex  As Long = ipArrayStartIndex
 '
@@ -1151,7 +1155,7 @@ End Function
 '    ' If Guard.IsNotArray(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 '    ' If Guard.LacksItems(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 '    ' If Guard.TooManyRanks(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
-'    ' 'If Guard.SizeMismatch(s.lastindex > ArrayInfo.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
+'    ' 'If Guard.SizeMismatch(s.lastindex > ArrayOp.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
 '
 '    Dim myArrayIndex  As Long = ipArrayStartIndex
 '
@@ -1443,7 +1447,7 @@ Public Function DequeueRange(Optional ByVal ipCount As Long = 1) As SeqA
         Exit Function
     End If
 
-    If ipCount < 0 Then
+    If ipCount < 1 Then
         Exit Function
     End If
     
@@ -1456,12 +1460,10 @@ Public Function DequeueRange(Optional ByVal ipCount As Long = 1) As SeqA
     Dim myS As SeqA
     Set myS = SeqA.Deb
     
-    Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(FIRST_INDEX, ipCount)
-    Do
-        myS.Add myItems.CurItem(0)
-    Loop While myItems.MoveNext
-    
-    MoveDown FIRST_INDEX, ipCount
+    Dim myIndex As Long
+    For myIndex = 1 To ipCount
+        myS.Add Me.Dequeue
+    Next
     
     Set DequeueRange = myS
     
@@ -1709,12 +1711,11 @@ Private Function SetOfCommon(ByRef ipseq As SeqA) As SeqA
         Exit Function
     End If
     
-    Set myS = Me.Dedup
-    
     Dim myItems As IterItems: Set myItems = IterItems(ipseq)
     Do
-        If myS.LacksItem(myItems.CurItem(0)) Then
-            myS.RemoveAt myItems.CurKey(0)
+        Dim myItem As Variant: myItem = Array(myItems.CurItem(0))
+        If Me.HoldsItem(myItem(0)) Then
+            myS.Add myItem(0)
         End If
     Loop While myItems.MoveNext
  
@@ -1739,10 +1740,13 @@ Private Function SetOfHostOnly(ByRef ipseq As SeqA) As SeqA
     
     Dim myItems As IterItems: Set myItems = IterItems(ipseq)
     Do
-        If myS.HoldsItem(myItems.CurItem(0)) Then
-            myS.Remove myItems.CurItem(0)
+        Dim myItem As Variant: myItem = Array(myItems.CurItem(0))
+        If myS.HoldsItem(myItem(0)) Then
+            myS.RemoveAll myItem(0)
         End If
     Loop While myItems.MoveNext
+    
+    Set SetOfHostOnly = myS
     
 End Function
 
@@ -1769,6 +1773,8 @@ Private Function SetOfParamOnly(ByRef ipseq As SeqA) As SeqA
         End If
     Loop While myItems.MoveNext
 
+    Set SetOfParamOnly = myS
+    
 End Function
 
 Private Function SetOfNotCommon(ByRef ipseq As SeqA) As SeqA
@@ -1827,6 +1833,8 @@ Private Function SetofUnique(ByRef ipseq As SeqA) As SeqA
             myS.Add myItem(0)
         End If
     Loop While myItems.MoveNext
+    
+    Set SetofUnique = myS
 
 End Function
 

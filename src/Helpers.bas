@@ -27,13 +27,13 @@ End Sub
 
 Public Function LineariseArray(ByRef ipArray As Variant) As Variant
 
-    If ArrayInfo.Ranks(ipArray) = 1 Then
+    If ArrayOp.Ranks(ipArray) = 1 Then
         LineariseArray = ipArray
         Exit Function
     End If
     
     Dim mySize As Long
-    mySize = ArrayInfo.Count(ipArray)
+    mySize = ArrayOp.Count(ipArray)
     
     Dim myA As Variant
     ReDim myA(1 To mySize)

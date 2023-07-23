@@ -18,7 +18,7 @@ Sub TestStrConv()
     myA = StrConv(myS, vbNarrow)
 End Sub
 
-Sub TestKvpC()
+Sub TestKvp()
     Dim myK As KvpC
     Set myK = KvpC.Deb
     

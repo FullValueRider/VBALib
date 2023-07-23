@@ -51,7 +51,13 @@ Public Sub FmtTests()
     Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab, vbTab,
 #End If
 
-    
+    Test01a_Fmt_Text_Nothing
+    Test01b_Fmt_Text_NoParams
+    Test01c_Fmt_Text_NoSubstitutions
+    Test01d_Fmt_Text_Formatting_Threevbcrlf
+    Test01e_Fmt_Text_Formatting_Threeplainquotes
+    Test01f_Fmt_Text_Formatting_Zeroplainquotes
+    Test01g_Fmt_Text_Formatting_ThreeVariables
     
     Debug.Print "Testing completed"
 

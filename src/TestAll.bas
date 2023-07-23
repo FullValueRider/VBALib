@@ -30,12 +30,13 @@ Public myComponentName As String
     myTime = Timer
     Debug.Print "Testing started"
     Debug.Print
-    TestArrayInfo.ArrayInfoTests
-    TestStrs.StrsTests
-    TestStringifier.StringifierTests
+    TestArrayOp.ArrayOpTests
     TestFmt.FmtTests
-    TestMappers.MapperTests
-    TestComparers.ComparerTests
+    TestIterItems.IterItemsTests
+    TestStrs.StrsTests
+     TestStringifier.StringifierTests
+     TestMappers.MapperTests
+     TestComparers.ComparerTests
     'TestReducers.ReducerTests
     TestIterItems.IterItemsTests
 

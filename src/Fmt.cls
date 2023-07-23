@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Fmt"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Class Fmt enables substitution of variables and control characters in strings using fields delineated by {} markers."
@@ -133,7 +133,7 @@ Attribute TrySplat.VB_Description = "True if the paramArray is allocated.  If pa
     ' splat is a reference to the splat operator '...' used in some other languages.
     ' The splat operator allows a 'container' to be interpreted as a 'ParamArray'
     
-    If ArrayInfo.LacksItems(ipParamarray) Then
+    If ArrayOp.LacksItems(ipParamarray) Then
         TrySplat = False
         Exit Function
     End If

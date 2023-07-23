@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "rdSum"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Returns the sum of the numbers in the SeqC.  Non-numbers are ignored"

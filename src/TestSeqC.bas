@@ -77,7 +77,7 @@ Public Sub SeqCTests()
     Test08d_InsertRange_ArrayList
     Test08e_InsertRange_Dictionary
     
-    'Test09a0_Remove_SingleItem
+    Test09a0_Remove_SingleItem
     
     Test09a_RemoveAt_SingleItem
     Test09b_RemoveAt_ThreeItems
@@ -85,7 +85,7 @@ Public Sub SeqCTests()
     Test10a_Remove_SingleItems
     
     Test11a_RemoveRange_SingleItem
-    Test11b_RemoveRange_ThreeItems
+    Test11b_RemoveAtRange_ThreeItems
     
     Test12a_RemoveRange_SingleItem
     
@@ -1140,6 +1140,44 @@ End Sub
 
 
 '@TestMethod("SeqC")
+Private Sub Test09a0_Remove_SingleItem()
+    #If twinbasic Then
+        myProcedureName = CurrentProcedureName
+       myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    On Error GoTo TestFail
+
+    'Arrange:
+    Dim mySeq As SeqC
+    Dim myExpected As Variant
+    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
+    ReDim Preserve myExpected(1 To 5)
+
+    Dim myResult As Variant
+    Set mySeq = SeqC.Deb(Array(Empty, Empty, Empty, 42, Empty, Empty))
+
+    'Act:
+    mySeq.Remove 42
+
+    myResult = mySeq.ToArray
+
+    'Assert:
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("SeqC")
 Private Sub Test09a_RemoveAt_SingleItem()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
@@ -1262,7 +1300,7 @@ Private Sub Test11a_RemoveRange_SingleItem()
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1292,7 +1330,7 @@ TestFail:
 End Sub
 
 '@TestMethod("SeqC")
-Private Sub Test11b_RemoveRange_ThreeItems()
+Private Sub Test11b_RemoveAtRange_ThreeItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
        myComponentName = CurrentComponentName
@@ -1312,7 +1350,7 @@ Private Sub Test11b_RemoveRange_ThreeItems()
     Set mySeq = SeqC.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
 
     'Act:
-    mySeq.RemoveAtRange SeqC(4, 5, 6)
+    mySeq.RemoveAtRange SeqC(5, 4, 6)
 
     myResult = mySeq.ToArray
 
@@ -3008,10 +3046,6 @@ Private Sub Test26b_Sorted()
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myExpected2 As Variant
-    myExpected2 = Array(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
-    ReDim Preserve myExpected2(1 To 10)
-
     Dim myResult As Variant
     Dim myResult2 As Variant
 
@@ -3023,7 +3057,6 @@ Private Sub Test26b_Sorted()
 
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
-    AssertStrictSequenceEquals myExpected2, myResult2, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

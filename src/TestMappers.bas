@@ -4,6 +4,7 @@ Attribute VB_Name = "TestMappers"
 '@IgnoreModule
 Option Explicit
 Option Private Module
+Option Base 1
 
 'Private Assert As Object
 'Private Fakes As Object
@@ -391,10 +392,11 @@ Private Sub Test03b_mpIndex_mpInc_Collection()
     
     'Act:
     Dim myTmp As Variant
-    myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 2)).ToArray
-    myResult(1) = myTmp(1).Item(2)
-    myResult(2) = myTmp(2).Item(2)
-    myResult(3) = myTmp(3).Item(2)
+    Set myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 2))
+    
+    myResult(1) = myTmp.Item(1).Item(2)
+    myResult(2) = myTmp.Item(2).Item(2)
+    myResult(3) = myTmp.Item(3).Item(2)
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
@@ -453,10 +455,10 @@ Private Sub Test03c_mpIndex_mpInc_ArrayList()
     
     'Act:
     Dim myTmp As Variant
-    myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 1)).ToArray
-    myResult(1) = myTmp(1).Item(1)
-    myResult(2) = myTmp(2).Item(1)
-    myResult(3) = myTmp(3).Item(1)
+    myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 2)).ToArray
+    myResult(1) = myTmp(1).Item(2)
+    myResult(2) = myTmp(2).Item(2)
+    myResult(3) = myTmp(3).Item(2)
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
@@ -497,10 +499,10 @@ Private Sub Test03d_mpIndex_mpInc_Array()
     
     'Act:
     Dim myTmp As Variant
-    myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 1)).ToArray
-    myResult(1) = myTmp(1)(1)
-    myResult(2) = myTmp(2)(1)
-    myResult(3) = myTmp(3)(1)
+    myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 2)).ToArray
+    myResult(1) = myTmp(1)(2)
+    myResult(2) = myTmp(2)(2)
+    myResult(3) = myTmp(3)(2)
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     

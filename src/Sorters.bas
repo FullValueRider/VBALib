@@ -11,14 +11,14 @@ Public Sub ShakerSortArray(ByRef iopArray As Variant)
         
     End If
     
-    If ArrayInfo.LacksItems(iopArray) Then
+    If ArrayOp.LacksItems(iopArray) Then
         Exit Sub
     End If
     
-    If ArrayInfo.IsNotArray(iopArray, e_ArrayType.m_ListArray) Then
+    If ArrayOp.IsNotArray(iopArray, e_ArrayType.m_ListArray) Then
         Err.Raise 17 + vbObjectError, _
             "VBALib.Sorters.ShakerSortArray", _
-            Fmt.Text("Expecting array with one dimensions. Got {0} dimensions", ArrayInfo.Ranks(iopArray))
+            Fmt.Text("Expecting array with one dimensions. Got {0} dimensions", ArrayOp.Ranks(iopArray))
     End If
     
     Dim i As Long

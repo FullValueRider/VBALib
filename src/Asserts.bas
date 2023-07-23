@@ -80,6 +80,6 @@ Public Sub AssertStrictAreSame(ByRef ipExpected As Variant, ipResult As Variant,
     
 End Sub
 
-Public Sub AssertFail(ByRef ipComponent As String, ipProcedure As String, ipMessage)
+Public Sub AssertFail(ByRef ipComponent As String, ipProcedure As String, ByRef ipMessage As String)
     Fmt.Dbg "{0}, {1}, {2}", ipComponent, ipProcedure, ipMessage
 End Sub

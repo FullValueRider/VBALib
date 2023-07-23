@@ -2,9 +2,9 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ArrayInfo"
+Attribute VB_Name = "ArrayOp"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -115,6 +115,7 @@ Public Function Count(ByRef ipArray As Variant, Optional ByVal ipRank As Long = 
      
     If LacksItems(ipArray) Then
         Count = -1
+        Exit Function
     End If
  
     Count = CountKnownArray(ipArray, ipRank)
@@ -161,46 +162,47 @@ End Function
  '@Description("Returns the number of dimensions of an array. Returns -1 if not an array")
 Public Function Ranks(ByVal ipArray As Variant) As Long
 Attribute Ranks.VB_Description = "Returns the number of dimensions of an array. Returns -1 if not an array"
+    
+    Ranks = -1
 
      If Not VBA.IsArray(ipArray) Then
-         Ranks = -1
-     End If
-     
-     Dim myIndex As Long
-     For myIndex = 1 To 60000
-     
-         On Error Resume Next
-
-         Dim myDummy As Long
-         myDummy = UBound(ipArray, myIndex)
-         
-         If Err.Number <> 0 Or myDummy = -1 Then
-             On Error GoTo 0
-             Exit For
-         End If
-         
-         Err.Clear
-         
-     Next
-     
-     On Error GoTo 0
-     
-     Ranks = myIndex - 1
-     
+        Exit Function
+    End If
+    
+    Dim myIndex As Long
+    For myIndex = 1 To 60000
+    
+        On Error Resume Next
+    
+        Dim myDummy As Long
+        myDummy = UBound(ipArray, myIndex)
+        
+        If Err.Number <> 0 Or myDummy = -1 Then
+            On Error GoTo 0
+            Ranks = myIndex - 1
+            Exit Function
+        End If
+        
+        Err.Clear
+        
+    Next
+    
 End Function
 
 
  '@Ignore ParameterCanBeByVal
 Public Function HoldsRank(ByRef ipArray As Variant, ByVal ipRank As Long) As Boolean
     
+    HoldsRank = False
+    
     Dim myRanks As Long
     myRanks = Ranks(ipArray)
     If myRanks < 1 Then
-       HoldsRank = False
+       Exit Function
     End If
     
     If ipRank > myRanks Then
-        HoldsRank = False
+        Exit Function
     End If
     
     HoldsRank = True
@@ -215,37 +217,132 @@ End Function
 
 Public Function FirstIndex(ByRef ipArray As Variant, Optional ByVal ipRank As Long = 1) As Variant
     
-   If LacksItems(ipArray) Then
-       FirstIndex = Null
-   End If
-   
-   Dim myRanks As Long
-   myRanks = Ranks(ipArray)
-   
-   If ipRank >= 1 And ipRank <= myRanks Then
-       FirstIndex = LBound(ipArray, ipRank)
-   Else
-       FirstIndex = Null
-   End If
+    FirstIndex = Null
+    
+    If LacksItems(ipArray) Then
+        Exit Function
+    End If
+    
+    Dim myRanks As Long
+    myRanks = Ranks(ipArray)
+    
+    If ipRank >= 1 And ipRank <= myRanks Then
+        FirstIndex = LBound(ipArray, ipRank)
+    End If
     
 End Function
 
 Public Function LastIndex(ByRef ipArray As Variant, Optional ByVal ipRank As Long = 1) As Variant
     
-   If LacksItems(ipArray) Then
-       LastIndex = Null
-   End If
-   
-   Dim myRanks As Long
-   myRanks = Ranks(ipArray)
-   
-   If ipRank >= 1 And ipRank <= myRanks Then
-       LastIndex = UBound(ipArray, ipRank)
-   Else
-       LastIndex = Null
-   End If
+    LastIndex = Null
+    
+    If LacksItems(ipArray) Then
+        Exit Function
+    End If
+    
+    Dim myRanks As Long
+    myRanks = Ranks(ipArray)
+    
+    If ipRank >= 1 And ipRank <= myRanks Then
+        LastIndex = UBound(ipArray, ipRank)
+    End If
    
 End Function
 
 
+'@Description("Returns a new 1 dimension array with 1 based indexing populated with the mapped items")
+Public Function MapIt(ByRef ipArray As Variant, ByRef ipMapper As IMapper) As Variant
+Attribute MapIt.VB_Description = "Returns a new 1 dimension array with 1 based indexing populated with the mapped items"
 
+    If ArrayOp.LacksItems(ipArray) Then
+        MapIt = Array()
+        Exit Function
+    End If
+    
+    Dim myA As Variant: ReDim myA(1 To ArrayOp.Count(ipArray))
+    
+    Dim mySize As Long: mySize = 1
+    Dim myItem As Variant
+    For Each myItem In ipArray
+    
+        Dim myResult As Variant
+        myResult = ipMapper.ExecMapper(myItem)
+        VariantCopy myA(mySize), myResult(0)
+        mySize = mySize + 1
+        
+    Next
+    
+    ReDim Preserve myA(1 To mySize)
+    
+    MapIt = myA
+    
+End Function
+
+
+Public Function FilterIt(ByRef ipArray As Variant, ByVal ipComparer As IComparer) As Variant
+
+    If ipArray.LacksItems Then
+        FilterIt = Array()
+        Exit Function
+    End If
+    
+    Dim myA As Variant: ReDim myA(1 To ArrayOp.Count(ipArray))
+    
+    Dim mySize As Long: mySize = 1
+    Dim myItem As Variant
+    For Each myItem In ipArray
+            
+        If ipComparer.ExecCmp(myItem) Then
+            VariantCopy myA(mySize), myItem(0)
+            mySize = mySize + 1
+        End If
+        
+    Next
+    
+    ReDim Preserve myA(1 To mySize)
+    
+    FilterIt = myA
+
+End Function
+
+' Does not generate an interim SeqA as would filterIt followed by Count.
+Public Function CountIt(ByRef ipArray As Variant, ByVal ipComparer As IComparer) As Long
+
+    If ipArray.LacksItems Then
+        CountIt = -1
+        Exit Function
+    End If
+    
+    Dim myCount As Long: myCount = 0
+    Dim myItem As Variant
+    For Each myItem In ipArray
+            
+        If ipComparer.ExecCmp(myItem) Then
+            myCount = myCount + 1
+        End If
+        
+    Next
+    
+    CountIt = myCount
+
+End Function
+
+'@Description("Returns a single Host based on the Reducer").
+Public Function ReduceIt(ByRef ipArray As Variant, ByRef ipReducer As IReducer) As Variant
+    'ReduceIt = ipReducer.ExecReduction(Me)
+    
+    If ipArray.LacksItems Then
+        ReduceIt = Null
+        Exit Function
+    End If
+    
+    Dim myItem As Variant
+    myItem = ipReducer.ExecReduction(ipArray)
+    
+    If VBA.IsObject(myItem(0)) Then
+       Set ReduceIt = myItem(0)
+    Else
+        ReduceIt = myItem(0)
+    End If
+    
+End Function

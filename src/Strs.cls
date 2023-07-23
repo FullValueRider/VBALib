@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Strs"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule FunctionReturnValueDiscarded, IndexedDefaultMemberAccess
@@ -141,7 +141,7 @@ Attribute Dedup.VB_Description = "Removes duplicates of substrings in ipDedup."
         myDedupItems = ipDedupItems
     End If
     
-'    If ArrayInfo.LacksItems(myDedupItems) Then
+'    If ArrayOp.LacksItems(myDedupItems) Then
 '        myDedupItems = Array(Chars.twSpace)
 '    End If
     
@@ -281,11 +281,11 @@ Public Function ToSubStr _
   ByRef ipString As String, _
   Optional ByRef ipSeparator As String = Chars.twDefaultSeparator, _
   Optional ByRef ipTrimChars As String = twNullStr _
-) As SeqC
+) As Variant
 Attribute ToSubStr.VB_Description = "Splits a string into a SeqC of trimmed substrings"
 
     If VBA.Len(ipString) = 0 Then
-        Set ToSubStr = SeqC.Deb
+        Set ToSubStr = Array()
         Exit Function
     End If
     
@@ -299,15 +299,15 @@ Attribute ToSubStr.VB_Description = "Splits a string into a SeqC of trimmed subs
     Dim myArray As Variant
     myArray = VBA.Split(ipString, ipSeparator)
     
-    Dim myS As SeqC
-    Set myS = SeqC.Deb
+    Dim myA As Variant
+    ReDim myA(1 To UBound(myArray) - LBound(myArray) + 1)
         
-    Dim mySubStr As Variant
-    For Each mySubStr In myArray
-        myS.Add Trimmer(VBA.CStr(mySubStr), myTrimchars)
+    Dim myIndex As Long
+    For myIndex = LBound(myArray) To UBound(myArray)
+        myA(myIndex + 1) = Trimmer(VBA.CStr(myArray(myIndex)), myTrimchars)
     Next
     
-    Set ToSubStr = myS
+   ToSubStr = myA
       
 End Function
 
@@ -376,7 +376,7 @@ Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindRep
     
     Dim myFRPairs As Variant
     
-    If ArrayInfo.LacksItems(ipFindReplacePairs) Then
+    If ArrayOp.LacksItems(ipFindReplacePairs) Then
         myFRPairs = Array(Array(Chars.twSpace, Chars.twNullStr))
     Else
         myFRPairs = ipFindReplacePairs
@@ -409,63 +409,65 @@ Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindRep
 End Function
 
 
-Public Function ToAscB(ByVal ipString As String) As SeqC
+Public Function ToAscB(ByVal ipString As String) As Variant
   
-  If VBA.Len(ipString) = 0 Then
+    If VBA.Len(ipString) = 0 Then
       
-      Set ToAscB = SeqC.Deb
+        Set ToAscB = Array()
           
-  Else
-      
-      Dim myS As SeqC
-      Set myS = SeqC.Deb
-      Dim myIndex As Long
-      For myIndex = 1 To VBA.Len(ipString)
-          myS.Add VBA.AscB(VBA.Mid$(ipString, myIndex, 1))
-      Next
-      
-  End If
+    Else
+    
+        Dim myLen As Long: myLen = VBA.Len(ipString)
+        Dim myA As Variant
+        ReDim myA(1 To myLen)
+        Dim myIndex As Long
+        For myIndex = 1 To myLen
+            myA(myIndex) = VBA.AscB(VBA.Mid$(ipString, myIndex, 1))
+        Next
+    
+    End If
   
-  Set ToAscB = myS
+   ToAscB = myA
   
 End Function
 
 
-Public Function ToUnicodeBytes(ByVal ipString As String) As SeqC
+Public Function ToUnicodeBytes(ByVal ipString As String) As Variant
 
   If VBA.Len(ipString) = 0 Then
       
-     Set ToUnicodeBytes = SeqC.Deb
+     ToUnicodeBytes = Array()
           
   Else
       
       Dim myvariant() As Byte
       myvariant = ipString
-      Set ToUnicodeBytes = SeqC(myvariant)
+     ToUnicodeBytes = myvariant
           
   End If
       
 End Function
 
 
-Public Function ToUnicodeIntegers(ByVal ipString As String) As SeqC
+Public Function ToUnicodeIntegers(ByVal ipString As String) As Variant
 
-  If VBA.Len(ipString) = 0 Then
-      
-      Set ToUnicodeIntegers = SeqC.Deb
-          
-  Else
-      
-      Dim myS As SeqC
-      Set myS = SeqC.Deb
-      Dim myIndex As Long
-      For myIndex = 1 To VBA.Len(ipString)
-          myS.Add VBA.AscW(VBA.Mid$(ipString, myIndex, 1))
-      Next
-      
-  End If
+    If VBA.Len(ipString) = 0 Then
+        
+        Set ToUnicodeIntegers = SeqC.Deb
+            
+    Else
+        
+        Dim myLen As Long: myLen = VBA.Len(ipString)
+        Dim myA As Variant
+        ReDim myA(1 To myLen)
+        Dim myIndex As Long
+        For myIndex = 1 To myLen
+            myA(myIndex) = VBA.AscW(VBA.Mid$(ipString, myIndex, 1))
+        Next
+        
+    End If
   
-  Set ToUnicodeIntegers = myS
+   ToUnicodeIntegers = myA
   
 End Function
 
@@ -476,7 +478,10 @@ Public Function Sort(ByRef ipString As String) As String
         Exit Function
     End If
     
-  Sort = Join(SeqC(ipString).Sort.ToArray, vbNullString)
+    Dim myChars As Variant
+    myChars = Strs.ToChars(ipString)
+    Sorters.ShakerSortArray myChars
+    Sort = Join(myChars, vbNullString)
   
 End Function
 

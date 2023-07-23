@@ -53,7 +53,7 @@ End Sub
 
 Public Sub GuardExpectingArray(ByRef ipArray As Variant, ByRef ipMessage As String)
     
-    If ArrayInfo.IsNotArray(ipArray) Then
+    If ArrayOp.IsNotArray(ipArray) Then
         Err.Raise 17 + vbObjectError, _
             ipMessage, _
             Fmt.Text("Expecting an array.  Got {0}", VBA.TypeName(ipArray))
@@ -66,7 +66,7 @@ Public Sub GuardEmptyRangeObject(ByRef ipRange As Variant, ByRef ipMessage As St
     Dim myLen As Long
     Select Case GroupInfo.Id(ipRange)
         Case e_Group.m_string:                  myLen = VBA.Len(ipRange)
-        Case e_Group.m_array:                   myLen = ArrayInfo.Count(ipRange)
+        Case e_Group.m_array:                   myLen = ArrayOp.Count(ipRange)
         Case e_Group.m_List, m_Dictionary:      myLen = ipRange.Count
     End Select
     

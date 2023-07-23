@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "mpByIndex"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -46,9 +46,10 @@ Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
     Select Case myGroupName
 
         Case "string":                                                                  IMapper_ExecMapper = ExecMapperByString(VBA.CStr(ipHostItem))
-        Case "seq":                                                                     IMapper_ExecMapper = ExecMapperBySeqC(ipHostItem)
-        Case "arraylist":                                                               IMapper_ExecMapper = ExecMapperByAL(ipHostItem)
+        Case "seq":                                                                     IMapper_ExecMapper = ExecMapperByIndex1(ipHostItem)
+        Case "arraylist":                                                               IMapper_ExecMapper = ExecMapperByIndex0(ipHostItem)
         Case "kvp", "dictionary", "chashd", "kvpair":                                   IMapper_ExecMapper = ExecMapperByDictionary(ipHostItem)
+        ' a separate case is needed for collection due to the add/remove nature of assigning to an item
         Case "collection":                                                              IMapper_ExecMapper = ExecMapperByCollection(ipHostItem)
         Case "array":                                                                   IMapper_ExecMapper = ExecMapperByArray(ipHostItem)
 
@@ -79,61 +80,81 @@ Private Function ExecMapperByString(ByRef ipHostItem As String) As Variant
 End Function
 
 
-Private Function ExecMapperByAL(ByRef ipHostItem As Variant) As Variant
+Private Function ExecMapperByIndex0(ByRef ipIndexFrom0 As Variant) As Variant
 
-    If s.Index < 0 Or s.Index > ipHostItem.Count - 1 Then
-        ExecMapperByAL = Array(ipHostItem)
+    If s.Index < 0 Or s.Index > ipIndexFrom0.Count - 1 Then
+        ExecMapperByIndex0 = Array(ipIndexFrom0)
         Exit Function
     End If
 
     Dim myItem As Variant
-    myItem = s.Mapper.ExecMapper(ipHostItem.Item(s.Index))
+    myItem = s.Mapper.ExecMapper(ipIndexFrom0.Item(s.Index - 1))
 
     If VBA.IsObject(myItem(0)) Then
-        Set ipHostItem.Item(s.Index) = myItem(0)
+        Set ipIndexFrom0.Item(s.Index) = myItem(0)
     Else
-        ipHostItem.Item(s.Index) = myItem(0)
+        ipIndexFrom0.Item(s.Index) = myItem(0)
     End If
 
-    ExecMapperByAL = Array(ipHostItem)
+    ExecMapperByIndex0 = Array(ipIndexFrom0)
 
 End Function
 
-Private Function ExecMapperBySeqC(ByRef ipseq As Variant) As Variant
+Private Function ExecMapperByIndex1(ByRef ipIndexFrom1 As Variant) As Variant
 
     Dim myIndex As Long
     myIndex = VBA.CLng(s.Index)
-    
-    If myIndex < ipseq.FirstIndex Or myIndex > ipseq.LastIndex Then
-        ExecMapperBySeqC = Array(ipseq)
+    ' can't use firstindex/lastindex as the item may be a collection which doesn't support this abstraction
+    If myIndex < 1 Or myIndex > ipIndexFrom1.Count Then
+        ExecMapperByIndex1 = Array(ipIndexFrom1)
         Exit Function
     End If
 
     Dim myItem As Variant
-    myItem = s.Mapper.ExecMapper(VBA.CVar(ipseq.Item(myIndex)))
+    myItem = s.Mapper.ExecMapper(VBA.CVar(ipIndexFrom1.Item(myIndex)))
 
     If VBA.IsObject(myItem(0)) Then
-        Set ipseq.Item(myIndex) = myItem(0)
+        Set ipIndexFrom1.Item(myIndex) = myItem(0)
     Else
-        ipseq.Item(myIndex) = myItem(0)
+        ipIndexFrom1.Item(myIndex) = myItem(0)
     End If
 
-    ExecMapperBySeqC = Array(ipseq)
+    ExecMapperByIndex1 = Array(ipIndexFrom1)
 
 End Function
 
-Private Function ExecMapperByCollection(ByVal ipHostItem As Collection) As Variant
-    If s.Index < 1 Or s.Index > ipHostItem.Count Then
-        ExecMapperByCollection = Array(ipHostItem)
+Private Function ExecMapperByCollection(ByRef ipIndexColl As Variant) As Variant
+
+    Dim myIndex As Long
+    myIndex = VBA.CLng(s.Index)
+    ' can't use firstindex/lastindex as the item may be a collection which doesn't support this abstraction
+    If myIndex < 1 Or myIndex > ipIndexColl.Count Then
+        ExecMapperByCollection = Array(ipIndexColl)
         Exit Function
     End If
 
-    ipHostItem.Add s.Mapper.ExecMapper(ipHostItem.Item(s.Index))(0), After:=s.Index
-    ipHostItem.Remove s.Index
+    Dim myItem As Variant
+    myItem = s.Mapper.ExecMapper(VBA.CVar(ipIndexColl.Item(myIndex)))
 
-    ExecMapperByCollection = Array(ipHostItem)
+    ipIndexColl.Add myItem(0), After:=myIndex
+    ipIndexColl.Remove myIndex
+
+    ExecMapperByCollection = Array(ipIndexColl)
 
 End Function
+
+' Private Function ExecMapperByCollection(ByVal ipHostItem As Collection) As Variant
+'     If s.Index < 1 Or s.Index > ipHostItem.Count Then
+'         ExecMapperByCollection = Array(ipHostItem)
+'         Exit Function
+'     End If
+
+'     ipHostItem.Add s.Mapper.ExecMapper(ipHostItem.Item(s.Index))(0), After:=s.Index
+'     ipHostItem.Remove s.Index
+
+'     ExecMapperByCollection = Array(ipHostItem)
+
+' End Function
 
 
 ' Todo: check if passing by ref works, if not use variant copy method

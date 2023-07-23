@@ -79,7 +79,7 @@ Public Sub IterItemsTests()
     Test08b_GetKeyDictionary
     Test08c_GetIndexDIctionary
     
-    Test09a_GetIndexDIctionary
+    Test09a_GetIndexDictionary
     
     Debug.Print vbTab, vbTab, "Testing completed"
 
@@ -146,8 +146,10 @@ Private Sub Test02a_GetItem0Seq()
     Dim myResult As Variant
     
     'Act:  Again we need to sort The result SeqC to get the matching array
+    Dim myS As SeqC
+    Set myS = SeqC(1, 2, 3, 4, 5)
     Dim myI As IterItems
-    Set myI = IterItems(SeqC(1, 2, 3, 4, 5))
+    Set myI = IterItems(myS)
        
     myResult = myI.CurItem(0)
    
@@ -436,8 +438,10 @@ Private Sub Test04a_GetKeySeq()
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
+    Dim myC As SeqC
+    Set myC = SeqC(10, 20, 30, 40, 50, 60, 70, 80, 90)
     Dim myI As IterItems
-    Set myI = IterItems(SeqC(10, 20, 30, 40, 50, 60, 70, 80, 90))
+    Set myI = IterItems(myC)
     myI.MoveNext
     myI.MoveNext
     myI.MoveNext
@@ -472,14 +476,16 @@ Private Sub Test04b_GetIndexSeq()
     
     'Arrange:
     Dim myExpected As Variant
-    myExpected = 5&
+    myExpected = 4&
     
     Dim myResult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
+    Dim myS As SeqC
+    Set myS = SeqC(10, 20, 30, 40, 50, 60, 70, 80, 90)
     Dim myI As IterItems
-    Set myI = IterItems(SeqC(10, 20, 30, 40, 50, 60, 70, 80, 90))
+    Set myI = IterItems(myS)
     myI.MoveNext
     myI.MoveNext
     myI.MoveNext
@@ -605,7 +611,7 @@ Private Sub Test05c_GetIndexArray()
     
     'Arrange:
     Dim myExpected As Variant
-    myExpected = 5&
+    myExpected = 4&
     
     Dim myArray As Variant
     myArray = Array(10, 20, 30, 40, 50, 60, 70, 80, 90)
@@ -762,7 +768,7 @@ Private Sub Test06c_GetIndexCollection()
     
     'Arrange:
     Dim myExpected As Variant
-    myExpected = 5&
+    myExpected = 4&
     
     Dim myC As Collection
     Set myC = New Collection
@@ -929,7 +935,7 @@ Private Sub Test07c_GetIndexArrayList()
     
     'Arrange:
     Dim myExpected As Variant
-    myExpected = 5&
+    myExpected = 4&
     
     Dim myC As ArrayList
     Set myC = New ArrayList
@@ -1096,7 +1102,7 @@ Private Sub Test08c_GetIndexDIctionary()
     
     'Arrange:
     Dim myExpected As Variant
-    myExpected = 5&
+    myExpected = 4&
     
     Dim myK As KvpC
     Set myK = KvpC.Deb
@@ -1140,7 +1146,7 @@ End Sub
 '
 
 '@TestMethod("IterItems")
-Private Sub Test09a_GetIndexDIctionary()
+Private Sub Test09a_GetIndexDictionary()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
@@ -1154,7 +1160,7 @@ Private Sub Test09a_GetIndexDIctionary()
     'Arrange:
     Dim myExpected As Variant
     myExpected = Array(10, 20, 30, 40, 50, 60, 70, 80, 90)
-    ReDim Preserve myExpected(1 To 9)
+    
     
     Dim myK As KvpC
     Set myK = KvpC.Deb
@@ -1176,7 +1182,7 @@ Private Sub Test09a_GetIndexDIctionary()
     
     
     Dim myResult As Variant
-    ReDim myResult(1 To 9)
+    ReDim myResult(0 To 8)
     
     'Act:
         Do

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Stringifier"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule ImplicitUnboundDefaultMemberAccess
@@ -198,7 +198,7 @@ Friend Function StringifyArray(ByRef ipArray As Variant) As String
     ' The call to 'ToString' overwrites s.ArrayMarkup
     ' so we preserve a copy here
     
-    If ArrayInfo.LacksItems(ipArray) Then
+    If ArrayOp.LacksItems(ipArray) Then
        StringifyArray s.ArrayMarkup.Left & s.ArrayMarkup.Right
     End If
 '    Dim myMarkup As ItemMarkup
@@ -233,10 +233,12 @@ Friend Function StringifyItemByIndex(ByRef ipItemByIndex As Variant) As String
     
     Dim myItems As IterItems: Set myItems = IterItems(ipItemByIndex)
     Do
-        myS.Add StringifyItem(myItems.CurItem(0))
-    Loop Until myItems.MoveNext
-    
-    StringifyItemByIndex = s.ObjectMarkup.Left & VBA.Join(myS.ToArray, s.ObjectMarkup.Separator) & s.ObjectMarkup.Right
+        Dim myItem As Variant:        myItem = myItems.CurItem(0)
+        myS.Add StringifyItem(myItem)
+    Loop While myItems.MoveNext
+    Dim myArray As Variant: myArray = myS.ToArray
+    Dim myString As String: myString = VBA.Join(myArray, s.ObjectMarkup.Separator)
+    StringifyItemByIndex = s.ObjectMarkup.Left & myString & s.ObjectMarkup.Right
     
 End Function
 
@@ -313,12 +315,12 @@ Friend Function StringifyItemObject(ByVal ipObject As Object) As String
   
         Select Case True
         
-            Case TryStringifyByCallByName(ipObject, myMethodName(0), VbGet, myString)
+            Case TryStringifyByCallByName(ipObject, myMethodName(0), vbGet, myString)
         
                 StringifyItemObject = s.ObjectMarkup.Left & myString & s.ObjectMarkup.Right
                 Exit Function
                 
-            Case TryStringifyByCallByName(ipObject, myMethodName(0), VbMethod, myString)
+            Case TryStringifyByCallByName(ipObject, myMethodName(0), vbMethod, myString)
         
                 StringifyItemObject = s.ObjectMarkup.Left & myString & s.ObjectMarkup.Right
                 Exit Function

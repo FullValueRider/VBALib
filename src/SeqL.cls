@@ -4,16 +4,16 @@ BEGIN
 END
 Attribute VB_Name = "SeqL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Attribute VB_Description = "SeqL is a multipurpose Collection/ArrayList replacement.  It uses a double linked list to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayInfo.GetIndex. For a Keyed collection, use one of the Kvp classes"
+Attribute VB_Description = "SeqL is a multipurpose Collection/ArrayList replacement.  It uses a double linked list to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayOp.GetIndex. For a Keyed collection, use one of the Kvp classes"
 '@PredeclaredId
 '@Exposed
 '@Folder("Seq")
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 
-'@ModuleDescription("SeqL is a multipurpose Collection/ArrayList replacement.  It uses a double linked list to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayInfo.GetIndex. For a Keyed collection, use one of the Kvp classes")
+'@ModuleDescription("SeqL is a multipurpose Collection/ArrayList replacement.  It uses a double linked list to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayOp.GetIndex. For a Keyed collection, use one of the Kvp classes")
 ' SeqL uses the VBA Collection class as a host for the items
 ' Other versions of SeqL are available (SeqL, SeqLL, SeqLH, SeqLT)
 
@@ -78,7 +78,7 @@ Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqL
     Set s.Last = s.Root
     
     ' Check to see if we return a default 'empty' seq
-    If ArrayInfo.LacksItems(ipFPA) Then
+    If ArrayOp.LacksItems(ipFPA) Then
         Set ConstructInstance = Me
         Exit Function
     End If
@@ -484,7 +484,7 @@ Attribute LBO.VB_Description = "Returns the Item at Lastbut one Index"
 
    If s.Last.Pred Is Nothing Then
         LBO = Null
-        Exit Function
+        Exit Property
     End If
     
     If VBA.IsObject(s.Last.Pred.Item) Then
@@ -553,7 +553,7 @@ Public Function IndexOf _
         Exit Function
     End If
     
-    If ipStart < 1 Or ipStart > s.Host.Count Then
+    If ipStart < FIRST_INDEX Or ipStart > s.Host.Count Then
         Exit Function
     End If
     
@@ -580,7 +580,7 @@ Public Function IndexOf _
     For myCount = ipStart To myEnd
         
         If ComparerHelpers.Equals(myNode.Item, ipItem) Then
-            IndexOf = ipStart + myCount - 1
+            IndexOf = myCount
             Exit Function
         End If
         
@@ -624,7 +624,7 @@ Public Function LastIndexOf _
     Set myNode = GetNodeAt(myEnd)
     
     Dim myCount As Long
-    For myCount = ipStart To myEnd Step -1
+    For myCount = myEnd To ipStart Step -1
         
         If ComparerHelpers.Equals(myNode.Item, ipItem) Then
             LastIndexOf = myCount
@@ -666,7 +666,7 @@ End Function
 '@Description("Add Items in the paramarray to the  )
 Public Function AddItems(ParamArray ipParamarray() As Variant) As SeqL
 
-    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
         Set AddItems = Me
         Exit Function
     End If
@@ -779,8 +779,7 @@ Public Function InsertRange(ByVal ipIndex As Long, ByRef ipRange As Variant) As 
 
     GuardInvalidRangeItem ipRange, "VBALib.SeqL.InsertRange"
     
-    Dim myItems As IterItems
-    Set myItems = IterItems(ipRange)
+    Dim myItems As IterItems: Set myItems = IterItems(ipRange).MoveToEndIndex
     
     If myItems.LacksItems Then
         Set InsertRange = Me
@@ -793,9 +792,9 @@ Public Function InsertRange(ByVal ipIndex As Long, ByRef ipRange As Variant) As 
         If GroupInfo.IsDictionary(ipRange) Then
             Insert myIndex, Array(myItems.CurKey(0), myItems.CurItem(0))
         Else
-            Insert myIndex, Array(myItems.CurKey(0), myItems.CurItem(0))
+            Insert myIndex, myItems.CurItem(0)
         End If
-    Loop While myItems.MoveNext
+    Loop While myItems.MovePrev
     
 End Function
 
@@ -854,7 +853,7 @@ Attribute RemoveItems.VB_Description = "Removes the first encountered item from 
         Exit Function
     End If
     
-    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
         Set RemoveItems = Me
         Exit Function
     End If
@@ -886,17 +885,17 @@ Attribute RemoveItemsAt.VB_Description = "Removes the first encountered item fro
     Dim myParams As Variant
     myParams = ipParamarray
 
-    If ArrayInfo.LacksItems(myParams) Then
+    If ArrayOp.LacksItems(myParams) Then
         Exit Function
     End If
     
     ' The indexes may be in any order so need sorting
     Sorters.ShakerSortArray myParams
     
-    Dim myItems As IterItems: Set myItems = IterItems(myParams)
+    Dim myItems As IterItems: Set myItems = IterItems(myParams).MoveToEndIndex
     Do
-        RemoveNode GetNodeAt(myItems.CurOffset(0) + 1)
-    Loop While myItems.MoveNext
+        RemoveNode GetNodeAt(myItems.CurItem(0))
+    Loop While myItems.MovePrev
 
 End Function
 
@@ -984,7 +983,7 @@ Public Function RemoveAll(ParamArray ipParamarray() As Variant) As SeqL
         Exit Function
     End If
     
-    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
         RemoveAllItems
         Exit Function
     End If
@@ -993,6 +992,8 @@ Public Function RemoveAll(ParamArray ipParamarray() As Variant) As SeqL
     For Each myParam In ipParamarray
         RemoveAllSingleItem myParam
     Next
+    
+    Set RemoveAll = Me
 
 End Function
 
@@ -1029,6 +1030,7 @@ Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
         If ComparerHelpers.Equals(myNode.Item, ipItem) Then
            
             Dim myTmp As SeqLNode
+            Set myTmp = myNode
             Set myNode = myNode.Pred
             RemoveNode myTmp
             
@@ -1169,7 +1171,7 @@ End Function
 '''     If Guard.IsNotArray(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 '''     If Guard.LacksItems(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 '''     If Guard.TooManyRanks(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
-'''     'If Guard.SizeMismatch(s.host.count > ArrayInfo.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
+'''     'If Guard.SizeMismatch(s.host.count > ArrayOp.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
 ''    If Var.LacksItems(ipArray.Cargo) Then
 ''        Return Me
 ''    End If
@@ -1201,7 +1203,7 @@ End Function
 ''    ' If Guard.IsNotArray(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 ''    ' If Guard.LacksItems(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 ''    ' If Guard.TooManyRanks(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
-''    ' 'If Guard.SizeMismatch(s.host.count > ArrayInfo.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
+''    ' 'If Guard.SizeMismatch(s.host.count > ArrayOp.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
 ''
 ''    Dim myArrayIndex  As Long = ipArrayStartIndex
 ''
@@ -1237,7 +1239,7 @@ End Function
 ''    ' If Guard.IsNotArray(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 ''    ' If Guard.LacksItems(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
 ''    ' If Guard.TooManyRanks(ipArray, CurrentComponentName, CurrentProcedureName) Then Return Me
-''    ' 'If Guard.SizeMismatch(s.host.count > ArrayInfo.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
+''    ' 'If Guard.SizeMismatch(s.host.count > ArrayOp.Count(myArray), CurrentComponentName, CurrentProcedureName) Then Return Me
 ''
 ''    Dim myArrayIndex  As Long = ipArrayStartIndex
 ''
@@ -1412,7 +1414,7 @@ Public Function PushRange(ByRef ipRange As Variant) As SeqL
     Set PushRange = AddRange(ipRange)
 End Function
 
-
+'@Descrition("Returns the last item of the seq.  Removes the last item of the seq")
 Public Function Pop() As Variant
 
     If s.Root Is Nothing Then
@@ -1535,21 +1537,9 @@ Public Function DequeueRange(Optional ByVal ipCount As Long = 1) As SeqL
     Dim myS As SeqL
     Set myS = SeqL.Deb
     
-    Dim myCount As Long
-    For myCount = 1 To ipCount
-
-        Dim myTmp As SeqLNode
-        Set myTmp = s.Root
-        
-        myS.Add myTmp.Item
-        
-        Set s.Root = s.Root.Succ
-        Set s.Root.Pred = Nothing
-        Set myTmp.Pred = Nothing
-        Set myTmp.Succ = Nothing
-        Set myTmp = Nothing
-        s.Host.Count = s.Host.Count - 1
-        
+    Dim myIndex As Long
+    For myIndex = 1 To ipCount
+        myS.Add Me.Dequeue
     Next
     
     Set DequeueRange = myS
@@ -1813,15 +1803,13 @@ Private Function SetOfCommon(ByRef ipseq As SeqL) As SeqL
     If LacksItems Or ipseq.LacksItems Then
         Exit Function
     End If
-
-    Set myS = Me.Dedup
     
     Dim myNode As SeqLNode
     Set myNode = s.Root
     
     Do
-        If myS.LacksItem(myNode.Item) Then
-            myS.RemoveAt myNode.Item
+        If ipseq.HoldsItem(myNode.Item) Then
+            myS.Add myNode.Item
         End If
         
         Set myNode = myNode.Succ
@@ -1851,13 +1839,15 @@ Private Function SetOfHostOnly(ByRef ipseq As SeqL) As SeqL
     
     Dim myNode As SeqLNode: Set myNode = s.Root
     Do
-        If myS.HoldsItem(myNode.Item) Then
-            myS.Remove myNode.Item
+        If ipseq.HoldsItem(myNode.Item) Then
+            myS.RemoveAll myNode.Item
         End If
         
         Set myNode = myNode.Succ
         
     Loop Until myNode Is Nothing
+    
+    Set SetOfHostOnly = myS
     
 End Function
 
@@ -1866,7 +1856,7 @@ Private Function SetOfParamOnly(ByRef ipseq As SeqL) As SeqL
 
     Dim myS As SeqL
     Set myS = SeqL.Deb
- Set SetOfParamOnly = myS
+    Set SetOfParamOnly = myS
     
     If ipseq.LacksItems Then
         Exit Function
@@ -1887,6 +1877,8 @@ Private Function SetOfParamOnly(ByRef ipseq As SeqL) As SeqL
         Set myNode = myNode.Succ
         
     Loop Until myNode Is Nothing
+    
+    Set SetOfParamOnly = myS
     
 End Function
 
@@ -1924,7 +1916,7 @@ Private Function SetOfNotCommon(ByRef ipseq As SeqL) As SeqL
         
     Loop While myItems.MoveNext
     
-    
+    Set SetOfNotCommon = myS
 
 End Function
 
@@ -1946,6 +1938,8 @@ Private Function SetofUnique(ByRef ipseq As SeqL) As SeqL
             myS.Add myItems.CurItem(0)
         End If
     Loop While myItems.MoveNext
+    
+    Set SetofUnique = myS
 
 End Function
 

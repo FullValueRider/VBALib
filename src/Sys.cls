@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Sys"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A location for global helper methods"
@@ -29,7 +29,7 @@ Public Function ResolveParamArray(ByRef iopFPA As Variant) As Boolean
 Attribute ResolveParamArray.VB_Description = "Revises the FPA (forwarded ParamArray) to FPA(0) if FPA contains a single item of the Enumarable group, a number or a string."
     ResolveParamArray = False
     ' the FPA must be an allocated array i.e. not <Array>() to be processable
-    If ArrayInfo.LacksItems(iopFPA) Then
+    If ArrayOp.LacksItems(iopFPA) Then
         Exit Function
     End If
     

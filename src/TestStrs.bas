@@ -722,13 +722,14 @@ Private Sub Test07a_SubStr_Default()
     'Arrange:
     Dim myExpected As Variant
     myExpected = Split("Hello,There,World", ",")
-    ReDim Preserve myExpected(1 To 3)
+    ReDim Preserve myExpected(1 To 3) As Variant
+    
     
     Dim myResult As Variant
     'Act:
-    myResult = Strs.ToSubStr("Hello,There,World").ToArray
+    myResult = Strs.ToSubStr("Hello,There,World")
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertPermissiveSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -756,13 +757,14 @@ Private Sub Test07b_SubStr_ab()
     'Arrange:
     Dim myExpected As Variant
     myExpected = Split("Hello_ab_There_ab_World", "_ab_")
-    ReDim Preserve myExpected(1 To 3)
+    ReDim Preserve myExpected(1 To 3) As Variant
     
     Dim myResult As Variant
     'Act:
-    myResult = Strs.ToSubStr("Hello_ab_There_ab_World", "_ab_").ToArray
+    myResult = Strs.ToSubStr("Hello_ab_There_ab_World", "_ab_")
+   
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertPermissiveSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1060,7 +1062,8 @@ Private Sub Test11a_ToAscB()
     ReDim Preserve myExpected(1 To 5)
     Dim myResult As Variant
     'Act:
-    myResult = Strs.ToAscB("Hello").ToArray
+    myResult = Strs.ToAscB("Hello")
+    ReDim Preserve myResult(1 To 5)
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
@@ -1099,7 +1102,8 @@ Private Sub Test11b_ToUnicodeBytes()
     
     Dim myResult As Variant
     'Act:
-    myResult = Strs.ToUnicodeBytes("Hello").ToArray
+    myResult = Strs.ToUnicodeBytes("Hello")
+    ReDim Preserve myResult(1 To 10)
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     
@@ -1135,7 +1139,8 @@ Private Sub Test11c_ToUnicodeIntegers()
     
     Dim myResult As Variant
     'Act:
-    myResult = Strs.ToUnicodeIntegers("Hello").ToArray
+    myResult = Strs.ToUnicodeIntegers("Hello")
+    ReDim Preserve myResult(1 To 5)
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
     

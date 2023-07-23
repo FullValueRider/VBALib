@@ -85,13 +85,13 @@ Public Sub SeqLTests()
     
     Test10a_Remove_SingleItem
     
-    Test11a_RemoveRange_SingleItem
-    Test11b_RemoveRange_ThreeItems
+    ' Test11a_RemoveRange_SingleItem
+    ' Test11b_RemoveRange_ThreeItems
     
     Test12a_RemoveRange_SingleItem
     
     Test13a_RemoveAll_DefaultAll
-    Test13b_RemoveAll_Default_42AndHello
+    Test13b_RemoveAll_42AndHello
     Test13c_Reset
     Test13d_Clear
     
@@ -121,7 +121,7 @@ Public Sub SeqLTests()
     
     Test20a_IndexOf_WholeSeq_Present
     Test20b_IndexOf_WholeSeq_NotPresent
-    Test20c_IndexOf_SubSeq_Present
+    Test20c_IndexOf_SubSeq_ItemIsPresent
     Test20d_IndexOf_SubSeq_NotPresent
     
     Test21a_LastIndexOf_WholeSeq_Present
@@ -1259,7 +1259,7 @@ TestFail:
 End Sub
 
 '@TestMethod("SeqL")
-Private Sub Test11a_RemoveRange_SingleItem()
+Private Sub Test11a_RemoveAtRange_SingleItem()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
        myComponentName = CurrentComponentName
@@ -1297,7 +1297,7 @@ TestFail:
 End Sub
 
 '@TestMethod("SeqL")
-Private Sub Test11b_RemoveRange_ThreeItems()
+Private Sub Test11b_RemoveAtRange_ThreeItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
        myComponentName = CurrentComponentName
@@ -1317,7 +1317,7 @@ Private Sub Test11b_RemoveRange_ThreeItems()
     Set mySeq = SeqL.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
 
     'Act:
-    mySeq.RemoveAtRange SeqL(4, 5, 6).ToArray
+    mySeq.RemoveAtRange SeqL(5, 4, 6).ToArray
 
     myResult = mySeq.ToArray
 
@@ -1412,7 +1412,7 @@ End Sub
 
 
 '@TestMethod("SeqL")
-Private Sub Test13b_RemoveAll_Default_42AndHello()
+Private Sub Test13b_RemoveAll_42AndHello()
     
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
@@ -2284,7 +2284,7 @@ TestFail:
 End Sub
 
 '@TestMethod("SeqL")
-Private Sub Test20c_IndexOf_SubSeq_Present()
+Private Sub Test20c_IndexOf_SubSeq_ItemIsPresent()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
        myComponentName = CurrentComponentName

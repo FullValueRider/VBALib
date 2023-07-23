@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SetH"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SetH is a multipurpose Collection/ArrayList replacement.  It uses a cHashD object to store the items.  Items are access using 1 based indexing. For a Keyed collection, use one of the Kvp classes"
@@ -61,7 +61,7 @@ Option Explicit
 '    ' the assignment to s.tmp is a kludge that allows the various
 '    ' Populate methods to operate on the new instance
 '    ' which greatly simplifies the populate methods at some processing cost.
-'    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
 '        Set Deb = s.Tmp
 '        Set s.Tmp = Nothing
 '        Exit Function
@@ -128,7 +128,7 @@ Option Explicit
 'Private Sub PopulateUsingForEach(ByVal ipForEach As Variant)
 '
 '   If VBA.IsArray(ipForEach) Then
-'        If ArrayInfo.LacksItems(ipForEach) Then
+'        If ArrayOp.LacksItems(ipForEach) Then
 '            Exit Sub
 '        End If
 '    ElseIf ipForEach.Count = 0 Then
@@ -358,7 +358,7 @@ Option Explicit
 ''@Description("Adds one or more items . Return the Me instance")
 'Public Function AddItems(ParamArray ipParamarray() As Variant) As SetH
 '
-'    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
 '        Set AddItems = Me
 '        Exit Function
 '    End If
@@ -409,8 +409,8 @@ Option Explicit
 '
 'Private Sub AddRangeUsingForEach(ByVal ipForEach As Variant)
 '
-'    If ArrayInfo.IsArray(ipForEach) Then
-'        If ArrayInfo.LacksItems(ipForEach) Then
+'    If ArrayOp.IsArray(ipForEach) Then
+'        If ArrayOp.LacksItems(ipForEach) Then
 '            Exit Sub
 '        End If
 '    ElseIf ipForEach.Count < 1 Then
@@ -494,7 +494,7 @@ Option Explicit
 '        Exit Function
 '    End If
 '
-'    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
 '        Set InsertItems = Me
 '        Exit Function
 '   End If
@@ -552,8 +552,8 @@ Option Explicit
 'Private Sub InsertRangeUsingForeach(ByRef ipIndex As Long, ByRef ipForEach As Variant)
 '
 '    Dim myLen As Long
-'    If ArrayInfo.IsArray(ipForEach) Then
-'        myLen = ArrayInfo.Count(ipForEach)
+'    If ArrayOp.IsArray(ipForEach) Then
+'        myLen = ArrayOp.Count(ipForEach)
 '    Else
 '        myLen = ipForEach.Count
 '    End If
@@ -600,7 +600,7 @@ Option Explicit
 '        Exit Function
 '    End If
 '
-'    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
 '        Set Remove = Me
 '        Exit Function
 '    End If
@@ -630,7 +630,7 @@ Option Explicit
 '        Exit Function
 '    End If
 '
-'    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
 '        Set RemoveAt = Me
 '        Exit Function
 '    End If
@@ -700,7 +700,7 @@ Option Explicit
 ''@Description("If the ParamArray is empty, removes all items otherwise removes all ocurrences of  each item in the paramarray")
 'Public Function RemoveAll(ParamArray ipParamarray() As Variant) As SetH
 '
-'    If ArrayInfo.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
 '
 '        #If twinbasic Then
 '            s.Host.Clear
@@ -758,7 +758,7 @@ Option Explicit
 '
 'Private Function RemoveAtUsingArrayOfIndexes(ByRef ipRange As Variant) As SetH
 ''
-'    If ArrayInfo.LacksItems(VBA.CVar(ipRange)) Then
+'    If ArrayOp.LacksItems(VBA.CVar(ipRange)) Then
 '
 '         Set RemoveAtUsingArrayOfIndexes = Me
 '        Exit Function
