@@ -114,11 +114,11 @@ Public Property Set Item(ByRef ipKey As Variant, ByVal ipItem As Variant)
 End Property
 
 '@Description("Removes Key/Value pairs that exist in the KvpL")
-Public Function Remove(ParamArray ipParamarray() As Variant) As KvpL
+Public Function Remove(ParamArray ipParamArray() As Variant) As KvpL
 Attribute Remove.VB_Description = "Removes Key/Value pairs that exist in the KvpL"
 
     Dim myItem As Variant
-    For Each myItem In ipParamarray
+    For Each myItem In ipParamArray
         Dim myIndex As Long
         myIndex = s.Keys.IndexOf(myItem)
         If myIndex > 0 Then

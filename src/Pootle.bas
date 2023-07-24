@@ -41,3 +41,15 @@ Sub TestKvp()
     End With
     
 End Sub
+
+Sub TestPerm()
+    Dim myP As Collection
+    Set myP = Maths.Permutations(Array(1, 2, 3, 4), 4)
+    Fmt.Dbg "{0}", myP
+End Sub
+
+Sub testfmtdbgarray()
+    Fmt.Dbg "{0},{1},{2},{3}", 10, 20, 30, 40
+
+    Fmt.Dbg "{0}", Array(1, 2, 3, 4)
+End Sub

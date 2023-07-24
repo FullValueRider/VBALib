@@ -56,10 +56,10 @@ Private s                                       As State
 
 
 '@DefaultMember
-Public Function Deb(ParamArray ipParamarray() As Variant) As SeqC
+Public Function Deb(ParamArray ipParamArray() As Variant) As SeqC
 Attribute Deb.VB_UserMemId = 0
     With New SeqC
-        Set Deb = .ConstructInstance(VBA.CVar(ipParamarray))
+        Set Deb = .ConstructInstance(VBA.CVar(ipParamArray))
     End With
 End Function
 
@@ -623,15 +623,15 @@ Attribute Add.VB_Description = "Add a single item.  Returns the index at which a
 End Function
 
 '@Description("Adds one or more items . Return the Me instance")
-Public Function AddItems(ParamArray ipParamarray() As Variant) As SeqC
+Public Function AddItems(ParamArray ipParamArray() As Variant) As SeqC
 Attribute AddItems.VB_Description = "Adds one or more items . Return the Me instance"
 
-    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamArray)) Then
         Set AddItems = Me
         Exit Function
     End If
 
-    AddRange VBA.CVar(ipParamarray)
+    AddRange VBA.CVar(ipParamArray)
 
     Set AddItems = Me
 
@@ -712,9 +712,9 @@ Attribute Insert.VB_Description = "Inserts one or more items starting at ipIndex
 End Function
 
 '@Description("Inserts one or more items starting at ipIndex")
-Public Function InsertItems(ByRef ipIndex As Long, ParamArray ipParamarray() As Variant) As SeqC
+Public Function InsertItems(ByRef ipIndex As Long, ParamArray ipParamArray() As Variant) As SeqC
 Attribute InsertItems.VB_Description = "Inserts one or more items starting at ipIndex"
-   Set InsertItems = InsertRange(ipIndex, VBA.CVar(ipParamarray))
+   Set InsertItems = InsertRange(ipIndex, VBA.CVar(ipParamArray))
 End Function
 
 
@@ -792,7 +792,7 @@ End Function
 
 
 '@Description "Removes the first encountered item from the SeqC"
-Public Function RemoveItems(ParamArray ipParamarray() As Variant) As SeqC
+Public Function RemoveItems(ParamArray ipParamArray() As Variant) As SeqC
 Attribute RemoveItems.VB_Description = "Removes the first encountered item from the SeqC"
 
     If s.Host.Count < 1 Then
@@ -800,13 +800,13 @@ Attribute RemoveItems.VB_Description = "Removes the first encountered item from 
         Exit Function
     End If
     
-    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamArray)) Then
         Set RemoveItems = Me
         Exit Function
     End If
     
     Dim myItem As Variant
-    For Each myItem In ipParamarray
+    For Each myItem In ipParamArray
     
         Dim myIndex As Long
         myIndex = IndexOf(myItem)
@@ -823,7 +823,7 @@ End Function
 
 
 '@Description("Removes the items at the Indexes.  Indexes are sorted before use.")
-Public Function RemoveItemsAt(ParamArray ipParamarray() As Variant) As SeqC
+Public Function RemoveItemsAt(ParamArray ipParamArray() As Variant) As SeqC
 Attribute RemoveItemsAt.VB_Description = "Removes the items at the Indexes.  Indexes are sorted before use."
 
     Set RemoveItemsAt = Me
@@ -833,7 +833,7 @@ Attribute RemoveItemsAt.VB_Description = "Removes the items at the Indexes.  Ind
     End If
     
     Dim myParams As Variant
-    myParams = ipParamarray
+    myParams = ipParamArray
     
     If ArrayOp.LacksItems(myParams) Then
         Exit Function
@@ -918,7 +918,7 @@ Attribute RemoveAtRange.VB_Description = "Remove items in the specified range of
 End Function
 
 '@Description("If the ParamArray is empty, removes all items otherwise removes all ocurrences of  each item in the paramarray")
-Public Function RemoveAll(ParamArray ipParamarray() As Variant) As SeqC
+Public Function RemoveAll(ParamArray ipParamArray() As Variant) As SeqC
 Attribute RemoveAll.VB_Description = "If the ParamArray is empty, removes all items otherwise removes all ocurrences of  each item in the paramarray"
 
     Set RemoveAll = Me
@@ -927,7 +927,7 @@ Attribute RemoveAll.VB_Description = "If the ParamArray is empty, removes all it
         Exit Function
     End If
     
-    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamArray)) Then
   
         #If twinbasic Then
             s.Host.Clear
@@ -940,7 +940,7 @@ Attribute RemoveAll.VB_Description = "If the ParamArray is empty, removes all it
     End If
         
     Dim myItem As Variant
-    For Each myItem In ipParamarray
+    For Each myItem In ipParamArray
         RemoveAllSingleItem myItem
     Next
     
@@ -1230,8 +1230,8 @@ End Property
 ' Push = add at end
 ' Pop remove from end
 '
-Public Function Push(ParamArray ipParamarray() As Variant) As SeqC
-     Set Push = AddRange(VBA.CVar(ipParamarray))
+Public Function Push(ParamArray ipParamArray() As Variant) As SeqC
+     Set Push = AddRange(VBA.CVar(ipParamArray))
 End Function
 
 Public Function PushRange(ByRef ipRange As Variant) As SeqC
@@ -1286,8 +1286,8 @@ Public Function PopRange(Optional ByVal ipCount As Long = 1) As SeqC
 End Function
 
  
-Public Function enQueue(ParamArray ipParamarray() As Variant) As SeqC
-   Set enQueue = AddRange(VBA.CVar(ipParamarray))
+Public Function enQueue(ParamArray ipParamArray() As Variant) As SeqC
+   Set enQueue = AddRange(VBA.CVar(ipParamArray))
 End Function
 
 

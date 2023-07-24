@@ -61,7 +61,7 @@ Option Explicit
 '    ' the assignment to s.tmp is a kludge that allows the various
 '    ' Populate methods to operate on the new instance
 '    ' which greatly simplifies the populate methods at some processing cost.
-'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(vba.cvar(ipParamArray)) Then
 '        Set Deb = s.Tmp
 '        Set s.Tmp = Nothing
 '        Exit Function
@@ -69,7 +69,7 @@ Option Explicit
 '
 '    ' Resolve the paramarray if it only has a single item
 '    Dim myParam As Variant
-'    myParam = VBA.CVar(ipParamarray)
+'    myParam = vba.cvar(ipParamArray)
 '    Sys.ResolveParamArray myParam
 '
 '    ' myParam may now be any type so we process in accordance with the rules stated above
@@ -358,7 +358,7 @@ Option Explicit
 ''@Description("Adds one or more items . Return the Me instance")
 'Public Function AddItems(ParamArray ipParamarray() As Variant) As SetH
 '
-'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(vba.cvar(ipParamArray)) Then
 '        Set AddItems = Me
 '        Exit Function
 '    End If
@@ -494,12 +494,12 @@ Option Explicit
 '        Exit Function
 '    End If
 '
-'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(vba.cvar(ipParamArray)) Then
 '        Set InsertItems = Me
 '        Exit Function
 '   End If
 '
-'   Set InsertItems = InsertRange(ipIndex, VBA.CVar(ipParamarray))
+'   Set InsertItems = InsertRange(ipIndex, vba.cvar(ipParamArray))
 '
 'End Function
 '
@@ -600,7 +600,7 @@ Option Explicit
 '        Exit Function
 '    End If
 '
-'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(vba.cvar(ipParamArray)) Then
 '        Set Remove = Me
 '        Exit Function
 '    End If
@@ -630,7 +630,7 @@ Option Explicit
 '        Exit Function
 '    End If
 '
-'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(vba.cvar(ipParamArray)) Then
 '        Set RemoveAt = Me
 '        Exit Function
 '    End If
@@ -700,7 +700,7 @@ Option Explicit
 ''@Description("If the ParamArray is empty, removes all items otherwise removes all ocurrences of  each item in the paramarray")
 'Public Function RemoveAll(ParamArray ipParamarray() As Variant) As SetH
 '
-'    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+'    If ArrayOp.LacksItems(vba.cvar(ipParamArray)) Then
 '
 '        #If twinbasic Then
 '            s.Host.Clear
@@ -1208,7 +1208,7 @@ Option Explicit
 ''
 ''
 'Public Function Push(ParamArray ipParamarray() As Variant) As SetH
-'     Set Push = AddRange(VBA.CVar(ipParamarray))
+'     Set Push = AddRange(vba.cvar(ipParamArray))
 'End Function
 '
 'Public Function PushRange(ByRef ipRange As Variant) As SetH
@@ -1261,7 +1261,7 @@ Option Explicit
 '
 '
 'Public Function enQueue(ParamArray ipParamarray() As Variant) As SetH
-'   Set enQueue = AddRange(VBA.CVar(ipParamarray))
+'   Set enQueue = AddRange(vba.cvar(ipParamArray))
 'End Function
 '
 '

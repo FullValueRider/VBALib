@@ -346,3 +346,24 @@ Public Function ReduceIt(ByRef ipArray As Variant, ByRef ipReducer As IReducer) 
     End If
     
 End Function
+
+'@Description("If paramarray is an array which contains a single item which is an array, it is assumend to be a forwarded paramarray, so paramarray is replaced by paramArray(0)")
+Public Sub Splat(ByRef iopParamArray As Variant)
+    ' splat is a reference to the splat operator '...' used in some other languages.
+    
+    If Not VBA.IsArray(iopParamArray) Then
+        Exit Sub
+    End If
+    
+    If ArrayOp.LacksItems(iopParamArray) Then
+        Exit Sub
+    End If
+    
+    If ArrayOp.HoldsOneItem(iopParamArray) Then
+        If VBA.IsArray(iopParamArray(0)) Then
+            iopParamArray = VBA.CVar(iopParamArray)
+        End If
+    End If
+    
+End Sub
+

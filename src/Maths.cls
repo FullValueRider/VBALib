@@ -211,42 +211,54 @@ End Function
 ' Generate permutations of the input seq using Heap's Algorithm
 ' https://www.mrexcel.com/board/threads/permutations-heaps-algorithm.959919/
 ' https://iq.opengenus.org/heaps-algorithm-for-generating-permutations/
-Public Sub Permutations(ByRef ipseq As SeqC, ByRef ipSwapIndex As Long, ByRef opPermutations As SeqC)
+' originlly passed permutations out by out parameter.
+' converted to function 23/July/2023
+' https://stackoverflow.com/questions/31425531/heaps-algorithm-for-permutations
+' which doesn't have the second call to generate at the end of the for loop
+' updated to make the swap index optional
+'@Description("Returns a collection containing permutations of the range 0 to ipSwapindex. iF IPsWAPINDEX = -1 USES THE WHOLE INPUT ARRAY.
+Public Function Permutations(ByVal ipseq As Variant, Optional ByRef ipSwapIndex As Long = -1) As Collection ', ByRef opPermutations As Collection
     
-        If VBA.IsObject(ipseq.First) Then
-            Err.Raise 17 + vbObjectError, _
-                "VBALib.Maths.Permutations", _
-                "Cannot generate permutations of objects"
-        End If
-        
-        If ipSwapIndex = 1 Then
-        
-            opPermutations.Add ipseq.Clone
-            Exit Sub
-            
-        Else
-            
-            Dim i As Long
-            For i = ipseq.FirstIndex To ipSwapIndex
-                Permutations ipseq, ipSwapIndex - 1, opPermutations
+    Static myP As Collection
     
-                ' if SwapIndex is odd, swap 0th i.e (first) and
-                ' (SwapIndex-1)th i.e (last) element
-                'Dim temp As Variant
-                If Maths.IsEven(ipSwapIndex) Then
+    If myP Is Nothing Then
+        Set myP = New Collection
+    End If
+    
+    ' DO WE REALLY NEED THIS EXCLUSION?
+    If VBA.IsObject(ipseq(0)) Then
+        Err.Raise 17 + vbObjectError, _
+            "VBALib.Maths.Permutations", _
+            "Cannot generate permutations of objects"
+    End If
+    
+    If ipSwapIndex = 1 Then
+    
+        myP.Add ipseq
+        Set Permutations = myP
+        Exit Function
+        
+    Else
+    
+        Dim i As Long
+        For i = 0 To ipSwapIndex - 1
+            Set myP = Permutations(ipseq, ipSwapIndex - 1)
+        
+            ' if SwapIndex is odd, swap 0th i.e (first) and
+            ' (SwapIndex-1)th i.e (last) element
+            If Maths.IsEven(ipSwapIndex) Then
+                Swap ipseq(i), ipseq(ipSwapIndex - 1)
                 
-                    ipseq.Swap i, ipSwapIndex
-                    
-                ' If SwapIndex is even, swap ith
-                ' and (SwapIndex-1)th i.e last element
-                Else
-                
-                    ipseq.Swap 1, ipSwapIndex
-                  
-                End If
-                
-            Next
-            
-       End If
+            ' If SwapIndex is even, swap ith
+            ' and (SwapIndex-1)th i.e last element
+            Else
+                Swap ipseq(0), ipseq(ipSwapIndex - 1)
+              
+            End If
+        Next
+    
+    End If
+    
+    Set Permutations = myP
       
-    End Sub
+End Function

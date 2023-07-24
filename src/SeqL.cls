@@ -32,8 +32,8 @@ Private Const FIRST_INDEX                       As Long = 1
 
 Private Type State
 
-    Root                                        As SeqLNode
-    Last                                        As SeqLNode
+    Root                                        As ListNode
+    Last                                        As ListNode
     Host                                        As Host ' emulates the Host object in other seQ
    
     
@@ -62,11 +62,11 @@ Private s                                       As State
 
 
 '@DefaultMember
-Public Function Deb(ParamArray ipParamarray() As Variant) As SeqL
+Public Function Deb(ParamArray ipParamArray() As Variant) As SeqL
 Attribute Deb.VB_UserMemId = 0
     
     With New SeqL
-        Set Deb = .ConstructInstance(VBA.CVar(ipParamarray))
+        Set Deb = .ConstructInstance(VBA.CVar(ipParamArray))
     End With
    
 End Function
@@ -136,7 +136,7 @@ Public Function Clone() As SeqL
         Exit Function
     End If
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
 
     Do
@@ -172,7 +172,7 @@ Attribute Count.VB_Description = "Counts number of host items equal to ipItem.  
     Dim myCount As Long
     myCount = 0
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
 
     Do
@@ -242,7 +242,7 @@ Attribute ToArray.VB_Description = "Returns a shallow copy of the SeqL as an Arr
     Dim myA As Variant
     ReDim myA(1 To s.Host.Count)
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
 
     Dim myIndex As Long
@@ -277,7 +277,7 @@ Attribute ToCollection.VB_Description = "Returns a shallow copy of the SeqL as a
         Exit Function
     End If
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
 
     Do
@@ -573,7 +573,7 @@ Public Function IndexOf _
         End If
     End If
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = GetNodeAt(ipStart)
     
     Dim myCount As Long
@@ -620,7 +620,7 @@ Public Function LastIndexOf _
     
     'cannot use Iteritems unless we convert managing nodes into managing a list object
     ' which is probably not worth the effort as it will duplicate Seq classes
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = GetNodeAt(myEnd)
     
     Dim myCount As Long
@@ -646,13 +646,13 @@ Public Function Add(ByRef ipItem As Variant) As Long
 Attribute Add.VB_Description = "Add a single item.  Returns the index at which added.  For compatibility with ArrayList"
 
     If s.Root Is Nothing Then
-        Set s.Root = SeqLNode(ipItem:=ipItem)
+        Set s.Root = ListNode(ipItem:=ipItem)
         Set s.Last = s.Root
        
     Else
     
-        Dim myNode As SeqLNode
-        Set myNode = SeqLNode(s.Last, Nothing, ipItem)
+        Dim myNode As ListNode
+        Set myNode = ListNode(s.Last, Nothing, ipItem)
         Set s.Last.Succ = myNode
         Set s.Last = myNode
     End If
@@ -664,14 +664,14 @@ End Function
 
 
 '@Description("Add Items in the paramarray to the  )
-Public Function AddItems(ParamArray ipParamarray() As Variant) As SeqL
+Public Function AddItems(ParamArray ipParamArray() As Variant) As SeqL
 
-    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamArray)) Then
         Set AddItems = Me
         Exit Function
     End If
 
-    Me.AddRange VBA.CVar(ipParamarray)
+    Me.AddRange VBA.CVar(ipParamArray)
 
     Set AddItems = Me
 
@@ -708,7 +708,7 @@ Public Property Get Item(ByVal ipIndex As Long) As Variant
 
     GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "VBALib.SeqL.Get_Item"
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = GetNodeAt(ipIndex)
 
     If VBA.IsObject(myNode.Item) Then
@@ -723,7 +723,7 @@ Public Property Let Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
 
     GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "VBALib.SeqL.Get_Item"
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = GetNodeAt(ipIndex)
     myNode.Item = ipItem
 
@@ -733,7 +733,7 @@ Public Property Set Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
 
     GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "VBALib.SeqL.Get_Item"
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = GetNodeAt(ipIndex)
     Set myNode.Item = ipItem
 
@@ -747,12 +747,12 @@ Public Function Insert(ByVal ipIndex As Long, ByVal ipItem As Variant) As Long
         Exit Function
     End If
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = GetNodeAt(ipIndex)
 
     
-    Dim myNewNode As SeqLNode
-    Set myNewNode = SeqLNode(myNode.Pred, myNode, ipItem)
+    Dim myNewNode As ListNode
+    Set myNewNode = ListNode(myNode.Pred, myNode, ipItem)
     
     If Not (myNode.Pred Is Nothing) Then
         Set myNode.Pred.Succ = myNewNode
@@ -765,8 +765,8 @@ Public Function Insert(ByVal ipIndex As Long, ByVal ipItem As Variant) As Long
 
 End Function
 '
-Public Function InsertItems(ByVal ipIndex As Long, ParamArray ipParamarray() As Variant) As SeqL
-    Set InsertItems = InsertRange(ipIndex, VBA.CVar(ipParamarray))
+Public Function InsertItems(ByVal ipIndex As Long, ParamArray ipParamArray() As Variant) As SeqL
+    Set InsertItems = InsertRange(ipIndex, VBA.CVar(ipParamArray))
 End Function
 
 
@@ -830,7 +830,7 @@ Attribute RemoveAt.VB_Description = "Removes the first encountered item from the
         Exit Function
     End If
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = GetNodeAt(ipIndex)
     
     If myNode Is Nothing Then
@@ -845,7 +845,7 @@ End Function
 
 
 '@Description "Removes the first encountered item from the Seq for each item in the ParamArray"
-Public Function RemoveItems(ParamArray ipParamarray() As Variant) As SeqL
+Public Function RemoveItems(ParamArray ipParamArray() As Variant) As SeqL
 Attribute RemoveItems.VB_Description = "Removes the first encountered item from the Seq for each item in the ParamArray"
 
     If s.Root Is Nothing Then
@@ -853,13 +853,13 @@ Attribute RemoveItems.VB_Description = "Removes the first encountered item from 
         Exit Function
     End If
     
-    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamArray)) Then
         Set RemoveItems = Me
         Exit Function
     End If
 
     Dim myItem As Variant
-    For Each myItem In ipParamarray
+    For Each myItem In ipParamArray
     
         Dim myNodeInfo As KVPair
         Set myNodeInfo = GetNodeInfo(myItem)
@@ -873,7 +873,7 @@ End Function
 
 
 '@Description("Removes the first encountered item from the SeqL")
-Public Function RemoveItemsAt(ParamArray ipParamarray() As Variant) As SeqL
+Public Function RemoveItemsAt(ParamArray ipParamArray() As Variant) As SeqL
 Attribute RemoveItemsAt.VB_Description = "Removes the first encountered item from the SeqL"
 
     Set RemoveItemsAt = Me
@@ -883,7 +883,7 @@ Attribute RemoveItemsAt.VB_Description = "Removes the first encountered item fro
     End If
 
     Dim myParams As Variant
-    myParams = ipParamarray
+    myParams = ipParamArray
 
     If ArrayOp.LacksItems(myParams) Then
         Exit Function
@@ -975,7 +975,7 @@ Attribute RemoveAtRange.VB_Description = "Remove items in the specified range of
 End Function
 
 
-Public Function RemoveAll(ParamArray ipParamarray() As Variant) As SeqL
+Public Function RemoveAll(ParamArray ipParamArray() As Variant) As SeqL
 
     Set RemoveAll = Me
     
@@ -983,13 +983,13 @@ Public Function RemoveAll(ParamArray ipParamarray() As Variant) As SeqL
         Exit Function
     End If
     
-    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+    If ArrayOp.LacksItems(VBA.CVar(ipParamArray)) Then
         RemoveAllItems
         Exit Function
     End If
     
     Dim myParam As Variant
-    For Each myParam In ipParamarray
+    For Each myParam In ipParamArray
         RemoveAllSingleItem myParam
     Next
     
@@ -999,13 +999,13 @@ End Function
 
 Private Sub RemoveAllItems()
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Last
     
     Do Until myNode.Pred Is Nothing
     
         '@Ignore VariableNotUsed
-        Dim myTmpNode As SeqLNode
+        Dim myTmpNode As ListNode
         Set myTmpNode = myNode
         
         Set myNode = myNode.Pred
@@ -1022,14 +1022,14 @@ End Sub
 
 Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Last
 
     Do
         
         If ComparerHelpers.Equals(myNode.Item, ipItem) Then
            
-            Dim myTmp As SeqLNode
+            Dim myTmp As ListNode
             Set myTmp = myNode
             Set myNode = myNode.Pred
             RemoveNode myTmp
@@ -1131,7 +1131,7 @@ Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
         Exit Function
     End If
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Do
@@ -1281,7 +1281,7 @@ Public Function MapIt(ByVal ipMapper As IMapper) As SeqL
         Exit Function
     End If
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Do
@@ -1302,7 +1302,7 @@ Attribute MappedIt.VB_Description = "Mutates the SeqL in place by applying the f
         Exit Function
     End If
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Do
@@ -1334,7 +1334,7 @@ Public Function FilterIt(ByVal ipComparer As IComparer) As SeqL
         Exit Function
     End If
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Do
@@ -1362,7 +1362,7 @@ Public Function CountIt(ByVal ipComparer As IComparer) As Long
     Dim myCount As Long
     myCount = 0
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Do
@@ -1405,8 +1405,8 @@ End Function
 ' Push = add at end
 ' Pop remove from end
 
-Public Function Push(ParamArray ipParamarray() As Variant) As SeqL
-     Set Push = AddRange(VBA.CVar(ipParamarray))
+Public Function Push(ParamArray ipParamArray() As Variant) As SeqL
+     Set Push = AddRange(VBA.CVar(ipParamArray))
 End Function
 
 
@@ -1428,7 +1428,7 @@ Public Function Pop() As Variant
         Pop = s.Last.Item
     End If
 
-    Dim myTmp As SeqLNode
+    Dim myTmp As ListNode
     Set myTmp = s.Last
     Set s.Last = s.Last.Pred
     Set s.Last.Succ = Nothing
@@ -1462,7 +1462,7 @@ Public Function PopRange(Optional ByVal ipCount As Long = 1) As SeqL
     Dim myCount As Long
     For myCount = 1 To ipCount
 
-        Dim myTmp As SeqLNode
+        Dim myTmp As ListNode
         Set myTmp = s.Last
 '
         myS.Add s.Last.Item
@@ -1480,8 +1480,8 @@ Public Function PopRange(Optional ByVal ipCount As Long = 1) As SeqL
 
 End Function
 
-Public Function enQueue(ParamArray ipParamarray() As Variant) As SeqL
-   Set enQueue = AddRange(VBA.CVar(ipParamarray))
+Public Function enQueue(ParamArray ipParamArray() As Variant) As SeqL
+   Set enQueue = AddRange(VBA.CVar(ipParamArray))
 End Function
 
 
@@ -1502,7 +1502,7 @@ Public Function Dequeue() As Variant
         Dequeue = s.Root.Item
     End If
 
-    Dim myTmp As SeqLNode
+    Dim myTmp As ListNode
     Set myTmp = s.Root
     Set s.Root = s.Root.Succ
     Set s.Root.Pred = Nothing
@@ -1592,16 +1592,16 @@ Public Function Reverse() As SeqL
     End If
 
 
-    Dim myNewLast As SeqLNode
+    Dim myNewLast As ListNode
     Set myNewLast = s.Root
     
-    Dim myNewRoot As SeqLNode
+    Dim myNewRoot As ListNode
     Set myNewRoot = s.Last
     
     Do
     
         ' swap pred and succ for each node
-        Dim myTmp As SeqLNode
+        Dim myTmp As ListNode
         
         Set myTmp = s.Last.Succ
         Set s.Last.Succ = s.Last.Pred
@@ -1629,7 +1629,7 @@ Public Function Reverse() As SeqL
        Exit Function
     End If
         
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Last
     
     Do
@@ -1657,7 +1657,7 @@ Public Function IsUnique() As Boolean
     Dim myH As cHashC
     Set myH = New cHashC
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Do
@@ -1694,7 +1694,7 @@ Attribute Dedup.VB_Description = "Returns the a new seq with the unique subset o
         Exit Function
     End If
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Do
@@ -1723,13 +1723,13 @@ Attribute Deduped.VB_Description = "Removes duplicate items from the seq"
     Dim myH As cHashC
     Set myH = New cHashC
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Last
     
     Do
         If myH.Exists(myNode.Item) Then
         
-            Dim myTmp As SeqLNode
+            Dim myTmp As ListNode
             Set myTmp = myNode
             Set myNode = myNode.Pred
             RemoveNode myTmp
@@ -1754,7 +1754,7 @@ Public Function Freq() As KvpC
         Exit Function
     End If
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Do
@@ -1804,7 +1804,7 @@ Private Function SetOfCommon(ByRef ipseq As SeqL) As SeqL
         Exit Function
     End If
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Do
@@ -1837,7 +1837,7 @@ Private Function SetOfHostOnly(ByRef ipseq As SeqL) As SeqL
         Exit Function
     End If
     
-    Dim myNode As SeqLNode: Set myNode = s.Root
+    Dim myNode As ListNode: Set myNode = s.Root
     Do
         If ipseq.HoldsItem(myNode.Item) Then
             myS.RemoveAll myNode.Item
@@ -1868,7 +1868,7 @@ Private Function SetOfParamOnly(ByRef ipseq As SeqL) As SeqL
         Exit Function
     End If
     
-    Dim myNode As SeqLNode: Set myNode = s.Root
+    Dim myNode As ListNode: Set myNode = s.Root
     Do
         If myS.HoldsItem(myNode.Item) Then
             myS.Remove myNode.Item
@@ -1892,7 +1892,7 @@ Private Function SetOfNotCommon(ByRef ipseq As SeqL) As SeqL
         Exit Function
     End If
     
-    Dim myNode As SeqLNode: Set myNode = s.Root
+    Dim myNode As ListNode: Set myNode = s.Root
     Do
     
         If ipseq.LacksItem(myNode.Item) Then
@@ -1948,9 +1948,9 @@ End Function
 ' Private methods
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 
-Private Function GetNodeAt(ByRef ipIndex As Long) As SeqLNode
+Private Function GetNodeAt(ByRef ipIndex As Long) As ListNode
 
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Dim myCount As Long
@@ -1981,7 +1981,7 @@ Private Function GetNodeInfo(ByRef ipItem As Variant) As KVPair
         Exit Function
     End If
     
-    Dim myNode As SeqLNode
+    Dim myNode As ListNode
     Set myNode = s.Root
     
     Dim myIndex As Long
@@ -2005,7 +2005,7 @@ End Function
 
 
 '@Ignore ProcedureCanBeWrittenAsFunction
-Private Sub RemoveNode(ByRef ipNode As SeqLNode)
+Private Sub RemoveNode(ByRef ipNode As ListNode)
 
     If ipNode Is Nothing Then
         Exit Sub

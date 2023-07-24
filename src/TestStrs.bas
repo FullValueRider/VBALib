@@ -721,8 +721,9 @@ Private Sub Test07a_SubStr_Default()
     
     'Arrange:
     Dim myExpected As Variant
+    ReDim myExpected(1 To 3)
     myExpected = Split("Hello,There,World", ",")
-    ReDim Preserve myExpected(1 To 3) As Variant
+    
     
     
     Dim myResult As Variant
@@ -756,8 +757,9 @@ Private Sub Test07b_SubStr_ab()
     
     'Arrange:
     Dim myExpected As Variant
+    ReDim myExpected(1 To 3)
     myExpected = Split("Hello_ab_There_ab_World", "_ab_")
-    ReDim Preserve myExpected(1 To 3) As Variant
+
     
     Dim myResult As Variant
     'Act:
