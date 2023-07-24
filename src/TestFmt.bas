@@ -75,7 +75,7 @@ Private Sub Test01a_Fmt_Text_Nothing()
     #End If
     
 
-    On Error GoTo TestFail
+    'On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -93,7 +93,7 @@ Private Sub Test01a_Fmt_Text_Nothing()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    'On Error Resume Next
     
     Exit Sub
 TestFail:
@@ -113,7 +113,7 @@ Private Sub Test01b_Fmt_Text_NoParams()
     #End If
     
 
-    On Error GoTo TestFail
+    'On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -130,7 +130,7 @@ Private Sub Test01b_Fmt_Text_NoParams()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    'On Error Resume Next
     
     Exit Sub
 TestFail:
@@ -150,7 +150,7 @@ Private Sub Test01c_Fmt_Text_NoSubstitutions()
     #End If
     
 
-    On Error GoTo TestFail
+    'On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -167,7 +167,7 @@ Private Sub Test01c_Fmt_Text_NoSubstitutions()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    'On Error Resume Next
     
     Exit Sub
 TestFail:
@@ -186,7 +186,7 @@ Private Sub Test01d_Fmt_Text_Formatting_Threevbcrlf()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
-    On Error GoTo TestFail
+    'On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -203,7 +203,7 @@ Private Sub Test01d_Fmt_Text_Formatting_Threevbcrlf()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    'On Error Resume Next
     
     Exit Sub
 TestFail:
@@ -223,7 +223,7 @@ Private Sub Test01e_Fmt_Text_Formatting_Threeplainquotes()
     #End If
     
 
-    On Error GoTo TestFail
+    'On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -240,7 +240,7 @@ Private Sub Test01e_Fmt_Text_Formatting_Threeplainquotes()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    'On Error Resume Next
     
     Exit Sub
 TestFail:
@@ -260,7 +260,7 @@ Private Sub Test01f_Fmt_Text_Formatting_Zeroplainquotes()
     #End If
     
 
-    On Error GoTo TestFail
+    'On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -277,7 +277,7 @@ Private Sub Test01f_Fmt_Text_Formatting_Zeroplainquotes()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    'On Error Resume Next
     
     Exit Sub
 TestFail:
@@ -297,7 +297,7 @@ Private Sub Test01g_Fmt_Text_Formatting_ThreeVariables()
     #End If
     
 
-    On Error GoTo TestFail
+    'On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -314,7 +314,7 @@ Private Sub Test01g_Fmt_Text_Formatting_ThreeVariables()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    On Error Resume Next
+    'On Error Resume Next
     
     Exit Sub
 TestFail:

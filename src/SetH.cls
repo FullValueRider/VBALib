@@ -70,7 +70,7 @@ Option Explicit
 '    ' Resolve the paramarray if it only has a single item
 '    Dim myParam As Variant
 '    myParam = vba.cvar(ipParamArray)
-'    Sys.ResolveParamArray myParam
+'    ArrayOp.SPlat myParam
 '
 '    ' myParam may now be any type so we process in accordance with the rules stated above
 '    Dim myGroupId As e_Group

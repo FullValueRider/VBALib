@@ -347,6 +347,14 @@ Public Function ReduceIt(ByRef ipArray As Variant, ByRef ipReducer As IReducer) 
     
 End Function
 
+
+' One of the many issues with VBA is that it supports methods with a variable number of parameters via the ParamArray.,
+' However, there is no 'splat' operater so Paramarrays cannot be forwarded to methods expecting a paramArray
+' To get around this limitation we use the resolve Splat method which assumes that if the FPA (forwarded ParamArray)
+' contains a single item which is itself an array then the intent is to interpret FPA(0) as a paramarray
+' On the occasion that single item processing is not required the Item should be encapsulated as an array
+' e.g. Method(Item), use Method(Array(Item)).
+
 '@Description("If paramarray is an array which contains a single item which is an array, it is assumend to be a forwarded paramarray, so paramarray is replaced by paramArray(0)")
 Public Sub Splat(ByRef iopParamArray As Variant)
     ' splat is a reference to the splat operator '...' used in some other languages.
@@ -361,7 +369,7 @@ Public Sub Splat(ByRef iopParamArray As Variant)
     
     If ArrayOp.HoldsOneItem(iopParamArray) Then
         If VBA.IsArray(iopParamArray(0)) Then
-            iopParamArray = VBA.CVar(iopParamArray)
+            iopParamArray = iopParamArray(0)
         End If
     End If
     

@@ -330,7 +330,10 @@ Private Sub Test03a_mpIndex_mpInc_SeqC()
     
     'Act:
     Dim myTmp As Variant
-    myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 2)).ToArray
+    Dim myInc As mpInc: Set myInc = mpInc(1)
+    Dim myIndex As mpByIndex: Set myIndex = mpByIndex(myInc, 2)
+    Set myTmp = mySeq.MapIt(myIndex)
+    myTmp = myTmp.ToArray
     myResult(1) = myTmp(1).Item(2)
     myResult(2) = myTmp(2).Item(2)
     myResult(3) = myTmp(3).Item(2)

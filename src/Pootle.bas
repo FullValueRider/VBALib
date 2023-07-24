@@ -49,7 +49,12 @@ Sub TestPerm()
 End Sub
 
 Sub testfmtdbgarray()
+
     Fmt.Dbg "{0},{1},{2},{3}", 10, 20, 30, 40
+    Dim myD As KvpA
+    Set myD = KvpA.Deb
+    myD.AddPairs SeqA("One", "Two", "Three", "Four"), SeqA(1, 2, 3, 4)
+    Fmt.Dbg "{0}", myD
 
     Fmt.Dbg "{0}", Array(1, 2, 3, 4)
 End Sub

@@ -471,7 +471,7 @@ Private Sub Test02f_InitByDictionary()
     Dim mySeq As SeqA
     
     'Act:
-    Set mySeq = SeqA.Deb(myD)
+    Set mySeq = SeqA(myD)
     Dim myTmp As Variant
     myTmp = mySeq.ToArray
     

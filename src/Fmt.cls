@@ -171,6 +171,16 @@ Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamArray 
         s.ToString.SetItemSeparator
     End If
     
+    If VBA.LenB(ipFormatTemplate) = 0 Then
+        TextByVar = ipFormatTemplate
+        Exit Function
+    End If
+        
+    If ArrayOp.LacksItems(ipParamArray) Then
+        TextByVar = ipFormatTemplate
+        Exit Function
+    End If
+    
     ArrayOp.Splat ipParamArray
 '
 '    Dim myToString As Stringifier

@@ -82,22 +82,34 @@ Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqL
         Set ConstructInstance = Me
         Exit Function
     End If
-
-    ' ipParamArray contains one or more items so return a Seq containing a copy
-    ' of the item(s) in the forwarded paramarray.
-    ' The nature of the host (s.root and s.last) means
-    ' that there is no bind method for SeqL
+    
+    ' ipParamArray contains one or more items depending on the input type.
+    ' if the input contains only a single item we want to use that item
+    ' else we want to treat the forwrded paramarray as a single array item
+    
+    Dim myItem As Variant
+    If ArrayOp.HoldsOneItem(ipFPA) Then
+        If VBA.IsObject(ipFPA(0)) Then
+            Set myItem = ipFPA(0)
+         Else
+            myItem = ipFPA(0)
+         End If
+    Else
+        myItem = ipFPA
+    End If
+    
     ' Resolve the items in the forwarded paramarray using the rules for
     ' instantiation as described above.
     
-    Sys.ResolveParamArray ipFPA
+    ' See the Bind method if mutability of an input array required
     
     Select Case True
-        Case VBA.IsArray(ipFPA):                Set ConstructInstance = AddRange(LineariseArray(ipFPA))
-        Case GroupInfo.IsContainer(ipFPA):      Set ConstructInstance = AddRange(ipFPA)
-        Case GroupInfo.IsString(ipFPA):         Set ConstructInstance = AddRange(ipFPA)
-        Case GroupInfo.IsNumber(ipFPA):         Set ConstructInstance = ConstructInstanceByCount(VBA.CLng(ipFPA))
-        Case Else:                              Set ConstructInstance = AddItems(ipFPA)
+    
+        Case VBA.IsArray(myItem):                Set ConstructInstance = AddRange(LineariseArray(myItem))
+        Case GroupInfo.IsContainer(myItem):      Set ConstructInstance = AddRange(myItem)
+        Case GroupInfo.IsString(myItem):         Set ConstructInstance = AddRange(myItem)
+        Case GroupInfo.IsNumber(myItem):         Set ConstructInstance = ConstructInstanceByCount(VBA.CLng(myItem))
+        Case Else:                              Set ConstructInstance = AddItems(myItem)
     End Select
 
 End Function
