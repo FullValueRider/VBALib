@@ -21,6 +21,7 @@ Private Type State
     RefType                         As VbVarType
 End Type
 
+
 Private s                           As State
 
 

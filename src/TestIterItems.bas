@@ -13,19 +13,21 @@ Option Private Module
     'Do nothing
 #Else
 
-'@ModuleInitialize
+
+    '@ModuleInitialize
 Private Sub ModuleInitialize()
+    GlobalAssert
     'this method runs once per module.
-'    Set Assert = CreateObject("Rubberduck.AssertClass")
-'    Set Fakes = CreateObject("Rubberduck.FakesProvider")
+    '    Set Assert = CreateObject("Rubberduck.AssertClass")
+    '    Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
 
 
 '@ModuleCleanup
 Private Sub ModuleCleanup()
     'this method runs once per module.
-'    Set Assert = Nothing
-'    Set Fakes = Nothing
+    '    Set Assert = Nothing
+    '    Set Fakes = Nothing
 End Sub
 
 
@@ -39,15 +41,18 @@ End Sub
 Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
+
+
 #End If
 
 Public Sub IterItemsTests()
     
-#If twinbasic Then
-    Debug.Print CurrentProcedureName;
-#Else
-    Debug.Print ErrEx.LiveCallstack.ProcedureName;
-#End If
+    #If twinbasic Then
+        Debug.Print CurrentProcedureName;
+    #Else
+        GlobalAssert
+        Debug.Print ErrEx.LiveCallstack.ProcedureName;
+    #End If
 
     Test01a_IsObjectAndName
     
@@ -84,19 +89,19 @@ Public Sub IterItemsTests()
     Debug.Print vbTab, vbTab, "Testing completed"
 
 End Sub
-    
+
 
 '@TestMethod("IterItems")
 Private Sub Test01a_IsObjectAndName()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -132,12 +137,12 @@ Private Sub Test02a_GetItem0Seq()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -172,12 +177,12 @@ Private Sub Test02b_GetItem0SeqAfterThreeMovenext()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -212,12 +217,12 @@ Private Sub Test02c_GetItem0SeqAfterThreeMoveNextTwoMovePrev()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -254,12 +259,12 @@ Private Sub Test03a_GetItemSeqAtOffset3()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -290,17 +295,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test03b_GetItemSeqAtOffsetMinus3()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -337,12 +343,12 @@ Private Sub Test03c_GetItemSeqIndexGreaterThanSize()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -380,12 +386,12 @@ Private Sub Test03d_GetItemSeqIndexDeforeIndex1()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -423,12 +429,12 @@ Private Sub Test04a_GetKeySeq()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -462,17 +468,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test04b_GetIndexSeq()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -506,17 +513,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test05a_GetItemArray()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -551,17 +559,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test05b_GetKeyArray()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -597,17 +606,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test05c_GetIndexArray()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -643,17 +653,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test06a_GetItemCollection()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -698,17 +709,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test06b_GetKeyCollection()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -754,17 +766,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test06c_GetIndexCollection()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -810,17 +823,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test07a_GetItemArrayList()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -865,17 +879,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test07b_GetKeyArrayList()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -921,17 +936,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test07c_GetIndexArrayList()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -977,17 +993,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test08a_GetItemDictionary()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -1032,17 +1049,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test08b_GetKeyDictionary()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -1088,17 +1106,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("IterItems")
 Private Sub Test08c_GetIndexDIctionary()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -1143,6 +1162,8 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+
 '
 
 '@TestMethod("IterItems")
@@ -1150,12 +1171,12 @@ Private Sub Test09a_GetIndexDictionary()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -1185,11 +1206,11 @@ Private Sub Test09a_GetIndexDictionary()
     ReDim myResult(0 To 8)
     
     'Act:
-        Do
+    Do
             
-            myResult(myI.CurOffset(0)) = VBA.CVar(myI.CurItem(0))
+        myResult(myI.CurOffset(0)) = VBA.CVar(myI.CurItem(0))
         
-        Loop While myI.MoveNext
+    Loop While myI.MoveNext
     
     
     'Assert:
@@ -1204,3 +1225,5 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+

@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 Option Explicit
 '@Exposed
 '@PredeclaredId
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
 
 Implements IMapper
 
@@ -24,12 +24,14 @@ Private Type State
         
 End Type
 
+
 Private s                           As State
-    
-    
+
+
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
 
 Private Sub Class_Initialize()
     ' Allows mpSPlit to be used without calling .Deb
@@ -37,6 +39,7 @@ Private Sub Class_Initialize()
     s.Count = -1
     s.Compare = vbBinaryCompare
 End Sub
+
 
 Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         
@@ -52,6 +55,7 @@ Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
 
 End Function
 
+
 '@Defaultmember
 Public Function Deb(Optional ByVal ipSeparator As String = " ", Optional ByVal ipCount As Long = -1, Optional ByVal ipCompare As VbCompareMethod = vbBinaryCompare) As mpSplit
 Attribute Deb.VB_UserMemId = 0
@@ -59,6 +63,7 @@ Attribute Deb.VB_UserMemId = 0
         Set Deb = .ConstructInstance(ipSeparator, ipCount, ipCompare)
     End With
 End Function
+
 
 Friend Function ConstructInstance(ByVal ipSeparator As String, ByVal ipCount As Long, ByVal ipCompare As VbCompareMethod) As mpSplit
         

@@ -26,6 +26,7 @@ Private Type State
     Mapper                      As IMapper
 End Type
 
+
 Private s                       As State
 
 
@@ -49,7 +50,7 @@ Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         Case "seq":                                                                     IMapper_ExecMapper = ExecMapperByIndex1(ipHostItem)
         Case "arraylist":                                                               IMapper_ExecMapper = ExecMapperByIndex0(ipHostItem)
         Case "kvp", "dictionary", "chashd", "kvpair":                                   IMapper_ExecMapper = ExecMapperByDictionary(ipHostItem)
-        ' a separate case is needed for collection due to the add/remove nature of assigning to an item
+            ' a separate case is needed for collection due to the add/remove nature of assigning to an item
         Case "collection":                                                              IMapper_ExecMapper = ExecMapperByCollection(ipHostItem)
         Case "array":                                                                   IMapper_ExecMapper = ExecMapperByArray(ipHostItem)
 
@@ -100,6 +101,7 @@ Private Function ExecMapperByIndex0(ByRef ipIndexFrom0 As Variant) As Variant
 
 End Function
 
+
 Private Function ExecMapperByIndex1(ByRef ipIndexFrom1 As Variant) As Variant
 
     Dim myIndex As Long
@@ -123,6 +125,7 @@ Private Function ExecMapperByIndex1(ByRef ipIndexFrom1 As Variant) As Variant
 
 End Function
 
+
 Private Function ExecMapperByCollection(ByRef ipIndexColl As Variant) As Variant
 
     Dim myIndex As Long
@@ -136,12 +139,13 @@ Private Function ExecMapperByCollection(ByRef ipIndexColl As Variant) As Variant
     Dim myItem As Variant
     myItem = s.Mapper.ExecMapper(VBA.CVar(ipIndexColl.Item(myIndex)))
 
-    ipIndexColl.Add myItem(0), After:=myIndex
+    ipIndexColl.Add myItem(0), after:=myIndex
     ipIndexColl.Remove myIndex
 
     ExecMapperByCollection = Array(ipIndexColl)
 
 End Function
+
 
 ' Private Function ExecMapperByCollection(ByVal ipHostItem As Collection) As Variant
 '     If s.Index < 1 Or s.Index > ipHostItem.Count Then
@@ -207,6 +211,7 @@ Private Function ExecMapperByDictionary(ByRef ipHostItem As Variant) As Variant
 
 End Function
 
+
 '@DefaultMember
 Public Function Deb(ByRef ipMapper As IMapper, Optional ByRef ipIndexKey As Variant = 1) As mpByIndex
 Attribute Deb.VB_UserMemId = 0
@@ -229,6 +234,7 @@ Friend Function ConstructInstance(ByRef ipMapper As IMapper, ByVal ipIndexKey As
     Set ConstructInstance = Me
 
 End Function
+
 
 ''
 ''Public Property Get TypeName() As String

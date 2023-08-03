@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 '@IgnoreModule ImplicitUnboundDefaultMemberAccess
 '@PredeclaredId
 '@Exposed
-'@Folder("Lib")
+'@Folder("VBALib")
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 Option Explicit
 
@@ -25,11 +25,13 @@ Private Type State
     
 End Type
 
+
 Private s                           As State
 
 'Private Sub Initialize_Class()
 '    ResetMarkup
 'End Sub
+
 
 '@DefaultMember
 Public Function Deb() As Stringifier
@@ -57,9 +59,9 @@ End Function
 
 Public Function SetDictionaryItemMarkup _
 ( _
-    Optional ByVal ipLeft As Variant = Chars.twSpace & Chars.twPlainSQuote, _
-    Optional ByVal ipSeparator As Variant = Chars.twColon & Chars.twSpace, _
-    Optional ByVal ipRight As Variant = Chars.twPlainSQuote _
+Optional ByVal ipLeft As Variant = Chars.twSpace & Chars.twPlainSQuote, _
+Optional ByVal ipSeparator As Variant = Chars.twColon & Chars.twSpace, _
+Optional ByVal ipRight As Variant = Chars.twPlainSQuote _
 ) As Stringifier
     Set s.DictionaryItemMarkup = ItemMarkup.Deb(ipLeft, ipSeparator, ipRight)
     Set SetDictionaryItemMarkup = Me
@@ -68,9 +70,9 @@ End Function
 
 Public Function SetArrayMarkup _
 ( _
-    Optional ByVal ipLeft As Variant = Chars.twLSQB, _
-    Optional ByVal ipSeparator As Variant = Chars.twComma, _
-    Optional ByVal ipRight As Variant = Chars.twRSQB _
+Optional ByVal ipLeft As Variant = Chars.twLSQB, _
+Optional ByVal ipSeparator As Variant = Chars.twComma, _
+Optional ByVal ipRight As Variant = Chars.twRSQB _
 ) As Stringifier
     Set s.ArrayMarkup = ItemMarkup.Deb(ipLeft, ipSeparator, ipRight)
     Set SetArrayMarkup = Me
@@ -79,9 +81,9 @@ End Function
 
 Public Function SetObjectMarkup _
 ( _
-    Optional ByVal ipLeft As Variant = Chars.twLCUB, _
-    Optional ByVal ipSeparator As Variant = Chars.twComma, _
-    Optional ByVal ipRight As Variant = Chars.twRCUB _
+Optional ByVal ipLeft As Variant = Chars.twLCUB, _
+Optional ByVal ipSeparator As Variant = Chars.twComma, _
+Optional ByVal ipRight As Variant = Chars.twRCUB _
 ) As Stringifier
     Set s.ObjectMarkup = ItemMarkup.Deb(ipLeft, ipSeparator, ipRight)
     Set SetObjectMarkup = Me
@@ -131,8 +133,8 @@ Public Function StringifyItem(ByRef ipItem As Variant) As String
         Case e_Group.m_Admin:                           StringifyItem = StringifyAdmin(ipItem)
         Case Else
             Err.Raise 17 + vbObjectError, _
-                "VBAlib.Stringifier.StringifyItem", _
-                "Don't know how to stringify Type '" & VBA.TypeName(ipItem)
+            "Stringifier.StringifyItem", _
+            "Don't know how to stringify Type '" & VBA.Typename(ipItem)
                 
     End Select
             
@@ -146,32 +148,32 @@ Friend Function StringifyAdmin(ByRef ipAdmin As Variant) As String
         Case VBA.IsError(ipAdmin)
              
             StringifyAdmin = _
-                s.ObjectMarkup.Left _
-                & Chars.twPlainDQuote _
-                & ipAdmin.Source _
-                & Chars.twPlainDQuote _
-                & s.ObjectMarkup.Separator _
-                & ipAdmin.Number _
-                & s.ObjectMarkup.Separator _
-                & Chars.twPlainDQuote _
-                & ipAdmin.Description _
-                & Chars.twPlainDQuote _
-                & s.ObjectMarkup.Right
+            s.ObjectMarkup.Left _
+            & Chars.twPlainDQuote _
+            & ipAdmin.Source _
+            & Chars.twPlainDQuote _
+            & s.ObjectMarkup.Separator _
+            & ipAdmin.Number _
+            & s.ObjectMarkup.Separator _
+            & Chars.twPlainDQuote _
+            & ipAdmin.Description _
+            & Chars.twPlainDQuote _
+            & s.ObjectMarkup.Right
         
                 
         Case VBA.IsEmpty(ipAdmin)
             
-            StringifyAdmin = VBA.TypeName(ipAdmin)
+            StringifyAdmin = VBA.Typename(ipAdmin)
                 
                     
         Case VBA.IsNull(ipAdmin)
         
-            StringifyAdmin = VBA.TypeName(ipAdmin)
+            StringifyAdmin = VBA.Typename(ipAdmin)
                 
                     
         Case VBA.VarType(ipAdmin) = vbDataObject
         
-           StringifyAdmin s.ObjectMarkup.Left & "Object?" & s.ObjectMarkup.Right
+            StringifyAdmin s.ObjectMarkup.Left & "Object?" & s.ObjectMarkup.Right
                                                                     
 
         Case ipAdmin Is Nothing
@@ -179,14 +181,14 @@ Friend Function StringifyAdmin(ByRef ipAdmin As Variant) As String
             ' Debug.Print s.ObjectMarkup.Left
             ' Debug.Print s.ObjectMarkup.Right
             ' Debug.Print s.ObjectMarkup.Separator
-            StringifyAdmin s.ObjectMarkup.Left & VBA.TypeName(ipAdmin) & s.ObjectMarkup.Right ' Nul is nothing
+            StringifyAdmin s.ObjectMarkup.Left & VBA.Typename(ipAdmin) & s.ObjectMarkup.Right ' Nul is nothing
 
         Case Else
 
             Err.Raise _
-                17 + vbObjectError, _
-                "Stringifier.StringifyAdmin", _
-                "Unexpected Item: " & TypeName(ipAdmin.Cargo)
+            17 + vbObjectError, _
+            "Stringifier.StringifyAdmin", _
+            "Unexpected Item: " & Typename(ipAdmin.Cargo)
                 
                 
     End Select
@@ -199,11 +201,11 @@ Friend Function StringifyArray(ByRef ipArray As Variant) As String
     ' so we preserve a copy here
     
     If ArrayOp.LacksItems(ipArray) Then
-       StringifyArray s.ArrayMarkup.Left & s.ArrayMarkup.Right
+        StringifyArray s.ArrayMarkup.Left & s.ArrayMarkup.Right
     End If
-'    Dim myMarkup As ItemMarkup
-'    Set myMarkup = s.ArrayMarkup
-'
+    '    Dim myMarkup As ItemMarkup
+    '    Set myMarkup = s.ArrayMarkup
+    '
     Dim myS As SeqC
     Set myS = SeqC.Deb
     
@@ -215,7 +217,7 @@ Friend Function StringifyArray(ByRef ipArray As Variant) As String
         myS.Add StringifyItem(myItem)
     Next
     
-   ' Set s.ArrayMarkup = myMarkup
+    ' Set s.ArrayMarkup = myMarkup
     
     StringifyArray = s.ArrayMarkup.Left & VBA.Join(myS.ToArray, s.ArrayMarkup.Separator) & s.ArrayMarkup.Right
     
@@ -284,7 +286,7 @@ Friend Function StringifyItembyKey(ByRef ipItemByKey As Variant) As String
         myT = myT & s.DictionaryItemMarkup.Separator
         myT = myT & StringifyItem(ipItemByKey.Item(myKey))
         
-        myS.Add myT 's.DictionaryItemMarkup.Left & ToString(myKey) & s.DictionaryItemMarkup.Right & s.DictionaryItemMarkup.Separator & ToString(ipItemByKey.item(myKey))
+        myS.Add myT                              's.DictionaryItemMarkup.Left & ToString(myKey) & s.DictionaryItemMarkup.Right & s.DictionaryItemMarkup.Separator & ToString(ipItemByKey.item(myKey))
         
     Next
     
@@ -295,9 +297,9 @@ End Function
 
 '@Description("Try to get string description of a non iterable object. Default result is '{<TypeName>}'"
 Friend Function StringifyItemObject(ByVal ipObject As Object) As String
-'    If ipObject Is Nothing Then
-'        return s.ObjectMarkup.Left & s.ObjectMarkup.Right
-'    End If
+    '    If ipObject Is Nothing Then
+    '        return s.ObjectMarkup.Left & s.ObjectMarkup.Right
+    '    End If
     Dim myString As String
     If TryStringifyByDefaultMember(ipObject, myString) Then
     
@@ -331,7 +333,7 @@ Friend Function StringifyItemObject(ByVal ipObject As Object) As String
     
     ' In desperation just return the typename wrapped in object markup
     
-    StringifyItemObject = s.ObjectMarkup.Left & "Object: " & TypeName(ipObject) & s.ObjectMarkup.Right
+    StringifyItemObject = s.ObjectMarkup.Left & "Object: " & Typename(ipObject) & s.ObjectMarkup.Right
             
 End Function
 
@@ -339,19 +341,20 @@ End Function
 Private Function TryStringifyByDefaultMember(ByVal ipObject As Object, ByRef opString As String) As Boolean
 
     On Error Resume Next
-    opString = ipObject ' may need to be ipObject()
+    opString = ipObject                          ' may need to be ipObject()
     TryStringifyByDefaultMember = Err.Number = 0
     On Error GoTo 0
     
 End Function
 
+
 '@Ignore ParameterCanBeByVal
 Private Function TryStringifyByCallByName _
 ( _
-    ByRef ipObject As Object, _
-    ByVal ipMethodName As String, _
-    ByVal ipMethodType As VbCallType, _
-    ByRef opString As String _
+ByRef ipObject As Object, _
+ByVal ipMethodName As String, _
+ByVal ipMethodType As VbCallType, _
+ByRef opString As String _
 ) As Boolean
 
     On Error Resume Next

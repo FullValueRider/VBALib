@@ -13,8 +13,10 @@ Option Private Module
     'Do nothing
 #Else
 
-'@ModuleInitialize
+
+    '@ModuleInitialize
 Private Sub ModuleInitialize()
+    GlobalAssert
     'this method runs once per module.
     'Set Assert = CreateObject("Rubberduck.AssertClass")
     'Set Fakes = CreateObject("Rubberduck.FakesProvider")
@@ -40,15 +42,17 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
+
 #End If
 
 Public Sub ComparerTests()
 
-#If twinbasic Then
-    Debug.Print CurrentProcedureName;
-#Else
-    Debug.Print ErrEx.LiveCallstack.ProcedureName;
-#End If
+    #If twinbasic Then
+        Debug.Print CurrentProcedureName;
+    #Else
+        GlobalAssert
+        Debug.Print ErrEx.LiveCallstack.ProcedureName;
+    #End If
 
     Test01a_CmpEq_Long_True
     Test01b_CmpEq_Long_False
@@ -74,19 +78,19 @@ Public Sub ComparerTests()
     Debug.Print vbTab, vbTab, "Testing completed"
 
 End Sub
-    
+
 
 '@TestMethod("Comparer")
 Private Sub Test01a_CmpEq_Long_True()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -118,12 +122,12 @@ Private Sub Test01b_CmpEq_Long_False()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -150,17 +154,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Comparer")
 Private Sub Test02a_CmpNEq_Long_True()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -192,12 +197,12 @@ Private Sub Test02b_CmpNEq_Long_False()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -230,12 +235,12 @@ Private Sub Test03a_CmpMT_Long_True()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -267,12 +272,12 @@ Private Sub Test03b_CmpMT_Long_False()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -299,17 +304,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Comparer")
 Private Sub Test04a_CmpLT_Long_True()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -341,12 +347,12 @@ Private Sub Test04b_CmpLT_Long_False()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -373,17 +379,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Comparer")
 Private Sub Test05a_CmpMTEQ_Long_MTTrue()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -415,12 +422,12 @@ Private Sub Test05b_CmpMTEQ_Long_EQTrue()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -446,17 +453,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Comparer")
 Private Sub Test05c_CmpMTEQ_Long_False()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -483,17 +491,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Comparer")
 Private Sub Test06a_CmpLTEQ_Long_LTTrue()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -525,12 +534,12 @@ Private Sub Test06b_CmpLTEQ_Long_EQTrue()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -556,17 +565,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Comparer")
 Private Sub Test06c_CmpLTEQ_Long_False()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Boolean
@@ -592,3 +602,5 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+

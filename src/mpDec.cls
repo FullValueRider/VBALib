@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 Option Explicit
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
 Implements IMapper
 
 Const MY_TYPENAME                   As String = "mpDec"
@@ -19,7 +19,9 @@ Private Type State
     Decrement                       As Variant
 End Type
 
+
 Private s                           As State
+
 
 '@DefaultMember
 Public Function Deb(Optional ByVal ipDecrement As Variant = 1) As mpDec
@@ -28,6 +30,7 @@ Attribute Deb.VB_UserMemId = 0
         Set Deb = .ConstructInstance(ipDecrement)
     End With
 End Function
+
 
 Friend Function ConstructInstance(ByVal ipDecrement As Variant) As mpDec
         
@@ -40,6 +43,7 @@ End Function
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
 
 Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
     

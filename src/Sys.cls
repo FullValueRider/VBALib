@@ -10,7 +10,8 @@ Attribute VB_Exposed = True
 Attribute VB_Description = "A location for global helper methods"
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib")
+'@Folder("Helpers")
+'@IgnoreModule
 Option Explicit
 
 

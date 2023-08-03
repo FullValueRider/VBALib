@@ -1,18 +1,24 @@
 Attribute VB_Name = "AA_ReadMe"
+'@Folder("Docs")
 '@IgnoreModule
 'Passes all tests in twinbasic
 
-'1. Do not use ParamArray:  Replace all uses of paramarray with a call to SeqC constructor except in the creation of SeqC and in SeqC methods
 
-'2. Rewrote IMapper methods to take a whole SeqC rather than just one item at a time.
+'' Seq
+'Implement SeqH
+
+' Implement seqT
+
+'Kvp
+
+' Inserting by index is supported by all Kvp but not yet implemented.
+' Not sure I want to do this as it seems to go against the grain of a dictionary
+
+'Implment KvpT
 
 
 'ToDo List
 
-'# KvpC
-'
-'- Implement initialisation with data?
-'  Probably needs to wait until auto key is reestablished
 
 'SeqA
 '
@@ -23,13 +29,7 @@ Attribute VB_Name = "AA_ReadMe"
 '- Add testing for MappedIt, Mapit, FilterIt, CountIt, ReduceIt
 
 
-'# Sequences
-'# Align code across seq
 
-'# Kvp
-'- Align code across KVP
-
-' SeqT and KVPT (based on Treap)
 
 
 

@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 Attribute VB_Description = "Class Fmt enables substitution of variables and control characters in strings using fields delineated by {} markers."
 '@PredeclaredId
 '@Exposed
-'@Folder("StringyStuff")
+'@Folder("Strings")
 '12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
 '=========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
 ' Code line limit should be 120 characters.
@@ -31,7 +31,7 @@ Attribute VB_Description = "Class Fmt enables substitution of variables and cont
 '
 ' Layout fields represent control characters and are of the form {zz(x)}
     
- '  x  = an optional positive integer to indicate the number of times the control character is repeated.
+'  x  = an optional positive integer to indicate the number of times the control character is repeated.
      
 '   zz can be
 '       nl = new line
@@ -70,51 +70,51 @@ End Type
 Private s                                       As State
 
 
- 'Field openers - definitions
- Private Const NEWLINES                          As String = "{nl"
- Private Const TABS                              As String = "{tb"
- Private Const NEWLINES_TAB                      As String = "{nt" ' 1 or more newlines followed by one Tab
- Private Const DQUOTE                            As String = "{dq"
- Private Const SQUOTE                            As String = "{sq"
- Private Const SMART_SQUOTE_OPEN                 As String = "{so"
- Private Const SMART_SQUOTE_CLOSE                As String = "{sc"
- Private Const SMART_DQUOTE_OPEN                 As String = "{do"
- Private Const SMART_DQUOTE_CLOSE                As String = "{dc"
+'Field openers - definitions
+Private Const NEWLINES                          As String = "{nl"
+Private Const TABS                              As String = "{tb"
+Private Const NEWLINES_TAB                      As String = "{nt" ' 1 or more newlines followed by one Tab
+Private Const DQUOTE                            As String = "{dq"
+Private Const SQUOTE                            As String = "{sq"
+Private Const SMART_SQUOTE_OPEN                 As String = "{so"
+Private Const SMART_SQUOTE_CLOSE                As String = "{sc"
+Private Const SMART_DQUOTE_OPEN                 As String = "{do"
+Private Const SMART_DQUOTE_CLOSE                As String = "{dc"
 
- ' Field closures - definitions
- Private Const FIELD_COUNT_IS_NONE               As String = "}"
- Private Const FIELD_COUNT_IS_ZERO               As String = "0}"
- Private Const FIELD_COUNT_IS_ONE                As String = "1}"
+' Field closures - definitions
+Private Const FIELD_COUNT_IS_NONE               As String = "}"
+Private Const FIELD_COUNT_IS_ZERO               As String = "0}"
+Private Const FIELD_COUNT_IS_ONE                As String = "1}"
 
 
- Public Sub Class_Initialize()
+Public Sub Class_Initialize()
  
     s.ArrayMarkupIsSet = False
     s.ObjectMarkupIsSet = False
     s.DictionaryItemMarkupIsSet = False
     s.ItemSeparatorIsSet = False
 
-     If Not s.FormatFields Is Nothing Then
-         Exit Sub
-     End If
+    If Not s.FormatFields Is Nothing Then
+        Exit Sub
+    End If
      
-     Set s.FormatFields = KvpC.Deb
+    Set s.FormatFields = KvpC.Deb
          
-     With s.FormatFields
+    With s.FormatFields
          
-         .Add ipKey:=NEWLINES, ipItem:=vbCrLf                              ' {nl
-         .Add ipKey:=TABS, ipItem:=vbTab                                   ' {tb
-         .Add ipKey:=NEWLINES_TAB, ipItem:=vbCrLf                          ' {nt
-         .Add ipKey:=DQUOTE, ipItem:=Chars.twPlainDQuote                   ' {dq
-         .Add ipKey:=SQUOTE, ipItem:=Chars.twPlainSQuote                   ' {sq
-         .Add ipKey:=SMART_SQUOTE_OPEN, ipItem:=Chars.twLSmartSQuote       ' {so
-         .Add ipKey:=SMART_SQUOTE_CLOSE, ipItem:=Chars.twRSmartSQuote      ' {sc
-         .Add ipKey:=SMART_DQUOTE_OPEN, ipItem:=Chars.twLSMartDQuote       ' {do
-         .Add ipKey:=SMART_DQUOTE_CLOSE, ipItem:=Chars.twRSmartDQuote      ' {dc
+        .Add ipKey:=NEWLINES, ipItem:=vbCrLf     ' {nl
+        .Add ipKey:=TABS, ipItem:=vbTab          ' {tb
+        .Add ipKey:=NEWLINES_TAB, ipItem:=vbCrLf ' {nt
+        .Add ipKey:=DQUOTE, ipItem:=Chars.twPlainDQuote ' {dq
+        .Add ipKey:=SQUOTE, ipItem:=Chars.twPlainSQuote ' {sq
+        .Add ipKey:=SMART_SQUOTE_OPEN, ipItem:=Chars.twLSmartSQuote ' {so
+        .Add ipKey:=SMART_SQUOTE_CLOSE, ipItem:=Chars.twRSmartSQuote ' {sc
+        .Add ipKey:=SMART_DQUOTE_OPEN, ipItem:=Chars.twLSMartDQuote ' {do
+        .Add ipKey:=SMART_DQUOTE_CLOSE, ipItem:=Chars.twRSmartDQuote ' {dc
              
-     End With
+    End With
      
- End Sub
+End Sub
 
 
 Public Function Deb() As Fmt
@@ -123,34 +123,46 @@ Public Function Deb() As Fmt
     End With
 End Function
 
+
 Friend Function ConstructInstance() As Fmt
     Set ConstructInstance = Me
 End Function
 
 
-
 '@Description("Sends the formatted output to Debug.Print")
-Public Function Dbg(ByRef ipFormatTemplate As String, ParamArray ipParamArray() As Variant) As String
+Public Function Dbg(ByRef ipFormatTemplate As String, ParamArray ipParamarray() As Variant) As String
 Attribute Dbg.VB_Description = "Sends the formatted output to Debug.Print"
         
-    
+    Dim myFPA As Variant
+    myFPA = ipParamarray
+    myFPA = ArrayOp.Splat(myFPA)
+
+
+    ' Dim myIndex As Long
+    ' For myIndex = LBound(myFPA) To UBound(myFPA)
+    '     myFpa(myIndex) =
+    ' Next
+
     Dim myString As String
-    myString = TextByVar(ipFormatTemplate, VBA.CVar(ipParamArray))
+    myString = TextByVar(ipFormatTemplate, myFPA)
     
     Debug.Print myString
     Dbg = myString
   
 End Function
-    
+
 
 '@Description("Returns a string representing the paramArray")
-Public Function Text(ByRef ipFormatTemplate As String, ParamArray ipParamArray() As Variant) As String
+Public Function Text(ByRef ipFormatTemplate As String, ParamArray ipParamarray() As Variant) As String
 Attribute Text.VB_Description = "Returns a string representing the paramArray"
-    Text = TextByVar(ipFormatTemplate, VBA.CVar(ipParamArray))
+    Dim myFPA As Variant
+    myFPA = ipParamarray
+    myFPA = ArrayOp.Splat(myFPA)
+    Text = TextByVar(ipFormatTemplate, myFPA)
 End Function
-        
-    
-Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamArray As Variant) As String
+
+
+Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray As Variant) As String
     
     Set s.ToString = Stringifier.Deb
 
@@ -176,27 +188,27 @@ Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamArray 
         Exit Function
     End If
         
-    If ArrayOp.LacksItems(ipParamArray) Then
+    If ArrayOp.LacksItems(ipParamarray) Then
         TextByVar = ipFormatTemplate
         Exit Function
     End If
     
-    ArrayOp.Splat ipParamArray
-'
-'    Dim myToString As Stringifier
-'    Set myToString = Stringifier.Deb
-'
+    ipParamarray = ArrayOp.Splat(ipParamarray)
+    '
+    '    Dim myToString As Stringifier
+    '    Set myToString = Stringifier.Deb
+    '
     Dim myS As SeqC
     Set myS = SeqC.Deb
     
     Dim myItem As Variant
-    For Each myItem In ipParamArray
+    For Each myItem In ipParamarray
         myS.Add s.ToString.StringifyItem(myItem)
     Next
 
     If myS.LacksItems Then
-       TextByVar = ipFormatTemplate
-       Exit Function
+        TextByVar = ipFormatTemplate
+        Exit Function
     End If
     
     Dim myReturn  As String
@@ -214,8 +226,6 @@ Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamArray 
     
 End Function
 
- 
-    
 
 ' Friend Function GetFormattedParameters(ByVal ipFormatTemplate As String, ByVal ipFPA As Variant) As String
 
@@ -274,6 +284,7 @@ Attribute ReplaceFormatFieldWithNoCountByFormatFieldWithCountOfOne.VB_Descriptio
         
 End Function
 
+
 '@Description("return the number in a format field")
 Friend Function GetRepeatCountForFormatField(ByRef ipFormatTemplate As String, ByVal ipFormatField As String) As Long
 Attribute GetRepeatCountForFormatField.VB_Description = "return the number in a format field"
@@ -293,6 +304,7 @@ Attribute GetRepeatCountForFormatField.VB_Description = "return the number in a 
     GetRepeatCountForFormatField = CLng(myRepeatCount)
         
 End Function
+
 
 '@Description("Replace {XXn} layout field to fomatting characters 'XX' repeated 'n' times")
 Friend Function ReplaceFormatFieldWithCountByControlCharacters(ByRef ipFormatTemplate As String) As String
@@ -323,6 +335,7 @@ Attribute ReplaceFormatFieldWithCountByControlCharacters.VB_Description = "Repla
         
 End Function
 
+
 '@Description("Returns a string of formatting characters in line with the formatting tag")
 Friend Function GetFormattingFieldReplacementString(ByVal ipFormatString As String, ByVal ipRepeatCount As Long) As String
 Attribute GetFormattingFieldReplacementString.VB_Description = "Returns a string of formatting characters in line with the formatting tag"
@@ -341,11 +354,12 @@ Attribute GetFormattingFieldReplacementString.VB_Description = "Returns a string
         
 End Function
 
+
 '@Description("Replace each ocurrence of '{<number>}' with the corresponding stringified item from the parameters list")
 Friend Function ReplaceVariableFieldByVariableString _
 ( _
-    ByVal ipFormatTemplate As String, _
-    ByVal ipseq As SeqC _
+ByVal ipFormatTemplate As String, _
+ByVal ipSeq As SeqC _
 ) As String
 Attribute ReplaceVariableFieldByVariableString.VB_Description = "Replace each ocurrence of '{<number>}' with the corresponding stringified item from the parameters list"
 
@@ -354,12 +368,12 @@ Attribute ReplaceVariableFieldByVariableString.VB_Description = "Replace each oc
     myReturn = ipFormatTemplate
     
     Dim myIndex As Long
-    For myIndex = ipseq.FirstIndex To ipseq.LastIndex
+    For myIndex = ipSeq.FirstIndex To ipSeq.LastIndex
     
         Dim myReplace As String
         ' Remember that {} fields start at 0
         myReplace = Chars.twLCUB & VBA.CStr(myIndex - 1) & Chars.twRCUB
-        myReturn = VBA.Replace(myReturn, myReplace, ipseq.Item(myIndex))
+        myReturn = VBA.Replace(myReturn, myReplace, ipSeq.Item(myIndex))
 
     Next
         
@@ -381,9 +395,9 @@ End Function
 
 Public Function SetDictionaryItemMarkup _
 ( _
-    Optional ByVal ipLeft As Variant = Chars.twSpace & Chars.twPlainSQuote, _
-    Optional ByVal ipSeparator As Variant = Chars.twColon & Chars.twSpace, _
-    Optional ByVal ipRight As Variant = Chars.twPlainSQuote _
+Optional ByVal ipLeft As Variant = Chars.twSpace & Chars.twPlainSQuote, _
+Optional ByVal ipSeparator As Variant = Chars.twColon & Chars.twSpace, _
+Optional ByVal ipRight As Variant = Chars.twPlainSQuote _
 ) As Fmt
     Set s.DictionaryItemMarkup = ItemMarkup.Deb(ipLeft, ipSeparator, ipRight)
     Set SetDictionaryItemMarkup = Me
@@ -392,9 +406,9 @@ End Function
 
 Public Function SetArrayMarkup _
 ( _
-    Optional ByVal ipLeft As Variant = Chars.twLSQB, _
-    Optional ByVal ipSeparator As Variant = Chars.twComma, _
-    Optional ByVal ipRight As Variant = Chars.twRSQB _
+Optional ByVal ipLeft As Variant = Chars.twLSQB, _
+Optional ByVal ipSeparator As Variant = Chars.twComma, _
+Optional ByVal ipRight As Variant = Chars.twRSQB _
 ) As Fmt
     Set s.ArrayMarkup = ItemMarkup.Deb(ipLeft, ipSeparator, ipRight)
     s.ArrayMarkupIsSet = True
@@ -404,9 +418,9 @@ End Function
 
 Public Function SetObjectMarkup _
 ( _
-    Optional ByVal ipLeft As Variant = Chars.twLCUB, _
-    Optional ByVal ipSeparator As Variant = Chars.twComma, _
-    Optional ByVal ipRight As Variant = Chars.twRCUB _
+Optional ByVal ipLeft As Variant = Chars.twLCUB, _
+Optional ByVal ipSeparator As Variant = Chars.twComma, _
+Optional ByVal ipRight As Variant = Chars.twRCUB _
 ) As Fmt
     Set s.ObjectMarkup = ItemMarkup.Deb(ipLeft, ipSeparator, ipRight)
     s.ObjectMarkupIsSet = True

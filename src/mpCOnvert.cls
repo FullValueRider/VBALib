@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
 Option Explicit
 Implements IMapper
 
@@ -21,11 +21,14 @@ Private Type State
     Conversion                          As e_ConvertTo
 End Type
 
+
 Private s                               As State
+
 
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
 
 '@Description("Converts the Items in the to the specifiied Type")
 Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
@@ -55,9 +58,9 @@ Attribute IMapper_ExecMapper.VB_Description = "Converts the Items in the to the 
         Case Else
         
             Err.Raise _
-                17 + vbObjectError, _
-                "VBALib.mpConvertIMapper_ExecMapper", _
-                "The requested conversion is not possible"
+            17 + vbObjectError, _
+            "mpConvertIMapper_ExecMapper", _
+            "The requested conversion is not possible"
         
     End Select
     
@@ -71,13 +74,15 @@ Attribute IMapper_ExecMapper.VB_Description = "Converts the Items in the to the 
     
 End Function
 
+
 '@DefaultMember
 Public Function Deb(ByRef ipConversion As e_ConvertTo) As mpCOnvert
 Attribute Deb.VB_UserMemId = 0
     With New mpCOnvert
-       Set Deb = .ConstructInstance(ipConversion)
+        Set Deb = .ConstructInstance(ipConversion)
     End With
 End Function
+
 
 Friend Function ConstructInstance(ByRef ipConversion As e_ConvertTo) As mpCOnvert
     s.Conversion = ipConversion

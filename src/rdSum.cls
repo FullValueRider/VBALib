@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 Attribute VB_Description = "Returns the sum of the numbers in the SeqC.  Non-numbers are ignored"
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Reducers")
+'@Folder("Reducers")
 '@ModuleDescription("Returns the sum of the numbers in the SeqC.  Non-numbers are ignored")
 Option Explicit
 
@@ -22,6 +22,7 @@ Private Type State
     Comparer                        As IComparer
 End Type
 
+
 Private s                           As State
 
 
@@ -30,6 +31,7 @@ Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 Attribute IReducer_ExecReduction.VB_Description = "Computes the sum of the items"
     IReducer_ExecReduction = ExecReduction(ipHostItems)
 End Function
+
 
 Private Property Get IReducer_TypeName() As String
     IReducer_TypeName = MY_TYPENAME
@@ -65,11 +67,13 @@ Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant
 
 End Function
 
+
 Public Function Deb(Optional ByRef ipComparer As IComparer = Nothing) As rdSum
     With New rdSum
         Set Deb = .ConstructInstance(ipComparer)
     End With
 End Function
+
 
 Friend Function ConstructInstance(ByRef ipComparer As IComparer) As rdSum
 

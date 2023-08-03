@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Reducers")
+'@Folder("Reducers")
 Option Explicit
  
 Implements IReducer
@@ -23,15 +23,17 @@ Private Type State
     Reducer                 As IReducer
 End Type
 
+
 Private s                   As State
 
 
-Public Property Get IReducer_TypeName() As String
+Private Property Get IReducer_TypeName() As String
     IReducer_TypeName = MY_TYPENAME
 End Property
 
- '@Description("Calls Mapit on the lowest level item supporting mapit on The hostItem")
-Public Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
+
+'@Description("Calls Mapit on the lowest level item supporting mapit on The hostItem")
+Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 Attribute IReducer_ExecReduction.VB_Description = "Calls Mapit on the lowest level item supporting mapit on The hostItem"
 
     Dim myItem As Variant
@@ -46,7 +48,7 @@ Attribute IReducer_ExecReduction.VB_Description = "Calls Mapit on the lowest lev
             
                 IReducer_ExecReduction = myItem.ReduceIt(Me)
                 
-            Case "kvp"
+            Case "VBALib.Kvp"
             
                 IReducer_ExecReduction = SeqC(myItem.Items).ReduceIt(Me)
                 
@@ -60,6 +62,7 @@ Attribute IReducer_ExecReduction.VB_Description = "Calls Mapit on the lowest lev
         
 End Function
 
+
 '@DefaultMember
 Public Function Deb(ByVal ipReducer As IReducer) As rdInner
 Attribute Deb.VB_UserMemId = 0
@@ -68,12 +71,14 @@ Attribute Deb.VB_UserMemId = 0
     End With
 End Function
 
+
 Friend Function ConstructInstance(ByVal ipReducer As IReducer) As rdInner
     Set s.Reducer = ipReducer
     Set ConstructInstance = Me
 End Function
 
+
 ' Returns the first three characters of the type name, avoids issues with SeqCA, SeqCC, SeqCT, SeqCH, SeqCL etc
 Public Function Shortname(ByRef ipItem As Variant) As String
-    Shortname = VBA.LCase$(VBA.Mid$(VBA.TypeName(ipItem), 1, 3))
+    Shortname = VBA.LCase$(VBA.Mid$(VBA.Typename(ipItem), 1, 3))
 End Function

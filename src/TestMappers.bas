@@ -14,19 +14,20 @@ Option Base 1
 #Else
 
 
-'@ModuleInitialize
+    '@ModuleInitialize
 Private Sub ModuleInitialize()
     'this method runs once per module.
-'    Set Assert = CreateObject("Rubberduck.AssertClass")
-'    Set Fakes = CreateObject("Rubberduck.FakesProvider")
+    '    Set Assert = CreateObject("Rubberduck.AssertClass")
+    '    Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
 
 
 '@ModuleCleanup
 Private Sub ModuleCleanup()
+    GlobalAssert
     'this method runs once per module.
-'    Set Assert = Nothing
-'    Set Fakes = Nothing
+    '    Set Assert = Nothing
+    '    Set Fakes = Nothing
 End Sub
 
 
@@ -41,15 +42,17 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
+
 #End If
 
 Public Sub MapperTests()
  
-#If twinbasic Then
-    Debug.Print CurrentProcedureName;
-#Else
-    Debug.Print ErrEx.LiveCallstack.ProcedureName;
-#End If
+    #If twinbasic Then
+        Debug.Print CurrentProcedureName;
+    #Else
+        GlobalAssert
+        Debug.Print ErrEx.LiveCallstack.ProcedureName;
+    #End If
 
     Test01a_mpDec_Default
     Test01b_mpDec_1
@@ -71,17 +74,20 @@ Public Sub MapperTests()
     Debug.Print vbTab, vbTab, "Testing completed"
     
 End Sub
+
+
 '@TestMethod("Mapper")
 Private Sub Test01a_mpDec_Default()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
+        ErrEx.Enable vbNullString
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -109,17 +115,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Mapper")
 Private Sub Test01b_mpDec_1()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -148,18 +155,17 @@ TestFail:
 End Sub
 
 
-
 '@TestMethod("Mapper")
 Private Sub Test01c_mpDec_3()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -193,12 +199,12 @@ Private Sub Test02a_mpInc_Default()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -226,17 +232,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Mapper")
 Private Sub Test02b_mpInc_1()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqC
@@ -265,17 +272,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Mapper")
 Private Sub Test02c_mpInc_3()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqC
@@ -304,17 +312,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Mapper")
 Private Sub Test03a_mpIndex_mpInc_SeqC()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     
@@ -356,12 +365,12 @@ Private Sub Test03b_mpIndex_mpInc_Collection()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     
@@ -419,12 +428,12 @@ Private Sub Test03c_mpIndex_mpInc_ArrayList()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     
@@ -481,12 +490,12 @@ Private Sub Test03d_mpIndex_mpInc_Array()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     
@@ -525,12 +534,12 @@ Private Sub Test03e_mpIndex_mpInc_Dictionary()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     
@@ -587,12 +596,12 @@ Private Sub Test03f_mpIndex_mpInc_String()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     
@@ -622,17 +631,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Mapper")
 Private Sub Test04a_mpInner()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As Variant
@@ -668,4 +678,5 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 

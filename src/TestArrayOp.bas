@@ -13,35 +13,42 @@ Option Private Module
     'Do nothing
 #Else
 
+
     '@ModuleInitialize
-    Public Sub ModuleInitialize()
-        'this method runs once per module.
-    End Sub
-    
-    '@ModuleCleanup
-    Public Sub ModuleCleanup()
-        'this method runs once per module.
-    End Sub
-    
-    '@TestInitialize
-    Public Sub TestInitialize()
-        'This method runs before every test in the module..
-    End Sub
-    
-    '@TestCleanup
-    Public Sub TestCleanup()
-        'this method runs after every test in the module.
-    End Sub
-    
+Public Sub ModuleInitialize()
+    'this method runs once per module.
+    GlobalAssert
+End Sub
+
+
+'@ModuleCleanup
+Public Sub ModuleCleanup()
+    'this method runs once per module.
+End Sub
+
+
+'@TestInitialize
+Public Sub TestInitialize()
+    'This method runs before every test in the module..
+End Sub
+
+
+'@TestCleanup
+Public Sub TestCleanup()
+    'this method runs after every test in the module.
+End Sub
+
+
 #End If
 
 Public Sub ArrayOpTests()
 
-#If twinbasic Then
-    Debug.Print CurrentProcedureName; vbTab, vbTab,
-#Else
-    Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab,
-#End If
+    #If twinbasic Then
+        Debug.Print CurrentProcedureName; vbTab, vbTab,
+    #Else
+        GlobalAssert
+        Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab,
+    #End If
 
     Test01a_HoldsItems
     Test01b_LacksItems
@@ -61,7 +68,7 @@ Public Sub ArrayOpTests()
     Debug.Print "Testing completed"
 
 End Sub
-    
+
 
 Public Function MakeTableArray(ByVal ipFirst As Long, ByVal ipSecond As Long) As Variant
 
@@ -115,9 +122,11 @@ Public Function Make3DArray(ByVal ipFirst As Long, ByVal ipSecond As Long, ByVal
     
 End Function
 
+
 Public Function GetParamArray(ParamArray ipArgs() As Variant) As Variant
     GetParamArray = ipArgs
 End Function
+
 
 '@TestMethod("ArrayOp")
 Public Sub Test01a_HoldsItems()
@@ -167,6 +176,7 @@ TestFail:
     Resume TestExit
     
 End Sub
+
 
 '@TestMethod("ArrayOp")
 Public Sub Test01b_LacksItems()
@@ -264,6 +274,7 @@ TestFail:
     
 End Sub
 
+
 '@TestMethod("ArrayOp")
 Public Sub Test02b_IsNotArray()
 
@@ -275,7 +286,7 @@ Public Sub Test02b_IsNotArray()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     'Arrange
     Dim myExpected As Variant: myExpected = Array(True, False, False, False, False, False, False, True, True, True)
                                             
@@ -459,6 +470,7 @@ TestFail:
 
 End Sub
 
+
 '@TestMethod("ArrayOp")
 Public Sub Test04c_LacksRank()
 
@@ -507,6 +519,7 @@ TestFail:
     Resume TestExit
 
 End Sub
+
 
 '@TestMethod("ArrayOp")
 Public Sub Test05a_FirstIndex()
@@ -562,6 +575,7 @@ TestFail:
     
 End Sub
 
+
 '@TestMethod("ArrayOp")
 Public Sub Test05b_LastIndex()
 
@@ -610,4 +624,5 @@ TestFail:
     Resume TestExit
     
 End Sub
+
 

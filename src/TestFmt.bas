@@ -13,19 +13,21 @@ Option Private Module
     'Do nothing
 #Else
 
-'@ModuleInitialize
+
+    '@ModuleInitialize
 Private Sub ModuleInitialize()
+    GlobalAssert
     'this method runs once per module.
-'    Set Assert = CreateObject("Rubberduck.AssertClass")
-'    Set Fakes = CreateObject("Rubberduck.FakesProvider")
+    '    Set Assert = CreateObject("Rubberduck.AssertClass")
+    '    Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
 
 
 '@ModuleCleanup
 Private Sub ModuleCleanup()
     'this method runs once per module.
-'    Set Assert = Nothing
-'    Set Fakes = Nothing
+    '    Set Assert = Nothing
+    '    Set Fakes = Nothing
 End Sub
 
 
@@ -40,16 +42,18 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
+
 #End If
 
 Public Sub FmtTests()
 
     
-#If twinbasic Then
-    Debug.Print CurrentProcedureName; vbTab, vbTab,
-#Else
-    Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab, vbTab,
-#End If
+    #If twinbasic Then
+        Debug.Print CurrentProcedureName; vbTab, vbTab,
+    #Else
+        GlobalAssert
+        Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab, vbTab,
+    #End If
 
     Test01a_Fmt_Text_Nothing
     Test01b_Fmt_Text_NoParams
@@ -62,7 +66,8 @@ Public Sub FmtTests()
     Debug.Print "Testing completed"
 
 End Sub
-    
+
+
 '@TestMethod("Fmt")
 Private Sub Test01a_Fmt_Text_Nothing()
 
@@ -75,7 +80,7 @@ Private Sub Test01a_Fmt_Text_Nothing()
     #End If
     
 
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -93,13 +98,14 @@ Private Sub Test01a_Fmt_Text_Nothing()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    'On Error Resume Next
+    On Error Resume Next
     
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Fmt")
 Private Sub Test01b_Fmt_Text_NoParams()
@@ -113,7 +119,7 @@ Private Sub Test01b_Fmt_Text_NoParams()
     #End If
     
 
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -130,13 +136,14 @@ Private Sub Test01b_Fmt_Text_NoParams()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    'On Error Resume Next
+    On Error Resume Next
     
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Fmt")
 Private Sub Test01c_Fmt_Text_NoSubstitutions()
@@ -150,7 +157,7 @@ Private Sub Test01c_Fmt_Text_NoSubstitutions()
     #End If
     
 
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -167,13 +174,14 @@ Private Sub Test01c_Fmt_Text_NoSubstitutions()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    'On Error Resume Next
+    On Error Resume Next
     
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Fmt")
 Private Sub Test01d_Fmt_Text_Formatting_Threevbcrlf()
@@ -186,7 +194,7 @@ Private Sub Test01d_Fmt_Text_Formatting_Threevbcrlf()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -203,13 +211,14 @@ Private Sub Test01d_Fmt_Text_Formatting_Threevbcrlf()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    'On Error Resume Next
+    On Error Resume Next
     
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Fmt")
 Private Sub Test01e_Fmt_Text_Formatting_Threeplainquotes()
@@ -223,7 +232,7 @@ Private Sub Test01e_Fmt_Text_Formatting_Threeplainquotes()
     #End If
     
 
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -240,13 +249,14 @@ Private Sub Test01e_Fmt_Text_Formatting_Threeplainquotes()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    'On Error Resume Next
+    On Error Resume Next
     
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Fmt")
 Private Sub Test01f_Fmt_Text_Formatting_Zeroplainquotes()
@@ -260,7 +270,7 @@ Private Sub Test01f_Fmt_Text_Formatting_Zeroplainquotes()
     #End If
     
 
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -277,13 +287,14 @@ Private Sub Test01f_Fmt_Text_Formatting_Zeroplainquotes()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    'On Error Resume Next
+    On Error Resume Next
     
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Fmt")
 Private Sub Test01g_Fmt_Text_Formatting_ThreeVariables()
@@ -297,7 +308,7 @@ Private Sub Test01g_Fmt_Text_Formatting_ThreeVariables()
     #End If
     
 
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -314,11 +325,12 @@ Private Sub Test01g_Fmt_Text_Formatting_ThreeVariables()
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
-    'On Error Resume Next
+    On Error Resume Next
     
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 

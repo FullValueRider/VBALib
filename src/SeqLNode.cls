@@ -9,17 +9,21 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
 '@Exposed
-'Folder("set")
+'@Folder("Seq")
 Option Explicit
 
+Private Const MY_TYPENAME               As String = "SeqLNode"
 
+ 
 Private Type State
     Pred                    As SeqLNode
     Succ                    As SeqLNode
     Item                    As Variant
 End Type
 
+
 Private s                   As State
+
 
 '@DefaultMember
 Public Function Deb(Optional ByRef ipPred As SeqLNode = Nothing, Optional ByRef ipSucc As SeqLNode = Nothing, Optional ByRef ipItem As Variant = Null) As SeqLNode
@@ -28,6 +32,7 @@ Attribute Deb.VB_UserMemId = 0
         Set Deb = .ConstructInstance(ipPred, ipSucc, ipItem)
     End With
 End Function
+
 
 Friend Function ConstructInstance(ByRef ipPred As SeqLNode, ByRef ipSucc As SeqLNode, ByRef ipItem As Variant) As SeqLNode
 
@@ -45,13 +50,19 @@ Friend Function ConstructInstance(ByRef ipPred As SeqLNode, ByRef ipSucc As SeqL
     
 End Function
 
+Private Sub Terminate()
+    Set s.Pred = Nothing
+    Set s.Succ = Nothing
+End Sub
+
 
 Public Property Get Succ() As SeqLNode
     Set Succ = s.Succ
 End Property
 
-Public Property Set Succ(ByVal ipSeqLNode As SeqLNode)
-    Set s.Succ = ipSeqLNode
+
+Public Property Set Succ(ByVal ipListNode As SeqLNode)
+    Set s.Succ = ipListNode
 End Property
 
 
@@ -59,8 +70,9 @@ Public Property Get Pred() As SeqLNode
     Set Pred = s.Pred
 End Property
 
-Public Property Set Pred(ByVal ipSeqLNode As SeqLNode)
-    Set s.Pred = ipSeqLNode
+
+Public Property Set Pred(ByVal ipListNode As SeqLNode)
+    Set s.Pred = ipListNode
 End Property
 
 
@@ -72,10 +84,17 @@ Public Property Get Item() As Variant
     End If
 End Property
 
+
 Public Property Set Item(ByVal ipItem As Variant)
     Set s.Item = ipItem
 End Property
 
+
 Public Property Let Item(ByVal ipItem As Variant)
     s.Item = ipItem
+End Property
+
+
+Public Property Get Typename() As String
+    Typename = MY_TYPENAME
 End Property

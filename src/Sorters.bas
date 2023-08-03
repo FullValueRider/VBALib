@@ -1,13 +1,15 @@
 Attribute VB_Name = "Sorters"
+'@Folder("Helpers")
 Option Explicit
+
 
 Public Sub ShakerSortArray(ByRef iopArray As Variant)
     ' from https://www.vbforums.com/showthread.php?473677-VB6-Sorting-algorithms-(sort-array-sorting-arrays)&p=2912324#post2912324
     ' The shaker sort is used because it is the highest rated sort which is stable and inplace and which does not use recursion
     If Not VBA.IsArray(iopArray) Then
         Err.Raise 17 + vbObjectError, _
-        "VBALib.Sorters.ShakerSortArray", _
-        Fmt.Text("Expecting array. Got {0}.", VBA.TypeName(iopArray))
+        "Sorters.ShakerSortArray", _
+        Fmt.Text("Expecting array. Got {0}.", VBA.Typename(iopArray))
         
     End If
     
@@ -17,8 +19,8 @@ Public Sub ShakerSortArray(ByRef iopArray As Variant)
     
     If ArrayOp.IsNotArray(iopArray, e_ArrayType.m_ListArray) Then
         Err.Raise 17 + vbObjectError, _
-            "VBALib.Sorters.ShakerSortArray", _
-            Fmt.Text("Expecting array with one dimensions. Got {0} dimensions", ArrayOp.Ranks(iopArray))
+        "Sorters.ShakerSortArray", _
+        Fmt.Text("Expecting array with one dimensions. Got {0} dimensions", ArrayOp.Ranks(iopArray))
     End If
     
     Dim i As Long
@@ -87,20 +89,20 @@ Public Sub ShakerSortArray(ByRef iopArray As Variant)
             For i = iMax To iMin Step -1
                 If iopArray(i) > iopArray(i + 1) Then
                     If VBA.IsObject(iopArray(i)) Then
-                    Set varSwap = iopArray(i)
-                Else
-                    varSwap = iopArray(i)
-                End If
-                If VBA.IsObject(iopArray(i + 1)) Then
-                    Set iopArray(i) = iopArray(i + 1)
-                Else
-                    iopArray(i) = iopArray(i + 1)
-                End If
-                If VBA.IsObject(varSwap) Then
-                    Set iopArray(i + 1) = varSwap
-                Else
-                    iopArray(i + 1) = varSwap
-                End If
+                        Set varSwap = iopArray(i)
+                    Else
+                        varSwap = iopArray(i)
+                    End If
+                    If VBA.IsObject(iopArray(i + 1)) Then
+                        Set iopArray(i) = iopArray(i + 1)
+                    Else
+                        iopArray(i) = iopArray(i + 1)
+                    End If
+                    If VBA.IsObject(varSwap) Then
+                        Set iopArray(i + 1) = varSwap
+                    Else
+                        iopArray(i + 1) = varSwap
+                    End If
                     blnSwapped = True
                 End If
             Next i
@@ -109,14 +111,15 @@ Public Sub ShakerSortArray(ByRef iopArray As Variant)
     Loop Until Not blnSwapped
 End Sub
 
-Public Sub ShakerSortSeq(ByRef iopS As Object)
+
+Public Sub ShakerSortByItem(ByVal iopS As Object)
     ' from https://www.vbforums.com/showthread.php?473677-VB6-Sorting-algorithms-(sort-array-sorting-arrays)&p=2912324#post2912324
     ' The shaker sort is used because it is the highest rated sort which is stable and inplace and which does not use recursion
     
-    If VBA.Left$(VBA.TypeName(iopS), 3) <> "Seq" Then
+    If VBA.Left$(VBA.Typename(iopS), 3) <> "Seq" Then
         Err.Raise 17 + vbObjectError, _
-            "VBALib.Sorters.ShakerSortSeq", _
-            Fmt.Text("Expecting a Seq.  Got {0}", VBA.TypeName(iopS))
+        "Sorters.ShakerSortByItem", _
+        Fmt.Text("Expecting a Seq.  Got {0}", VBA.Typename(iopS))
     End If
     
     If iopS.Count < 1 Then
@@ -165,6 +168,7 @@ Public Sub ShakerSortSeq(ByRef iopS As Object)
         blnSwapped = False
         For i = iMin To iMax
             If iopS.Item(i) > iopS.Item(i + 1) Then
+                'Swap iopS.Item(i), iopS.Item(i + 1)
                 If VBA.IsObject(iopS.Item(i)) Then
                     Set varSwap = iopS.Item(i)
                 Else
@@ -188,21 +192,22 @@ Public Sub ShakerSortSeq(ByRef iopS As Object)
             iMax = iMax - 1
             For i = iMax To iMin Step -1
                 If iopS.Item(i) > iopS.Item(i + 1) Then
+                    'Swap iopS.Item(i), iopS.Item(i + 1)
                     If VBA.IsObject(iopS.Item(i)) Then
-                    Set varSwap = iopS.Item(i)
-                Else
-                    varSwap = iopS.Item(i)
-                End If
-                If VBA.IsObject(iopS.Item(i + 1)) Then
-                    Set iopS.Item(i) = iopS.Item(i + 1)
-                Else
-                    iopS.Item(i) = iopS.Item(i + 1)
-                End If
-                If VBA.IsObject(varSwap) Then
-                    Set iopS.Item(i + 1) = varSwap
-                Else
-                    iopS.Item(i + 1) = varSwap
-                End If
+                        Set varSwap = iopS.Item(i)
+                    Else
+                        varSwap = iopS.Item(i)
+                    End If
+                    If VBA.IsObject(iopS.Item(i + 1)) Then
+                        Set iopS.Item(i) = iopS.Item(i + 1)
+                    Else
+                        iopS.Item(i) = iopS.Item(i + 1)
+                    End If
+                    If VBA.IsObject(varSwap) Then
+                        Set iopS.Item(i + 1) = varSwap
+                    Else
+                        iopS.Item(i + 1) = varSwap
+                    End If
                     blnSwapped = True
                 End If
             Next i
@@ -210,3 +215,6 @@ Public Sub ShakerSortSeq(ByRef iopS As Object)
         End If
     Loop Until Not blnSwapped
 End Sub
+
+
+

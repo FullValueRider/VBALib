@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 Option Explicit
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
 Implements IMapper
 
 Const MY_TYPENAME                   As String = "mpInc"
@@ -18,6 +18,7 @@ Const MY_TYPENAME                   As String = "mpInc"
 Private Type State
     Increment                       As Variant
 End Type
+
 
 Private s                           As State
 
@@ -30,6 +31,7 @@ Attribute Deb.VB_UserMemId = 0
     End With
 End Function
 
+
 Friend Function ConstructInstance(ByVal ipIncrement As Variant) As mpInc
         
     s.Increment = ipIncrement
@@ -37,9 +39,11 @@ Friend Function ConstructInstance(ByVal ipIncrement As Variant) As mpInc
         
 End Function
 
+
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
 
 ''@Description("")
 'Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant

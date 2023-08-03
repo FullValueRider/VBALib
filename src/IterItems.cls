@@ -23,9 +23,9 @@ Option Explicit
 
 Private Type State
 
-    Host                                As Variant   ' holds ipItems
-    Keys                                As Variant   ' Keys if ipItems is a dictionary
-    Items                               As Variant   ' Items if ipItems is a ToArray object
+    Host                                As Variant ' holds ipItems
+    Keys                                As Variant ' Keys if ipItems is a dictionary
+    Items                               As Variant ' Items if ipItems is a ToArray object
     
     FirstIndex                          As Long
     LastIndex                           As Long
@@ -39,7 +39,9 @@ Private Type State
     
 End Type
 
+
 Private s                               As State
+
 
 '@Defaultmember
 Public Function Deb(ByRef ipItems As Variant) As IterItems
@@ -49,12 +51,13 @@ Attribute Deb.VB_UserMemId = 0
     End With
 End Function
 
+
 Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
 
     ' If VBA.IsArray(ipItems) Then
     '     If ArrayOp.Ranks(ipItems) > 1 Then
     '         Err.Raise 17 + vbObjectError, _
-    '             "VBALib.Iteritems: Invalid Array", _
+    '             "Iteritems: Invalid Array", _
     '             "Arrays must be 1 dimension only"
     '     End If
     ' End If
@@ -98,8 +101,8 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
         Case GroupInfo.IsArray(ipItems)
             If ArrayOp.Ranks(ipItems) > 1 Then
                 Err.Raise 17 + vbObjectError, _
-                    "VBALib.IterItems", _
-                    "IterItems does not currently support Arrays with more than one dimension"
+                "IterItems", _
+                "IterItems does not currently support Arrays with more than one dimension"
             End If
             s.Host = ipItems
             s.FirstIndex = LBound(ipItems)
@@ -132,21 +135,25 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
     
 End Function
 
+
 Public Function Size() As Long
     Size = s.Size
 End Function
+
 
 Public Function HoldsItems() As Boolean
     HoldsItems = s.Size > 0
 End Function
 
+
 Public Function LacksItems() As Boolean
     LacksItems = s.Size < 1
 End Function
 
+
 '@Description("Sets the subrange and stepping to be used when using Iteritems. From,To parameters must use 1 based indexing. Step in the number of position to move in response to MoveNext/MovePrev. Mapping to the ative index is done by IterItems")
 Public Function FTS(Optional ByRef ipStartIndex As Variant = Empty, Optional ByRef ipEndIndex As Variant = Empty, Optional ByRef ipStep As Long = 1) As IterItems
-Attribute FTS.VB_Description = "Sets the subrange and stepping to be used when using Iteritems"
+Attribute FTS.VB_Description = "Sets the subrange and stepping to be used when using Iteritems. From,To parameters must use 1 based indexing. Step in the number of position to move in response to MoveNext/MovePrev. Mapping to the ative index is done by IterItems"
     ' Start and End indexes are variants because at some stage we will also be allowing dictionary keys
     
     If Not VBA.IsEmpty(ipStartIndex) Then
@@ -176,7 +183,7 @@ Attribute FTS.VB_Description = "Sets the subrange and stepping to be used when u
     End If
     
     If s.StartIndex > s.EndIndex Then
-       AlertInvalidStartEnd s.StartIndex, s.EndIndex
+        AlertInvalidStartEnd s.StartIndex, s.EndIndex
     End If
     
     ' finally,  convert start and end indexes to native indexes
@@ -252,6 +259,7 @@ Public Function HasNext(Optional ByRef ipLocalOffset As Long = 0) As Boolean
     
 End Function
 
+
 Public Function HasNoNext(Optional ByRef ipLocalOffset As Long = 0) As Boolean
     HasNoNext = Not HasNext(ipLocalOffset)
 End Function
@@ -270,6 +278,7 @@ Public Function HasPrev(Optional ByRef ipLocalOffset As Long = 0) As Boolean
     
 End Function
 
+
 Public Function HasNoPrev(Optional ByRef ipLocalOffset As Long = 0) As Boolean
     HasNoPrev = Not HasPrev(ipLocalOffset)
 End Function
@@ -284,6 +293,7 @@ Public Function MoveNext() As Boolean
     End If
 End Function
 
+
 Public Function MovePrev() As Boolean
     If HasPrev Then
         MovePrev = True
@@ -292,6 +302,7 @@ Public Function MovePrev() As Boolean
         MovePrev = False
     End If
 End Function
+
 
 ' '@Description("Returns the native index of the specified item")
 ' Private Function TryGetIndex(ByRef ipLocalOffset As Long, ByRef ipIndex As Long) As Boolean
@@ -312,7 +323,7 @@ End Function
 
 '@Description("Get the items at the global + local offset.  Default local offset = 0. offset = number of steps")
 Public Property Get CurItem(ByVal ipLocalOffset As Long) As Variant
-Attribute CurItem.VB_Description = "Get the items at the global + local offset.  Default local offset = 0"
+Attribute CurItem.VB_Description = "Get the items at the global + local offset.  Default local offset = 0. offset = number of steps"
 
     Dim myLoc As Long: myLoc = s.GlobalOffset + ipLocalOffset * s.Step + s.FirstIndex
     If myLoc < s.StartIndex Or myLoc > s.EndIndex Then
@@ -336,7 +347,7 @@ Attribute CurItem.VB_Description = "Get the items at the global + local offset. 
         Case GroupInfo.IsIndexFrom1(s.Host):
             myResult = Array(s.Host.Item(myLoc))
         Case GroupInfo.IsIndexFrom0(s.Host):
-             myResult = Array(s.Host.Item(myLoc))
+            myResult = Array(s.Host.Item(myLoc))
         Case Else:
             myResult = Array(s.Host)
         
@@ -374,6 +385,7 @@ Public Property Let CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant
     
 End Property
 
+
 '@("Sets the value of the current object Item")
 Public Property Set CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant)
 
@@ -386,7 +398,7 @@ Public Property Set CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant
     Select Case True
     
         Case GroupInfo.IsArray(s.Host):             Set s.Host(s.FirstIndex + myLoc) = ipItem
-        'Case GroupInfo.IsString(s.Host):            Mid$(s.Host, myLoc, 1) = ipItem
+            'Case GroupInfo.IsString(s.Host):            Mid$(s.Host, myLoc, 1) = ipItem
         Case GroupInfo.IsItemByToArray(s.Host):     Set s.Items(myLoc) = ipItem
         Case GroupInfo.IsDictionary(s.Host):        Set s.Host.Item(myLoc) = ipItem
         Case GroupInfo.IsIndexFrom0(s.Host):        Set s.Host.Item(myLoc) = ipItem
@@ -395,6 +407,7 @@ Public Property Set CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant
     End Select
     
 End Property
+
 
 '@("Returns the host index of the current item")
 Public Property Get CurKey(ByVal ipLocalOffset As Long) As Variant
@@ -426,6 +439,7 @@ Public Property Get CurKey(ByVal ipLocalOffset As Long) As Variant
 
 End Property
 
+
 '@Description("Returns the 1 based index of the current item")
 Public Property Get CurOffset(ByVal ipLocalOffset As Long) As Variant
 Attribute CurOffset.VB_Description = "Returns the 1 based index of the current item"
@@ -441,12 +455,11 @@ Attribute CurOffset.VB_Description = "Returns the 1 based index of the current i
 End Property
 
 
-
 Private Sub AlertInvalidFTs(ByRef ipType As String, ByRef ipValue As Long)
 
     Err.Raise 17 + vbObjectError, _
-        Fmt.Text("VBALib: Invalid FTS Paramater: {0}", ipType), _
-        Fmt.Text("Expecting {0} to be in the normalised range {1} to {2}. Got {3}", ipType, s.GlobalOffset, s.Size, ipValue)
+    Fmt.Text("VBALib: Invalid FTS Paramater: {0}", ipType), _
+    Fmt.Text("Expecting {0} to be in the normalised range {1} to {2}. Got {3}", ipType, s.GlobalOffset, s.Size, ipValue)
         
 End Sub
 
@@ -454,8 +467,8 @@ End Sub
 Private Sub AlertNotNumber(ByRef ipItem As Variant)
 
     Err.Raise 17 + vbObjectError, _
-        "VBALib.IterItems: Invalid Number", _
-        Fmt.Text("Expecting an number. Got Type: {0}", VBA.TypeName(ipItem))
+    "IterItems: Invalid Number", _
+    Fmt.Text("Expecting an number. Got Type: {0}", VBA.Typename(ipItem))
         
 End Sub
 
@@ -463,20 +476,21 @@ End Sub
 Private Sub AlertNegativeStep(ByRef ipStep As Variant)
 
     Err.Raise 17 + vbObjectError, _
-        "VBALib.IterItems: Invalid Negative Step", _
-        Fmt.Text("Negative steps ({0}) are deprecated.  Use MovePrev instead", ipStep)
+    "IterItems: Invalid Negative Step", _
+    Fmt.Text("Negative steps ({0}) are deprecated.  Use MovePrev instead", ipStep)
         
 End Sub
 
 
 Private Sub AlertNoItems()
     Err.Raise 17 + vbObjectError, _
-        "VBALib.Iteritems: No Items", _
-        "Cannot iterate an Item count of 0"
+    "Iteritems: No Items", _
+    "Cannot iterate an Item count of 0"
 End Sub
+
 
 Private Sub AlertInvalidStartEnd(ByRef ipStart As Long, ByRef ipEnd As Long)
     Err.Raise 17 + vbObjectError, _
-        "VBALib.IterItems.FTS|", _
-        Fmt.Text("Expcting start index before End index. Got Start of {0}, End of {1}")
+    "IterItems.FTS|", _
+    Fmt.Text("Expcting start index before End index. Got Start of {0}, End of {1}", ipStart, ipEnd)
 End Sub

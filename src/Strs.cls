@@ -11,6 +11,7 @@ Attribute VB_Exposed = True
 Option Explicit
 '@PredeclaredId
 '@Exposed
+'@Folder("Strings")
 ' The strs class is for methods that process **strings**
 ' To convert to a string, see class 'Stringifier'
 
@@ -72,8 +73,8 @@ Public Function BinToNum(ByVal ipBinary As String, Optional ByRef ipSeperator As
     Else
     
         Err.Raise 17 + vbObjectError, _
-            "Strs.BinToNum", _
-            "Number too big"
+        "Strs.BinToNum", _
+        "Number too big"
 
 
     End If
@@ -104,6 +105,7 @@ Public Function BinToNum(ByVal ipBinary As String, Optional ByRef ipSeperator As
         
 End Function
 
+
 Public Function ToChars(ByRef ipString As String) As Variant
 
     Dim myLen As Long
@@ -125,6 +127,8 @@ Public Function ToChars(ByRef ipString As String) As Variant
     ToChars = myResult
     
 End Function
+
+
 '@Description("Removes duplicates of substrings in ipDedup.")
 Public Function Dedup(ByRef ipString As String, Optional ByRef ipDedupItems As Variant = Empty) As String
 Attribute Dedup.VB_Description = "Removes duplicates of substrings in ipDedup."
@@ -141,9 +145,9 @@ Attribute Dedup.VB_Description = "Removes duplicates of substrings in ipDedup."
         myDedupItems = ipDedupItems
     End If
     
-'    If ArrayOp.LacksItems(myDedupItems) Then
-'        myDedupItems = Array(Chars.twSpace)
-'    End If
+    '    If ArrayOp.LacksItems(myDedupItems) Then
+    '        myDedupItems = Array(Chars.twSpace)
+    '    End If
     
     Dim myString As String
     myString = ipString
@@ -181,10 +185,10 @@ Attribute Trimmer.VB_Description = "Removes ipTrimchars from the ends of a strin
     Dim myString As String
     myString = ipString
     
-'    ' Check for empty SeqC
-'    If myTrimchars.LacksItems Then
-'        Set myTrimchars = ToChars(Chars.WhiteSpace)
-'    End If
+    '    ' Check for empty SeqC
+    '    If myTrimchars.LacksItems Then
+    '        Set myTrimchars = ToChars(Chars.WhiteSpace)
+    '    End If
      
     'Trim the RHS of string
     If ipRhs Then
@@ -212,6 +216,7 @@ Attribute Trimmer.VB_Description = "Removes ipTrimchars from the ends of a strin
           
 End Function
 
+
 '@Description("Adds padding to the RHS of a string to achieve the desired width of string"
 Public Function PadRight(ByVal ipString As String, ByVal ipWidth As Long, Optional ByVal ipPadChars As String) As String
 
@@ -233,6 +238,7 @@ Public Function PadRight(ByVal ipString As String, ByVal ipWidth As Long, Option
     PadRight = VBA.Left$(myReturn, ipWidth)
           
 End Function
+
 
 '@Description("Adds padding to the LHS of a string to achieve the desired width of string"
 Public Function PadLeft(ByVal ipString As String, ByVal ipWidth As Long, Optional ByVal ipPadChars As String) As String
@@ -256,6 +262,7 @@ Public Function PadLeft(ByVal ipString As String, ByVal ipWidth As Long, Optiona
         
 End Function
 
+
 '@Description("Counts the ocurrence of a non overlapping substring")
 Public Function CountOf(ByVal ipCountIn As String, ByVal ipCountMe As String) As Long
 Attribute CountOf.VB_Description = "Counts the ocurrence of a non overlapping substring"
@@ -278,9 +285,9 @@ End Function
 '@Description("Splits a string into a SeqC of trimmed substrings")
 Public Function ToSubStr _
 ( _
-  ByRef ipString As String, _
-  Optional ByRef ipSeparator As String = Chars.twDefaultSeparator, _
-  Optional ByRef ipTrimChars As String = twNullStr _
+ByRef ipString As String, _
+Optional ByRef ipSeparator As String = Chars.twDefaultSeparator, _
+Optional ByRef ipTrimChars As String = twNullStr _
 ) As Variant
 Attribute ToSubStr.VB_Description = "Splits a string into a SeqC of trimmed substrings"
 
@@ -307,9 +314,10 @@ Attribute ToSubStr.VB_Description = "Splits a string into a SeqC of trimmed subs
         myA(myIndex + 1) = Trimmer(VBA.CStr(myArray(myIndex)), myTrimchars)
     Next
     
-   ToSubStr = myA
+    ToSubStr = myA
       
 End Function
+
 
 '@Description("Creates a string composed of ipCount repetitions of ipString")
 Public Function Repeat(ByRef ipString As String, ByRef ipCount As Long) As String
@@ -336,6 +344,7 @@ Attribute Repeat.VB_Description = "Creates a string composed of ipCount repetiti
   
 End Function
 
+
 '@Description("Repeats the replace action until the string no longer changes in lengtth")
 Public Function Replacer(ByRef ipString As String, Optional ByRef ipFind As String = Chars.twSpace, Optional ByVal ipReplace As String = Chars.twNullStr) As String
 Attribute Replacer.VB_Description = "Repeats the replace action until the string no longer changes in lengtth"
@@ -361,7 +370,7 @@ Attribute Replacer.VB_Description = "Repeats the replace action until the string
         
     Loop Until myLen = VBA.Len(myReturn)
 
-  Replacer = myReturn
+    Replacer = myReturn
       
 End Function
 
@@ -390,13 +399,13 @@ Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindRep
     
         If Not VBA.IsArray(myPair) Then
             Err.Raise 17 + vbObjectError, _
-            "VBALib.strs.Multireplacer", _
-            "Expecting array.  Got " & VBA.TypeName(myPair)
+            "strs.Multireplacer", _
+            "Expecting array.  Got " & VBA.Typename(myPair)
         End If
         
         If LBound(myPair) <> 0 Or UBound(myPair) <> 1 Then
             Err.Raise 17 + vbObjectError, _
-            "VBALib.strs.Multireplacer", _
+            "strs.Multireplacer", _
             "Expecting bounds of 0 to 1. Got bounds" & LBound(myPair) & " to " & UBound(myPair)
         End If
         
@@ -427,24 +436,24 @@ Public Function ToAscB(ByVal ipString As String) As Variant
     
     End If
   
-   ToAscB = myA
+    ToAscB = myA
   
 End Function
 
 
 Public Function ToUnicodeBytes(ByVal ipString As String) As Variant
 
-  If VBA.Len(ipString) = 0 Then
+    If VBA.Len(ipString) = 0 Then
       
-     ToUnicodeBytes = Array()
+        ToUnicodeBytes = Array()
           
-  Else
+    Else
       
-      Dim myvariant() As Byte
-      myvariant = ipString
-     ToUnicodeBytes = myvariant
+        Dim myvariant() As Byte
+        myvariant = ipString
+        ToUnicodeBytes = myvariant
           
-  End If
+    End If
       
 End Function
 
@@ -467,9 +476,10 @@ Public Function ToUnicodeIntegers(ByVal ipString As String) As Variant
         
     End If
   
-   ToUnicodeIntegers = myA
+    ToUnicodeIntegers = myA
   
 End Function
+
 
 Public Function Sort(ByRef ipString As String) As String
 
@@ -486,7 +496,6 @@ Public Function Sort(ByRef ipString As String) As String
 End Function
 
 
-  
 '@Description("increments characters using the SeqCuence in the ipAllowedChar SeqC")
 Public Function Inc(ByRef ipString As String, Optional ByVal ipAllowedChars As String) As String
 Attribute Inc.VB_Description = "increments characters using the SeqCuence in the ipAllowedChar SeqC"
@@ -542,7 +551,7 @@ Attribute Inc.VB_Description = "increments characters using the SeqCuence in the
         ' the character as strindex is incrementable- continue loop
         ' the character at strindex is not incrementable insert second allowed char and exit loop
         
-         ' check for strindex =0
+        ' check for strindex =0
         If myStrIndex = 0 Then
             Inc = VBA.Mid$(myAllowedChars, 2, 1) & ipString
             Exit Function

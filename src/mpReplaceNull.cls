@@ -11,7 +11,7 @@ Attribute VB_Description = "Replaces null values with a default value"
 Option Explicit
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
 Implements IMapper
 '@ModuleDescription("Replaces null values with a default value")
 Const MY_TYPENAME                   As String = "mpReplaceNull"
@@ -19,6 +19,7 @@ Const MY_TYPENAME                   As String = "mpReplaceNull"
 Private Type State
     Default                         As Variant
 End Type
+
 
 Private s                           As State
 
@@ -31,6 +32,7 @@ Attribute Deb.VB_UserMemId = 0
     End With
 End Function
 
+
 Friend Function ConstructInstance(ByVal ipDefault As Variant) As mpReplaceNull
         
     s.Default = ipDefault
@@ -38,9 +40,11 @@ Friend Function ConstructInstance(ByVal ipDefault As Variant) As mpReplaceNull
         
 End Function
 
+
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
 
 ''@Description("")
 'Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant

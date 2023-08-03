@@ -9,52 +9,56 @@ Public myComponentName As String
 #If twinbasic Then
     ' Do Nothing
 #Else
-
-    ' We need these definitions because rubberduck unit testing is not being used.
-
     Public Assert As Object
     Public Fakes As Object
-
 #End If
 
-  Public Sub Main()
-    #If twinbasic Then
-        ' do nothing
-    #Else
-        ErrEx.Enable vbNullString
-        Set Assert = CreateObject("Rubberduck.AssertClass")
-        Set Fakes = CreateObject("Rubberduck.FakesProvider")
-    #End If
+
+Public Sub Main()
+  
         
-    Dim myTime As Variant
-    myTime = Timer
+    Dim myTime As Variant: myTime = Timer
+    
     Debug.Print "Testing started"
     Debug.Print
+
     TestArrayOp.ArrayOpTests
     TestFmt.FmtTests
     TestIterItems.IterItemsTests
     TestStrs.StrsTests
-     TestStringifier.StringifierTests
-     TestMappers.MapperTests
-     TestComparers.ComparerTests
+    TestStringifier.StringifierTests
+    TestMappers.MapperTests
+    TestComparers.ComparerTests
     'TestReducers.ReducerTests
-    TestIterItems.IterItemsTests
-
-'    TestHashC.cHashCTests  ' not yet complete
+    '    TestHashC.cHashCTests  ' not yet complete
     TestSeqA.SeqATests
     TestSeqC.SeqCTests
     TestSeqL.SeqLTests
+    TestSeqH.SeqHTests
 
     TestKvpA.KvpATests
     TestKvpC.KvpCTests
+    TestKvpH.KvpHTests
     TestKvpL.KvpLTests
-    'TestKvpH.KvpHTests
+
     Debug.Print
     Debug.Print "Testing Finished  " & Timer - myTime & " seconds."
         
 End Sub
 
-'Private Function TimeNow() As String
-'    TimeNow = Format(Time(), "hh:nn:ss")
-'End Function
+Public Function GlobalAssert()
+    #If twinbasic Then
+        ' do nothing
+    #Else
+        If Not ErrEx.IsEnabled Then
+            ErrEx.Enable vbNullString
+        End If
+        If Assert Is Nothing Then
+            Set Assert = CreateObject("Rubberduck.AssertClass")
+        End If
+        If Fakes Is Nothing Then
+            Set Fakes = CreateObject("Rubberduck.FakesProvider")
+        End If
+    #End If
 
+End Function

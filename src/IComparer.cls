@@ -8,15 +8,19 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@Exposed
+'@Folder("Interfaces")
 Option Explicit
 
 '@Interface
 
+
 Public Function ExecCmp(ByRef ipHostItem As Variant) As Boolean
 End Function
- 
-Public Property Get TypeName() As String
+
+
+Public Property Get Typename() As String
 End Property
+
 
 'Public Function ExecCount(ByRef ipHostItems As SeqC) As Long
 'End Function

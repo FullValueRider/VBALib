@@ -1,9 +1,7 @@
 Attribute VB_Name = "Chars"
-
+'@folder("Constants")
 '@IgnoreModule ConstantNotUsed
 Option Explicit
-
-'@Folder("VBALib")
 
 Public Const twNullStr              As String = vbNullString
 Public Const twHat                  As String = "^"

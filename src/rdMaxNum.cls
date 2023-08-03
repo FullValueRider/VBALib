@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Reducers")
+'@Folder("Reducers")
 Option Explicit
 
 Implements IReducer
@@ -17,7 +17,7 @@ Implements IReducer
 Const MY_TYPENAME                   As String = "rdMaxNum"
 
 
-Public Property Get IReducer_TypeName() As String
+Private Property Get IReducer_TypeName() As String
     IReducer_TypeName = MY_TYPENAME
 End Property
 

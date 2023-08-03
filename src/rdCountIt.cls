@@ -7,9 +7,9 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
- '@PredeclaredId
- '@Exposed
- '@Folder("VBALib.Filters")
+'@PredeclaredId
+'@Exposed
+'@Folder("Filters")
 Option Explicit
 
 Implements IReducer
@@ -20,7 +20,9 @@ Private Type State
     Comparer                        As IComparer
 End Type
 
+
 Private s                           As State
+
 
 Public Function Deb(ByRef ipComparer As IComparer) As rdCountIt
         
@@ -32,6 +34,7 @@ Public Function Deb(ByRef ipComparer As IComparer) As rdCountIt
         
 End Function
 
+
 Friend Function ConstructInstance(ByRef ipComparer As IComparer) As rdCountIt
         
     Set s.Comparer = ipComparer
@@ -39,30 +42,33 @@ Friend Function ConstructInstance(ByRef ipComparer As IComparer) As rdCountIt
         
 End Function
 
+
 '@Description("Adds the value in ipArgsArray(0) to each item in the SeqC.  If the host item is not a number the string NAN is returned")
 Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 Attribute IReducer_ExecReduction.VB_Description = "Adds the value in ipArgsArray(0) to each item in the SeqC.  If the host item is not a number the string NAN is returned"
     IReducer_ExecReduction = ExecReduction(ipHostItems)
 End Function
 
+
 Private Property Get IReducer_TypeName() As String
     IReducer_TypeName = MY_TYPENAME
 End Property
+
 
 Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant
         
     Dim myCounter As Long
     myCounter = 0
         
-   Dim myItem As Variant
-   For Each myItem In ipHostItems
+    Dim myItem As Variant
+    For Each myItem In ipHostItems
    
         If s.Comparer.ExecCmp(myItem) Then
             myCounter = myCounter + 1
         End If
    
-   Next
+    Next
    
-   ExecReduction = myCounter
+    ExecReduction = myCounter
         
 End Function

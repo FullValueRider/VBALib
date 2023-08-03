@@ -1,4 +1,5 @@
 Attribute VB_Name = "ComparerHelpers"
+'@Folder("Helpers")
 Option Explicit
 
 
@@ -13,6 +14,7 @@ Option Explicit
 'A comparison of a string and a number can give strange results due to numbers being coerced to strings or vice versa
 ' Therefore VBALib defines the comparison of a string and a number as false
 
+
 Public Function GetItemAsComparerValue(ByRef ipItem As Variant) As Variant
 
     Dim myResult As Variant
@@ -20,8 +22,8 @@ Public Function GetItemAsComparerValue(ByRef ipItem As Variant) As Variant
     Select Case True
     
         Case GroupInfo.IsContainer(ipItem):                        myResult = Fmt.Text("{0}", ipItem)
-        ' Admin needs to be before Object because nothing is an object
-        Case GroupInfo.IsAdmin(ipItem):                            myResult = VBA.TypeName(ipItem)
+            ' Admin needs to be before Object because nothing is an object
+        Case GroupInfo.IsAdmin(ipItem):                            myResult = VBA.Typename(ipItem)
         Case VBA.IsObject(ipItem):
             
             On Error Resume Next
@@ -32,7 +34,7 @@ Public Function GetItemAsComparerValue(ByRef ipItem As Variant) As Variant
             End If
             
             On Error GoTo 0
-        ' Booleans, Strings and Numbers
+            ' Booleans, Strings and Numbers
         Case Else:                                                  myResult = ipItem
             
     End Select
@@ -40,6 +42,7 @@ Public Function GetItemAsComparerValue(ByRef ipItem As Variant) As Variant
     GetItemAsComparerValue = myResult
 
 End Function
+
 
 Public Function StringNumberComparison(ByRef ipReference As Variant, ByRef ipItem As Variant) As Boolean
 
@@ -53,6 +56,7 @@ Public Function StringNumberComparison(ByRef ipReference As Variant, ByRef ipIte
     
 End Function
 
+
 ' In vba it is not possible to compare a non object with an object
 ' so to be stricter, and to give a result, rather than an error,
 ' the following comparisons for equality are defined)
@@ -60,8 +64,8 @@ Public Function Equals(ByRef ipLHS As Variant, ByRef ipRhs As Variant) As Boolea
     
     If VBA.IsObject(ipLHS) And VBA.IsObject(ipRhs) Then
         Equals = ipLHS Is ipRhs
-'    ElseIf (ipLHS Is Nothing) And (ipRHS Is Nothing) Then
-'        Equals = True
+        '    ElseIf (ipLHS Is Nothing) And (ipRHS Is Nothing) Then
+        '        Equals = True
     ElseIf VBA.IsEmpty(ipLHS) And VBA.IsEmpty(ipRhs) Then
         Equals = True
     ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRhs) Then
@@ -75,3 +79,5 @@ Public Function Equals(ByRef ipLHS As Variant, ByRef ipRhs As Variant) As Boolea
     End If
     
 End Function
+
+

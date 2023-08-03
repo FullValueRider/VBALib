@@ -15,7 +15,7 @@ Attribute VB_Description = "A simple single item dictionary"
 '@Moduledescription("A simple single item dictionary")
 '@PredeclaredId
 '@Exposed
-'@Folder("Kvp")
+'@Folder("VBALib.Kvp")
 Option Explicit
 
 
@@ -26,7 +26,9 @@ Private Type Properties
         
 End Type
 
+
 Private p               As Properties
+
 
 '@DefaultMember
 Public Function Deb(Optional ByRef ipKVPairOrKey As Variant = Empty, Optional ByRef ipItem As Variant = Empty) As KVPair
@@ -35,14 +37,15 @@ Attribute Deb.VB_UserMemId = 0
         Set Deb = .ConstructInstance(ipKVPairOrKey, ipItem)
     End With
 End Function
- 
+
+
 Friend Function ConstructInstance(ByRef ipKVPairOrKey As Variant, ByRef ipItem As Variant) As KVPair
 
     Set p.Keys = New Collection
     Set p.Items = New Collection
     Set ConstructInstance = Me
     
-    If VBA.TypeName(ipKVPairOrKey) = "KVPair" Then
+    If VBA.Typename(ipKVPairOrKey) = "VBALib.Kvpair" Then
         Set ConstructInstance = ConstructInstanceUsingKVPair(ipKVPairOrKey)
         
     Else
@@ -50,6 +53,7 @@ Friend Function ConstructInstance(ByRef ipKVPairOrKey As Variant, ByRef ipItem A
     End If
             
 End Function
+
 
 Private Function ConstructInstanceUsingKVPair(ByRef ipKVpair As Variant) As KVPair
 
@@ -59,6 +63,7 @@ Private Function ConstructInstanceUsingKVPair(ByRef ipKVpair As Variant) As KVPa
     
 End Function
 
+
 Private Function ConstructInstanceUsingKeyAndItem(ByRef ipKey As Variant, ByRef ipItem As Variant) As KVPair
 
     p.Keys.Add ipKey
@@ -67,14 +72,17 @@ Private Function ConstructInstanceUsingKeyAndItem(ByRef ipKey As Variant, ByRef 
     
 End Function
 
+
 Public Property Get Key() As Variant
     Key = p.Keys.Item(1)
 End Property
+
 
 Public Property Let Key(ByVal ipKey As Variant)
     p.Keys.Add ipKey
     p.Keys.Remove 1
 End Property
+
 
 Public Property Set Key(ByVal ipKey As Variant)
     p.Keys.Add ipKey
@@ -92,15 +100,18 @@ Public Property Get Item() As Variant
     
 End Property
 
+
 Public Property Let Item(ByVal ipItem As Variant)
     p.Items.Add ipItem
     p.Items.Remove 1
 End Property
 
+
 Public Property Set Item(ByVal ipItem As Variant)
     p.Items.Add ipItem
     p.Items.Remove 1
 End Property
+
 
 'Public Function ToString(Optional ByVal ipSeparator As Variant) As String
 '    If VBA.IsMissing(ipSeparator) Then ipSeparator = chars.twComma
@@ -109,8 +120,9 @@ End Property
 'End Function
 
 Public Function Name() As String
-    Name = TypeName(Me)
+    Name = Typename(Me)
 End Function
+
 
 'This may seem stupid but a KVPair can be treated as a single item dictionary
 ' So to conform with other dictionary type we implement Keys and Items functions
@@ -120,9 +132,11 @@ Attribute NewEnum.VB_UserMemId = -4
     Set NewEnum = p.Keys.[_NewEnum]
 End Function
 
+
 Public Function Keys() As Variant
     Set Keys = Array(p.Keys.Item(1))
 End Function
+
 
 Public Function Items() As Variant
     Set Items = Array(p.Items.Item(1))

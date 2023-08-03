@@ -12,12 +12,14 @@ Option Private Module
     'Do nothing
 #Else
 
-'@ModuleInitialize
+
+    '@ModuleInitialize
 Private Sub ModuleInitialize()
+    GlobalAssert
     'this method runs once per module.
     ' BUT only runs if the Testing is via rubberduck unit tests
     '    Set Assert = CreateObject("Rubberduck.AssertClass")
-'    Set Fakes = CreateObject("Rubberduck.FakesProvider")
+    '    Set Fakes = CreateObject("Rubberduck.FakesProvider")
 
 End Sub
 
@@ -25,8 +27,8 @@ End Sub
 '@ModuleCleanup
 Private Sub ModuleCleanup()
     'this method runs once per module.
-'    Set Assert = Nothing
-'    Set Fakes = Nothing
+    '    Set Assert = Nothing
+    '    Set Fakes = Nothing
 End Sub
 
 
@@ -35,15 +37,17 @@ Private Sub TestInitialize()
     'This method runs before every test in the module..
 End Sub
 
+
 #End If
 
 Public Sub StrsTests()
  
-#If twinbasic Then
-    Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab, vbTab,
-#Else
-    Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab, vbTab,
-#End If
+    #If twinbasic Then
+        Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab, vbTab,
+    #Else
+        GlobalAssert
+        Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab, vbTab,
+    #End If
 
     Test01a_strs_BinToNum_Byte
     Test01b_strs_BinToNum_Integer
@@ -96,10 +100,12 @@ Public Sub StrsTests()
 
 End Sub
 
+
 '@TestCleanup
 Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
+
 
 '@TestMethod("Strs")
 Private Sub Test01a_strs_BinToNum_Byte()
@@ -185,6 +191,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Strs")
 Private Sub Test01c_strs_BinToNum_Long()
@@ -274,8 +281,6 @@ TestFail:
 End Sub
 
 
-
-
 '@TestMethod("Strs")
 Private Sub Test02a_Strs_Dedup_Default()
 
@@ -287,7 +292,7 @@ Private Sub Test02a_Strs_Dedup_Default()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     
@@ -497,6 +502,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Strs")
 Private Sub Test04c_Strs_PadRight_abcd()
 
@@ -530,6 +536,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Strs")
 Private Sub Test05a_Strs_PadLeft_Default()
@@ -600,6 +607,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Strs")
 Private Sub Test05c_Strs_PadLeft_abcd()
@@ -721,9 +729,8 @@ Private Sub Test07a_SubStr_Default()
     
     'Arrange:
     Dim myExpected As Variant
-    ReDim myExpected(1 To 3)
     myExpected = Split("Hello,There,World", ",")
-    
+    ReDim Preserve myExpected(1 To 3)
     
     
     Dim myResult As Variant
@@ -742,6 +749,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Strs")
 Private Sub Test07b_SubStr_ab()
 
@@ -757,9 +765,8 @@ Private Sub Test07b_SubStr_ab()
     
     'Arrange:
     Dim myExpected As Variant
-    ReDim myExpected(1 To 3)
     myExpected = Split("Hello_ab_There_ab_World", "_ab_")
-
+    ReDim Preserve myExpected(1 To 3)
     
     Dim myResult As Variant
     'Act:
@@ -812,6 +819,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Strs")
 Private Sub Test08b_Repeat_Hello()
 
@@ -844,6 +852,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Strs")
 Private Sub Test09a_Replacer()
@@ -878,6 +887,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Strs")
 Private Sub Test09b_Replacer_SpecifiedPair()
 
@@ -910,6 +920,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Strs")
 Private Sub Test09c_Replacer_NestedPairs()
@@ -978,6 +989,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Strs")
 Private Sub Test10b_MultiReplacer_SpecifiedPair()
 
@@ -1010,6 +1022,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Strs")
 Private Sub Test10c_MultiReplacer_NestedPairs()
@@ -1078,6 +1091,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Strs")
 Private Sub Test11b_ToUnicodeBytes()
@@ -1156,6 +1170,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Strs")
 Private Sub Test12a_Sort()
 
@@ -1188,6 +1203,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Strs")
 Private Sub Test13a_Inc_NoCarryInc()
@@ -1266,6 +1282,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Strs")
 Private Sub Test13c_Inc_FullROllover()
 
@@ -1304,6 +1321,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Strs")
 Private Sub Test13d_Inc_NonIncMidString()
 
@@ -1315,7 +1333,7 @@ Private Sub Test13d_Inc_NonIncMidString()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
-   On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myExpected As String
@@ -1341,3 +1359,5 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+

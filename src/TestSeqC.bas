@@ -13,8 +13,9 @@ Private Fakes As Object
 #Else
 
 
-'@ModuleInitialize
+    '@ModuleInitialize
 Private Sub ModuleInitialize()
+    GlobalAssert
     'this method runs once per module.
     'Set Assert = CreateObject("Rubberduck.AssertClass")
     'Set Fakes = CreateObject("Rubberduck.FakesProvider")
@@ -39,15 +40,18 @@ End Sub
 Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
+
+
 #End If
 
 Public Sub SeqCTests()
  
-#If twinbasic Then
-    Debug.Print CurrentProcedureName;
-#Else
-    Debug.Print ErrEx.LiveCallstack.ProcedureName;
-#End If
+    #If twinbasic Then
+        Debug.Print CurrentProcedureName;
+    #Else
+        GlobalAssert
+        Debug.Print ErrEx.LiveCallstack.ProcedureName;
+    #End If
 
     Test01_SeqObj
     
@@ -68,14 +72,14 @@ Public Sub SeqCTests()
     Test06d_AddRange_ArrayList
     Test06e_AddRange_Dictionary
     
-    Test07a_Insert_SingleItems
-    Test07b_Insert_MultipleItems
+    Test07a_InsertAt_SingleItems
+    Test07b_InsertAt_MultipleItems
     
-    Test08a_InsertRange_String
-    Test08b_InsertRange_Array
-    Test08c_InsertRange_Collection
-    Test08d_InsertRange_ArrayList
-    Test08e_InsertRange_Dictionary
+    Test08a_InsertAtRange_String
+    Test08b_InsertAtRange_Array
+    Test08c_InsertAtRange_Collection
+    Test08d_InsertAtRange_ArrayList
+    Test08e_InsertAtRange_Dictionary
     
     Test09a0_Remove_SingleItem
     
@@ -85,7 +89,7 @@ Public Sub SeqCTests()
     Test10a_Remove_SingleItems
     
     Test11a_RemoveRange_SingleItem
-    Test11b_RemoveAtRange_ThreeItems
+    Test11b_RemoveIndexesRange_ThreeItems
     
     Test12a_RemoveRange_SingleItem
     
@@ -165,17 +169,18 @@ Public Sub SeqCTests()
 
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test01_SeqObj()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim mySeq As SeqC
@@ -187,8 +192,8 @@ Private Sub Test01_SeqObj()
     
     'Act:
     myResult(0) = VBA.IsObject(mySeq)
-    myResult(1) = VBA.TypeName(mySeq)
-    myResult(2) = mySeq.TypeName
+    myResult(1) = VBA.Typename(mySeq)
+    myResult(2) = mySeq.Typename
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
@@ -206,12 +211,12 @@ End Sub
 Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -243,12 +248,12 @@ End Sub
 Private Sub Test02b_InitByString()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim myExpected As Variant
@@ -281,12 +286,12 @@ End Sub
 Private Sub Test02c_InitByForEachArray()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim myArray(1 To 3, 1 To 3) As Variant
@@ -332,12 +337,12 @@ End Sub
 Private Sub Test02d_InitByForEachArrayList()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim myAL As Object
@@ -386,12 +391,12 @@ End Sub
 Private Sub Test02e_InitByForEachCollection()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim myC As Collection
@@ -440,12 +445,12 @@ End Sub
 Private Sub Test02f_InitByDictionary()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim myD As Scripting.Dictionary
@@ -492,16 +497,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test03a_WriteItem()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -531,16 +537,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test04a_Add_MultipleItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -568,18 +575,17 @@ TestFail:
 End Sub
 
 
-
 '@TestMethod("SeqC")
 Private Sub Test06a_AddRange_String()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -611,12 +617,12 @@ End Sub
 Private Sub Test06b_AddRange_Array()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -648,12 +654,12 @@ End Sub
 Private Sub Test06c_AddRange_Collection()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -695,12 +701,12 @@ End Sub
 Private Sub Test06d_AddRange_ArrayList()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -742,12 +748,12 @@ End Sub
 Private Sub Test06e_AddRange_Dictionary()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -787,15 +793,15 @@ End Sub
 
 
 '@TestMethod("SeqC")
-Private Sub Test07a_Insert_SingleItems()
+Private Sub Test07a_InsertAt_SingleItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -811,9 +817,9 @@ Private Sub Test07a_Insert_SingleItems()
 
     'Act:
     Set mySeq = SeqC.Deb(5)
-    myResult2(0) = mySeq.Insert(3, "Hello")
-    myResult2(1) = mySeq.Insert(5, 42&)
-    myResult2(2) = mySeq.Insert(7, 3.142)
+    myResult2(0) = mySeq.InsertAt(3, "Hello")
+    myResult2(1) = mySeq.InsertAt(5, 42&)
+    myResult2(2) = mySeq.InsertAt(7, 3.142)
 
     myResult = mySeq.ToArray
     'Assert:
@@ -830,16 +836,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
-Private Sub Test07b_Insert_MultipleItems()
+Private Sub Test07b_InsertAt_MultipleItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -851,7 +858,7 @@ Private Sub Test07b_Insert_MultipleItems()
 
     'Act:
     Set mySeq = SeqC(5)
-    mySeq.InsertItems 3, "Hello", 42&, 3.142
+    mySeq.InsertAtItems 3, "Hello", 42&, 3.142
 
     myResult = mySeq.ToArray
 
@@ -869,8 +876,9 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 ''@TestMethod("SeqC")
-'Private Sub Test09a_InsertItems()
+'Private Sub Test09a_InsertAtItems()
 '    #If twinbasic Then
 '        myProcedureName = CurrentProcedureName
 '       myComponentName = CurrentComponentName
@@ -878,7 +886,7 @@ End Sub
 '        myProcedureName = ErrEx.LiveCallstack.ProcedureName
 '        myComponentName = ErrEx.LiveCallstack.ModuleName
 '    #End If
-'      On Error GoTo TestFail
+'      on error GoTo TestFail
 '
 '    'Arrange:
 '    Dim mySeq As SeqC
@@ -895,7 +903,7 @@ End Sub
 '    'Act:
 '
 '    Set mySeq = SeqC.Deb(5)
-'    myResult2 = mySeq.InsertItems(3, "Hello", 42&, 3.142).ToArray
+'    myResult2 = mySeq.InsertAtItems(3, "Hello", 42&, 3.142).ToArray
 '
 '
 '    myResult = mySeq.ToArray
@@ -905,7 +913,7 @@ End Sub
 '
 'TestExit:
 '    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
+'    on error Resume Next
 '
 '    Exit Sub
 'TestFail:
@@ -915,15 +923,15 @@ End Sub
 
 
 '@TestMethod("SeqC")
-Private Sub Test08a_InsertRange_String()
+Private Sub Test08a_InsertAtRange_String()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -936,7 +944,7 @@ Private Sub Test08a_InsertRange_String()
 
     'Act:
     Set mySeq = SeqC.Deb(5)
-    mySeq.InsertRange 3, "Hello"
+    mySeq.InsertAtRange 3, "Hello"
 
     myResult = mySeq.ToArray
     'Assert:
@@ -953,16 +961,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
-Private Sub Test08b_InsertRange_Array()
+Private Sub Test08b_InsertAtRange_Array()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -974,7 +983,7 @@ Private Sub Test08b_InsertRange_Array()
 
     'Act:
     Set mySeq = SeqC.Deb(5)
-    mySeq.InsertRange 3, Array("Hello", 42&, 3.142)
+    mySeq.InsertAtRange 3, Array("Hello", 42&, 3.142)
 
     myResult = mySeq.ToArray
     'Assert:
@@ -990,16 +999,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
-Private Sub Test08c_InsertRange_Collection()
+Private Sub Test08c_InsertAtRange_Collection()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1021,7 +1031,7 @@ Private Sub Test08c_InsertRange_Collection()
 
     'Act:
     Set mySeq = SeqC(5)
-    mySeq.InsertRange 3, myC
+    mySeq.InsertAtRange 3, myC
 
     myResult = mySeq.ToArray
 
@@ -1038,16 +1048,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
-Private Sub Test08d_InsertRange_ArrayList()
+Private Sub Test08d_InsertAtRange_ArrayList()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1069,7 +1080,7 @@ Private Sub Test08d_InsertRange_ArrayList()
 
     'Act:
     Set mySeq = SeqC.Deb(5)
-    mySeq.InsertRange 3, myAL
+    mySeq.InsertAtRange 3, myAL
 
     myResult = mySeq.ToArray
 
@@ -1087,16 +1098,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
-Private Sub Test08e_InsertRange_Dictionary()
+Private Sub Test08e_InsertAtRange_Dictionary()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1117,7 +1129,7 @@ Private Sub Test08e_InsertRange_Dictionary()
 
     'Act:
     Set mySeq = SeqC.Deb(5)
-    mySeq.InsertRange 3, myD
+    mySeq.InsertAtRange 3, myD
     myResult = mySeq.ToArray
 
     myResult(3) = myResult(3)(0) & VBA.CStr(myResult(3)(1))
@@ -1143,7 +1155,7 @@ End Sub
 Private Sub Test09a0_Remove_SingleItem()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
@@ -1177,16 +1189,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test09a_RemoveAt_SingleItem()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1215,16 +1228,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test09b_RemoveAt_ThreeItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1236,7 +1250,7 @@ Private Sub Test09b_RemoveAt_ThreeItems()
     Set mySeq = SeqC.Deb(Array(Empty, 42, Empty, Empty, 42, Empty, Empty, 42))
 
     'Act:
-    mySeq.RemoveItemsAt 8, 2, 5
+    mySeq.RemoveIndexes 8, 2, 5
 
     myResult = mySeq.ToArray
 
@@ -1253,16 +1267,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test10a_Remove_SingleItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1291,11 +1306,12 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test11a_RemoveRange_SingleItem()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
@@ -1329,16 +1345,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
-Private Sub Test11b_RemoveAtRange_ThreeItems()
+Private Sub Test11b_RemoveIndexesRange_ThreeItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1350,7 +1367,7 @@ Private Sub Test11b_RemoveAtRange_ThreeItems()
     Set mySeq = SeqC.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
 
     'Act:
-    mySeq.RemoveAtRange SeqC(5, 4, 6)
+    mySeq.RemoveIndexesRange SeqC(5, 4, 6)
 
     myResult = mySeq.ToArray
 
@@ -1367,16 +1384,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test12a_RemoveRange_SingleItem()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1410,12 +1428,12 @@ End Sub
 Private Sub Test13a_RemoveAll_DefaultAll()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1447,12 +1465,12 @@ End Sub
 Private Sub Test13b_RemoveAll_Default_42AndHello()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1485,12 +1503,12 @@ End Sub
 Private Sub Test13c_Reset()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1517,16 +1535,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test13d_Clear()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1553,16 +1572,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test14a_Fill()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1598,12 +1618,12 @@ End Sub
 Private Sub Test15a_Slice()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1636,12 +1656,12 @@ End Sub
 Private Sub Test15b_SliceToEnd()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1669,16 +1689,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test15c_SliceRunOnly()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1706,16 +1727,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test15d_Slice_Start3_End9_step2()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1743,16 +1765,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test15e_Slice_Start3_End9_step2_ToCollection()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1786,16 +1809,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test15f_Slice_Start3_End9_step2_ToArray()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1823,16 +1847,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test16a_Head()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1860,16 +1885,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test16b_Head_3Items()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1897,16 +1923,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test16c_HeadZeroItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1933,16 +1960,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test16d_HeadFullSeq()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -1970,16 +1998,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test17a_Tail()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2007,16 +2036,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test17b_Tail_3Items()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2044,16 +2074,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test17c_TailFullItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2080,16 +2111,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test17d_TailZeroSeq()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2117,16 +2149,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test18a_KnownIndexes_Available()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2163,12 +2196,12 @@ End Sub
 Private Sub Test18b_KnownIndexes_Unavailable()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2205,12 +2238,12 @@ End Sub
 Private Sub Test19a_KnownValues_Available()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2242,16 +2275,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test20a_IndexOf_WholeSeq_Present()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2278,16 +2312,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test20b_IndexOf_WholeSeq_NotPresent()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2314,16 +2349,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test20c_IndexOf_SubSeq_Present()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2350,16 +2386,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test20d_IndexOf_SubSeq_NotPresent()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2391,12 +2428,12 @@ End Sub
 Private Sub Test21a_LastIndexOf_WholeSeq_Present()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2423,16 +2460,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test21b_LastIndexOf_WholeSeq_NotPresent()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2459,16 +2497,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test21c_LastIndexOf_SubSeq_Present()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2495,16 +2534,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test21d_LastIndexOf_SubSeq_NotPresent()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2531,16 +2571,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test22a_Push()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2568,16 +2609,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test22b_PushRange()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2612,12 +2654,12 @@ End Sub
 Private Sub Test23a_Pop()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2656,12 +2698,12 @@ End Sub
 Private Sub Test23b_PopRange()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2696,16 +2738,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test23c_PopRange_ExceedsHost()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2744,12 +2787,12 @@ End Sub
 Private Sub Test23d_PopRange_NegativeRun()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2783,16 +2826,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test24a_Enqueue()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2820,16 +2864,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test24b_EnqueueRange()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2864,12 +2909,12 @@ End Sub
 Private Sub Test25a_Dequeue()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2908,12 +2953,12 @@ End Sub
 Private Sub Test25b_DeqeueRange()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2948,16 +2993,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test25c_DequeueRange_ExceedsHost()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -2992,16 +3038,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test26a_Sort()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3029,16 +3076,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test26b_Sorted()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3068,16 +3116,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test27a_Reverse()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim myExpected As Variant
@@ -3087,7 +3136,7 @@ Private Sub Test27a_Reverse()
     Dim mySeq As SeqC
     Set mySeq = SeqC.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
-     Dim myResult As Variant
+    Dim myResult As Variant
     'Act:
     myResult = mySeq.Reverse.ToArray
 
@@ -3104,16 +3153,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test27b_Reversed()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3148,16 +3198,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test28a_Unique()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3188,16 +3239,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test28b_Unique_SingleItem()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3226,16 +3278,17 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test28c_Unique_NoItems()
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3263,17 +3316,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test29a_SetOfCommon()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3307,12 +3361,12 @@ Private Sub Test29b_SetOfHostOnly()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3340,17 +3394,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test29c_SetOfParamOnly()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3378,17 +3433,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test29d_SetOfNotCommon()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3416,17 +3472,18 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("SeqC")
 Private Sub Test29e_SetOfUnique()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3439,7 +3496,7 @@ Private Sub Test29e_SetOfUnique()
     Set mySeq = SeqC(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = mySeq.SetOf(m_Unique, SeqC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)).Sorted.ToArray
+    myResult = mySeq.SetOf(e_SetoF.m_Unique, SeqC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)).Sorted.ToArray
 
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -3455,18 +3512,17 @@ TestFail:
 End Sub
 
 
-
 '@TestMethod("SeqC")
 Private Sub Test30a_Swap()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
 
     'Arrange:
     Dim mySeq As SeqC
@@ -3499,6 +3555,5 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
-
 
 

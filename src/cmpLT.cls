@@ -21,6 +21,7 @@ Private Type State
     RefType                     As VbVarType
 End Type
 
+
 Private s                       As State
 
 
@@ -55,7 +56,7 @@ End Function
 Friend Function ConstructInstance(ByVal ipReference As Variant) As cmpLT
 
     If VarType(ipReference) = vbBoolean Then
-        Err.Raise "VBALib.cmpLT", _
+        Err.Raise "cmpLT", _
         "LT is not a valid comparision for booleans"
     End If
     
@@ -64,4 +65,3 @@ Friend Function ConstructInstance(ByVal ipReference As Variant) As cmpLT
     Set ConstructInstance = Me
     
 End Function
-    

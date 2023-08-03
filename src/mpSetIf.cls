@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 Option Explicit
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
     
 Implements IMapper
 
@@ -18,8 +18,8 @@ Const MY_TYPENAME               As String = "mpSetIf"
 
 Private Type State
   
-  Comparer                      As IComparer
-  Item                          As Variant
+    Comparer                      As IComparer
+    Item                          As Variant
   
 End Type
 
@@ -30,11 +30,11 @@ Private s                       As State
 'twinbasic requirement
 Private Sub Class_Initialize()
   
-  If s.Comparer Is Nothing Then
+    If s.Comparer Is Nothing Then
     
-    Set s.Comparer = cmpEQ.Deb(0)
+        Set s.Comparer = cmpEQ.Deb(0)
     
-  End If
+    End If
   
 End Sub
 
@@ -45,15 +45,16 @@ Public Function Deb(Optional ByRef ipComparer As IComparer, Optional ByVal ipRes
     End With
 End Function
 
+
 Friend Function ConstructInstance(ByRef ipComparer As IComparer, ByVal ipReset As Variant) As mpSetIf
     
     If s.Comparer Is Nothing Then
       
-      Set s.Comparer = cmpEQ.Deb(0)
+        Set s.Comparer = cmpEQ.Deb(0)
       
     Else
       
-      Set s.Comparer = ipComparer
+        Set s.Comparer = ipComparer
       
     End If
     
@@ -63,9 +64,11 @@ Friend Function ConstructInstance(ByRef ipComparer As IComparer, ByVal ipReset A
         
 End Function
 
+
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
 
 'Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
 '    IMapper_ExecMapper = ExecMapper(ipHostItem)
@@ -75,3 +78,5 @@ End Property
 Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
     IMapper_ExecMapper = Array(IIf(s.Comparer.ExecCmp(ipHostItem), s.Item, ipHostItem))
 End Function
+
+

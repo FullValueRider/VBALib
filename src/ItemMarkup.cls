@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 '@IgnoreModule SuspiciousPredeclaredInstanceAccess
 '@PredeclaredId
 '@Exposed
-'@Folder("Lib.Fmt")
+'@Folder("VBALib.Fmt")
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 Option Explicit
 
@@ -23,14 +23,16 @@ Private Type Properties
     
 End Type
 
+
 Private p                       As Properties
+
 
 '@DefaultMember
 Public Function Deb _
 ( _
-    Optional ByVal ipLeft As String = Chars.twLParen, _
-    Optional ByVal ipSeparator As String = Chars.twComma, _
-    Optional ByVal ipRight As String = Chars.twRParen _
+Optional ByVal ipLeft As String = Chars.twLParen, _
+Optional ByVal ipSeparator As String = Chars.twComma, _
+Optional ByVal ipRight As String = Chars.twRParen _
 ) As ItemMarkup
 Attribute Deb.VB_UserMemId = 0
     With New ItemMarkup
@@ -39,11 +41,12 @@ Attribute Deb.VB_UserMemId = 0
     
 End Function
 
+
 Public Function ConstructInstance _
 ( _
-    ByVal ipLeft As String, _
-    ByVal ipSeparator As String, _
-    ByVal ipRight As String _
+ByVal ipLeft As String, _
+ByVal ipSeparator As String, _
+ByVal ipRight As String _
 ) As ItemMarkup
     
     p.Separator = ipSeparator
@@ -56,7 +59,7 @@ End Function
 
 
 Public Property Get Separator() As String
-   Separator = p.Separator
+    Separator = p.Separator
 End Property
 
 

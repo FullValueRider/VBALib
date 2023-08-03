@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 Option Explicit
 '@Exposed
 '@PredeclaredId
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
 
 Implements IMapper
 
@@ -20,6 +20,7 @@ Private Type State
     Mapper                  As IMapper
 End Type
 
+
 Private s                   As State
 
 
@@ -28,9 +29,11 @@ Private s                   As State
 '    IMapper_ExecMapper = ExecMapper(ipHostItem)
 'End Function
 
+
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
 
 '@Description("if the Hostitem is a SeqC or kvp then we reapply mapit with the mpInner instance")
 Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
@@ -58,6 +61,7 @@ Attribute IMapper_ExecMapper.VB_Description = "if the Hostitem is a SeqC or kvp 
     
 End Function
 
+
 '@DefaultMember
 Public Function Deb(ByVal ipMapper As IMapper) As mpInner
 Attribute Deb.VB_UserMemId = 0
@@ -65,6 +69,7 @@ Attribute Deb.VB_UserMemId = 0
         Set Deb = .ConstructInstance(ipMapper)
     End With
 End Function
+
 
 Friend Function ConstructInstance(ByRef ipMapper As IMapper) As mpInner
     Set s.Mapper = ipMapper

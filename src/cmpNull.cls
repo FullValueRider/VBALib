@@ -25,15 +25,17 @@ Const MY_TYPENAME                   As String = "cmpNull"
 'Private s                           As State
 '
 
+
 Private Property Get IComparer_TypeName() As String
     IComparer_TypeName = MY_TYPENAME
 End Property
+
 
 '@Description("Returns false if the input is null. A bit counterintuitive but works well with the filterIt method for removing null values")
 Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
 Attribute IComparer_ExecCmp.VB_Description = "Returns false if the input is null. A bit counterintuitive but works well with the filterIt method for removing null values"
     
-      IComparer_ExecCmp = Not VBA.IsNull(ipHostItem)
+    IComparer_ExecCmp = Not VBA.IsNull(ipHostItem)
        
 End Function
 
@@ -49,11 +51,11 @@ End Function
 
 Friend Function ConstructInstance() As cmpNull
 
-'    If VBA.IsNull(ipReference) Then
-'        Err.Raise 17 + vbObjectError, _
-'            "VBALib.cmpNull", _
-'            "Good grief!!!, The replacement value for NUll - it really really really shouldn't be NUll"
-'    End If
+    '    If VBA.IsNull(ipReference) Then
+    '        Err.Raise 17 + vbObjectError, _
+    '            "cmpNull", _
+    '            "Good grief!!!, The replacement value for NUll - it really really really shouldn't be NUll"
+    '    End If
     
     Set ConstructInstance = Me
     

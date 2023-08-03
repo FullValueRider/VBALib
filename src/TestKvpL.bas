@@ -12,19 +12,21 @@ Option Private Module
     'Do nothing
 #Else
 
-'@ModuleInitialize
+
+    '@ModuleInitialize
 Private Sub ModuleInitialize()
+    GlobalAssert
     'this method runs once per module.
-'    Set Assert = CreateObject("Rubberduck.AssertClass")
-'    Set Fakes = CreateObject("Rubberduck.FakesProvider")
+    '    Set Assert = CreateObject("Rubberduck.AssertClass")
+    '    Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
 
 
 '@ModuleCleanup
 Private Sub ModuleCleanup()
     'this method runs once per module.
-'    Set Assert = Nothing
-'    Set Fakes = Nothing
+    '    Set Assert = Nothing
+    '    Set Fakes = Nothing
 End Sub
 
 
@@ -33,16 +35,18 @@ Private Sub TestInitialize()
     'This method runs before every test in the module..
 End Sub
 
+
 #End If
 
 
 Public Sub KvpLTests()
  
-#If twinbasic Then
-    Debug.Print CurrentProcedureName;
-#Else
-    Debug.Print ErrEx.LiveCallstack.ProcedureName;
-#End If
+    #If twinbasic Then
+        Debug.Print CurrentProcedureName;
+    #Else
+        GlobalAssert
+        Debug.Print ErrEx.LiveCallstack.ProcedureName;
+    #End If
 
     Test01_ObjAndName
     Test02_Add_ThreeItems
@@ -76,22 +80,25 @@ Public Sub KvpLTests()
     Debug.Print vbTab, vbTab, vbTab, "Testing completed"
 
 End Sub
+
+
 '@TestCleanup
 Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test01_ObjAndName()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -103,8 +110,8 @@ Private Sub Test01_ObjAndName()
     
     'Act:
     myResult(0) = VBA.IsObject(myK)
-    myResult(1) = VBA.TypeName(myK)
-    myResult(2) = myK.TypeName
+    myResult(1) = VBA.Typename(myK)
+    myResult(2) = myK.Typename
     'Assert:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
@@ -118,17 +125,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test02_Add_ThreeItems()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -166,17 +173,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test03_Add_Pairs()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -213,17 +221,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test04a_GetItem()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -249,17 +257,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test04b_LetItem()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -287,17 +296,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test04c_SetItem()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -326,17 +335,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test05a_Remove()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -365,17 +374,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test05b_Remove()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -403,17 +412,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test06_RemoveAfter()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -441,17 +451,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test07_RemoveBefore()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -478,24 +488,25 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test08a_RemoveAll()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
     Set myK = KvpL.Deb.AddPairs(SeqL(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqL(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Long
-    myExpected = 0
+    myExpected = -1
     
     Dim myResult As Variant
     
@@ -514,24 +525,25 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test08b_Clear()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
     Set myK = KvpL.Deb.AddPairs(SeqL(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqL(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Long
-    myExpected = 0
+    myExpected = -1
     
     Dim myResult As Variant
     
@@ -550,24 +562,25 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test08c_Reset()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
     Set myK = KvpL.Deb.AddPairs(SeqL(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqL(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Long
-    myExpected = 0
+    myExpected = -1
     
     Dim myResult As Variant
     
@@ -587,17 +600,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test09_Clone()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -635,17 +648,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test10_Hold_Lacks_FilledSeq()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -695,17 +708,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test11_MappedIt()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -735,17 +748,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test12_MapIt()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -781,17 +795,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test13_FilterIt()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -819,17 +833,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test14_ReduceIt()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -856,17 +871,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test15a_KeyByIndex()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -894,17 +910,17 @@ TestFail:
 End Sub
 
 
-'@TestMethod("KvpL")
+'@TestMethod("VBALib.KvpL")
 Private Sub Test15b_KeyOf()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -931,17 +947,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test16a_GetFirst()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -968,17 +985,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test16b_LetFirst()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -1006,17 +1024,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test16c_GetLast()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -1043,17 +1062,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test16d_LetLast()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -1081,17 +1101,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test16e_GetFirstKey()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -1118,17 +1139,18 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("KvpL")
+
+'@TestMethod("VBALib.KvpL")
 Private Sub Test16f_LastKey()
 
     #If twinbasic Then
         myProcedureName = CurrentProcedureName
-       myComponentName = CurrentComponentName
+        myComponentName = CurrentComponentName
     #Else
         myProcedureName = ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-      On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myK As KvpL
@@ -1154,3 +1176,5 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+

@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
 '@Exposed
-'Folder("set")
+'@Folder("vbWatchDog")
 Option Explicit
 
 Private Const MY_TYPENAME               As String = "ListNode"
@@ -80,4 +80,9 @@ End Property
 
 Public Property Let Item(ByVal ipItem As Variant)
     s.Item = ipItem
+End Property
+
+
+Public Property Get Typename() As String
+    Typename = MY_TYPENAME
 End Property

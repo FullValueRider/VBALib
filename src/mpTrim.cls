@@ -11,7 +11,7 @@ Option Explicit
 
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
 
 
 Implements IMapper
@@ -21,6 +21,7 @@ Const MY_TYPENAME               As String = "mpTrim"
 Private Type State
     TrimChars                   As String
 End Type
+
 
 Private s                       As State
 
@@ -37,11 +38,13 @@ Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
     
 End Function
 
+
 Public Function Deb(Optional ByRef ipTrimChars As String = Chars.twSpace) As mpTrim
     With New mpTrim
         Set Deb = .ConstructInstance(ipTrimChars)
     End With
 End Function
+
 
 Friend Function ConstructInstance(ByRef ipTrimChars As String) As mpTrim
         
@@ -55,6 +58,9 @@ Friend Function ConstructInstance(ByRef ipTrimChars As String) As mpTrim
         
 End Function
 
+
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
+

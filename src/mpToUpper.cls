@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 Option Explicit
 '@Exposed
 '@PredeclaredId
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
     
 Implements IMapper
 
@@ -20,9 +20,11 @@ Const MY_TYPENAME                   As String = "mpToUpper"
 '    Set IMapper_ExecMapper = ExecMapper(ipHostItem)
 'End Function
 
+
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
 
 Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         
@@ -34,15 +36,18 @@ Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
     End If
 End Function
 
+
 Public Function Deb() As mpToUpper
     With New mpToUpper
         Set Deb = .ConstructInstance
     End With
 End Function
 
+
 Friend Function ConstructInstance() As mpToUpper
     Set ConstructInstance = Me
 End Function
+
 
 'Public Function TypeName() As String
 '    TypeName = MY_TYPENAME

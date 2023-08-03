@@ -8,11 +8,17 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@Exposed
+
+'@Folder("Interfaces")
 Option Explicit
+
 
 '@Interface
 Public Function ExecMapper(ByRef ipHostItem As Variant) As Variant
 End Function
- 
-Public Property Get TypeName() As String
+
+
+Public Property Get Typename() As String
 End Property
+
+

@@ -11,7 +11,7 @@ Option Explicit
 '@ModuleDescription"Splits a string to a SeqC of substrings)
 '@Exposed
 '@PredeclaredId
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
 
 Const MY_TYPENAME               As String = "mpSplitToSeq"
 Private Type State
@@ -19,6 +19,7 @@ Private Type State
     Separator                   As String
         
 End Type
+
 
 Private s                       As State
 
@@ -29,9 +30,11 @@ Implements IMapper
 '    Set IMapper_ExecMapper = ExecMapper(ipHostItem)
 'End Function
 
+
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
 
 Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
 
@@ -47,6 +50,7 @@ Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         
 End Function
 
+
 '@DefaultMember
 Public Function Deb(Optional ByVal ipSeparator As String = ",") As mpSplitToSeq
 Attribute Deb.VB_UserMemId = 0
@@ -58,6 +62,7 @@ Attribute Deb.VB_UserMemId = 0
     End With
     
 End Function
+
 
 Friend Function ConstructInstance(ByVal ipSeparator As String) As mpSplitToSeq
         

@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 Option Explicit
 '@Exposed
 '@PredeclaredId
-'@Folder("VBALib.Mappers")
+'@Folder("Mappers")
     
 Implements IMapper
 
@@ -20,6 +20,7 @@ Const MY_TYPENAME                   As String = "mpToLower"
 Private Property Get IMapper_Typename() As String
     IMapper_Typename = MY_TYPENAME
 End Property
+
 
 Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         
@@ -31,6 +32,7 @@ Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         
 End Function
 
+
 '@DefaultMember
 Public Function Deb() As mpToLower
 Attribute Deb.VB_UserMemId = 0
@@ -38,6 +40,7 @@ Attribute Deb.VB_UserMemId = 0
         Set Deb = .ConstructInstance
     End With
 End Function
+
 
 Friend Function ConstructInstance() As mpToLower
     Set ConstructInstance = Me

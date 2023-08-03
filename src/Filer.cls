@@ -8,9 +8,11 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
+'@Folder("Helpers")
 '@PredeclaredId
 '@Exposed
-Const ForReading                            As Integer = 1  'Scripting.IOMode.ForReading
+Const ForReading                            As Integer = 1 'Scripting.IOMode.ForReading
+
 
 Public Function GetFileAsArrayOfStrings(ByVal ipFilePath As String, Optional ByRef ipSplitAtToken As String = vbCrLf) As Variant
 
@@ -22,6 +24,7 @@ Public Function GetFileAsArrayOfStrings(ByVal ipFilePath As String, Optional ByR
         
 End Function
 
+
 Public Function GetFileAsString(ByVal ipPath As String) As String
 
     Dim myFso  As Scripting.FileSystemObject
@@ -29,3 +32,5 @@ Public Function GetFileAsString(ByVal ipPath As String) As String
     GetFileAsString = myFso.OpenTextFile(ipPath, ForReading).ReadAll
     
 End Function
+
+

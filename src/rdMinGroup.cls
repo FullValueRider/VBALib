@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Reducers")
+'@Folder("Reducers")
 '@IgnoreModule
 Option Explicit
  

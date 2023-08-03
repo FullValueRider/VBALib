@@ -21,6 +21,7 @@ Private Type State
     RefType                         As VbVarType
 End Type
 
+
 Private s                           As State
 
 
@@ -59,4 +60,3 @@ Friend Function ConstructInstance(ByVal ipReference As Variant) As cmpEQ
     Set ConstructInstance = Me
     
 End Function
-    

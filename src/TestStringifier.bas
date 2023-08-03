@@ -12,18 +12,21 @@ Option Private Module
     'Do nothing
 #Else
 
-'@ModuleInitialize
+
+    '@ModuleInitialize
 Private Sub ModuleInitialize()
+    GlobalAssert
     'this method runs once per module.
-'    Set Assert = CreateObject("Rubberduck.AssertClass")
-'    Set Fakes = CreateObject("Rubberduck.FakesProvider")
+    '    Set Assert = CreateObject("Rubberduck.AssertClass")
+    '    Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
+
 
 '@ModuleCleanup
 Private Sub ModuleCleanup()
     'this method runs once per module.
-'    Set Assert = Nothing
-'    Set Fakes = Nothing
+    '    Set Assert = Nothing
+    '    Set Fakes = Nothing
 End Sub
 
 
@@ -38,6 +41,7 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
+
 #End If
 
 
@@ -46,6 +50,7 @@ Public Sub StringifierTests()
     #If twinbasic Then
         Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab,
     #Else
+        GlobalAssert
         Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab,
     #End If
 
@@ -61,6 +66,8 @@ Public Sub StringifierTests()
     Debug.Print "Testing completed"
 
 End Sub
+
+
 '@TestMethod("Stringifier")
 Private Sub Test01_StringifyItem_String()
 
@@ -93,6 +100,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Stringifier")
 Private Sub Test02_StringifyItem_Long()
@@ -129,10 +137,11 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 ''@TestMethod("Stringifier.049")
 'Private Sub Test49c_StringifyItem_Long()
 '
-'    On Error GoTo TestFail
+'    on error GoTo TestFail
 '
 '    'Arrange:
 '    Dim myExpected As String
@@ -147,7 +156,7 @@ End Sub
 '
 'TestExit:
 '    '@Ignore UnhandledOnErrorResumeNext
-'    On Error Resume Next
+'    on error Resume Next
 '
 '    Exit Sub
 'TestFail:
@@ -191,6 +200,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Stringifier")
 Private Sub Test04_StringifyItem_SeqC()
 
@@ -227,6 +237,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Stringifier")
 Private Sub Test05_StringifyItem_Collection()
@@ -270,6 +281,7 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
 
 '@TestMethod("Stringifier")
 Private Sub Test06_StringifyItem_Dictionary()
@@ -316,6 +328,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("Stringifier")
 Private Sub Test07_StringifyItem_CustomDictionaryMarkup()
 
@@ -348,7 +361,7 @@ Private Sub Test07_StringifyItem_CustomDictionaryMarkup()
     Set myToString = Stringifier.Deb.SetObjectMarkup(ipSeparator:="?").SetDictionaryItemMarkup("|", "_", "|")
     myResult = myToString.StringifyItem(myC)
     'Assert:
-   'Debug.Print myExpected
+    'Debug.Print myExpected
     'Debug.Print myResult
     AssertStrictAreEqual myExpected, myResult, myProcedureName
     
@@ -361,3 +374,5 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+

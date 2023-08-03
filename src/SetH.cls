@@ -103,7 +103,7 @@ Option Explicit
 '
 'Private Sub PopulateUsingInitialSize(ByVal ipInitialSize As Long)
 '
-'    GuardInsufficientCapacity ipInitialSize, "VBALib.SetH.Deb"
+'    GuardInsufficientCapacity ipInitialSize, "SetH.Deb"
 '
 '    Dim myCount As Long
 '    For myCount = FIRST_INDEX To ipInitialSize
@@ -228,14 +228,14 @@ Option Explicit
 '        Exit Function
 '    End If
 '
-'    GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.Host.Count, "VBALib.SetH.Sice"
+'    GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.Host.Count, "SetH.Sice"
 '
 '    Dim myRun As Long
 '    myRun = ipRun
 '    If myRun = -1 Then
 '        myRun = s.Host.Count - ipStart + 1
 '    Else
-'        GuardIndexOutOfBounds ipStart, FIRST_INDEX, myRun + ipStart, "VBALib.SetH.Sice"
+'        GuardIndexOutOfBounds ipStart, FIRST_INDEX, myRun + ipStart, "SetH.Sice"
 '    End If
 '
 '    Dim myS As SetH
@@ -378,7 +378,7 @@ Option Explicit
 '
 '    Dim myGroupId As e_Group
 '    myGroupId = GroupInfo.Id(ipRange)
-'    GuardInvalidRangeObject myGroupId, ipRange, "VBALib.SetH.AddRange"
+'    GuardInvalidRangeObject myGroupId, ipRange, "SetH.AddRange"
 '
 '    Select Case myGroupId
 '        Case e_Group.m_string:              AddRangeFromString VBA.CStr(ipRange)
@@ -440,7 +440,7 @@ Option Explicit
 '
 'Public Property Get Item(ByRef ipIndex As Long) As Variant
 '
-'    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "VBALib.SetH.Get_Item"
+'    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "SetH.Get_Item"
 '
 '    Dim myItem As Variant
 '    myItem = Array(s.Host.KeyByIndex(ipIndex))
@@ -455,7 +455,7 @@ Option Explicit
 '
 'Public Property Let Item(ByRef ipIndex As Long, ByVal ipItem As Variant)
 '
-'    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "VBALib.SetH.Get_Item"
+'    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "SetH.Get_Item"
 '
 '    s.Host.Add ipItem
 '    s.Host.Remove ipIndex
@@ -465,7 +465,7 @@ Option Explicit
 '
 'Public Property Set Item(ByRef ipIndex As Long, ByVal ipItem As Variant)
 '
-'    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "VBALib.SetH.Get_Item"
+'    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "SetH.Get_Item"
 '
 '   s.Host.Add ipItem
 '   s.Host.Remove ipIndex
@@ -514,7 +514,7 @@ Option Explicit
 '
 '    Dim myGroupId As e_Group
 '    myGroupId = GroupInfo.Id(ipRange)
-'    GuardInvalidRangeObject myGroupId, ipRange, "VBALib.SetH.InsertRange"
+'    GuardInvalidRangeObject myGroupId, ipRange, "SetH.InsertRange"
 '
 '    Select Case GroupInfo.Id(ipRange)
 '
@@ -674,15 +674,15 @@ Option Explicit
 '
 '
 ''@Description("Remove items in the specified range of Indexes. Indexes are sorted in reverse order before use")
-'Public Function RemoveAtRange(ByRef ipSeq As SetH) As SetH
+'Public Function RemoveIndexesRange(ByRef ipSeq As SetH) As SetH
 '
 '    If s.Host.Count < 1 Then
-'        Set RemoveAtRange = Me
+'        Set RemoveIndexesRange = Me
 '        Exit Function
 '    End If
 '
 '    If ipSeq.Count < 1 Then
-'        Set RemoveAtRange = Me
+'        Set RemoveIndexesRange = Me
 '        Exit Function
 '    End If
 '
@@ -693,7 +693,7 @@ Option Explicit
 '        s.Host.Remove myItem
 '    Next
 '
-'    Set RemoveAtRange = Me
+'    Set RemoveIndexesRange = Me
 '
 'End Function
 '
@@ -872,7 +872,7 @@ Option Explicit
 'End Function
 '
 '
-''@Description"KvpH and cHashd terminology for HoldsItem")
+''@Description"VBALib.KvpH and cHashd terminology for HoldsItem")
 'Public Function Exists(ByRef ipItem As Variant) As Boolean
 '    'The new exists method for Collection is for Keys not for Items
 '    Exists = HoldsItem(ipItem)
@@ -986,7 +986,7 @@ Option Explicit
 ''@DescriptioN("Returns the item at FirstIndex")
 'Public Property Get First() As Variant
 '
-'   GuardInvalidIndex 1, s.Host.Count, "VBALib.SetH.Get_First"
+'   GuardInvalidIndex 1, s.Host.Count, "SetH.Get_First"
 '
 '   If VBA.IsObject(s.Host.KeyByIndex(First_Index)) Then
 '       Set First = s.Host.KeyByIndex(First_Index)
@@ -1000,7 +1000,7 @@ Option Explicit
 ''@DescriptioN("Assigns to the Item at FirstIndex")
 'Public Property Let First(ByVal ipItem As Variant)
 '
-'   GuardInvalidIndex 1, s.Host.Count, "VBALib.SetH.Let_First"
+'   GuardInvalidIndex 1, s.Host.Count, "SetH.Let_First"
 '
 '   Me.Item(First_Index) = ipItem
 '
@@ -1009,7 +1009,7 @@ Option Explicit
 ''@Description("Assigns to the Item at FirstIndex")
 'Public Property Set First(ByVal ipItem As Variant)
 '
-'   GuardInvalidIndex 1, s.Host.Count, "VBALib.SetH.Set_Last"
+'   GuardInvalidIndex 1, s.Host.Count, "SetH.Set_Last"
 '
 '   Set Me.Item(FirstIndex) = ipItem
 '
@@ -1018,7 +1018,7 @@ Option Explicit
 ''@Description("Returns the Item at LastIndex")
 'Public Property Get Last() As Variant
 '
-'   GuardInvalidIndex s.Host.Count, s.Host.Count, "VBALib.SetH.Set_Last"
+'   GuardInvalidIndex s.Host.Count, s.Host.Count, "SetH.Set_Last"
 '
 '   Dim myLastIndex As Long
 '   myLastIndex = s.Host.Count
@@ -1032,7 +1032,7 @@ Option Explicit
 ''@Description("Assigns to the Item at LastIndex")
 'Public Property Let Last(ByVal ipItem As Variant)
 '
-'   GuardInvalidIndex s.Host.Count, s.Host.Count, "VBALib.SetH.Set_First"
+'   GuardInvalidIndex s.Host.Count, s.Host.Count, "SetH.Set_First"
 '
 '   Me.Item(s.Host.Count) = ipItem
 '
@@ -1042,7 +1042,7 @@ Option Explicit
 ''@Description("Assigns to the item at LastIndex")
 'Public Property Set Last(ByVal ipItem As Variant)
 '
-'   GuardInvalidIndex s.Host.Count, s.Host.Count, "VBALib.SetH.Set_First"
+'   GuardInvalidIndex s.Host.Count, s.Host.Count, "SetH.Set_First"
 '
 '   Set Me.Item(s.Host.Count) = ipItem
 '
@@ -1052,7 +1052,7 @@ Option Explicit
 ''@Description("Returns the item at FirstIndex")
 'Public Property Get FBO() As Variant
 '
-'   GuardInvalidIndex 2, s.Host.Count, "VBALib.SetH.Get_FBO"
+'   GuardInvalidIndex 2, s.Host.Count, "SetH.Get_FBO"
 '
 '   Dim FBOIndex As Long
 '   FBOIndex = FIRST_INDEX + 1
@@ -1068,7 +1068,7 @@ Option Explicit
 ''@Description("Assigns to the Item at FirstIndex")
 'Public Property Let FBO(ByVal ipItem As Variant)
 '
-'   GuardInvalidIndex 2, s.Host.Count, "VBALib.SetH.Let_FBO"
+'   GuardInvalidIndex 2, s.Host.Count, "SetH.Let_FBO"
 '
 '   Set Me.Item(First_Index + 1) = ipItem
 '
@@ -1077,7 +1077,7 @@ Option Explicit
 ''@Description("Assigns to the Item at FirstIndex")
 'Public Property Set FBO(ByVal ipItem As Variant)
 '
-'   GuardInvalidIndex 2, s.Host.Count, "VBALib.SetH.Set_FBO"
+'   GuardInvalidIndex 2, s.Host.Count, "SetH.Set_FBO"
 '
 '   Set Me.Item(FirstIndex + 1) = ipItem
 '
@@ -1086,7 +1086,7 @@ Option Explicit
 ''@Description("Returns the Item at LastIndex")
 'Public Property Get LBO() As Variant
 '
-'   GuardInvalidIndex 2, s.Host.Count, "VBALib.SetH.Let_FBO"
+'   GuardInvalidIndex 2, s.Host.Count, "SetH.Let_FBO"
 '
 '   Dim myLBOIndex As Long
 '   myLBOIndex = s.Host.Count - 1
@@ -1103,7 +1103,7 @@ Option Explicit
 ''@Description("Assigns to the Item at LastIndex")
 'Public Property Let LBO(ByVal ipItem As Variant)
 '
-'   GuardInvalidIndex 2, s.Host.Count, "VBALib.SetH.Let_FBO"
+'   GuardInvalidIndex 2, s.Host.Count, "SetH.Let_FBO"
 '
 '   Me.Item(s.Host.Count - 1) = ipItem
 '
@@ -1113,7 +1113,7 @@ Option Explicit
 ''@Description("Assigns to the item at LastIndex")
 'Public Property Set LBO(ByVal ipItem As Variant)
 '
-'    GuardInvalidIndex 2, s.Host.Count, "VBALib.SetH.Let_FBO"
+'    GuardInvalidIndex 2, s.Host.Count, "SetH.Let_FBO"
 '
 '   Set Me.Item(s.Host.Count - 1) = ipItem
 '
@@ -1133,14 +1133,14 @@ Option Explicit
 '        Exit Function
 '    End If
 '
-'    GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.Host.Count, "VBALib.SetH.IndexOf"
+'    GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.Host.Count, "SetH.IndexOf"
 '
 '    Dim myRun As Long
 '    myRun = ipRun
 '    If myRun = -1 Then
 '        myRun = s.Host.Count - ipStart + 1
 '    Else
-'        GuardIndexOutOfBounds myRun, FIRST_INDEX, s.Host.Count, "VBALib.SetH.IndexOf"
+'        GuardIndexOutOfBounds myRun, FIRST_INDEX, s.Host.Count, "SetH.IndexOf"
 '    End If
 '
 '    Dim myIndex As Long
@@ -1169,14 +1169,14 @@ Option Explicit
 '        Exit Function
 '    End If
 '
-'    GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.Host.Count, "VBALib.SetH.LastIndexOf"
+'    GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.Host.Count, "SetH.LastIndexOf"
 '
 '    Dim myRun As Long
 '    myRun = ipRun
 '    If myRun = -1 Then
 '        myRun = s.Host.Count - ipStart + 1
 '    Else
-'        GuardIndexOutOfBounds myRun, FIRST_INDEX, s.Host.Count, "VBALib.SetH.LastIndexOf"
+'        GuardIndexOutOfBounds myRun, FIRST_INDEX, s.Host.Count, "SetH.LastIndexOf"
 '    End If
 '
 '    Dim myIndex As Long
@@ -1332,14 +1332,14 @@ Option Explicit
 '
 ''
 ' Public Function Sort() As SetH
-'     Sorters.ShakerSortSeq Me
+'     Sorters.ShakerSortByItem Me
 '     Set Sort = Me
 ' End Function
 ''
 'Public Function Sorted() As SetH
 '    Dim myS As SetH
 '    Set myS = Me.Clone
-'    Sorters.ShakerSortSeq myS
+'    Sorters.ShakerSortByItem myS
 '    Set Sorted = myS
 'End Function
 '
@@ -1465,7 +1465,7 @@ Option Explicit
 '        Case e_SetoF.m_Unique:           Set SetOf = SetofUnique(ipRangeItem)
 '        Case Else
 '            Err.Raise 17 + vbObjectError, _
-'                "VBALib.Seq.SetOf", _
+'                "Seq.SetOf", _
 '                Fmt.Text("Invalid e_set member. Expecting {0} to {1}. Got {2}", e_SetoF.m_First, e_SetoF.m_Last, ipSet)
 '
 '    End Select
@@ -1602,3 +1602,6 @@ Option Explicit
 '     Set Freq = myKvp
 '
 ' End Function
+
+
+
