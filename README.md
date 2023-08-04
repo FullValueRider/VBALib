@@ -13,7 +13,7 @@ Run the tests from TestAll.  Do not use Rubberduck unit testing. There are curre
 
 I'm currently using the MIT license **BUT** if you find yourslf using any of the library code for commercial reasons please make a contribution proportional to the utility you gained.
 
-VBALib requires the installation of vbWatchdog.  The library has been tested with the community version.
+__VBALib requires the installation of vbWatchdog.  The library has been tested with the community version.__
 ### A Note on naming
 In the library I use the following as I have previously found them useful for indicating the role of a variable and to virtually eliminate the bane of clashing names.
 #### Method parameter prefixes
