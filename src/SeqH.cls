@@ -884,7 +884,7 @@ Public Property Get Item(ByVal ipIndex As Long) As Variant
     Dim myNode As SeqHNode: Set myNode = GetNodeAt(ipIndex)
     
    If myNode Is Nothing Then
-        Exit Function
+        Exit Property
     ElseIf VBA.IsObject(myNode.Item) Then
         Set Item = myNode.Item
     Else

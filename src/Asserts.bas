@@ -68,10 +68,10 @@ Public Sub AssertStrictSequenceEquals(ByRef ipExpected As Variant, ipResult As V
 
 End Sub
 
-Public Sub AssertStrictSequenceNotEquals(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
+Public Sub AssertStrictNotSequenceEquals(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
     
 #If twinbasic Then
-    Assert.Strict.SequenceNotEquals ipExpected, ipResult, ipWhere
+    Assert.Strict.NotSequenceNotEquals ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
         Dim myExpected As String: myExpected = Fmt.Text("{0}", ipExpected)
@@ -120,7 +120,7 @@ Public Sub AssertExactSequenceEquals(ByRef ipExpected As Variant, ipResult As Va
                 myR(myIndex) = "** " & myR(myIndex) & " **"
             End If
             
-        Loop While myEItems.MoveNext And myRItems.MoveNext
+        Loop While myEItems.MoveNext Or myRItems.MoveNext
         
                 
         Dim myExpected As String: myExpected = VBA.Join(myE, ",")

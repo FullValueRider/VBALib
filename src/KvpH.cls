@@ -307,7 +307,7 @@ Public Property Get Item(ByRef ipKey As Variant) As Variant
     Dim myNode As KvpHNode: Set myNode = GetNodeOf(ipKey)
     
     If myNode Is Nothing Then
-        Exit Function
+        Exit Property
     ElseIf VBA.IsObject(myNode.Item) Then
         Set Item = myNode.Item
     Else

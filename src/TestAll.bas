@@ -47,7 +47,7 @@ Public Sub Main()
         
 End Sub
 
-Public Function GlobalAssert()
+Public Sub GlobalAssert()
     #If twinbasic Then
         ' do nothing
     #Else
@@ -62,4 +62,4 @@ Public Function GlobalAssert()
         End If
     #End If
 
-End Function
+End Sub
