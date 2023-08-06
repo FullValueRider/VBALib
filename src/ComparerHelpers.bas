@@ -23,7 +23,7 @@ Public Function GetItemAsComparerValue(ByRef ipItem As Variant) As Variant
     
         Case GroupInfo.IsContainer(ipItem):                        myResult = Fmt.Text("{0}", ipItem)
             ' Admin needs to be before Object because nothing is an object
-        Case GroupInfo.IsAdmin(ipItem):                            myResult = VBA.Typename(ipItem)
+        Case GroupInfo.IsAdmin(ipItem):                            myResult = VBA.TypeName(ipItem)
         Case VBA.IsObject(ipItem):
             
             On Error Resume Next

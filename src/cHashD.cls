@@ -8,8 +8,13 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@IgnoreModule
-'cHashD, Olaf Schmidt in August 2016 (enhanced about mixed, variable KeyTypes and Remove-functions in 2020)
- ' Reformatted and Rubberducked by Steven Laycock July 2023
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
+
+' Based on cHashD from https://www.vbforums.com/showthread.php?834515-Simple-and-fast-lightweight-HashList-Class-(no-APIs)&s=f049d882b4fc4d27f4bc2f9bc383a53e
+' cHashD, Olaf Schmidt in August 2016 (enhanced about mixed, variable KeyTypes and Remove-functions in 2020)
+' Reformatted and Rubberducked by Steven Laycock July 2023
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
+
 Option Explicit
 
 Private Const NoEntry                       As Currency = -98765432123456@

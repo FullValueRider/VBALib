@@ -45,6 +45,7 @@ Public Sub KvpLTests()
         Debug.Print CurrentProcedureName;
     #Else
         GlobalAssert
+        VBATesting = True
         Debug.Print ErrEx.LiveCallstack.ProcedureName;
     #End If
 
@@ -92,10 +93,10 @@ End Sub
 Private Sub Test01_ObjAndName()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -110,10 +111,10 @@ Private Sub Test01_ObjAndName()
     
     'Act:
     myResult(0) = VBA.IsObject(myK)
-    myResult(1) = VBA.Typename(myK)
-    myResult(2) = myK.Typename
+    myResult(1) = VBA.TypeName(myK)
+    myResult(2) = myK.TypeName
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -129,10 +130,10 @@ End Sub
 Private Sub Test02_Add_ThreeItems()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -161,8 +162,8 @@ Private Sub Test02_Add_ThreeItems()
     myItemsResult = myK.Items
     myKeysResult = myK.Keys
     'Assert:
-    AssertStrictSequenceEquals myItemsExpected, myItemsResult, myProcedureName
-    AssertStrictSequenceEquals myKeysExpected, myKeysResult, myProcedureName
+    AssertExactSequenceEquals myItemsExpected, myItemsResult, myProcedureName
+    AssertExactSequenceEquals myKeysExpected, myKeysResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -178,10 +179,10 @@ End Sub
 Private Sub Test03_Add_Pairs()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -208,8 +209,8 @@ Private Sub Test03_Add_Pairs()
     myItemsResult = myK.Items
     myKeysResult = myK.Keys
     'Assert:
-    AssertStrictSequenceEquals myItemsExpected, myItemsResult, myProcedureName
-    AssertStrictSequenceEquals myKeysExpected, myKeysResult, myProcedureName
+    AssertExactSequenceEquals myItemsExpected, myItemsResult, myProcedureName
+    AssertExactSequenceEquals myKeysExpected, myKeysResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -225,10 +226,10 @@ End Sub
 Private Sub Test04a_GetItem()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -246,7 +247,7 @@ Private Sub Test04a_GetItem()
     myResult = myK.Item(2&)
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -262,10 +263,10 @@ End Sub
 Private Sub Test04b_LetItem()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -284,7 +285,7 @@ Private Sub Test04b_LetItem()
     myResult = myK.Item(2&)
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -300,10 +301,10 @@ End Sub
 Private Sub Test04c_SetItem()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -323,7 +324,7 @@ Private Sub Test04c_SetItem()
     myResult = myK.Item(2&).ToArray
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -339,10 +340,10 @@ End Sub
 Private Sub Test05a_Remove()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -362,7 +363,7 @@ Private Sub Test05a_Remove()
     myResult = myK.Items
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -378,10 +379,10 @@ End Sub
 Private Sub Test05b_Remove()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -401,7 +402,7 @@ Private Sub Test05b_Remove()
     myResult = myK.Items
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -417,10 +418,10 @@ End Sub
 Private Sub Test06_RemoveAfter()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -439,7 +440,7 @@ Private Sub Test06_RemoveAfter()
     myResult = myK.RemoveAfter(2&, 3).Items
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -455,10 +456,10 @@ End Sub
 Private Sub Test07_RemoveBefore()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -477,7 +478,7 @@ Private Sub Test07_RemoveBefore()
     myResult = myK.RemoveBefore(6&, 3).Items
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -493,10 +494,10 @@ End Sub
 Private Sub Test08a_RemoveAll()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -514,7 +515,7 @@ Private Sub Test08a_RemoveAll()
     myResult = myK.RemoveAll.Count
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -530,10 +531,10 @@ End Sub
 Private Sub Test08b_Clear()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -551,7 +552,7 @@ Private Sub Test08b_Clear()
     myResult = myK.Clear.Count
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -567,10 +568,10 @@ End Sub
 Private Sub Test08c_Reset()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -588,7 +589,7 @@ Private Sub Test08c_Reset()
     myResult = myK.Clear.Count
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -604,10 +605,10 @@ End Sub
 Private Sub Test09_Clone()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -634,8 +635,8 @@ Private Sub Test09_Clone()
     myKeysResult = myT.Keys
     
     'Assert:
-    AssertStrictSequenceEquals myItemsExpected, myItemsResult, myProcedureName
-    AssertStrictSequenceEquals myKeysExpected, myKeysResult, myProcedureName
+    AssertExactSequenceEquals myItemsExpected, myItemsResult, myProcedureName
+    AssertExactSequenceEquals myKeysExpected, myKeysResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -652,10 +653,10 @@ End Sub
 Private Sub Test10_Hold_Lacks_FilledSeq()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -695,7 +696,7 @@ Private Sub Test10_Hold_Lacks_FilledSeq()
     myResult(18) = myK.LacksKey("Hello")
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -712,10 +713,10 @@ End Sub
 Private Sub Test11_MappedIt()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -735,7 +736,7 @@ Private Sub Test11_MappedIt()
     myResult = myResult.Items
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
    
     
 TestExit:
@@ -753,10 +754,10 @@ End Sub
 Private Sub Test12_MapIt()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -781,8 +782,8 @@ Private Sub Test12_MapIt()
     Set myMapresult = myK.MapIt(mpInc.Deb)
     
     'Assert:
-    AssertStrictSequenceEquals myOrigExpected, myOrigResult, myProcedureName
-    AssertStrictSequenceEquals myMapExpected, myMapresult.Items, myProcedureName
+    AssertExactSequenceEquals myOrigExpected, myOrigResult, myProcedureName
+    AssertExactSequenceEquals myMapExpected, myMapresult.Items, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -799,10 +800,10 @@ End Sub
 Private Sub Test13_FilterIt()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -821,7 +822,7 @@ Private Sub Test13_FilterIt()
     myResult = myK.FilterIt(cmpMT(2)).Items
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -838,10 +839,10 @@ End Sub
 Private Sub Test14_ReduceIt()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -859,7 +860,7 @@ Private Sub Test14_ReduceIt()
     myResult = myK.ReduceIt(rdSum)
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -876,10 +877,10 @@ End Sub
 Private Sub Test15a_KeyByIndex()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -897,7 +898,7 @@ Private Sub Test15a_KeyByIndex()
     myResult = myK.KeyByIndex(3)
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -914,10 +915,10 @@ End Sub
 Private Sub Test15b_KeyOf()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -935,7 +936,7 @@ Private Sub Test15b_KeyOf()
     myResult = myK.KeyOf("Hello")
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -952,10 +953,10 @@ End Sub
 Private Sub Test16a_GetFirst()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -973,7 +974,7 @@ Private Sub Test16a_GetFirst()
     myResult = myK.First
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -990,10 +991,10 @@ End Sub
 Private Sub Test16b_LetFirst()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -1012,7 +1013,7 @@ Private Sub Test16b_LetFirst()
     myResult = myK.First
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1029,10 +1030,10 @@ End Sub
 Private Sub Test16c_GetLast()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -1050,7 +1051,7 @@ Private Sub Test16c_GetLast()
     myResult = myK.Last
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1067,10 +1068,10 @@ End Sub
 Private Sub Test16d_LetLast()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -1089,7 +1090,7 @@ Private Sub Test16d_LetLast()
     myResult = myK.Last
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1106,10 +1107,10 @@ End Sub
 Private Sub Test16e_GetFirstKey()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -1127,7 +1128,7 @@ Private Sub Test16e_GetFirstKey()
     myResult = myK.FirstKey
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1144,10 +1145,10 @@ End Sub
 Private Sub Test16f_LastKey()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -1165,7 +1166,7 @@ Private Sub Test16f_LastKey()
     myResult = myK.LastKey
     
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

@@ -411,8 +411,8 @@ Private Sub AdjustIndex(ByRef Idx As Long, Optional ByVal Inverse As Boolean)
 End Sub
 
 
-Public Property Get Typename() As String
-    Typename = MY_TYPENAME
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
 End Property
 
 

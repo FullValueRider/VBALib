@@ -5,7 +5,7 @@ Option Explicit
 
 Public myProcedureName As String
 Public myComponentName As String
-
+Public VBATesting   As Boolean
 #If twinbasic Then
     ' Do Nothing
 #Else
@@ -16,7 +16,7 @@ Public myComponentName As String
 
 Public Sub Main()
   
-        
+    VBATesting = True
     Dim myTime As Variant: myTime = Timer
     
     Debug.Print "Testing started"
@@ -40,7 +40,8 @@ Public Sub Main()
     TestKvpC.KvpCTests
     TestKvpH.KvpHTests
     TestKvpL.KvpLTests
-
+    VBATesting = False
+    
     Debug.Print
     Debug.Print "Testing Finished  " & Timer - myTime & " seconds."
         
@@ -54,10 +55,10 @@ Public Function GlobalAssert()
             ErrEx.Enable vbNullString
         End If
         If Assert Is Nothing Then
-            Set Assert = CreateObject("Rubberduck.AssertClass")
+            Set Assert = New Rubberduck.AssertClass
         End If
         If Fakes Is Nothing Then
-            Set Fakes = CreateObject("Rubberduck.FakesProvider")
+            Set Fakes = New Rubberduck.FakesProvider
         End If
     #End If
 

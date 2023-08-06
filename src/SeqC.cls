@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqC is a multipurpose Collection/ArrayList replacement.  It uses a collection to store the items.  Items are access using 1 based indexing. For a Keyed collection, use one of the Kvp classes"
@@ -653,7 +653,7 @@ Attribute AddRange.VB_Description = "Add an array, list type, dictionary type, o
      If GroupInfo.IsNotContainer(ipRange) And GroupInfo.IsNotString(ipRange) Then
         Err.Raise 17 + vbObjectError, _
             "VBALib.SeqC.AddRange", _
-            Fmt.Text("Expecting a container type.  Got {0}", VBA.Typename(ipRange))
+            Fmt.Text("Expecting a container type.  Got {0}", VBA.TypeName(ipRange))
     End If
     
     Dim myItems As IterItems: Set myItems = IterItems(ipRange) '.movetoendindex
@@ -1179,8 +1179,8 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
 End Function
 
 
-Public Property Get Typename() As String
-    Typename = MY_TYPENAME
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
 End Property
 
 

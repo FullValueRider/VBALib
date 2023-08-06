@@ -51,6 +51,7 @@ Public Sub cHashCTests()
         Debug.Print CurrentProcedureName; vbTab, vbTab,
     #Else
         GlobalAssert
+        VBATesting = True
         Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab,
     #End If
 
@@ -76,10 +77,10 @@ Private Sub Test01_SeqObj()
     
     'Act:
     myResult(0) = VBA.IsObject(myH)
-    myResult(1) = VBA.Typename(myH)
-    myResult(2) = myH.Typename
+    myResult(1) = VBA.TypeName(myH)
+    myResult(2) = myH.TypeName
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -110,7 +111,7 @@ Private Sub Test02a_Add_MultipleItems_Count()
     
     myResult = myH.Count
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -143,7 +144,7 @@ Private Sub Test03a_Add_MultipleItems()
     myResult = myH.Keys
     Sorters.ShakerSortArray myResult
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -183,7 +184,7 @@ Private Sub Test04a0_Remove_SingleItem()
     myResult = myH.Keys
 
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -223,7 +224,7 @@ Private Sub Test05a_RemoveByIndex_SingleItem()
     myResult = myH.Keys
 
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -262,7 +263,7 @@ Private Sub Test6a_Clear()
     myResult = myH.Count
 
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -300,7 +301,7 @@ Private Sub Test7a_Exists_True()
     myResult = myH.Exists(100&)
 
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -338,7 +339,7 @@ Private Sub Test7b_Exists_False()
     myResult = myH.Exists(1000&)
 
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

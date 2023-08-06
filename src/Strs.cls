@@ -400,7 +400,7 @@ Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindRep
         If Not VBA.IsArray(myPair) Then
             Err.Raise 17 + vbObjectError, _
             "strs.Multireplacer", _
-            "Expecting array.  Got " & VBA.Typename(myPair)
+            "Expecting array.  Got " & VBA.TypeName(myPair)
         End If
         
         If LBound(myPair) <> 0 Or UBound(myPair) <> 1 Then

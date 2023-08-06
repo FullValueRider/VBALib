@@ -80,5 +80,5 @@ End Function
 
 ' Returns the first three characters of the type name, avoids issues with SeqCA, SeqCC, SeqCT, SeqCH, SeqCL etc
 Public Function Shortname(ByRef ipItem As Variant) As String
-    Shortname = VBA.LCase$(VBA.Mid$(VBA.Typename(ipItem), 1, 3))
+    Shortname = VBA.LCase$(VBA.Mid$(VBA.TypeName(ipItem), 1, 3))
 End Function

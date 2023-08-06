@@ -47,6 +47,7 @@ Public Sub ArrayOpTests()
         Debug.Print CurrentProcedureName; vbTab, vbTab,
     #Else
         GlobalAssert
+        VBATesting = True
         Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab,
     #End If
 
@@ -64,7 +65,7 @@ Public Sub ArrayOpTests()
     
     Test05a_FirstIndex
     Test05b_LastIndex
-    
+    VBATesting = False
     Debug.Print "Testing completed"
 
 End Sub
@@ -132,10 +133,10 @@ End Function
 Public Sub Test01a_HoldsItems()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
@@ -166,7 +167,7 @@ Public Sub Test01a_HoldsItems()
     myResult(7) = CVar(ArrayOp.HoldsItems(myArray6))
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     Exit Sub
@@ -182,10 +183,10 @@ End Sub
 Public Sub Test01b_LacksItems()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
@@ -216,7 +217,7 @@ Public Sub Test01b_LacksItems()
     myResult(7) = CVar(ArrayOp.LacksItems(myArray6))
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     Exit Sub
@@ -232,10 +233,10 @@ End Sub
 Public Sub Test02a_IsArray()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
@@ -264,7 +265,7 @@ Public Sub Test02a_IsArray()
     myResult(8) = ArrayOp.IsArray(myTableArray, m_MDArray)
     myResult(9) = ArrayOp.IsArray(my3dArray, m_ListArray)
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     Exit Sub
@@ -279,10 +280,10 @@ End Sub
 Public Sub Test02b_IsNotArray()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
@@ -311,7 +312,7 @@ Public Sub Test02b_IsNotArray()
     myResult(8) = ArrayOp.IsNotArray(myTableArray, m_MDArray)
     myResult(9) = ArrayOp.IsNotArray(my3dArray, m_ListArray)
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     Exit Sub
@@ -326,17 +327,17 @@ End Sub
 Public Sub Test03a_Count()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
     On Error GoTo TestFail
    
     'Arrange:
-    Dim myExpected  As Variant: myExpected = Array(-1, -1, -1, 6, -1, 5, 20, 105)
+    Dim myExpected  As Variant: myExpected = Array(-1&, -1&, -1&, 6&, -1&, 5&, 20&, 105&)
     Dim myLong As Long: myLong = 0
     Dim myvar As Variant
     Dim myArray1() As Long
@@ -360,7 +361,7 @@ Public Sub Test03a_Count()
     myResult(7) = CVar(ArrayOp.Count(myArray6))
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     Exit Sub
@@ -376,17 +377,17 @@ End Sub
 Public Sub Test04a_Ranks()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myExpected  As Variant: myExpected = Array(-1, -1, 0, 1, 0, 1, 2, 3)
+    Dim myExpected  As Variant: myExpected = Array(-1&, -1&, 0&, 1&, 0&, 1&, 2&, 3&)
     
     Dim myLong As Long: myLong = 0
     Dim myvar As Variant
@@ -409,7 +410,7 @@ Public Sub Test04a_Ranks()
     myResult(6) = CVar(ArrayOp.Ranks(myArray5))  ' 2
     myResult(7) = CVar(ArrayOp.Ranks(myArray6))  ' 3
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     Exit Sub
@@ -425,10 +426,10 @@ End Sub
 Public Sub Test04b_HoldsRank()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
@@ -459,7 +460,7 @@ Public Sub Test04b_HoldsRank()
     myResult(7) = CVar(ArrayOp.HoldsRank(myArray6, 2))
 
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 
 TestExit:
     Exit Sub
@@ -475,10 +476,10 @@ End Sub
 Public Sub Test04c_LacksRank()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
@@ -509,7 +510,7 @@ Public Sub Test04c_LacksRank()
     myResult(7) = CVar(ArrayOp.HoldsRank(myArray6, 2))
 
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 
 TestExit:
     Exit Sub
@@ -525,17 +526,17 @@ End Sub
 Public Sub Test05a_FirstIndex()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
     On Error GoTo TestFail
    
     'Arrange:
-    Dim myExpected  As Variant: myExpected = Array(Null, Null, Null, 0, Null, 1, 1, 3)
+    Dim myExpected  As Variant: myExpected = Array(Null, Null, Null, 0&, Null, 1&, 1&, 3&)
     Dim myLong As Long: myLong = 0
     Dim myvar As Variant
     Dim myArray1() As Long
@@ -564,7 +565,7 @@ Public Sub Test05a_FirstIndex()
     myResult = ArrayOp.MapIt(myResult, mpReplaceNull.Deb)
     
     'Assert:
-    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
   
 TestExit:
     Exit Sub
@@ -580,17 +581,17 @@ End Sub
 Public Sub Test05b_LastIndex()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
     On Error GoTo TestFail
    
     'Arrange:
-    Dim myExpected  As Variant: myExpected = Array(Null, Null, Null, 5, Null, 5, 5, 9)
+    Dim myExpected  As Variant: myExpected = Array(Null, Null, Null, 5&, Null, 5&, 5&, 9&)
     Dim myLong As Long: myLong = 0
     Dim myvar As Variant
     Dim myArray1() As Long
@@ -614,7 +615,7 @@ Public Sub Test05b_LastIndex()
     myResult(7) = CVar(ArrayOp.LastIndex(myArray6, 3))
     
     'Assert:
-    AssertStrictSequenceEquals ArrayOp.MapIt(myExpected, mpReplaceNull.Deb), ArrayOp.MapIt(myResult, mpReplaceNull.Deb), myProcedureName
+    AssertExactSequenceEquals ArrayOp.MapIt(myExpected, mpReplaceNull.Deb), ArrayOp.MapIt(myResult, mpReplaceNull.Deb), myProcedureName
     
 TestExit:
     Exit Sub

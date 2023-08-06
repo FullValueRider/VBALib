@@ -52,6 +52,7 @@ Public Sub FmtTests()
         Debug.Print CurrentProcedureName; vbTab, vbTab,
     #Else
         GlobalAssert
+        VBATesting = True
         Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab, vbTab,
     #End If
 
@@ -72,10 +73,10 @@ End Sub
 Private Sub Test01a_Fmt_Text_Nothing()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -94,7 +95,7 @@ Private Sub Test01a_Fmt_Text_Nothing()
     myResult = Fmt.Text(vbNullString)
     'Assert:
    
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -111,10 +112,10 @@ End Sub
 Private Sub Test01b_Fmt_Text_NoParams()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -132,7 +133,7 @@ Private Sub Test01b_Fmt_Text_NoParams()
     myResult = Fmt.Text("Hello {0} World{0}")
     'Assert:
    
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -149,10 +150,10 @@ End Sub
 Private Sub Test01c_Fmt_Text_NoSubstitutions()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -170,7 +171,7 @@ Private Sub Test01c_Fmt_Text_NoSubstitutions()
     myResult = Fmt.Text("Hello World", 1, "One", 3.142)
     'Assert:
    
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -187,10 +188,10 @@ End Sub
 Private Sub Test01d_Fmt_Text_Formatting_Threevbcrlf()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
 
@@ -207,7 +208,7 @@ Private Sub Test01d_Fmt_Text_Formatting_Threevbcrlf()
     myResult = Fmt.Text("Hello {nl3} World", 1, "One", 3.142)
     'Assert:
    
-    AssertStrictAreEqual VBA.Len(myExpected), VBA.Len(myResult), myProcedureName
+    AssertExactAreEqual VBA.Len(myExpected), VBA.Len(myResult), myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -224,10 +225,10 @@ End Sub
 Private Sub Test01e_Fmt_Text_Formatting_Threeplainquotes()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -245,7 +246,7 @@ Private Sub Test01e_Fmt_Text_Formatting_Threeplainquotes()
     myResult = Fmt.Text("Hello {sq3} World", 1, "One", 3.142)
     'Assert:
    
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -262,10 +263,10 @@ End Sub
 Private Sub Test01f_Fmt_Text_Formatting_Zeroplainquotes()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -283,7 +284,7 @@ Private Sub Test01f_Fmt_Text_Formatting_Zeroplainquotes()
     myResult = Fmt.Text("Hello {sq0} World", 1, "One", 3.142)
     'Assert:
    
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -300,10 +301,10 @@ End Sub
 Private Sub Test01g_Fmt_Text_Formatting_ThreeVariables()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -321,7 +322,7 @@ Private Sub Test01g_Fmt_Text_Formatting_ThreeVariables()
     myResult = Fmt.Text("Hello {0} {1} World {2} {3}", 1, "One", Array(1, 2, 3))
     'Assert:
    
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

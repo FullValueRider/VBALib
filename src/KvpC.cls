@@ -199,7 +199,7 @@ Attribute Remove.VB_Description = "Removes Key/Value pairs that exist in the Kvp
     If Not VBA.IsArray(myParamarray) Then
         Err.Raise 17 + vbObjectError, _
         "VBALib.KvpC.Remove", _
-        Fmt.Text("Expecting an array.  Got {0}", VBA.Typename(myParamarray))
+        Fmt.Text("Expecting an array.  Got {0}", VBA.TypeName(myParamarray))
     End If
     
     Dim myItem As Variant
@@ -492,8 +492,8 @@ Public Function LacksItems() As Boolean
 End Function
 
 
-Public Property Get Typename() As String
-    Typename = MY_TYPENAME
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
 End Property
 
 
@@ -560,7 +560,7 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
     End If
     
     Dim myItem As Variant
-    myItem = Array(ipReducer.ExecReduction(s.Items))
+    myItem = Array(ipReducer.ExecReduction(s.Items.ToArray))
     
     If VBA.IsObject(myItem(0)) Then
         Set ReduceIt = myItem(0)

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqH"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqHSeqH is a multipurpose Collection/ArrayList replacement.  It uses a double linked list with two sets of links to manage hash clashes and ordr of addition/insertion to store the items.  Items are access using a single 1 based index. For a Keyed collection, use one of the Kvp classes"
@@ -13,23 +13,23 @@ Attribute VB_Description = "SeqHSeqH is a multipurpose Collection/ArrayList repl
 '@Folder("Seq)
 '@ModuleDescription("SeqHSeqH is a multipurpose Collection/ArrayList replacement.  It uses a double linked list with two sets of links to manage hash clashes and ordr of addition/insertion to store the items.  Items are access using a single 1 based index. For a Keyed collection, use one of the Kvp classes")
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
+' Based on cHashD from https://www.vbforums.com/showthread.php?834515-Simple-and-fast-lightweight-HashList-Class-(no-APIs)&s=f049d882b4fc4d27f4bc2f9bc383a53e
+' cHashD, Olaf Schmidt in August 2016 (enhanced about mixed, variable KeyTypes and Remove-functions in 2020)
+' Reformatted and Rubberducked by Steven Laycock July 2023
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
 ' Code line limit should be 120 characters.
 ' Comment line limit should be 80 characters
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
-' SeqH is a list class and consequetlt may be used to sote many items with the same value
-' this means that hash clashes are very likely to happen
-' A simple way to manage hash clashes is to use a linked list in conjunction with a hash table
-' the hash table is used to store the first node
-' subsequent nodes with the same hash are linked after the first node
-' care is taken to compare the actual items so that different items with the same hash are linked sequentially
-' such linking requires two references in a node (for the predecessor and successor of a node.
-' Such a linked list can easily record the order of addition of nodes but cannot support order of addition
-' if insertion into the list is allowed.
-' these two sets of references are managed through the
-'
-' - AppendNode
-' - InsertNode
-' - RemoveNode
+' SeqH is a list class and consequently will store items with the same value.
+' This means that hash clashes are very likely to happen
+' This class uses an array to store the unique hashes and a linked list to
+' manage the hash clashes.
+' the hash table stores the node containing the first hash for a particular value
+' subsequent hash clashes are linked after the first node for the hash
+' nodes are linked in Hash/Item sequence.
+' The order of addition of values is also preserved by adding a second pair
+' of node references to the node class
+
 '
 ' To allow insertion a second set of references is required to track order of addition/insertion
 ' It should be noted that the Add/Insert methods will use either appendnode or insert node depending on the hash
@@ -42,19 +42,20 @@ Private Const HMul                          As Long = 3727
 
 Private Const MY_TYPENAME                   As String = "SeqH"
 Private Const FIRST_INDEX                   As Long = 1
+Private Const MIN_SEQ_SIZE                  As Long = 512
 
-Private Type Host
-    Count                                   As Long
-End Type
-
+'Private Type Host
+'    Count                                   As Long
+'End Type
+'
  
 Private Type State
-    ' used in hash calculations
+    ' W is used in hash calculations
     W()                                     As Integer
     ' typedef used to access the data area of W()
     saW                                     As SAFEARRAY1D
     ' a feelgood typedef to allow consistent terminology between seq classes where the count of nodes in not provided by the Host object
-    Host                                    As Host
+   ' Host                                    As Host
     ' A value with all bits set to 1 which represents the number of hashslots available
     ' it is used to AND intermediate values in the the hash calculation
     ' to ensure that the hash is always within the range of available HashSlots
@@ -76,9 +77,9 @@ Private Type State
     ' Node contain the last order
     OrderLast                               As SeqHNode
     
-    ' flag used to prevent updating of the node order field
-    ' when redistrubing hashes due to a resize.
-    Resizing                                As Boolean
+'    ' flag used to prevent updating of the node order field
+'    ' when redistrubing hashes due to a resize.
+'    Resizing                                As Boolean
     
 End Type
 
@@ -111,7 +112,7 @@ Private p                                   As Properties
 ' - mscorlib Stack: Items as generated by for each on the stack
 ' - mscorlib Queue: Items as generated by for eac on the queue
 
-
+'The printby methods are used for debugging.  do not use complex keys
 Public Sub PrintByHash()
 
     Dim myNode As SeqHNode: Set myNode = s.HashRoot
@@ -185,17 +186,15 @@ Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqH
 End Function
 
 
-Private Function ConstructInstanceByCount(ByRef ipSize As Long) As SeqH
+Private Function ConstructInstanceByCount(Optional ByRef ipNewSize As Long = MIN_SEQ_SIZE) As SeqH
     
-    If ipSize < FIRST_INDEX Then
-        Set ConstructInstanceByCount = Me
-        Exit Function
+    If ipNewSize < MIN_SEQ_SIZE Then
+        Err.Raise 17 + vbObjectError, _
+            "VBALib.SeqH", _
+            Fmt.Dbg("Seq should have a size of at least 512 items. Got {0}", ipNewSize)
     End If
-    
-    Dim myCount As Long
-    For myCount = FIRST_INDEX To ipSize
-        Me.Add Empty
-    Next
+            
+    SetSize ipNewSize
     
     Set ConstructInstanceByCount = Me
     
@@ -206,8 +205,9 @@ End Function
 Public Sub SetSize(Optional ByVal ipNewSize As Long)
 Attribute SetSize.VB_Description = "set the size of hash array to be the 2^n value just greater than ipNewSize"
 
-    s.Resizing = True
-    If ipNewSize < 0 Then ipNewSize = 1023
+    If ipNewSize < 0 Then
+        ipNewSize = MIN_SEQ_SIZE
+    End If
 
     ' calculate a long whose value is the first 2^n-1 that is greater than ipNewSize
     ' this provides a bitfield of 1's used to set the maximum for a hash value
@@ -217,10 +217,9 @@ Attribute SetSize.VB_Description = "set the size of hash array to be the 2^n val
     End If
     
     ' Redim without preserve should mean that we have no entries in s.HashSlots
-    ReDim s.HashSlots(FIRST_INDEX To s.HashSlotMask)
+    ReDim s.HashSlots(FIRST_INDEX To s.HashSlotMask + 1)
     p.Size = s.HashSlotMask
     If s.HashRoot Is Nothing Then
-        s.Resizing = False
         Exit Sub
     End If
     
@@ -253,16 +252,10 @@ Attribute SetSize.VB_Description = "set the size of hash array to be the 2^n val
             Set s.HashSlots(myNode.Hash) = myNode
             AppendByHash myNode
         Else
-            InsertByHash myNode
+            InsertbyHash myNode
         End If
         
     Loop
-    
-    ' we now need to find the new locations of the nodes with
-    ' order =First_Index and order = s.OrderLast.order nodes.
-'    Set s.OrderRoot = GetNodeAt(FIRST_INDEX)
-'    Set s.OrderLast = GetNodeAt(s.OrderLast.order)
-    s.Resizing = False
     
 End Sub
 
@@ -292,7 +285,10 @@ Attribute Clone.VB_Description = "Makes a shallow copy of the seq"
     
 End Function
 
+'@Description("Returns the size of the Seq or the number of specified Items.  Returns -1 rather than 0 if there are no items in the Seq but count item will return 0 if not found")
+
 Public Function Count(Optional ByRef ipItem As Variant) As Long
+Attribute Count.VB_Description = "Returns the size of the Seq or the number of specified Items.  Returns -1 rather than 0 if there are no items in the Seq but count item will return 0 if not found"
     
     If s.HashRoot Is Nothing Then
         Count = -1
@@ -380,22 +376,17 @@ Attribute ToArray.VB_Description = "Returns a shallow copy of the SeqH as an Arr
     Dim myA As Variant: ReDim myA(s.OrderRoot.Order To s.OrderLast.Order)
 
     Dim myNode As SeqHNode: Set myNode = s.OrderRoot
-
-    Dim myIndex As Long: myIndex = 0
-    Do While myIndex < s.OrderLast.Order
-    
-        myIndex = myIndex + 1
-        
+    Do
+            
         If VBA.IsObject(myNode.Item) Then
-            Set myA(myIndex) = myNode.Item
+            Set myA(myNode.Order) = myNode.Item
         Else
-            myA(myIndex) = myNode.Item
+            myA(myNode.Order) = myNode.Item
         End If
 
         Set myNode = myNode.OrderSucc
         
-    Loop
-
+    Loop Until myNode Is Nothing
 
     ToArray = myA
 
@@ -414,7 +405,6 @@ Attribute ToCollection.VB_Description = "Returns a shallow copy of the SeqH as a
     End If
 
     Dim myNode As SeqHNode: Set myNode = s.OrderRoot
-
     Do
         myC.Add myNode.Item
         Set myNode = myNode.OrderSucc
@@ -814,7 +804,7 @@ Attribute Add.VB_Description = "Add a single item.  Returns the index at which t
         
     ElseIf s.HashSlots(myHash) Is Nothing Then
     
-        ' if thed hash slot is nothing then we just append
+        ' if the hash slot is nothing then we just append
         Set s.HashSlots(myHash) = myNewNode
         AppendByHash myNewNode
         AppendByOrder myNewNode
@@ -824,7 +814,7 @@ Attribute Add.VB_Description = "Add a single item.  Returns the index at which t
         
         'Insert ipNewNode in the node list at the end of the hash/item sequence
         ' append the new node to the order seq
-        InsertByHash myNewNode
+        InsertbyHash myNewNode
         AppendByOrder myNewNode
         
     End If
@@ -860,7 +850,7 @@ Attribute AddRange.VB_Description = "Add an array,  list type, dictionary type, 
      If GroupInfo.IsNotContainer(ipRange) And GroupInfo.IsNotString(ipRange) Then
         Err.Raise 17 + vbObjectError, _
             "VBALib.SeqH.AddRange", _
-            Fmt.Text("Expecting a container type.  Got {0}", VBA.Typename(ipRange))
+            Fmt.Text("Expecting a container type.  Got {0}", VBA.TypeName(ipRange))
     End If
     
     Dim myItems As IterItems: Set myItems = IterItems(ipRange)
@@ -871,7 +861,9 @@ Attribute AddRange.VB_Description = "Add an array,  list type, dictionary type, 
     
     Do
         If GroupInfo.IsDictionary(ipRange) Then
-            Me.Add Array(myItems.CurKey(0), myItems.CurItem(0))
+            Dim myK As Variant: myK = Array(myItems.CurKey(0))
+            Dim myI As Variant: myI = Array(myItems.CurItem(0))
+            Me.Add Array(myK(0), myI(0))
         Else
             Me.Add myItems.CurItem(0)
         End If
@@ -891,7 +883,9 @@ Public Property Get Item(ByVal ipIndex As Long) As Variant
     
     Dim myNode As SeqHNode: Set myNode = GetNodeAt(ipIndex)
     
-   If VBA.IsObject(myNode.Item) Then
+   If myNode Is Nothing Then
+        Exit Function
+    ElseIf VBA.IsObject(myNode.Item) Then
         Set Item = myNode.Item
     Else
         Item = myNode.Item
@@ -936,7 +930,7 @@ Public Function InsertAt(ByVal ipIndex As Long, ByVal ipItem As Variant) As Long
     If s.HashSlots(myHash) Is Nothing Then
         AppendByHash myNewNode
     Else
-        InsertByHash myNewNode
+        InsertbyHash myNewNode
     End If
     
     ' byorder
@@ -1064,6 +1058,7 @@ Public Function RemoveAll(ParamArray ipParamarray() As Variant) As SeqH
     End If
     
     Dim myParamarray As Variant
+    '@Ignore AssignmentNotUsed
     myParamarray = ipParamarray
     myParamarray = ArrayOp.Splat(ipParamarray)
     
@@ -1192,7 +1187,7 @@ Public Function RemoveAt(ByRef ipIndex As Long) As Long
 
     RemoveAt = -1
     
-    If s.HashRoot Is Nothing Then
+    If s.OrderRoot Is Nothing Then
         Exit Function
     End If
     
@@ -1480,8 +1475,8 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
     
 End Function
 
-Public Property Get Typename() As String
-    Typename = MY_TYPENAME
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
 End Property
 
 Public Function Push(ParamArray ipParamarray() As Variant) As SeqH
@@ -1532,7 +1527,7 @@ Public Function PopRange(Optional ByVal ipCount As Long = 1) As SeqA
     End If
     
     If ipCount > s.OrderLast.Order Then
-        Set PopRange = SeqA(Me).Reverse
+        Set PopRange = SeqA(ToArray).Reverse
         Me.RemoveAll
         Exit Function
     End If
@@ -1592,7 +1587,7 @@ Attribute DequeueRange.VB_Description = "SeqA is deliberate"
     End If
 
     If ipCount > s.OrderLast.Order Then
-        Set DequeueRange = SeqA(Me).Clone
+        Set DequeueRange = SeqA(ToArray)
         Me.RemoveAll
         Exit Function
     End If
@@ -2123,8 +2118,17 @@ Private Sub AppendByHash(ByRef ipNode As SeqHNode)
     
 End Sub
 
-
-Private Sub InsertByHash(ByVal ipNewNode As SeqHNode)
+Private Sub AppendByOrder(ByRef ipNode As SeqHNode)
+    
+    ' no need to look at hashslots as this is handled by  'byHash' methods
+    Set ipNode.OrderPred = s.OrderLast
+    Set ipNode.OrderSucc = Nothing
+    Set s.OrderLast.OrderSucc = ipNode
+    Set s.OrderLast = ipNode
+    s.OrderLast.OrderPred.UpdateOrder
+    
+End Sub
+Private Sub InsertbyHash(ByVal ipNewNode As SeqHNode)
 
     ' we know that the new node is not the first node.
     ' we know that the new node exists in hashslots
@@ -2164,16 +2168,7 @@ Private Sub InsertByHash(ByVal ipNewNode As SeqHNode)
     
 End Sub
 
-Private Sub AppendByOrder(ByRef ipNode As SeqHNode)
-    
-    ' no need to look at hashslots as this is handled by  'byHash' methods
-    Set ipNode.OrderPred = s.OrderLast
-    Set ipNode.OrderSucc = Nothing
-    Set s.OrderLast.OrderSucc = ipNode
-    Set s.OrderLast = ipNode
-    s.OrderLast.OrderPred.UpdateOrder
-    
-End Sub
+
 
 Private Sub InsertByOrder(ByVal ipNewNode As SeqHNode)
 
@@ -2279,7 +2274,6 @@ Private Function GetHash(ByRef ipItem As Variant) As Long
     Dim F As Single
     Dim VT As VbVarType
     Dim myHash As Long
-    'Dim s.HashSlotMask As Long
      
     Dim C As Variant
     C = VBA.CDec(C)
@@ -2365,7 +2359,7 @@ Private Function GetHash(ByRef ipItem As Variant) As Long
             myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
             
     End Select
-     
+    ' the hashslot array starts at 1 so we must add 1 below for the case where the hash is zero
     GetHash = myHash + 1
     
 End Function

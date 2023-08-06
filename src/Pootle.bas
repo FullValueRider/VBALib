@@ -20,9 +20,8 @@ Sub TestStrConv()
 End Sub
 
 
-Sub TestKvp()
+Sub TestKvpC()
 
-    Dim myS As SeqA: Set myS = SeqA()
     Dim myK As KvpC
     Set myK = KvpC.Deb
     
@@ -31,18 +30,13 @@ Sub TestKvp()
         .Add "Two", 20
         .Add "Three", 30
         .Add "Four", 40
-    
-    
-        Dim myItems As IterItems: Set myItems = IterItems(myK)
-        Do
-            Debug.Print myItems.CurItem(0), myItems.CurKey(0), myItems.CurOffset(0)
-            Debug.Print myItems.CurItem(1), myItems.CurKey(1), myItems.CurOffset(1)
-            Debug.Print myItems.CurItem(2), myItems.CurKey(2), myItems.CurOffset(2)
-            Debug.Print myItems.CurItem(3), myItems.CurKey(3), myItems.CurOffset(3)
-        
-        Loop Until myItems.MoveNext
-    
     End With
+    
+        Dim myKeys As Variant: Set myKeys = myK.KeysAsSeq
+        Dim myIndex As Long
+        For myIndex = myKeys.FirstIndex To myKeys.LastIndex
+            Debug.Print myK.Item(myKeys.Item(myIndex))
+        Next
     
 End Sub
 
@@ -62,7 +56,7 @@ Sub testfmtdbgarray()
     myD.AddPairs SeqA("One", "Two", "Three", "Four"), SeqA(1, 2, 3, 4)
     Fmt.Dbg "{0}", myD
 
-    Fmt.Dbg "{0}", Array(1, 2, 3, 4)
+    Fmt.Dbg "{0}", Array(Array(1, 2, 3, 4))
 End Sub
 
 
@@ -70,7 +64,7 @@ Sub testredim()
 
     Dim myNodes() As KvpHNode
     ReDim myNodes(1 To 100)
-    Dim myNode As KvpHNode: Set myNode = KvpHNode(Nothing, Nothing, 1, 1, 1)
+    Dim myNode As KvpHNode: Set myNode = KvpHNode(1, 1, 1)
     Set myNodes(1) = myNode
     
     ReDim myNodes(1 To 50)

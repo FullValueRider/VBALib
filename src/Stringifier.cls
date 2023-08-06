@@ -134,7 +134,7 @@ Public Function StringifyItem(ByRef ipItem As Variant) As String
         Case Else
             Err.Raise 17 + vbObjectError, _
             "Stringifier.StringifyItem", _
-            "Don't know how to stringify Type '" & VBA.Typename(ipItem)
+            "Don't know how to stringify Type '" & VBA.TypeName(ipItem)
                 
     End Select
             
@@ -163,12 +163,12 @@ Friend Function StringifyAdmin(ByRef ipAdmin As Variant) As String
                 
         Case VBA.IsEmpty(ipAdmin)
             
-            StringifyAdmin = VBA.Typename(ipAdmin)
+            StringifyAdmin = VBA.TypeName(ipAdmin)
                 
                     
         Case VBA.IsNull(ipAdmin)
         
-            StringifyAdmin = VBA.Typename(ipAdmin)
+            StringifyAdmin = VBA.TypeName(ipAdmin)
                 
                     
         Case VBA.VarType(ipAdmin) = vbDataObject
@@ -181,14 +181,14 @@ Friend Function StringifyAdmin(ByRef ipAdmin As Variant) As String
             ' Debug.Print s.ObjectMarkup.Left
             ' Debug.Print s.ObjectMarkup.Right
             ' Debug.Print s.ObjectMarkup.Separator
-            StringifyAdmin s.ObjectMarkup.Left & VBA.Typename(ipAdmin) & s.ObjectMarkup.Right ' Nul is nothing
+            StringifyAdmin s.ObjectMarkup.Left & VBA.TypeName(ipAdmin) & s.ObjectMarkup.Right ' Nul is nothing
 
         Case Else
 
             Err.Raise _
             17 + vbObjectError, _
             "Stringifier.StringifyAdmin", _
-            "Unexpected Item: " & Typename(ipAdmin.Cargo)
+            "Unexpected Item: " & TypeName(ipAdmin.Cargo)
                 
                 
     End Select
@@ -333,7 +333,7 @@ Friend Function StringifyItemObject(ByVal ipObject As Object) As String
     
     ' In desperation just return the typename wrapped in object markup
     
-    StringifyItemObject = s.ObjectMarkup.Left & "Object: " & Typename(ipObject) & s.ObjectMarkup.Right
+    StringifyItemObject = s.ObjectMarkup.Left & "Object: " & TypeName(ipObject) & s.ObjectMarkup.Right
             
 End Function
 

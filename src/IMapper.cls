@@ -18,7 +18,7 @@ Public Function ExecMapper(ByRef ipHostItem As Variant) As Variant
 End Function
 
 
-Public Property Get Typename() As String
+Public Property Get TypeName() As String
 End Property
 
 

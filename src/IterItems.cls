@@ -21,6 +21,8 @@ Option Explicit
 ' Index = the offset from the first index of the host item
 ' the indexes provided to FTS must be based on normalised indexes StartIndexing at 1
 
+Private Const MY_TYPENAME               As String = "IterItems"
+
 Private Type State
 
     Host                                As Variant ' holds ipItems
@@ -127,9 +129,9 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
     s.GlobalOffset = 0
     s.Size = s.LastIndex - s.FirstIndex + 1
     
-    If s.Size = 0 Then
-        AlertNoItems
-    End If
+'    If s.Size = 0 Then
+'        AlertNoItems
+'    End If
     
     Set ConstructInstance = Me
     
@@ -454,6 +456,25 @@ Attribute CurOffset.VB_Description = "Returns the 1 based index of the current i
 
 End Property
 
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
+End Property
+
+Public Property Get FirstIndex() As Long
+    FirstIndex = s.FirstIndex
+End Property
+
+Public Property Get StartIndex() As Long
+    StartIndex = s.StartIndex
+End Property
+
+Public Property Get LastIndex() As Long
+    LastIndex = s.LastIndex
+End Property
+
+Public Property Get EndIndex() As Long
+    EndIndex = s.EndIndex
+End Property
 
 Private Sub AlertInvalidFTs(ByRef ipType As String, ByRef ipValue As Long)
 
@@ -468,7 +489,7 @@ Private Sub AlertNotNumber(ByRef ipItem As Variant)
 
     Err.Raise 17 + vbObjectError, _
     "IterItems: Invalid Number", _
-    Fmt.Text("Expecting an number. Got Type: {0}", VBA.Typename(ipItem))
+    Fmt.Text("Expecting an number. Got Type: {0}", VBA.TypeName(ipItem))
         
 End Sub
 

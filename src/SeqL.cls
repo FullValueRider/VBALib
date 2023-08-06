@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqL is a multipurpose Collection/ArrayList replacement.  It uses a double linked list to store the items.  Items are access using a 1 based index. For a Keyed collection, use one of the Kvp classes"
@@ -698,7 +698,7 @@ Attribute AddRange.VB_Description = "Add an array,  list type, dictionary type, 
      If GroupInfo.IsNotContainer(ipRange) And GroupInfo.IsNotString(ipRange) Then
         Err.Raise 17 + vbObjectError, _
             "VBALib.SeqL.AddRange", _
-            Fmt.Text("Expecting a container type.  Got {0}", VBA.Typename(ipRange))
+            Fmt.Text("Expecting a container type.  Got {0}", VBA.TypeName(ipRange))
     End If
     
     Dim myItems As IterItems: Set myItems = IterItems(ipRange)
@@ -1216,8 +1216,8 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
 
 End Function
 
-Public Property Get Typename() As String
-    Typename = MY_TYPENAME
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
 End Property
 
 Public Function Push(ParamArray ipParamarray() As Variant) As SeqL
@@ -1865,10 +1865,11 @@ Private Sub RemoveNode(ByRef ipNode As SeqLNode)
         Exit Sub
     End If
     
+    '@Ignore VariableNotUsed
     Dim myTmp As SeqLNode:
     ' case of first node
     If ipNode.Pred Is Nothing Then
-    Set myTmp = ipNode
+        Set myTmp = ipNode
         Set s.Root = ipNode.Succ
         Set s.Root.Pred = Nothing
         Set myTmp = Nothing
@@ -1886,6 +1887,7 @@ Private Sub RemoveNode(ByRef ipNode As SeqLNode)
         Exit Sub
     End If
 
+    '@Ignore AssignmentNotUsed
     Set myTmp = ipNode
     Set ipNode.Pred.Succ = ipNode.Succ
     Set ipNode.Succ.Pred = ipNode.Pred

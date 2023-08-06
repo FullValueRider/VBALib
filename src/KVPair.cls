@@ -45,7 +45,7 @@ Friend Function ConstructInstance(ByRef ipKVPairOrKey As Variant, ByRef ipItem A
     Set p.Items = New Collection
     Set ConstructInstance = Me
     
-    If VBA.Typename(ipKVPairOrKey) = "VBALib.Kvpair" Then
+    If VBA.TypeName(ipKVPairOrKey) = "VBALib.Kvpair" Then
         Set ConstructInstance = ConstructInstanceUsingKVPair(ipKVPairOrKey)
         
     Else
@@ -120,7 +120,7 @@ End Property
 'End Function
 
 Public Function Name() As String
-    Name = Typename(Me)
+    Name = TypeName(Me)
 End Function
 
 

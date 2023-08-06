@@ -27,7 +27,7 @@ Public Sub GuardInvalidRangeItem(ByRef ipRange As Variant, ByRef ipMessage As St
         Case Else
             Err.Raise 17 + vbObjectError, _
             ipMessage, _
-            Fmt.Text("Expecting string, array, list type or dictionary type.  Got {0}", VBA.Typename(ipRange))
+            Fmt.Text("Expecting string, array, list type or dictionary type.  Got {0}", VBA.TypeName(ipRange))
     End Select
     
 End Sub
@@ -61,7 +61,7 @@ Public Sub GuardExpectingArray(ByRef ipArray As Variant, ByRef ipMessage As Stri
     If ArrayOp.IsNotArray(ipArray) Then
         Err.Raise 17 + vbObjectError, _
         ipMessage, _
-        Fmt.Text("Expecting an array.  Got {0}", VBA.Typename(ipArray))
+        Fmt.Text("Expecting an array.  Got {0}", VBA.TypeName(ipArray))
     End If
         
 End Sub

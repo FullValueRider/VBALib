@@ -9,7 +9,7 @@ Public Sub ShakerSortArray(ByRef iopArray As Variant)
     If Not VBA.IsArray(iopArray) Then
         Err.Raise 17 + vbObjectError, _
         "Sorters.ShakerSortArray", _
-        Fmt.Text("Expecting array. Got {0}.", VBA.Typename(iopArray))
+        Fmt.Text("Expecting array. Got {0}.", VBA.TypeName(iopArray))
         
     End If
     
@@ -116,10 +116,10 @@ Public Sub ShakerSortByItem(ByVal iopS As Object)
     ' from https://www.vbforums.com/showthread.php?473677-VB6-Sorting-algorithms-(sort-array-sorting-arrays)&p=2912324#post2912324
     ' The shaker sort is used because it is the highest rated sort which is stable and inplace and which does not use recursion
     
-    If VBA.Left$(VBA.Typename(iopS), 3) <> "Seq" Then
+    If VBA.Left$(VBA.TypeName(iopS), 3) <> "Seq" Then
         Err.Raise 17 + vbObjectError, _
         "Sorters.ShakerSortByItem", _
-        Fmt.Text("Expecting a Seq.  Got {0}", VBA.Typename(iopS))
+        Fmt.Text("Expecting a Seq.  Got {0}", VBA.TypeName(iopS))
     End If
     
     If iopS.Count < 1 Then

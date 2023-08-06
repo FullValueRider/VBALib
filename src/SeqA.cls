@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqA is a multipurpose Collection/ArrayList replacement.  It uses a one dimensional array to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayOp.GetIndex. For a Keyed collection, use one of the Kvp classes"
@@ -674,7 +674,7 @@ Attribute AddRange.VB_Description = "Add an array,  list type, dictionary type, 
     If GroupInfo.IsNotContainer(ipRange) And GroupInfo.IsNotString(ipRange) Then
         Err.Raise 17 + vbObjectError, _
             "VBALib.SeqA.AddRange", _
-            Fmt.Text("Expecting a container type.  Got {0}", VBA.Typename(ipRange))
+            Fmt.Text("Expecting a container type.  Got {0}", VBA.TypeName(ipRange))
     End If
     
     Dim myItems As IterItems: Set myItems = IterItems(ipRange)
@@ -1207,8 +1207,8 @@ End Function
 'End Function
 '
 
-Public Property Get Typename() As String
-    Typename = MY_TYPENAME
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
 End Property
 
 

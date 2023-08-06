@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqLNode"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -95,6 +95,6 @@ Public Property Let Item(ByVal ipItem As Variant)
 End Property
 
 
-Public Property Get Typename() As String
-    Typename = MY_TYPENAME
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
 End Property

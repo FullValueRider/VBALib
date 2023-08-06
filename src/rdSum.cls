@@ -44,20 +44,20 @@ Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant
     mySum = VBA.CDec(0)
     
     'Dim myItem As Variant
-    Dim myIndex As Long
+    Dim myItem As Variant
     If s.Comparer Is Nothing Then
     
-        For myIndex = ipHostItems.FirstIndex To ipHostItems.LastIndex
-            If GroupInfo.IsNumber(ipHostItems.Item(myIndex)) Then
-                mySum = mySum + ipHostItems.Item(myIndex)
+        For Each myItem In ipHostItems
+            If GroupInfo.IsNumber(myItem) Then
+                mySum = mySum + myItem
             End If
         Next
        
     Else
         
-        For myIndex = ipHostItems.FirstIndex To ipHostItems.LastIndex
-            If s.Comparer.ExecCmp(ipHostItems.Item(myIndex)) Then
-                mySum = mySum + ipHostItems.Item(myIndex)
+        For Each myItem In ipHostItems
+            If s.Comparer.ExecCmp(myItem) Then
+                mySum = mySum + myItem
             End If
         Next
         

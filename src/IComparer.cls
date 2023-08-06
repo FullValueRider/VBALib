@@ -18,7 +18,7 @@ Public Function ExecCmp(ByRef ipHostItem As Variant) As Boolean
 End Function
 
 
-Public Property Get Typename() As String
+Public Property Get TypeName() As String
 End Property
 
 

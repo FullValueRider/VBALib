@@ -51,6 +51,7 @@ Public Sub ComparerTests()
         Debug.Print CurrentProcedureName;
     #Else
         GlobalAssert
+        VBATesting = True
         Debug.Print ErrEx.LiveCallstack.ProcedureName;
     #End If
 
@@ -84,10 +85,10 @@ End Sub
 Private Sub Test01a_CmpEq_Long_True()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -104,7 +105,7 @@ Private Sub Test01a_CmpEq_Long_True()
     myResult = myCmp.ExecCmp(42)
     
     'Act:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -121,10 +122,10 @@ End Sub
 Private Sub Test01b_CmpEq_Long_False()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -142,7 +143,7 @@ Private Sub Test01b_CmpEq_Long_False()
     'Act:  Again we need to sort The result SeqC to get the matching array
     myResult = myCmp.ExecCmp(43)
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -159,10 +160,10 @@ End Sub
 Private Sub Test02a_CmpNEq_Long_True()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -179,7 +180,7 @@ Private Sub Test02a_CmpNEq_Long_True()
     myResult = myCmp.ExecCmp(42)
     
     'Act:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -196,10 +197,10 @@ End Sub
 Private Sub Test02b_CmpNEq_Long_False()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -217,7 +218,7 @@ Private Sub Test02b_CmpNEq_Long_False()
     'Act:  Again we need to sort The result SeqC to get the matching array
     myResult = myCmp.ExecCmp(43)
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -234,10 +235,10 @@ End Sub
 Private Sub Test03a_CmpMT_Long_True()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -254,7 +255,7 @@ Private Sub Test03a_CmpMT_Long_True()
     myResult = myCmp.ExecCmp(43)
     
     'Act:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -271,10 +272,10 @@ End Sub
 Private Sub Test03b_CmpMT_Long_False()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -292,7 +293,7 @@ Private Sub Test03b_CmpMT_Long_False()
     'Act:  Again we need to sort The result SeqC to get the matching array
     myResult = myCmp.ExecCmp(42)
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -309,10 +310,10 @@ End Sub
 Private Sub Test04a_CmpLT_Long_True()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -329,7 +330,7 @@ Private Sub Test04a_CmpLT_Long_True()
     myResult = myCmp.ExecCmp(41)
     
     'Act:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -346,10 +347,10 @@ End Sub
 Private Sub Test04b_CmpLT_Long_False()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -367,7 +368,7 @@ Private Sub Test04b_CmpLT_Long_False()
     'Act:  Again we need to sort The result SeqC to get the matching array
     myResult = myCmp.ExecCmp(42)
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -384,10 +385,10 @@ End Sub
 Private Sub Test05a_CmpMTEQ_Long_MTTrue()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -404,7 +405,7 @@ Private Sub Test05a_CmpMTEQ_Long_MTTrue()
     myResult = myCmp.ExecCmp(43)
     
     'Act:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -421,10 +422,10 @@ End Sub
 Private Sub Test05b_CmpMTEQ_Long_EQTrue()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -441,7 +442,7 @@ Private Sub Test05b_CmpMTEQ_Long_EQTrue()
     myResult = myCmp.ExecCmp(42)
     
     'Act:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -458,10 +459,10 @@ End Sub
 Private Sub Test05c_CmpMTEQ_Long_False()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -479,7 +480,7 @@ Private Sub Test05c_CmpMTEQ_Long_False()
     'Act:  Again we need to sort The result SeqC to get the matching array
     myResult = myCmp.ExecCmp(41)
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -496,10 +497,10 @@ End Sub
 Private Sub Test06a_CmpLTEQ_Long_LTTrue()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -516,7 +517,7 @@ Private Sub Test06a_CmpLTEQ_Long_LTTrue()
     myResult = myCmp.ExecCmp(41)
     
     'Act:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -533,10 +534,10 @@ End Sub
 Private Sub Test06b_CmpLTEQ_Long_EQTrue()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -553,7 +554,7 @@ Private Sub Test06b_CmpLTEQ_Long_EQTrue()
     myResult = myCmp.ExecCmp(42)
     
     'Act:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -570,10 +571,10 @@ End Sub
 Private Sub Test06c_CmpLTEQ_Long_False()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -591,7 +592,7 @@ Private Sub Test06c_CmpLTEQ_Long_False()
     'Act:  Again we need to sort The result SeqC to get the matching array
     myResult = myCmp.ExecCmp(43)
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

@@ -4,16 +4,15 @@ BEGIN
 END
 Attribute VB_Name = "SeqHNode"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
 '@Exposed
-'@Folder("VBALib.Kvp")
+'@Folder("VBALib.Seq")
 Option Explicit
 
 Private Const MY_TYPENAME                   As String = "SeqHNode"
-
 
 ' SeqHNode uses two sets of pointers to manage the connection of nodes via the hash/item conbination
 ' and the connection via the order field
@@ -150,8 +149,8 @@ Public Property Let Item(ByVal ipItem As Variant)
 End Property
 
 
-Public Property Get Typename() As String
-    Typename = MY_TYPENAME
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
 End Property
 
 

@@ -193,7 +193,7 @@ Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray 
         Exit Function
     End If
     
-    ipParamarray = ArrayOp.Splat(ipParamarray)
+    'ipParamarray = ArrayOp.Splat(ipParamarray)
     '
     '    Dim myToString As Stringifier
     '    Set myToString = Stringifier.Deb

@@ -33,7 +33,7 @@ End Enum
 Public Function Name(ByRef ipItem As Variant) As String
     
     Dim myTypename As String
-    myTypename = VBA.LCase$(VBA.Typename(ipItem))
+    myTypename = VBA.LCase$(VBA.TypeName(ipItem))
     
     Select Case True
             ' We have multiple seq and kvp types distinguished by the last letter of their name
@@ -189,7 +189,7 @@ End Function
 
 
 Public Function IsItemByToArray(ByRef ipItem As Variant) As Boolean
-    IsItemByToArray = VBA.InStr("Stack,Queue", VBA.Typename(ipItem)) > 0
+    IsItemByToArray = VBA.InStr("Stack,Queue", VBA.TypeName(ipItem)) > 0
 End Function
 
 
@@ -199,7 +199,7 @@ End Function
 
 
 Public Function IsIndexFrom1(ByRef ipItem As Variant) As Boolean
-    IsIndexFrom1 = InStr("Seq,Col", VBA.Mid$(VBA.Typename(ipItem), 1, 3)) > 0
+    IsIndexFrom1 = InStr("Seq,Col", VBA.Mid$(VBA.TypeName(ipItem), 1, 3)) > 0
 End Function
 
 
@@ -209,7 +209,7 @@ End Function
 
 
 Public Function IsIndexFrom0(ByRef ipItem As Variant) As Boolean
-    IsIndexFrom0 = InStr("arraylist", VBA.LCase$(VBA.Typename(ipItem))) > 0
+    IsIndexFrom0 = InStr("arraylist", VBA.LCase$(VBA.TypeName(ipItem))) > 0
 End Function
 
 

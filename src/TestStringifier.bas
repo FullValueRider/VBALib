@@ -51,6 +51,7 @@ Public Sub StringifierTests()
         Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab,
     #Else
         GlobalAssert
+        VBATesting = True
         Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab,
     #End If
 
@@ -72,10 +73,10 @@ End Sub
 Private Sub Test01_StringifyItem_String()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
@@ -89,7 +90,7 @@ Private Sub Test01_StringifyItem_String()
     'Act:  Again we need to sort The result SeqC to get the matching array
     myResult = Stringifier.StringifyItem("Hello World!")
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -106,10 +107,10 @@ End Sub
 Private Sub Test02_StringifyItem_Long()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -125,7 +126,7 @@ Private Sub Test02_StringifyItem_Long()
     'Act:  Again we need to sort The result SeqC to get the matching array
     myResult = Stringifier.StringifyItem(42)
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -152,7 +153,7 @@ End Sub
 '    'Act:  Again we need to sort The result SeqC to get the matching array
 '    myresult = Stringifier.StringifyItem(42)
 '    'Assert:
-'    AssertStrictAreEqual myExpected, myResult,myProcedureName
+'    AssertExactAreEqual myExpected, myResult,myProcedureName
 '
 'TestExit:
 '    '@Ignore UnhandledOnErrorResumeNext
@@ -169,10 +170,10 @@ End Sub
 Private Sub Test03_StringifyItem_Array()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -188,7 +189,7 @@ Private Sub Test03_StringifyItem_Array()
     'Act:  Again we need to sort The result SeqC to get the matching array
     myResult = Stringifier.StringifyItem(Array(1, 2, 3, 4, 5, 6))
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -205,10 +206,10 @@ End Sub
 Private Sub Test04_StringifyItem_SeqC()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -226,7 +227,7 @@ Private Sub Test04_StringifyItem_SeqC()
     Dim myC As SeqC: Set myC = SeqC(1, 2, 3, 4, 5, 6)
     myResult = Stringifier.StringifyItem(myC)
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -243,10 +244,10 @@ End Sub
 Private Sub Test05_StringifyItem_Collection()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -270,7 +271,7 @@ Private Sub Test05_StringifyItem_Collection()
     Stringifier.ResetMarkup
     myResult = Stringifier.StringifyItem(myC)
     'Assert:
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -287,10 +288,10 @@ End Sub
 Private Sub Test06_StringifyItem_Dictionary()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -316,7 +317,7 @@ Private Sub Test06_StringifyItem_Dictionary()
     'Assert:
     'Debug.Print myExpected
     'Debug.Print myResult
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -333,10 +334,10 @@ End Sub
 Private Sub Test07_StringifyItem_CustomDictionaryMarkup()
 
     #If twinbasic Then
-        myProcedureName = CurrentProcedureName
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
-        myProcedureName = ErrEx.LiveCallstack.ProcedureName
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     
@@ -363,7 +364,7 @@ Private Sub Test07_StringifyItem_CustomDictionaryMarkup()
     'Assert:
     'Debug.Print myExpected
     'Debug.Print myResult
-    AssertStrictAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

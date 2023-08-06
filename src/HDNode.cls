@@ -128,8 +128,8 @@ Public Property Let Key(ByVal ipKey As Variant)
 End Property
 
 
-Public Property Get Typename() As String
-    Typename = MY_TYPENAME
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
 End Property
 
 Public Property Get Hash() As Variant
