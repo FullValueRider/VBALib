@@ -99,13 +99,17 @@ Public Sub AssertExactSequenceEquals(ByRef ipExpected As Variant, ipResult As Va
         Dim myRItems As IterItems: Set myRItems = IterItems(ipResult)
         
         If myEItems.LacksItems Or myRItems.LacksItems Then
-            Fmt.Dbg "{0}: SequenceEquals assertion failed - no items: ", ipWhere
+            Fmt.Dbg "{0}: SequenceExactEquals assertion failed - no items: ", ipWhere
+            Exit Sub
+        End If
+        
+        If myEItems.Size <> myRItems.Size Then
+            Fmt.Deb "{0}: SequenceExactequals assertion failed - unequal sizes. Found {0} and {1}{nl}{2}{nl{3}", myEItems.Size, myRItems.Size, ipExpected, ipResult
             Exit Sub
         End If
         
         Dim myE As Variant: ReDim myE(myEItems.StartIndex To myEItems.EndIndex)
         Dim myR As Variant: ReDim myR(myRItems.StartIndex To myRItems.EndIndex)
-        
         
         Do
         

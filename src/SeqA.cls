@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqA is a multipurpose Collection/ArrayList replacement.  It uses a one dimensional array to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayOp.GetIndex. For a Keyed collection, use one of the Kvp classes"

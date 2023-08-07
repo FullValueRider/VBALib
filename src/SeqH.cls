@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqH"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqHSeqH is a multipurpose Collection/ArrayList replacement.  It uses a double linked list with two sets of links to manage hash clashes and ordr of addition/insertion to store the items.  Items are access using a single 1 based index. For a Keyed collection, use one of the Kvp classes"

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqL is a multipurpose Collection/ArrayList replacement.  It uses a double linked list to store the items.  Items are access using a 1 based index. For a Keyed collection, use one of the Kvp classes"
