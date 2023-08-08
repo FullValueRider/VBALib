@@ -91,38 +91,7 @@ Alternative to Lbound. Returns 'Empty' if ipRank is not in the array
 #### Function LastIndex(ByRef ipArray As Variant, Optional ByVal ipRank As Long = 1) As Variant
 ALternative to Ubound.  Returns 'Empty' if ipRank is not in the array
 
-## Comparer classes
-Comparer classes are used to provide a compare function for the Seq and Kvp FilterIt, ReduceIt and CountIt classes
-A class is provided for the comparisions of equals, not equals, more than, more than or equal, less than and less than or equals.
-The classes are primed with a reference value at creation or default to a reference of zero.  The cmp classes may rely on a CompereHelper function for their comparision.
-cmp classes implement the IComparer interface.
 
-### cmpEq
-
-#### Function Deb(ByVal ipReference As Variant) As cmpEQ
-DefaultMember
-
-#### Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
-IpHostItem is compared against ipReference
-
-#### Property Get IComparer_TypeName() As String
-Returns the typename as a string.  Useful when debugging
-
-### cmpNEQ
-### cmpLT
-### cmpLTEQ
-### cmpMT
-### cmpMTEQ
-
-### Example code
-```VBA
-DIm myNubmers as SeqC
-Set myNumbers = SeqC(-5,-4,-3,-2,-1,0,1,2,3,4,-10)
-Dim myNegatives as seqC
-set myNegatives = myNumbers.FilterIt(cmpLT(0))
-debug.print vba.Join(myNegatives.ToArray,chars.Comma)
--5,-4,-3,-2,-1,-10
-```
 ### Class Filer
 Provides file related actions specifically related to parsing Advent of Code  dataset.  Uses the Scripting.FileSystemObject
 
