@@ -14,7 +14,7 @@ Option Explicit
 
 
 ' IReducers take the whole SeqC or Items of a Kvp so we can be specific and specify SeqC as the parameter type
-Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant
+Public Function ExecReduction(ByRef ipForEach As Variant) As Variant
 End Function
 
 

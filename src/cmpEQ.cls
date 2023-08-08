@@ -18,7 +18,6 @@ Const MY_TYPENAME                   As String = "cmpEQ"
 
 Private Type State
     Reference                       As Variant
-    RefType                         As VbVarType
 End Type
 
 
@@ -31,16 +30,7 @@ End Property
 
 
 Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
-    
-    Dim myHostItem As Variant
-    myHostItem = GetItemAsComparerValue(ipHostItem)
-    
-    If StringNumberComparison(s.Reference, myHostItem) Then
-        IComparer_ExecCmp = False
-    Else
-        IComparer_ExecCmp = myHostItem = s.Reference
-    End If
-    
+    IComparer_ExecCmp = Comparers.EQ(ipHostItem, s.Reference(0))
 End Function
 
 
@@ -54,9 +44,6 @@ End Function
 
 
 Friend Function ConstructInstance(ByVal ipReference As Variant) As cmpEQ
-
-    s.Reference = GetItemAsComparerValue(ipReference)
-    s.RefType = VBA.VarType(s.Reference)
+    s.Reference = Array(ipReference)
     Set ConstructInstance = Me
-    
 End Function

@@ -305,7 +305,7 @@ Attribute Count.VB_Description = "Returns the size of the Seq or the number of s
     Dim myNode As SeqHNode: Set myNode = s.HashRoot
     Do
     
-        If ComparerHelpers.Equals(ipItem, myNode.Item) Then
+        If Comparers.EQ(ipItem, myNode.Item) Then
             myCount = myCount + 1
         End If
         
@@ -717,7 +717,7 @@ Public Function IndexOf _
     ' search for the first node whose order is in the range ipStart to ipEnd
     Do
     
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             IndexOf = myNode.Order
         End If
         
@@ -771,7 +771,7 @@ Optional ByVal ipRun As Long = 0 _
     Dim myCount As Long
     For myCount = ipStart To myEnd
         
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             LastIndexOf = myNode.Order
             Exit Function
         End If
@@ -1320,7 +1320,7 @@ Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
     Dim myNode As SeqHNode: Set myNode = s.HashRoot
     Do
     
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             HoldsItem = True
             Exit Function
         End If
@@ -1465,7 +1465,7 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
     
-    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me))
+    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me.ToArray))
     
     If VBA.IsObject(myItem(0)) Then
         Set ReduceIt = myItem(0)
@@ -2143,7 +2143,7 @@ Private Sub InsertbyHash(ByVal ipNewNode As SeqHNode)
 
     Do While myCurNode.Hash = ipNewNode.Hash
         ' check item is the same item as ipnewnode
-        If ComparerHelpers.Equals(myCurNode.Item, ipNewNode.Item) Then
+        If Comparers.EQ(myCurNode.Item, ipNewNode.Item) Then
             ' check the next node is not nothing
             If myCurNode.HashSucc Is Nothing Then
                 ' if ipnode.succ is nothing then by default
@@ -2251,7 +2251,7 @@ Attribute GetNodeOf.VB_Description = "Returns the first node containing ipItem"
     End If
     
     Do
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             Set GetNodeOf = myNode
             Exit Function
         End If
@@ -2388,7 +2388,7 @@ Private Function GetItemAsString(ByVal ipItem As Variant) As String
             myResult = Stringifier.SetNoMarkup.StringifyItemObject(ipItem)
     End Select
         
-    GetItemAsString = Fmt.SetNoMarkup.Text("{0}", myResult)
+    GetItemAsString = Fmt.NoMarkup.Text("{0}", myResult)
         
 End Function
 
@@ -2514,7 +2514,7 @@ Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
     
     ' search for the first matching item with the current hash
     ' also realising that becasue we have a valid hash doesn't mean that the item is in the sequence
-    Do Until ComparerHelpers.Equals(myNode.Item, ipItem)
+    Do Until Comparers.EQ(myNode.Item, ipItem)
         Set myNode = myNode.HashSucc
         ' check for the case of a valid hash but no item in seq
         ' i.e. the node hash has changed without finding a matching item
@@ -2536,6 +2536,6 @@ Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
         Set myNode = myNode.HashSucc
         RemoveNode myTmp
         
-    Loop While ComparerHelpers.Equals(myNode.Item, ipItem)
+    Loop While Comparers.EQ(myNode.Item, ipItem)
     
 End Sub

@@ -175,7 +175,7 @@ Attribute Count.VB_Description = "Counts number of host items equal to ipItem.  
     Dim myNode As SeqLNode: Set myNode = s.Root
     Do
     
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             myCount = myCount + 1
         End If
         
@@ -590,7 +590,7 @@ Public Function IndexOf _
     Dim myCount As Long
     For myCount = ipStart To myEnd
         
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             IndexOf = myCount
             Exit Function
         End If
@@ -637,7 +637,7 @@ Optional ByVal ipRun As Long = 0 _
     Dim myCount As Long
     For myCount = myEnd To ipStart Step -1
         
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             LastIndexOf = myCount
             Exit Function
         End If
@@ -1057,7 +1057,7 @@ Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
     Dim myNode As SeqLNode: Set myNode = s.Root
     Do
     
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             HoldsItem = True
             Exit Function
         End If
@@ -1206,7 +1206,7 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
     
-    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me))
+    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me.ToArray))
 
     If VBA.IsObject(myItem(0)) Then
         Set ReduceIt = myItem(0)
@@ -1803,7 +1803,7 @@ Private Function GetNodeInfo(ByRef ipItem As Variant) As KVPair
     
         myIndex = myIndex + 1
         
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             Set GetNodeInfo = KVPair(myIndex, myNode)
             Exit Function
         End If
@@ -1923,7 +1923,7 @@ Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
 
     Do
         
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
            
             Dim myTmp As SeqLNode
             Set myTmp = myNode

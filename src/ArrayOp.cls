@@ -58,7 +58,7 @@ Public Function HoldsItem(ByRef ipArray As Variant, ByRef ipItem As Variant) As 
 
     Dim myItem As Variant
     For Each myItem In ipArray
-        If ComparerHelpers.Equals(myItem, ipItem) Then
+        If Comparers.EQ(myItem, ipItem) Then
             HoldsItem = True
             Exit Function
         End If
@@ -414,4 +414,3 @@ Public Function Linearise(ByRef ipArray As Variant) As Variant
     Linearise = myA
     
 End Function
-

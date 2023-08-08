@@ -609,7 +609,7 @@ Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long
    ' Move to the end of Hash/Key pairs.  We only need to look at the keys at this stage
     Do Until myNode.HashSucc Is Nothing
     
-        If Not ComparerHelpers.Equals(myNode.HashSucc.Key, ipKey) Then
+        If Not Comparers.EQ(myNode.HashSucc.Key, ipKey) Then
             Exit Do
         End If
         Set myNode = myNode.HashSucc
@@ -771,7 +771,7 @@ Public Function Exists(ByRef ipKey As Variant) As Boolean
     ' found a matching hash, now check for matching key
     Dim myNode As KvpHNode: Set myNode = s.HashSlots(myH)
     Do Until myNode.Hash <> myH
-        If ComparerHelpers.Equals(myNode.Key, ipKey) Then
+        If Comparers.EQ(myNode.Key, ipKey) Then
             Exists = True
             Exit Function
         End If
@@ -861,7 +861,7 @@ Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
     
     Dim myNode As KvpHNode: Set myNode = s.HashRoot
     Do
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             HoldsItem = True
             Exit Function
         End If
@@ -1032,7 +1032,7 @@ Attribute Count.VB_Description = "Returns the size of the Kvp or the number of s
     Dim myNode As KvpHNode: Set myNode = s.OrderRoot
     Do
     
-        If ComparerHelpers.Equals(ipItem, myNode.Item) Then
+        If Comparers.EQ(ipItem, myNode.Item) Then
             myCount = myCount + 1
         End If
         
@@ -1102,7 +1102,7 @@ Public Function KeyOf(ByVal ipItem As Variant) As Variant
     Dim myNode As KvpHNode: Set myNode = s.OrderRoot
     Do
     
-        If ComparerHelpers.Equals(myNode.Item, ipItem) Then
+        If Comparers.EQ(myNode.Item, ipItem) Then
             If VBA.IsObject(myNode.Key) Then
                 Set KeyOf = myNode.Key
             Else
@@ -1879,7 +1879,7 @@ Private Function GetItemAsString(ByVal ipItem As Variant) As String
             myResult = Stringifier.SetNoMarkup.StringifyItemObject(ipItem)
     End Select
         
-    GetItemAsString = Fmt.SetNoMarkup.Text("{0}", myResult)
+    GetItemAsString = Fmt.NoMarkup.Text("{0}", myResult)
         
 End Function
 
@@ -1941,7 +1941,7 @@ Private Sub InsertbyHash(ByVal ipNewNode As KvpHNode)
 
     Do While myCurNode.Hash = ipNewNode.Hash
         ' check item is the same item as ipnewnode
-        If ComparerHelpers.Equals(myCurNode.Key, ipNewNode.Key) Then
+        If Comparers.EQ(myCurNode.Key, ipNewNode.Key) Then
             ' check the next node is not nothing
             If myCurNode.HashSucc Is Nothing Then
                 ' if ipnode.succ is nothing then by default
@@ -2131,7 +2131,7 @@ Attribute GetNodeOf.VB_Description = "Returns the first node containing ipItem"
     End If
     
     Do
-        If ComparerHelpers.Equals(myNode.Key, ipKey) Then
+        If Comparers.EQ(myNode.Key, ipKey) Then
             Set GetNodeOf = myNode
             Exit Function
         End If
@@ -2184,7 +2184,7 @@ Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
     
     ' search for the first matching item with the current hash
     ' also realising that becasue we have a valid hash doesn't mean that the item is in the sequence
-    Do Until ComparerHelpers.Equals(myNode.Item, ipItem)
+    Do Until Comparers.EQ(myNode.Item, ipItem)
         Set myNode = myNode.HashSucc
         ' check for the case of a valid hash but no item in seq
         ' i.e. the node hash has changed without finding a matching item
@@ -2206,6 +2206,6 @@ Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
         Set myNode = myNode.HashSucc
         RemoveNode myTmp
         
-    Loop While ComparerHelpers.Equals(myNode.Item, ipItem)
+    Loop While Comparers.EQ(myNode.Item, ipItem)
     
 End Sub

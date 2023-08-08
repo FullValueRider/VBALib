@@ -37,31 +37,26 @@ Private Property Get IReducer_TypeName() As String
     IReducer_TypeName = MY_TYPENAME
 End Property
 
-
+'@Description("Returns a decimal containong the sum of the Items.  An optional comparer may be used to emulate sumIf")
 Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant
+Attribute ExecReduction.VB_Description = "Returns a decimal containong the sum of the Items.  An optional comparer may be used to emulate sumIf"
 
-    Dim mySum As Variant
-    mySum = VBA.CDec(0)
+    Dim mySum As Variant:  mySum = VBA.CDec(0)
     
-    'Dim myItem As Variant
-    Dim myItem As Variant
-    If s.Comparer Is Nothing Then
-    
-        For Each myItem In ipHostItems
-            If GroupInfo.IsNumber(myItem) Then
-                mySum = mySum + myItem
+    Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
+    Do
+        Dim myItem As Variant: myItem = Array(myItems.CurItem(0))
+        If GroupInfo.IsNumber(myItem(0)) Then
+            If s.Comparer Is Nothing Then
+                mySum = mySum + myItem(0)
+            Else
+                If s.Comparer.ExecCmp(myItem(0)) Then
+                    mySum = mySum + myItem(0)
+                End If
             End If
-        Next
-       
-    Else
-        
-        For Each myItem In ipHostItems
-            If s.Comparer.ExecCmp(myItem) Then
-                mySum = mySum + myItem
-            End If
-        Next
-        
-    End If
+        End If
+                
+    Loop While myItems.MoveNext
 
     ExecReduction = mySum
 

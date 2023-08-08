@@ -19,7 +19,6 @@ Const MY_TYPENAME                   As String = "cmpMTEQ"
 
 Private Type State
     Reference                       As Variant
-    RefType                         As VbVarType
 End Type
 
 
@@ -32,16 +31,7 @@ End Property
 
 
 Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
-
-    Dim myHostItem As Variant
-    myHostItem = GetItemAsComparerValue(ipHostItem)
-    
-    If StringNumberComparison(s.Reference, myHostItem) Then
-        IComparer_ExecCmp = False
-    Else
-        IComparer_ExecCmp = myHostItem >= s.Reference
-    End If
-    
+    IComparer_ExecCmp = Comparers.MTEQ(ipHostItem, s.Reference(0))
 End Function
 
 
@@ -55,13 +45,6 @@ End Function
 
 
 Friend Function ConstructInstance(ByVal ipReference As Variant) As cmpMTEQ
-
-    If VarType(ipReference) = vbBoolean Then
-        Err.Raise "cmpMTEQ", _
-        "MT is not a valid comparision for booleans"
-    End If
-    s.Reference = GetItemAsComparerValue(ipReference)
-    s.RefType = VBA.VarType(s.Reference)
+    s.Reference = Array(ipReference)
     Set ConstructInstance = Me
-    
 End Function

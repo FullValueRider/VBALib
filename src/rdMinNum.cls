@@ -27,14 +27,14 @@ Public Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
     Dim myMin As Variant
     myMin = Globals.maxDecimal
     
-    Dim myIndex As Long
-    For myIndex = ipHostItems.FirstIndex To ipHostItems.LastIndex
+    Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
+    Do
     
-        If myMin > ipHostItems.Item(myIndex) Then
-            myMin = ipHostItems.Item(myIndex)
+        If myMin > myItems.CurItem(0) Then
+            myMin = myItems.CurItem(0)
         End If
                 
-    Next
+    Loop While myItems.MoveNext
 
     IReducer_ExecReduction = myMin
     

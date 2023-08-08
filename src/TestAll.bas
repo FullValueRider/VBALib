@@ -18,7 +18,7 @@ Public Sub Main()
   
     VBATesting = True
     Dim myTime As Variant: myTime = Timer
-    
+     
     Debug.Print "Testing started"
     Debug.Print
 
@@ -28,7 +28,7 @@ Public Sub Main()
     TestStrs.StrsTests
     TestStringifier.StringifierTests
     TestMappers.MapperTests
-    TestComparers.ComparerTests
+    TestCmpFunctors.CmpFunctorTests
     'TestReducers.ReducerTests
     '    TestHashC.cHashCTests  ' not yet complete
     TestSeqA.SeqATests

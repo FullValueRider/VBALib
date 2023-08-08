@@ -560,7 +560,7 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
     End If
     
     Dim myItem As Variant
-    myItem = Array(ipReducer.ExecReduction(s.Items.ToArray))
+    myItem = Array(ipReducer.ExecReduction(s.Items))
     
     If VBA.IsObject(myItem(0)) Then
         Set ReduceIt = myItem(0)
@@ -587,7 +587,7 @@ Public Function Count(Optional ByRef ipItem As Variant) As Long
     
     Dim myItem As Variant
     For Each myItem In s.Items
-        If ComparerHelpers.Equals(ipItem, myItem) Then
+        If Comparers.EQ(ipItem, myItem) Then
             myCount = myCount + 1
         End If
     Next

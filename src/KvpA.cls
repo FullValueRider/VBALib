@@ -586,7 +586,7 @@ Public Function Count(Optional ByRef ipItem As Variant) As Long
     Dim myCount As Long: myCount = 0
     Dim myIndex As Long
     For myIndex = s.Items.FirstIndex To s.Items.LastIndex
-        If ComparerHelpers.Equals(ipItem, s.Items(myIndex)) Then
+        If Comparers.EQ(ipItem, s.Items(myIndex)) Then
             myCount = myCount + 1
         End If
     Next

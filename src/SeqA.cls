@@ -192,7 +192,7 @@ Attribute Count.VB_Description = "Counts number of host items equal to ipItem.  
     
     Dim myIndex As Long
     For myIndex = FIRST_INDEX To s.LastIndex
-        If ComparerHelpers.Equals(s.Host(myIndex), ipItem) Then
+        If Comparers.EQ(s.Host(myIndex), ipItem) Then
             myCount = myCount + 1
         End If
     Next
@@ -578,7 +578,7 @@ Attribute IndexOf.VB_Description = "Returns the index of the Item"
     
     Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipStart, myEnd)
     Do
-        If ComparerHelpers.Equals(myItems.CurItem(0), ipItem) Then
+        If Comparers.EQ(myItems.CurItem(0), ipItem) Then
             IndexOf = myItems.CurKey(0)
             Exit Function
         End If
@@ -618,7 +618,7 @@ Optional ByVal ipRun As Long = 0 _
     
     Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipStart, myEnd).MoveToEndIndex
     Do
-        If ComparerHelpers.Equals(myItems.CurItem(0), ipItem) Then
+        If Comparers.EQ(myItems.CurItem(0), ipItem) Then
             LastIndexOf = myItems.CurKey(0)
             Exit Function
         End If
@@ -1034,7 +1034,7 @@ Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
 
     Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipEndIndex:=Me.LastIndex)
     Do
-        If ComparerHelpers.Equals(myItems.CurItem(0), ipItem) Then
+        If Comparers.EQ(myItems.CurItem(0), ipItem) Then
             HoldsItem = True
             Exit Function
         End If
@@ -1316,7 +1316,7 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
     
-    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me))
+    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me.ToArray))
     
     If VBA.IsObject(myItem(0)) Then
         Set ReduceIt = myItem(0)
@@ -1964,7 +1964,7 @@ Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
     
     Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipEndIndex:=s.LastIndex).MoveToEndIndex
     Do
-        If ComparerHelpers.Equals(myItems.CurItem(0), ipItem) Then
+        If Comparers.EQ(myItems.CurItem(0), ipItem) Then
             MoveDown myItems.CurKey(0), 1
         End If
     Loop While myItems.MovePrev

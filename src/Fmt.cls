@@ -435,13 +435,13 @@ Public Function SetItemSeparator(Optional ByVal ipSeparator As Variant = Chars.t
 End Function
 
 
-Public Function SetNoMarkup() As Fmt
+Public Function NoMarkup() As Fmt
 
     SetArrayMarkup vbNullString, vbNullString, vbNullString
     SetDictionaryItemMarkup vbNullString, vbNullString, vbNullString
     SetObjectMarkup vbNullString, vbNullString, vbNullString
     SetItemSeparator vbNullString
     
-    Set SetNoMarkup = Me
+    Set NoMarkup = Me
     
 End Function

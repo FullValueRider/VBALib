@@ -57,17 +57,16 @@ End Property
 
 Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant
         
-    Dim myCounter As Long
-    myCounter = 0
-        
-    Dim myItem As Variant
-    For Each myItem In ipHostItems
+    Dim myCounter As Long: myCounter = 0
+    
+    Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
+    Do
    
-        If s.Comparer.ExecCmp(myItem) Then
+        If s.Comparer.ExecCmp(myItems.CurItem(0)) Then
             myCounter = myCounter + 1
         End If
    
-    Next
+    Loop While myItems.MoveNext
    
     ExecReduction = myCounter
         

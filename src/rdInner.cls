@@ -32,33 +32,32 @@ Private Property Get IReducer_TypeName() As String
 End Property
 
 
-'@Description("Calls Mapit on the lowest level item supporting mapit on The hostItem")
+'@Description "Calls Mapit on the lowest level item supporting mapit on The hostItem"
 Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 Attribute IReducer_ExecReduction.VB_Description = "Calls Mapit on the lowest level item supporting mapit on The hostItem"
 
-    Dim myItem As Variant
-    For Each myItem In ipHostItems
-    
-        Dim myName As String
-        myName = Shortname(myItem)
+    Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
+    Do
+        Dim myItem As Variant: myItem = Array(myItems.CurItem(0))
+        Dim myName As String: myName = Shortname(myItem(0))
         
         Select Case myName
         
             Case "seq"
             
-                IReducer_ExecReduction = myItem.ReduceIt(Me)
+                IReducer_ExecReduction = myItem(0).ReduceIt(Me)
                 
-            Case "VBALib.Kvp"
+            Case "kvp"
             
-                IReducer_ExecReduction = SeqC(myItem.Items).ReduceIt(Me)
+                IReducer_ExecReduction = myItem(0).ReduceIt(Me)
                 
             Case Else
             
                 IReducer_ExecReduction = s.Reducer.ExecReduction(ipHostItems)
-                
+                Exit Do
         End Select
         
-    Next
+    Loop While myItems.MoveNext
         
 End Function
 
