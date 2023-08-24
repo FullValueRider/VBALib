@@ -35,7 +35,7 @@ Public Sub AssertExactAreNotEqual(ByRef ipExpected As Variant, ipResult As Varia
         
         
         If myExpected = myResult Then
-            Debug.Print
+            'Debug.Print
             Fmt.Dbg "{0}: Exact AreEqual assertion failed: {nt}{1}{nt}{2}", ipWhere, myExpected, myResult
         End If
     Else
@@ -57,7 +57,7 @@ Public Sub AssertStrictSequenceEquals(ByRef ipExpected As Variant, ipResult As V
         Dim myResult As String: myResult = Fmt.Text("{0}", Array(ipResult))
         
         If myExpected <> myResult Then
-            Debug.Print
+            'Debug.Print
             Fmt.Dbg "{0}: Strict SequenceEquals assertion failed: {nt}{1}{nt}{2}", ipWhere, myExpected, myResult
         End If
     Else
@@ -77,7 +77,7 @@ Public Sub AssertStrictNotSequenceEquals(ByRef ipExpected As Variant, ipResult A
         Dim myResult As String: myResult = Fmt.Text("{0}", ipResult)
         
         If myExpected = myResult Then
-            Debug.Print
+            'Debug.Print
             Fmt.Dbg "SequenceEquals assertion failed: {0}{nt}{1}{nt}{2}", ipWhere, myExpected, myResult
         End If
     Else
@@ -130,7 +130,7 @@ Public Sub AssertExactSequenceEquals(ByRef ipExpected As Variant, ipResult As Va
         Dim myResult As String: myResult = VBA.Join(myR, ",")
         
         If myExpected <> myResult Then
-            Debug.Print
+            'Debug.Print
             Fmt.Dbg "{0}: SequenceEquals assertion failed: {0}{nt}{1}{nt}{2}", ipWhere, myExpected, myResult
         End If
     Else

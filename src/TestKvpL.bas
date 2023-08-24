@@ -672,7 +672,7 @@ Private Sub Test10_Hold_Lacks_FilledSeq()
     Dim myResult As Variant
     ReDim myResult(1 To 18)
     'Act:
-    myResult(1) = myK.HoldsItems
+    myResult(1) = myK.HoldsItems                '
     myResult(2) = myK.LacksItems
     
     myResult(3) = myK.HoldsItem("Hello")

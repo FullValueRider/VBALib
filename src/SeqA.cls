@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqA is a multipurpose Collection/ArrayList replacement.  It uses a one dimensional array to store the items.  Items are access using a single 1 based index. Multi dimensions addressing can be converted to linrear addressing using ArrayOp.GetIndex. For a Keyed collection, use one of the Kvp classes"
@@ -27,7 +27,7 @@ Option Explicit
 
 Private Const MY_TYPENAME                       As String = "SeqA"
 Private Const FIRST_INDEX                       As Long = 1
-Private Const DEFAULT_CHUNK                     As Long = 16&
+Private Const DEFAULT_CHUNK                     As Long = 128&
 
 Private Type State
 
@@ -113,16 +113,21 @@ Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqA
 End Function
 
 
-Private Function ConstructInstanceByCount(ByRef ipSize As Long) As SeqA
+Private Function ConstructInstanceByCount(ByVal ipSize As Long) As SeqA
     
     If ipSize < FIRST_INDEX Then
         Set ConstructInstanceByCount = Me
         Exit Function
     End If
     
-    s.Size = ipSize
+    If ipSize < DEFAULT_CHUNK Then
+        s.Size = DEFAULT_CHUNK
+    Else
+        s.Size = ipSize
+    End If
+    
     ReSize
-    s.LastIndex = ipSize
+    s.LastIndex = 0
     Set ConstructInstanceByCount = Me
     
 End Function
@@ -146,7 +151,7 @@ End Sub
 Public Function Bind(ByRef ipArray As Variant) As SeqA
 Attribute Bind.VB_Description = "allows and external array to be inserted into s.Host"
     
-    '    GuardExpectingArray ipArray, "SeqA.Bind"
+    '    GuardArrayNotFound ipArray, "SeqA.Bind"
     '
     '    'ToDO: his code requires updating I think
     '     ' make a copy of the content of s.host
@@ -229,14 +234,14 @@ Attribute Slice.VB_Description = "Returns a subset of the SeqA"
         Exit Function
     End If
     
-    GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.LastIndex, "SeqA.Slice"
+    Guard.IndexOutOfBounds ipStart, Me, "Slice"
     
     Dim myRun As Long
     myRun = ipRun
     If myRun < 1 Then
         myRun = s.LastIndex - ipStart + 1
     Else
-        GuardIndexOutOfBounds myRun + ipStart - 1, FIRST_INDEX, s.LastIndex, "SeqA.Slice"
+        Guard.IndexOutOfBounds myRun + ipStart - 1, Me, "Slice"
     End If
     
 
@@ -655,10 +660,10 @@ Public Function AddItems(ParamArray ipParamarray() As Variant) As SeqA
         Exit Function
     End If
     
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
 
-    AddRange myParamarray
+    AddRange myParamArray
 
     Set AddItems = Me
     
@@ -716,7 +721,7 @@ End Property
 
 Public Property Let Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
 
-    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.LastIndex, "SeqA.Let_Item"
+    Guard.IndexOutOfBounds ipIndex, Me, "Let Item"
     
     s.Host(ipIndex) = ipItem
  
@@ -725,7 +730,7 @@ End Property
 
 Public Property Set Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
     
-    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.LastIndex, "SeqA.Set_Item"
+    Guard.IndexOutOfBounds ipIndex, Me, "Set Item"
 '    'assigning using s.host(index) does not work
 '    ' but the variant copy method is successful
     VariantCopy s.Host(ipIndex), ipItem
@@ -763,10 +768,10 @@ End Function
 
 Public Function InsertAtItems(ByVal ipIndex As Long, ParamArray ipParamarray() As Variant) As SeqA
     
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set InsertAtItems = InsertAtRange(ipIndex, myParamarray)
+    Set InsertAtItems = InsertAtRange(ipIndex, myParamArray)
     
 End Function
 
@@ -778,7 +783,7 @@ Public Function InsertAtRange(ByVal ipIndex As Long, ByRef ipRange As Variant) A
         Exit Function
     End If
 
-    GuardInvalidRangeItem ipRange, "SeqA.InsertAtRange"
+    Guard.InvalidRangeItem ipRange, MY_TYPENAME, "InsertAtRange"
     
     Dim myItems As IterItems:  Set myItems = IterItems(ipRange).MoveToEndIndex
     
@@ -826,10 +831,10 @@ End Function
 Public Function RemoveItems(ParamArray ipParamarray() As Variant) As SeqA
 Attribute RemoveItems.VB_Description = "Removes the first encountered item for each item in the paramarray"
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set RemoveItems = RemoveRange(myParamarray)
+    Set RemoveItems = RemoveRange(myParamArray)
     
     Set RemoveItems = Me
     
@@ -919,10 +924,10 @@ End Function
 Public Function RemoveIndexes(ParamArray ipParamarray() As Variant) As SeqA
 Attribute RemoveIndexes.VB_Description = "Removes the first encountered item from the SeqA"
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set RemoveIndexes = RemoveIndexesRange(myParamarray)
+    Set RemoveIndexes = RemoveIndexesRange(myParamArray)
     
     Set RemoveIndexes = Me
     
@@ -1336,10 +1341,10 @@ End Property
 Public Function Push(ParamArray ipParamarray() As Variant) As SeqA
 Attribute Push.VB_Description = "Adds one or more items"
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set Push = AddRange(myParamarray)
+    Set Push = AddRange(myParamArray)
     
 End Function
 
@@ -1409,10 +1414,10 @@ End Function
 
 Public Function enQueue(ParamArray ipParamarray() As Variant) As SeqA
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set enQueue = AddRange(myParamarray)
+    Set enQueue = AddRange(myParamArray)
     
 End Function
 

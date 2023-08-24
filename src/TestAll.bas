@@ -34,11 +34,12 @@ Public Sub Main()
     TestSeqA.SeqATests
     TestSeqC.SeqCTests
     TestSeqL.SeqLTests
-    TestSeqH.SeqHTests
+    TestSeqHL.SeqHLTests
 
     TestKvpA.KvpATests
     TestKvpC.KvpCTests
-    TestKvpH.KvpHTests
+    TestKvpHA.KvpHATests
+    tESTkVPhl.KvpHLTests
     TestKvpL.KvpLTests
     VBATesting = False
     

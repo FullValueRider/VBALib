@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqL is a multipurpose Collection/ArrayList replacement.  It uses a double linked list to store the items.  Items are access using a 1 based index. For a Keyed collection, use one of the Kvp classes"
@@ -79,7 +79,7 @@ Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqL
     
     ' Check to see if we return a default 'empty' seq
     If ArrayOp.LacksItems(ipFPA) Then
-        Set ConstructInstance = Me
+        Set ConstructInstance = ConstructInstanceByCount(32)
         Exit Function
     End If
     
@@ -105,25 +105,27 @@ Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqL
         Case VBA.IsArray(myItem):               Set ConstructInstance = AddRange(ArrayOp.Linearise(myItem))
         Case GroupInfo.IsContainer(myItem):     Set ConstructInstance = AddRange(myItem)
         Case GroupInfo.IsString(myItem):        Set ConstructInstance = AddRange(myItem)
-        Case GroupInfo.IsNumber(myItem):        Set ConstructInstance = ConstructInstanceByCount(VBA.CLng(myItem))
+        '@Ignore EmptyCaseBlock
+        Case GroupInfo.IsNumber(myItem):        'Set do nothing se explanation in SeqC. ConstructInstance = ConstructInstanceByCount(VBA.CLng(myItem))
         Case Else:                              Set ConstructInstance = AddItems(myItem)
     End Select
 
 End Function
 
 
+'@Ignore ParameterNotUsed
 Private Function ConstructInstanceByCount(ByRef ipSize As Long) As SeqL
     
-    If ipSize < FIRST_INDEX Then
-        Set ConstructInstanceByCount = Me
-        Exit Function
-    End If
-    
-    Dim myCount As Long
-    For myCount = FIRST_INDEX To ipSize
-        Me.Add Empty
-    Next
-    
+'    If ipSize < FIRST_INDEX Then
+'        Set ConstructInstanceByCount = Me
+'        Exit Function
+'    End If
+'
+'    Dim myCount As Long
+'    For myCount = FIRST_INDEX To ipSize
+'        Me.Add Empty
+'    Next
+'
     Set ConstructInstanceByCount = Me
     
 End Function
@@ -216,14 +218,14 @@ Attribute Slice.VB_Description = "Returns a subset of the SeqL"
         Exit Function
     End If
 
-    GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.Host.Count, "SeqL.Slice"
+    Guard.IndexOutOfBounds ipStart, Me, "Slice"
 
     Dim myRun As Long
     myRun = ipRun
     If myRun < FIRST_INDEX Then
         myRun = s.Host.Count - ipStart + 1
     Else
-        GuardIndexOutOfBounds myRun + ipStart - 1, FIRST_INDEX, s.Host.Count, "SeqL.Slice"
+        Guard.IndexOutOfBounds myRun + ipStart - 1, Me, "Slice"
     End If
 
     Dim myS As SeqL: Set myS = SeqL.Deb
@@ -679,10 +681,10 @@ Public Function AddItems(ParamArray ipParamarray() As Variant) As SeqL
         Exit Function
     End If
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
 
-    AddRange myParamarray
+    AddRange myParamArray
 
     Set AddItems = Me
 
@@ -740,7 +742,7 @@ End Property
 
 Public Property Let Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
 
-    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "SeqL.Let_Item"
+    Guard.IndexOutOfBounds ipIndex, Me, "Let_Item"
 
     Dim myNode As SeqLNode: Set myNode = GetNodeAt(ipIndex)
     myNode.Item = ipItem
@@ -750,7 +752,7 @@ End Property
 
 Public Property Set Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
 
-    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "SeqL.Set_Item"
+    Guard.IndexOutOfBounds ipIndex, Me, "SeqL.Set Item"
 
     Dim myNode As SeqLNode: Set myNode = GetNodeAt(ipIndex)
     Set myNode.Item = ipItem
@@ -784,10 +786,10 @@ End Function
 '
 Public Function InsertAtItems(ByVal ipIndex As Long, ParamArray ipParamarray() As Variant) As SeqL
     
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set InsertAtItems = InsertAtRange(ipIndex, myParamarray)
+    Set InsertAtItems = InsertAtRange(ipIndex, myParamArray)
     
 End Function
 
@@ -799,7 +801,7 @@ Public Function InsertAtRange(ByVal ipIndex As Long, ByRef ipRange As Variant) A
         Exit Function
     End If
 
-    GuardInvalidRangeItem ipRange, "SeqL.InsertAtRange"
+    Guard.InvalidRangeItem ipRange, MY_TYPENAME, "InsertAtRange"
     
     Dim myItems As IterItems: Set myItems = IterItems(ipRange).MoveToEndIndex
     
@@ -845,10 +847,10 @@ End Function
 Public Function RemoveItems(ParamArray ipParamarray() As Variant) As SeqL
 Attribute RemoveItems.VB_Description = "Removes the first encountered item from the Seq for each item in the ParamArray"
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set RemoveItems = RemoveRange(myParamarray)
+    Set RemoveItems = RemoveRange(myParamArray)
     
     Set RemoveItems = Me
     
@@ -917,7 +919,7 @@ End Function
 
 
 '@Description("Removes node at the specified index")
-Public Function RemoveAt(ByRef ipIndex As Long) As Long
+Public Function RemoveAt(ByVal ipIndex As Long) As Long
 Attribute RemoveAt.VB_Description = "Removes node at the specified index"
 
     RemoveAt = -1
@@ -941,10 +943,10 @@ End Function
 Public Function RemoveIndexes(ParamArray ipParamarray() As Variant) As SeqL
 Attribute RemoveIndexes.VB_Description = "Removes the first encountered item from the SeqL"
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set RemoveIndexes = RemoveIndexesRange(myParamarray)
+    Set RemoveIndexes = RemoveIndexesRange(myParamArray)
     
 End Function
 
@@ -1222,10 +1224,10 @@ End Property
 
 Public Function Push(ParamArray ipParamarray() As Variant) As SeqL
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set Push = AddRange(myParamarray)
+    Set Push = AddRange(myParamArray)
     
 End Function
 
@@ -1291,10 +1293,10 @@ End Function
 
 Public Function enQueue(ParamArray ipParamarray() As Variant) As SeqL
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set enQueue = AddRange(myParamarray)
+    Set enQueue = AddRange(myParamArray)
     
 End Function
 

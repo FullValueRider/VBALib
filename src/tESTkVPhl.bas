@@ -1,8 +1,7 @@
-Attribute VB_Name = "TestKvpA"
+Attribute VB_Name = "tESTkVPhl"
 '@TestModule
 '@Folder("Tests")
 '@IgnoreModule
-
 Option Explicit
 Option Private Module
 
@@ -45,7 +44,7 @@ End Sub
 
 #End If
 
-Public Sub KvpATests()
+Public Sub KvpHLTests()
  
     #If twinbasic Then
         Debug.Print CurrentProcedureName;
@@ -88,7 +87,7 @@ Public Sub KvpATests()
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test01_ObjAndName()
 
     #If twinbasic Then
@@ -101,10 +100,10 @@ Private Sub Test01_ObjAndName()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb
     Dim myExpected As Variant
-    myExpected = Array(True, "KvpA", "KvpA")
+    myExpected = Array(True, "KvpHL", "KvpHL")
     
     Dim myResult(0 To 2) As Variant
     
@@ -125,7 +124,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test02_Add_ThreeItems()
 
     #If twinbasic Then
@@ -138,8 +137,8 @@ Private Sub Test02_Add_ThreeItems()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb
     
     Dim myItemsExpected As Variant
     myItemsExpected = Array(3, "Hello", True)
@@ -174,7 +173,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test03_Add_Pairs()
 
     #If twinbasic Then
@@ -187,8 +186,8 @@ Private Sub Test03_Add_Pairs()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb
     
     Dim myItemsExpected As Variant
     myItemsExpected = Array(3, "Hello", True)
@@ -221,7 +220,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test04a_GetItem()
 
     #If twinbasic Then
@@ -234,8 +233,8 @@ Private Sub Test04a_GetItem()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&), SeqA(3, "Hello", True))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&), SeqA(3, "Hello", True))
    
     Dim myExpected As String
     myExpected = "Hello"
@@ -258,7 +257,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test04b_LetItem()
 
     #If twinbasic Then
@@ -271,8 +270,8 @@ Private Sub Test04b_LetItem()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&), SeqA(3, "Hello", True))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&), SeqA(3, "Hello", True))
    
     Dim myExpected As String
     myExpected = "World"
@@ -296,7 +295,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test04c_SetItem()
 
     #If twinbasic Then
@@ -309,8 +308,8 @@ Private Sub Test04c_SetItem()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&), SeqA(3, "Hello", True))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&), SeqA(3, "Hello", True))
    
     Dim myExpected As Variant
     myExpected = Array(1&, 2&, 3&)
@@ -335,7 +334,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test05a_Remove()
 
     #If twinbasic Then
@@ -348,8 +347,8 @@ Private Sub Test05a_Remove()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = Array(3&, True, 1&, 2&, 3&, 4&)
@@ -374,7 +373,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test05b_Remove()
 
     #If twinbasic Then
@@ -387,8 +386,8 @@ Private Sub Test05b_Remove()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = Array(3&, True, 2&, 4&)
@@ -413,7 +412,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test06_RemoveAfter()
 
     #If twinbasic Then
@@ -426,8 +425,8 @@ Private Sub Test06_RemoveAfter()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = Array(3&, "Hello", 3&, 4&)
@@ -451,7 +450,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test07_RemoveBefore()
 
     #If twinbasic Then
@@ -464,8 +463,8 @@ Private Sub Test07_RemoveBefore()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = Array(3&, "Hello", 3&, 4&)
@@ -489,7 +488,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test08a_RemoveAll()
 
     #If twinbasic Then
@@ -502,8 +501,8 @@ Private Sub Test08a_RemoveAll()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Long
     myExpected = -1
@@ -526,7 +525,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test08b_Clear()
 
     #If twinbasic Then
@@ -539,8 +538,8 @@ Private Sub Test08b_Clear()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Long
     myExpected = -1
@@ -563,7 +562,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test08c_Reset()
 
     #If twinbasic Then
@@ -576,8 +575,8 @@ Private Sub Test08c_Reset()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Long
     myExpected = -1
@@ -600,7 +599,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test09_Clone()
 
     #If twinbasic Then
@@ -613,8 +612,8 @@ Private Sub Test09_Clone()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb
     
     Dim myItemsExpected As Variant
     myItemsExpected = SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&).ToArray
@@ -626,7 +625,7 @@ Private Sub Test09_Clone()
     Dim myKeysResult As Variant
     
     'Act:
-    Dim myT As KvpA
+    Dim myT As KvpHL
     
     Set myT = myK.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&)).Clone
    
@@ -648,7 +647,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test10_Hold_Lacks_FilledSeq()
 
     #If twinbasic Then
@@ -661,8 +660,8 @@ Private Sub Test10_Hold_Lacks_FilledSeq()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = Array(True, False, True, True, False, False, False, False, True, True, True, True, False, False, False, False, True, True)
@@ -671,28 +670,28 @@ Private Sub Test10_Hold_Lacks_FilledSeq()
     Dim myResult As Variant
     ReDim myResult(1 To 18)
     'Act:
-    myResult(1) = myK.HoldsItems
-    myResult(2) = myK.LacksItems
+    myResult(1) = myK.HoldsItems            'True
+    myResult(2) = myK.LacksItems            'False
     
-    myResult(3) = myK.HoldsItem("Hello")
-    myResult(4) = myK.HoldsItem(4&)
-    myResult(5) = myK.HoldsItem(42&)
-    myResult(6) = myK.HoldsItem("World")
+    myResult(3) = myK.HoldsItem("Hello")    'True
+    myResult(4) = myK.HoldsItem(4&)         'True
+    myResult(5) = myK.HoldsItem(42&)        'False
+    myResult(6) = myK.HoldsItem("World")    'False
     
-    myResult(7) = myK.LacksItem("Hello")
-    myResult(8) = myK.LacksItem(4&)
-    myResult(9) = myK.LacksItem(42&)
-    myResult(10) = myK.LacksItem("World")
+    myResult(7) = myK.LacksItem("Hello")    'False
+    myResult(8) = myK.LacksItem(4&)         'False
+    myResult(9) = myK.LacksItem(42&)        'True
+    myResult(10) = myK.LacksItem("World")   'True
     
-    myResult(11) = myK.HoldsKey(2&)
-    myResult(12) = myK.HoldsKey(6&)
-    myResult(13) = myK.HoldsKey(42&)
-    myResult(14) = myK.HoldsKey("Hello")
+    myResult(11) = myK.HoldsKey(2&)         'True
+    myResult(12) = myK.HoldsKey(6&)         'True
+    myResult(13) = myK.HoldsKey(42&)        'False
+    myResult(14) = myK.HoldsKey("Hello")    'False
     
-    myResult(15) = myK.LacksKey(2&)
-    myResult(16) = myK.LacksKey(6&)
-    myResult(17) = myK.LacksKey(42&)
-    myResult(18) = myK.LacksKey("Hello")
+    myResult(15) = myK.LacksKey(2&)         'False
+    myResult(16) = myK.LacksKey(6&)         'False
+    myResult(17) = myK.LacksKey(42&)        'True
+    myResult(18) = myK.LacksKey("Hello")    'True
     
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -708,7 +707,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test11_MappedIt()
 
     #If twinbasic Then
@@ -721,8 +720,8 @@ Private Sub Test11_MappedIt()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = Array(4&, "Hellp", True, 2&, 3&, 4&, 5&)
@@ -731,8 +730,9 @@ Private Sub Test11_MappedIt()
     Dim myResult As Variant
     
     'Act:
-    myResult = myK.MappedIt(mpInc.Deb).Items
+    myK.MappedIt mpInc.Deb
     
+    myResult = myK.Items
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
    
@@ -748,7 +748,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test12_MapIt()
 
     #If twinbasic Then
@@ -761,8 +761,8 @@ Private Sub Test12_MapIt()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myOrigExpected As Variant
     myOrigExpected = Array(3&, "Hello", True, 1&, 2&, 3&, 4&)
@@ -773,7 +773,7 @@ Private Sub Test12_MapIt()
     ReDim Preserve myMapExpected(1 To 7)
     
     Dim myOrigResult As Variant
-    Dim myMapresult As KvpA
+    Dim myMapresult As KvpHL
     
     'Act:
     myOrigResult = myK.Items
@@ -794,7 +794,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test13_FilterIt()
 
     #If twinbasic Then
@@ -807,8 +807,8 @@ Private Sub Test13_FilterIt()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = Array(3&, 3&, 4&)
@@ -833,7 +833,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test14_ReduceIt()
 
     #If twinbasic Then
@@ -846,8 +846,8 @@ Private Sub Test14_ReduceIt()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As LongLong
     myExpected = VBA.CLngLng(3 + 1 + 2 + 3 + 4)
@@ -871,7 +871,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test15a_KeyByIndex()
 
     #If twinbasic Then
@@ -884,8 +884,8 @@ Private Sub Test15a_KeyByIndex()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = 30&
@@ -909,7 +909,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test15b_KeyOf()
 
     #If twinbasic Then
@@ -922,8 +922,8 @@ Private Sub Test15b_KeyOf()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = 20&
@@ -947,7 +947,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test16a_GetFirst()
 
     #If twinbasic Then
@@ -960,8 +960,8 @@ Private Sub Test16a_GetFirst()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = 3&
@@ -985,7 +985,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test16b_LetFirst()
 
     #If twinbasic Then
@@ -998,8 +998,8 @@ Private Sub Test16b_LetFirst()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(42&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = 42&
@@ -1024,7 +1024,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test16c_GetLast()
 
     #If twinbasic Then
@@ -1037,8 +1037,8 @@ Private Sub Test16c_GetLast()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = 4&
@@ -1062,7 +1062,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test16d_LetLast()
 
     #If twinbasic Then
@@ -1075,8 +1075,8 @@ Private Sub Test16d_LetLast()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = 42&
@@ -1101,7 +1101,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test16e_GetFirstKey()
 
     #If twinbasic Then
@@ -1114,8 +1114,8 @@ Private Sub Test16e_GetFirstKey()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = 10&
@@ -1139,7 +1139,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("VBALib.KvpA")
+'@TestMethod("VBALib.KvpH")
 Private Sub Test16f_LastKey()
 
     #If twinbasic Then
@@ -1152,8 +1152,8 @@ Private Sub Test16f_LastKey()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpA
-    Set myK = KvpA.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
+    Dim myK As KvpHL
+    Set myK = KvpHL.Deb.AddPairs(SeqA(10&, 20&, 30&, 40&, 50&, 60&, 70&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&))
    
     Dim myExpected As Variant
     myExpected = 70&
@@ -1175,5 +1175,3 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
-
-

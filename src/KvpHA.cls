@@ -2,9 +2,9 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "KvpH"
+Attribute VB_Name = "KvpHA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -19,7 +19,7 @@ Attribute VB_Exposed = True
 
 Option Explicit
 
-Private Const MY_TYPENAME                   As String = "KvpH"
+Private Const MY_TYPENAME                   As String = "KvpHA"
 Private Const FIRST_INDEX                   As Long = 1
 Private Const MIN_KVP_SIZE                  As Long = 512
 Private Const MAX_KVP_SIZE                  As Long = 524288 ' 2^19
@@ -39,6 +39,7 @@ Private Type HashTableEntry
 End Type
 
 Private Type State
+     Hasher                                 As Hasher
      W()                                    As Integer
      sAW                                    As SAFEARRAY1D
      
@@ -63,7 +64,7 @@ End Type
 Private s                                   As State
 
 ' Checking for duplicate keys is a linear time process
-' for KvpA, KvpC and KvpL.  Consequently for **ALL** Kvp classes
+' for KvpA, KvpC and KvpHA.  Consequently for **ALL** Kvp classes
 ' EnsureUniqueKeys is set to false by default
 ' Setting EnsureUniqueKeys to true will allow a check for a
 ' duplicate key each time a key is added.
@@ -79,14 +80,14 @@ End Type
 Private p                               As Properties
 
 '@DefaultMember
-Public Function Deb(Optional ByRef ipCapacity As Long = DEFAULT_KVP_SIZE) As KvpH
+Public Function Deb(Optional ByRef ipCapacity As Long = DEFAULT_KVP_SIZE) As KvpHA
 Attribute Deb.VB_UserMemId = 0
-    With New KvpH
+    With New KvpHA
         Set Deb = .ConstructInstance(ipCapacity)
     End With
 End Function
 
-Friend Function ConstructInstance(ByRef ipCapacity As Long) As KvpH
+Friend Function ConstructInstance(ByRef ipCapacity As Long) As KvpHA
 
     s.sAW.cDims = 1
     s.sAW.cbElements = 2
@@ -96,7 +97,7 @@ Friend Function ConstructInstance(ByRef ipCapacity As Long) As KvpH
     
     s.CompareMode = vbBinaryCompare
     s.EnsureUniqueKeys = False
-    ReInit ipCapacity                                 'at startup we set it up, to behave ideally for up to 16384 Items
+    Reinit ipCapacity                                 'at startup we set it up, to behave ideally for up to 16384 Items
                                                      ' now  the default value for the optional constructor param
     If LWC(97) = 0 Then
         InitLWC
@@ -108,7 +109,7 @@ End Function
 
 
 
-Public Function ReInit(Optional ByRef ExpectedMaxCount As Long, Optional ByVal EnsureUniqueKeys As Boolean = False) As KvpH
+Public Function Reinit(Optional ByRef ExpectedMaxCount As Long, Optional ByVal EnsureUniqueKeys As Boolean = False) As KvpHA
 
     If ExpectedMaxCount <= 0 Then
         ExpectedMaxCount = MIN_KVP_SIZE
@@ -140,11 +141,11 @@ Public Function ReInit(Optional ByRef ExpectedMaxCount As Long, Optional ByVal E
     s.FUB = 16
     ReDim s.FIndexes(0 To s.FUB)
     
-    Set ReInit = Me
+    Set Reinit = Me
     
 End Function
 
-Public Function Add(ByRef ipKey As Variant, ByRef ipItem As Variant) As KvpH
+Public Function Add(ByRef ipKey As Variant, ByRef ipItem As Variant) As KvpHA
 
     Guard.KeyIsAdmin ipKey, MY_TYPENAME, "AddPairs"
     Guard.EnsureUniqueKeys Me, ipKey, MY_TYPENAME, "AddPairs"
@@ -217,7 +218,7 @@ Public Function Add(ByRef ipKey As Variant, ByRef ipItem As Variant) As KvpH
 End Function
 
 
-Public Function AddPairs(ByRef ipKeys As Variant, ByRef ipItems As Variant) As KvpH
+Public Function AddPairs(ByRef ipKeys As Variant, ByRef ipItems As Variant) As KvpHA
    
     Dim myKeys As IterItems: Set myKeys = IterItems(ipKeys)
     Dim myItems As IterItems: Set myItems = IterItems(ipItems)
@@ -255,6 +256,9 @@ Attribute Item.VB_Description = "Returns the Item associated with ipKey or Null 
 
     Item = Null
     
+    If Me.LacksItems Then
+        Exit Function
+    End If
     Guard.KeyIsAdmin ipKey, MY_TYPENAME, "Get Item"
     
     Dim myIndex As Long: myIndex = FindIndex(ipKey)
@@ -275,18 +279,11 @@ Public Property Let Item(ByRef ipKey As Variant, ByVal ipItem As Variant)
 
     Guard.KeyIsAdmin ipKey, MY_TYPENAME, "Get Item"
     
-    ' Kvp classes do not allow adding a key by assignment
-    Dim myIndex As Long: myIndex = FindIndex(ipKey, s.LastH)
-    
+    ' Kvp classes do not permit adding a key by assignment
+    Dim myIndex As Long: myIndex = FindIndex(ipKey)
     Guard.KeyNotFound myIndex, ipKey, MY_TYPENAME, "Let Item"
     
-    If VBA.IsObject(ipItem) Then
-        Set s.Values(myIndex) = ipItem
-    Else
-        s.Values(myIndex) = ipItem
-    End If
-    
-    s.LastH = 0
+    s.Values(myIndex) = ipItem
     
 End Property
 
@@ -296,17 +293,11 @@ Public Property Set Item(ByRef ipKey As Variant, ByVal ipItem As Variant)
     Guard.KeyIsAdmin ipKey, MY_TYPENAME, "Get Item"
     
     ' Kvp classes do not allow adding a key by assignment
-    Dim myIndex As Long: myIndex = FindIndex(ipKey, s.LastH)
+    Dim myIndex As Long: myIndex = FindIndex(ipKey)
     
     Guard.KeyNotFound myIndex, ipKey, MY_TYPENAME, "Set Item"
     
-    If VBA.IsObject(ipItem) Then
-        Set s.Values(myIndex) = ipItem
-    Else
-        s.Values(myIndex) = ipItem
-    End If
-    
-    s.LastH = 0
+    Set s.Values(myIndex) = ipItem
     
 End Property
 
@@ -315,13 +306,18 @@ Public Property Get ItemByIndex(ByVal ipIndex As Long) As Variant
 
     ItemByIndex = Null
 
+    If Me.LacksItems Then
+        Exit Property
+    End If
+    
     If Guard.IndexOutOfBounds(ipIndex, Me, "Get ItemByIndex", REPORT_BACK) Then
         Exit Property
     End If
     
-    'Adjust for 1 based indexing
+    'Adjust to zero based indexing
     Dim myIndex As Long: myIndex = ipIndex - 1
     
+    ' adjust for hash clashes
     If s.FCount Then
         AdjustIndex myIndex
     End If
@@ -343,13 +339,14 @@ Public Property Let ItemByIndex(ByVal ipIndex As Long, ByVal ipItem As Variant)
     'Adjust for 1 based indexing
     Dim myIndex As Long: myIndex = ipIndex - 1
     
+    'Adjust for hash clashes
     If s.FCount Then
         AdjustIndex myIndex
     End If
     
-    s.Values(myIndex) = ipItem
+    's.Values(myIndex) = ipItem
    
-    'VariantCopyInd ByVal VarPtr(s.Values(myIndex)), ByVal VarPtr(ipItem)
+    VariantCopy ByVal VarPtr(s.Values(myIndex)), ByVal VarPtr(ipItem)
     
 End Property
 
@@ -370,19 +367,25 @@ Public Property Set ItemByIndex(ByVal ipIndex As Long, ByVal ipItem As Variant)
     
 End Property
 
-Public Property Get ItemByOffset(ByVal ipOffset As Long) As Variant
+Public Property Get ItemByOffset(ByVal ipoffset As Long) As Variant
 
     ItemByOffset = Null
     
-    Dim myIndex As Long: myIndex = Me.FirstIndex + ipOffset
+    If Me.LacksItems Then
+        Exit Property
+    End If
+    
+    Dim myIndex As Long: myIndex = Me.FirstIndex + ipoffset
     
     If Guard.IndexOutOfBounds(myIndex, Me, "Get ItemByOffset", REPORT_BACK) Then
         Exit Property
     End If
     
+    'adjust to zerobased indxing
     '@Ignore AssignmentNotUsed
     myIndex = myIndex - 1
     
+    ' adjust for hash clashes
     If s.FCount Then
         AdjustIndex myIndex
     End If
@@ -392,14 +395,16 @@ Public Property Get ItemByOffset(ByVal ipOffset As Long) As Variant
 End Property
 
 
-Public Property Let ItemByOffset(ByVal ipOffset As Long, ByVal ipItem As Variant)
+Public Property Let ItemByOffset(ByVal ipoffset As Long, ByVal ipItem As Variant)
 
-    Dim myIndex As Long: myIndex = Me.FirstIndex + ipOffset
+    Dim myIndex As Long: myIndex = Me.FirstIndex + ipoffset
     
     Guard.IndexOutOfBounds myIndex, Me, "Let ItemByIndex"
     
+    ' adjust to zero based indexing
     myIndex = myIndex - 1
     
+    ' adjust for hash clashes
     If s.FCount Then
         AdjustIndex myIndex
     End If
@@ -410,14 +415,15 @@ Public Property Let ItemByOffset(ByVal ipOffset As Long, ByVal ipItem As Variant
 End Property
 
 
-Public Property Set ItemByOffset(ByVal ipOffset As Long, ByVal ipItem As Variant)
+Public Property Set ItemByOffset(ByVal ipoffset As Long, ByVal ipItem As Variant)
 
-    Dim myIndex As Long: myIndex = Me.FirstIndex + ipOffset
+    Dim myIndex As Long: myIndex = Me.FirstIndex + ipoffset
     
     Guard.IndexOutOfBounds myIndex, Me, "Set ItemByOffset"
     
+    ' adjust to zero based indexing
     myIndex = myIndex - 1
-    
+    ' adjust for hash clashes
     If s.FCount Then
         AdjustIndex myIndex
     End If
@@ -425,6 +431,30 @@ Public Property Set ItemByOffset(ByVal ipOffset As Long, ByVal ipItem As Variant
     VariantCopyInd ByVal VarPtr(s.Values(myIndex)), ByVal VarPtr(ipItem)
     
 End Property
+
+Public Function IndexByKey(ByRef ipKey As Variant) As Long
+
+    IndexByKey = -1
+    
+    If Me.LacksItems Then
+        Exit Function
+    End If
+    
+    If Guard.KeyIsAdmin(ipKey, MY_TYPENAME, "Indexbykey", REPORT_BACK) Then
+        Exit Function
+    End If
+    
+    Dim myIndex As Long: myIndex = FindIndex(ipKey)
+    
+    ' adjust for hash clashes
+    If myIndex >= 0 And s.FCount > 0 Then
+        AdjustIndex myIndex, True
+    End If
+    
+    IndexByKey = myIndex
+    
+End Function
+
 
 ' No point in Get Key because it requires the Key which we already have
 
@@ -488,11 +518,11 @@ End Property
 Public Property Let KeyByIndex(ByRef ipIndex As Long, ByVal ipNewKey As Variant)
 Attribute KeyByIndex.VB_Description = "Removes the specufued Key/Item and add NewKey/Item. NewKey will be at a new Index"
 
+    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME, "Let KeyByIndex"
+    Guard.IndexOutOfBounds ipIndex, Me, "Let KeyByIndex"
+    
     ' adjust for KvpH using 1 based indexing
     Dim myIndex As Long: myIndex = ipIndex - 1
-
-    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME, "Let KeyByIndex"
-    Guard.IndexOutOfBounds myIndex, Me, "Let KeyByIndex"
     
     Dim myItem As Variant: myItem = Array(ItemByIndex(myIndex))
     Remove KeyByIndex(myIndex)
@@ -517,19 +547,19 @@ Attribute KeyByIndex.VB_Description = "Removes the specified Key/Item and adds N
 End Property
 
 
-Public Property Get KeyByOffset(ByRef ipOffset As Long) As Variant
+Public Property Get KeyByOffset(ByRef ipoffset As Long) As Variant
 
     KeyByOffset = Null
     
-    Dim myIndex As Long: myIndex = Me.FirstIndex + ipOffset
-    
+    Dim myIndex As Long: myIndex = Me.FirstIndex + ipoffset
     If Guard.IndexOutOfBounds(myIndex, Me, "Get KeyByOffset", REPORT_BACK) Then
         Exit Property
     End If
     
     '@Ignore AssignmentNotUsed
+    ' adjust to zero based indexing
     myIndex = myIndex - 1
-    
+    ' adjust for hash clashes
     If s.FCount Then
         AdjustIndex myIndex
     End If
@@ -545,32 +575,33 @@ Public Property Get KeyByOffset(ByRef ipOffset As Long) As Variant
 End Property
 
 '@Description("Removes the specufued Key/Item and add NewKey/Item. NewKey will be at a new Index")
-Public Property Let KeyByOffset(ByRef ipOffset As Long, ByVal ipNewKey As Variant)
+Public Property Let KeyByOffset(ByRef ipoffset As Long, ByVal ipNewKey As Variant)
 Attribute KeyByOffset.VB_Description = "Removes the specufued Key/Item and add NewKey/Item. NewKey will be at a new Index"
 
-    Dim myIndex As Long: myIndex = Me.FirstIndex + ipOffset
     Guard.KeyIsAdmin ipNewKey, MY_TYPENAME, "Let KeyByOffset"
+    
+    Dim myIndex As Long: myIndex = Me.FirstIndex + ipoffset
     Guard.IndexOutOfBounds myIndex, Me, "Let KeyByOffset"
     
+    ' no need to adjust to zero based indexing
     Dim myItem As Variant: myItem = Array(ItemByIndex(myIndex))
-    Remove KeyByIndex(myIndex)
+    RemoveKey KeyByIndex(myIndex)
     Me.Add ipNewKey, myItem(0)
    
 End Property
 
 '@Description("Removes the specified Key/Item and adds NewKey/Item. NewKey will be at a new Index")
-Public Property Set KeyByOffset(ByRef ipOffset As Long, ByVal ipNewKey As Variant)
+Public Property Set KeyByOffset(ByRef ipoffset As Long, ByVal ipNewKey As Variant)
 Attribute KeyByOffset.VB_Description = "Removes the specified Key/Item and adds NewKey/Item. NewKey will be at a new Index"
 
     Guard.KeyIsAdmin ipNewKey, MY_TYPENAME, "Set KeyByOffset"
     
-    Dim myIndex As Long: myIndex = Me.FirstIndex + ipOffset
+    Dim myIndex As Long: myIndex = Me.FirstIndex + ipoffset
     Guard.IndexOutOfBounds myIndex, Me, "Set KeyByOffset"
     
-    myIndex = myIndex - 1
-    
+    ' no need to adjust to zero based indexing
     Dim myItem As Variant: myItem = Array(ItemByIndex(myIndex))
-    Remove KeyByIndex(myIndex)
+    RemoveKey KeyByIndex(myIndex)
     Me.Add ipNewKey, myItem(0)
    
 End Property
@@ -651,7 +682,9 @@ Private Sub RemoveKey(ByRef ipKey As Variant)
     
 End Sub
 
-Public Function Remove(ParamArray ipParamarray() As Variant) As KvpH
+'@Description("Removes the first found key/item pair for each key in the paramarray")
+Public Function Remove(ParamArray ipParamarray() As Variant) As KvpHA
+Attribute Remove.VB_Description = "Removes the first found key/item pair for each key in the paramarray"
 
     Set Remove = Me
     
@@ -659,21 +692,38 @@ Public Function Remove(ParamArray ipParamarray() As Variant) As KvpH
         Exit Function
     End If
     
-    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    
+    If ArrayOp.LacksItems(myParamArray) Then
         Exit Function
     End If
+    
+    '@Ignore AssignmentNotUsed
+    myParamArray = ArrayOp.Splat(myParamArray)
+    
+    Set Remove = RemoveRange(myParamArray)
+    
+End Function
 
+'@Description("Removes the first found key/item pair for each key in the range parameter")
+Public Function RemoveRange(ByRef ipRange As Variant) As KvpHA
+Attribute RemoveRange.VB_Description = "Removes the first found key/item pair for each key in the range parameter"
+
+    Set RemoveRange = Me
     
-    Dim myParamarray As Variant: myParamarray = ArrayOp.Splat(VBA.CVar(ipParamarray))
+    If Me.LacksItems Then
+        Exit Function
+    End If
     
-    Dim myKeys As IterItems: Set myKeys = IterItems(myParamarray)
+    Dim myKeys As IterItems: Set myKeys = IterItems(ipRange)
+    
+    If myKeys.LacksItems Then
+        Exit Function
+    End If
+    
     Do
     
-        If Guard.KeyIsAdmin(myKeys.CurItem(0), MY_TYPENAME, "Remove", REPORT_BACK) Then
-            GoTo ContinueLoop:
-        End If
-        
-        If Me.LacksKey(myKeys.CurItem(0)) Then
+        If Guard.KeyIsAdmin(myKeys.CurItem(0), MY_TYPENAME, "RemoveRange", REPORT_BACK) Then
             GoTo ContinueLoop
         End If
         
@@ -682,66 +732,11 @@ Public Function Remove(ParamArray ipParamarray() As Variant) As KvpH
 ContinueLoop:
     Loop While myKeys.MoveNext
     
-    Set Remove = Me
+    Set RemoveRange = Me
     
 End Function
 
-
-'Public Function RemoveByIndex(ByVal ipIndex As Long) As KvpH
-'
-'    Set RemoveByIndex = Me
-'
-'    If Me.LacksItems Then
-'        Exit Function
-'    End If
-'
-'    If Guard.IndexOutOfBounds(ipIndex, myTypename, "RemoveByIndex", REPORT_BACK) Then
-'        Exit Function
-'    End If
-'
-'    Remove KeyByIndex(ipIndex)
-'
-'End Function
-
-Public Function RemoveByIndex(ParamArray ipParamarray() As Variant) As KvpH
-
-    Set RemoveByIndex = Me
-    
-    If Me.LacksItems Then
-        Exit Function
-    End If
-    
-    If ArrayOp.LacksItems(VBA.CVar(ipParamarray)) Then
-        Exit Function
-    End If
-    
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
-    
-    Sorters.ShakerSortArray myParamarray
-    
-    Dim myIndexes As IterItems: Set myIndexes = IterItems(myParamarray)
-    Do
-        Dim myIndex As Long
-        If GroupInfo.IsNotNumber(myIndexes.CurItem(0)) Then
-            GoTo ContinueLoop
-        Else
-            myIndex = myIndexes.CurItem(0)
-        End If
-        
-        If Guard.IndexOutOfBounds(myIndex, Me, "RemoveByIndexes", REPORT_BACK) Then
-            GoTo ContinueLoop
-        End If
-        
-        Me.Remove KeyByIndex(myIndex)
-    
-ContinueLoop:
-    Loop While myIndexes.MoveNext
-    
-    
-End Function
-
-Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long = 1) As KvpH
+Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long = 1) As KvpHA
 
     Set RemoveAfter = Me
     
@@ -753,15 +748,12 @@ Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long
         Exit Function
     End If
     
-    
     If Me.LacksKey(ipKey) Then
         Exit Function
     End If
     
-    If ipRun < 1 Then
-        Err.Raise 17 + vbObjectError, _
-            "VBALib.KvpC.RemoveAfter", _
-            Fmt.Text("Invalid run.  Expecting value of 1 or more.  Got {0}", ipRun)
+    If Guard.InvalidRun(ipRun, MY_TYPENAME, "RemoveAfter", REPORT_BACK) Then
+        Exit Function
     End If
     
     Dim myRemoveIndex As Long: myRemoveIndex = IndexByKey(ipKey) + 2 '1 for after, 1 for changing to 1 based index
@@ -777,7 +769,7 @@ Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long
         ' The remove index is after the provided key
         ' so we just remove at that index
         ' until count is reached or lastindex is exceeded
-        RemoveKey Me.KeyByIndex(myRemoveIndex)
+        RemoveByIndex myRemoveIndex
         
     Next
     
@@ -785,7 +777,7 @@ Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long
     
 End Function
 
-Public Function RemoveBefore(ByRef ipKey As Variant, Optional ByVal ipRun As Long = 1) As KvpH
+Public Function RemoveBefore(ByRef ipKey As Variant, Optional ByVal ipRun As Long = 1) As KvpHA
 
     Set RemoveBefore = Me
     
@@ -821,7 +813,7 @@ Public Function RemoveBefore(ByRef ipKey As Variant, Optional ByVal ipRun As Lon
         ' The remove index is before the provided key
         ' so we must adjust removeindex by -1
         ' until count is reached or lastindex is exceeded
-        RemoveKey Me.KeyByIndex(myRemoveIndex)
+        RemoveByIndex myRemoveIndex
         myRemoveIndex = myRemoveIndex - 1
         
     Next
@@ -830,203 +822,184 @@ Public Function RemoveBefore(ByRef ipKey As Variant, Optional ByVal ipRun As Lon
     
 End Function
 
-Public Function IndexByKey(ByRef ipKey As Variant) As Long
 
-    Dim Idx As Long: Idx = FindIndex(ipKey)
+Public Function RemoveAll(ParamArray ipParamarray() As Variant) As KvpHA
+
+    Set RemoveAll = Me
     
-    If Idx >= 0 And s.FCount > 0 Then
-        AdjustIndex Idx, True
+    If Me.LacksItems Then
+        Exit Function
     End If
     
-    IndexByKey = Idx
+    Dim myParamArray As Variant: myParamArray = ipParamarray 'eliminates the need for vba.cvar()
+    
+    If ArrayOp.LacksItems(myParamArray) Then
+        RemoveAllItems
+        Exit Function
+    End If
+    
+    '@Ignore AssignmentNotUsed
+    myParamArray = ArrayOp.Splat(myParamArray)
+  
+    Dim myKey As Variant
+    For Each myKey In myParamArray
+        RemoveAllSingleItem myKey
+    Next
+    
+    Set RemoveAll = Me
+
+End Function
+
+
+Public Function Clear() As KvpHA
+    Set Clear = Reinit(s.HashTableSize)
+End Function
+
+
+Public Function Reset() As KvpHA
+    Set Reset = Reinit(s.HashTableSize)
+End Function
+
+Public Function RemoveByIndex(ParamArray ipParamarray() As Variant) As KvpHA
+
+    Set RemoveByIndex = Me
+    
+    If Me.LacksItems Then
+        Exit Function
+    End If
+    
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    
+    If ArrayOp.LacksItems(myParamArray) Then
+        Exit Function
+    End If
+    
+    
+    '@Ignore AssignmentNotUsed
+    myParamArray = ArrayOp.Splat(myParamArray)
+    
+    Set RemoveByIndex = RemoveRangeByIndex(myParamArray)
+    
+    
+End Function
+
+'@Description("Removes the Items at the indexes in the range list")
+Public Function RemoveRangeByIndex(ByRef ipRange As Variant) As KvpHA
+Attribute RemoveRangeByIndex.VB_Description = "Removes the Items at the indexes in the range list"
+
+    Set RemoveRangeByIndex = Me
+    
+    If Me.LacksItems Then
+        Exit Function
+    End If
+    
+    Dim myS As SeqA: Set myS = SeqA(ipRange).Sorted
+    
+    If myS.LacksItems Then
+        Exit Function
+    End If
+    
+    ' we iterate backwards so we don't so we don't compromise indexes yet to be removed
+    'Dim myIndex As Long
+    Dim myIndexes As IterItems: Set myIndexes = IterItems(myS).MoveToEndIndex
+    Do
+        Dim myIndex As Long: myIndex = myIndexes.CurItem(0)
+        If GroupInfo.IsNotNumber(myIndex) Then
+            GoTo ContinueLoop:
+        End If
+        
+        If Guard.IndexOutOfBounds(myIndex, Me, "RemoveRangeByIndex", REPORT_BACK) Then
+            GoTo ContinueLoop
+        End If
+        
+        RemoveKey KeyByIndex(myIndex)
+        
+ContinueLoop:
+    Loop While myIndexes.MovePrev
+    
+    Set RemoveRangeByIndex = Me
+    
+End Function
+
+Public Function Clone() As KvpHA
+    Set Clone = KvpHA.Deb(s.HashTableSize).AddPairs(Me.Keys, Me.Items)
+End Function
+
+Public Function Exists(ByRef ipKey As Variant) As Boolean
+
+    Exists = False
+    
+    If Guard.KeyIsAdmin(ipKey, MY_TYPENAME, "Exists", REPORT_BACK) Then
+        Exit Function
+    End If
+    
+    If Me.LacksItems Then
+        Exit Function
+    End If
+    
+'    Dim myH As Long: myH = GetHash(ipKey)
+'    If VBA.IsEmpty(s.HashSlots(myH)) Then
+'        Exit Function
+'    End If
+
+    Exists = FindIndex(ipKey) >= 0
     
 End Function
 
 
-Public Function Clear() As KvpH
-    Set Clear = ReInit(s.HashTableSize)
+Public Function HoldsKey(ByRef ipKey As Variant) As Boolean
+    HoldsKey = Me.Exists(ipKey)
 End Function
 
 
-Public Function RemoveAll() As KvpH
-    Set RemoveAll = ReInit(s.HashTableSize)
-End Function
-
-Public Function Reset() As KvpH
-    Set Reset = ReInit(s.HashTableSize)
+Public Function ContainsKey(ByRef ipKey As Variant) As Boolean
+    ContainsKey = Me.Exists(ipKey)
 End Function
 
 
-Public Function clone() As KvpH
-    Set clone = KvpH.Deb(s.HashTableSize).AddPairs(Me.KeysAsSeq, Me.ItemsAsSeq)
+Public Function LacksKey(ByRef ipKey As Variant) As Boolean
+    LacksKey = Not Me.Exists(ipKey)
 End Function
+
+Public Function ExistsItem(ByRef ipItem As Variant) As Boolean
+    ExistsItem = Not VBA.IsNull(KeyOf(ipItem))
+End Function
+
+
+Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
+    HoldsItem = Me.ExistsItem(ipItem)
+End Function
+
+
+Public Function Contains(ByRef ipItem As Variant) As Boolean
+    Contains = Me.ExistsItem(ipItem)
+End Function
+
+
+Public Function LacksItem(ByRef ipItem As Variant) As Boolean
+    LacksItem = Not ExistsItem(ipItem)
+End Function
+
+Public Function HoldsItems() As Boolean
+    HoldsItems = s.Count >= FIRST_INDEX
+End Function
+
+Public Function LacksItems() As Boolean
+    LacksItems = s.Count < FIRST_INDEX
+End Function
+
+
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
+End Property
 
 
 Public Property Get HasUniqueKeys() As Boolean
     HasUniqueKeys = s.EnsureUniqueKeys
 End Property
 
-
-Public Property Get StringCompareMode() As VbCompareMethod
-    StringCompareMode = s.CompareMode
-End Property
-
-
-Public Property Let StringCompareMode(ByVal RHS As VbCompareMethod)
-    s.CompareMode = RHS
-End Property
-
-
-Public Function Keys() As Variant()
-
-    If s.Count = 0 Then
-        Keys = Array()
-        Exit Function
-    End If
-    
-    Dim i As Long
-    Dim j As Long
-    Dim V() As Variant
-    ReDim V(1 To s.Count)
-    
-    For i = 1 To s.Count
-    
-        Do While IsEmpty(s.Keys(j)): j = j + 1: Loop
-       
-        VariantCopy V(i), ByVal VarPtr(s.Keys(j))
-        j = j + 1
-        
-    Next
-    
-    'ReDim Preserve V(LBound(V) + 1 To UBound(V) + 1)
-    Keys = V
-    
-End Function
-
-Public Function KeysAsSeq() As SeqA
-    Set KeysAsSeq = SeqA(Me.Keys)
-End Function
-Public Function Items() As Variant()
-
-    If s.Count = 0 Then
-        Items = Array()
-        Exit Function
-    End If
-    
-    Dim i As Long
-    Dim j As Long
-    
-    Dim V() As Variant
-    ReDim V(1 To s.Count)
-    
-    For i = 1 To s.Count
-        Do While IsEmpty(s.Keys(j)): j = j + 1: Loop
-    
-        VariantCopy V(i), ByVal VarPtr(s.Values(j))
-        j = j + 1
-        
-    Next
-    
-    'ReDim Preserve V(LBound(V) + 1 To UBound(V) + 1)
-    Items = V
-    
-End Function
-
-Public Function ItemsAsSeq() As SeqA
-    Set ItemsAsSeq = SeqA(Me.Items)
-End Function
-
-Public Function Pairs() As Variant()             'hand-out the Key-Values in a Pairs-Array
-
-    If s.Count = 0 Then
-        Pairs = Array()
-        Exit Function
-    End If
-    
-    Dim i As Long
-    Dim j As Long
-    
-    Dim V() As Variant
-    ReDim V(1 To s.Count)
-    
-    For i = 1 To s.Count
-    
-        Do While IsEmpty(s.Keys(j)): j = j + 1: Loop
-
-        
-        V(i) = Array(s.Keys(j), s.Values(j))
-        j = j + 1
-        
-    Next
-    
-    Pairs = V
-    
-End Function
-
-Public Function PairsAsSeq() As SeqA
-    Set PairsAsSeq = SeqA(Me.Pairs)
-End Function
-
-
-Public Property Get FirstIndex() As Long
-    FirstIndex = FIRST_INDEX
-End Property
-
-Public Property Get LastIndex() As Long
-    LastIndex = s.Count
-End Property
-
-Public Property Get EnsureUniqueKeys() As Boolean
-    EnsureUniqueKeys = p.EnsureUniqueKeys
-End Property
-
-Public Property Let EnsureUniqueKeys(ByVal ipEnsureUniqueKeys As Boolean)
-    s.EnsureUniqueKeys = ipEnsureUniqueKeys
-End Property
-
-
-Public Function Exists(ByRef Key As Variant) As Boolean
-    Exists = FindIndex(Key) >= 0
-End Function
-
-
-Public Function HoldsKey(ByRef ipKey As Variant) As Boolean
-    HoldsKey = FindIndex(ipKey) >= 0
-End Function
-
-Public Function LacksKey(ByRef ipKey As Variant) As Boolean
-    LacksKey = FindIndex(ipKey) < 0
-End Function
-
-Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
-    HoldsItem = True
-    Dim myItem As Variant
-    For Each myItem In s.Values
-        If Comparers.EQ(myItem, ipItem) Then
-            Exit Function
-        End If
-    Next
-    HoldsItem = False
-End Function
-
-Public Function LacksItem(ByRef ipItem As Variant) As Boolean
-    LacksItem = Not Me.HoldsItem(ipItem)
-End Function
-
-Public Function HoldsItems() As Boolean
-    HoldsItems = s.Count >= Me.FirstIndex
-End Function
-
-Public Function LacksItems() As Boolean
-    LacksItems = s.Count < Me.FirstIndex
-End Function
-Public Property Get TypeName() As String
-    TypeName = MY_TYPENAME
-End Property
-
-
 '@Description("Mutates the Kvpc in place by applying the function in IMapper to each item")
-Public Function MappedIt(ByVal ipMapper As IMapper) As KvpH
+Public Function MappedIt(ByVal ipMapper As IMapper) As KvpHA
 Attribute MappedIt.VB_Description = "Mutates the Kvpc in place by applying the function in IMapper to each item"
 
     Set MappedIt = Me
@@ -1052,10 +1025,10 @@ End Function
 
 
 '@Description("Returns a Kvpc.Deb by applying the function in IMapper to each Item")
-Public Function MapIt(ByVal ipMapper As IMapper) As KvpH
+Public Function MapIt(ByVal ipMapper As IMapper) As KvpHA
 Attribute MapIt.VB_Description = "Returns a Kvpc.Deb by applying the function in IMapper to each Item"
 
-    Dim myK As KvpH: Set myK = KvpH.Deb(s.HashTableSize)
+    Dim myK As KvpHA: Set myK = KvpHA.Deb(s.HashTableSize)
     Set MapIt = myK
     
     If Me.LacksItems Then
@@ -1075,22 +1048,22 @@ End Function
 
 
 '@Description("Returns a Kvpc.Deb where the ICOmparer has been applied to the Items of the original Kvp")
-Public Function FilterIt(ByVal ipComparer As IComparer) As KvpH
+Public Function FilterIt(ByVal ipComparer As IComparer) As KvpHA
 Attribute FilterIt.VB_Description = "Returns a Kvpc.Deb where the ICOmparer has been applied to the Items of the original Kvp"
 
-    Dim myK As KvpH: Set myK = KvpH.Deb
+    Dim myK As KvpHA: Set myK = KvpHA.Deb
     Set FilterIt = myK
     
     If Me.LacksItems Then
         Exit Function
     End If
 
-    Dim myIndex As Long
-    For myIndex = LBound(s.Keys) To UBound(s.Keys)
-        If Not VBA.IsEmpty(s.Keys) Then
-            If ipComparer.ExecCmp(s.Values(myIndex)) Then
-                myK.Add s.Keys(myIndex), s.Values(myIndex)
-            End If
+    Dim myPairs As Variant: myPairs = Me.Pairs
+    
+    Dim myPair As Variant
+    For Each myPair In myPairs
+        If ipComparer.ExecCmp(myPair(1)) Then
+            myK.Add myPair(0), myPair(1)
         End If
     Next
 
@@ -1105,8 +1078,7 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
     
-    Dim myItem As Variant
-    myItem = Array(ipReducer.ExecReduction(Me.Items))
+    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me.Items))
     
     If VBA.IsObject(myItem(0)) Then
         Set ReduceIt = myItem(0)
@@ -1190,71 +1162,249 @@ Public Function KeyOf(ByRef ipItem As Variant) As Variant
     
 End Function
 
+Public Function Items() As Variant()
+
+    If s.Count = 0 Then
+        Items = Array()
+        Exit Function
+    End If
+    
+    Dim i As Long
+    Dim j As Long
+    
+    Dim V() As Variant
+    ReDim V(1 To s.Count)
+    
+    For i = 1 To s.Count
+        Do While IsEmpty(s.Keys(j)): j = j + 1: Loop
+    
+        VariantCopy V(i), ByVal VarPtr(s.Values(j))
+        j = j + 1
+        
+    Next
+    
+    'ReDim Preserve V(LBound(V) + 1 To UBound(V) + 1)
+    Items = V
+    
+End Function
+
+Public Function ItemsAsColl() As Collection
+
+    Dim myC As Collection: Set myC = New Collection
+    
+    Dim myItems As Variant: myItems = Me.Items
+    
+    Dim myItem As Variant
+    For Each myItem In myItems
+        myC.Add myItem
+    Next
+    
+    Set ItemsAsColl = myC
+    
+End Function
+
+Public Function ItemsAsSeq() As SeqA
+    Set ItemsAsSeq = SeqA.Deb(s.HashTableSize).AddRange(Me.Items)
+End Function
+
+Public Function Keys() As Variant()
+
+    If s.Count = 0 Then
+        Keys = Array()
+        Exit Function
+    End If
+    
+    Dim i As Long
+    Dim j As Long
+    Dim V() As Variant
+    ReDim V(1 To s.Count)
+    
+    For i = 1 To s.Count
+    
+        Do While IsEmpty(s.Keys(j)): j = j + 1: Loop
+       
+        VariantCopy V(i), ByVal VarPtr(s.Keys(j))
+        j = j + 1
+        
+    Next
+    
+    'ReDim Preserve V(LBound(V) + 1 To UBound(V) + 1)
+    Keys = V
+    
+End Function
+
+Public Function KeysAsColl() As Collection
+
+    Dim myC As Collection: Set myC = New Collection
+    
+    Dim myKeys As Variant: myKeys = Me.Keys
+    
+    Dim myKey As Variant
+    For Each myKey In myKeys
+        myC.Add myKey
+    Next
+    
+    Set KeysAsColl = myC
+    
+End Function
+
+Public Function KeysAsSeq() As SeqH
+    Set KeysAsSeq = SeqH.Deb(s.HashTableSize).AddRange(Me.Keys)
+End Function
+
+
+Public Function Pairs() As Variant()             'hand-out the Key-Values in a Pairs-Array
+
+    If s.Count = 0 Then
+        Pairs = Array()
+        Exit Function
+    End If
+    
+    Dim i As Long
+    Dim j As Long
+    
+    Dim V() As Variant
+    ReDim V(1 To s.Count)
+    
+    For i = 1 To s.Count
+    
+        Do While IsEmpty(s.Keys(j)): j = j + 1: Loop
+        V(i) = Array(s.Keys(j), s.Values(j))
+        j = j + 1
+        
+    Next
+    
+    Pairs = V
+    
+End Function
+
+Public Function PairsAsColl() As Collection
+
+    Dim myC As Collection: Set myC = New Collection
+    
+    Dim myPairs As Variant: myPairs = Me.Pairs
+    
+    Dim myPair As Variant
+    For Each myPair In myPairs
+        myC.Add myPair
+    Next
+    
+    Set PairsAsColl = myC
+    
+End Function
+
+Public Function PairsAsSeq() As SeqA
+    Set PairsAsSeq = SeqA(Me.Pairs)
+End Function
+
+Public Property Get FirstIndex() As Long
+
+    If s.Count < FIRST_INDEX Then
+        FirstIndex = -1
+    Else
+        FirstIndex = FIRST_INDEX
+    End If
+
+End Property
+
+Public Property Get LastIndex() As Long
+
+    If s.Count < FIRST_INDEX Then
+        LastIndex = -1
+    Else
+        LastIndex = s.Count
+    End If
+
+End Property
+'
+''@Description("Returns the index of the second item in the kvp or -1  if the kvp has less than 2 Items")
+'Public Function FBOIndex() As Long
+'
+'    If Me.LacksItems Then
+'        FBOIndex = -1
+'    ElseIf s.Count = FIRST_INDEX Then
+'        FBOIndex = -1
+'    Else
+'        FBOIndex = FIRST_INDEX + 1
+'    End If
+'
+'End Function
+'
+'
+''Description("Returns the index of the second to last item in the SeqH, or -1 if the SeqH has lees than 2 items")
+'Public Function LBOIndex() As Long
+'
+'    If Me.LacksItems Then
+'        LBOIndex = -1
+'    ElseIf s.Count = FIRST_INDEX Then
+'        LBOIndex = -1
+'    Else
+'        LBOIndex = s.Count - 1
+'    End If
+'
+'End Function
+
 Public Property Get FirstKey() As Variant
 
     FirstKey = Null
-    
+
     If Me.LacksItems Then
         Exit Property
     End If
-    
+
     Dim myKey As Variant: myKey = Array(KeyByIndex(Me.FirstIndex))
-    
+
     If VBA.IsObject(myKey(0)) Then
         Set FirstKey = myKey(0)
     Else
         FirstKey = myKey(0)
     End If
-    
+
 End Property
 
 
 Public Property Get LastKey() As Variant
 
     LastKey = Null
-    
+
     If Me.LacksItems Then
         Exit Property
     End If
-    
+
     Dim myKey As Variant: myKey = Array(KeyByIndex(Me.LastIndex))
-    
+
     If VBA.IsObject(myKey(0)) Then
         Set LastKey = myKey(0)
     Else
         LastKey = myKey(0)
     End If
-    
+
 End Property
 
-
-
+'
+'
 Public Property Get First() As Variant
 
     First = Null
-    
+
     If Me.LacksItems Then
         Exit Property
     End If
-    
+
     Dim myItem As Variant: myItem = Array(ItemByIndex(Me.FirstIndex))
-    
+
     If VBA.IsObject(myItem(0)) Then
         Set First = myItem(0)
     Else
         First = myItem(0)
     End If
-    
+
 End Property
 
 
 Public Property Set First(ByVal ipItem As Variant)
-    'ToDo: Something better than erroring?
-    If Me.LacksItems Then
-        Err.Raise 17 + vbObjectError, _
-            "VBALib.KvpC.Let_First", _
-            "Kvp has no Keys"
-    End If
+
+    Guard.KeyNotFound Me.LacksItems, FIRST_INDEX, MY_TYPENAME, "Set First"
 
     Set ItemByIndex(Me.FirstIndex) = ipItem
 
@@ -1263,65 +1413,198 @@ End Property
 
 Public Property Let First(ByVal ipItem As Variant)
 
-    'ToDo: Something better than erroring?
-    If Me.LacksItems Then
-        Err.Raise 17 + vbObjectError, _
-            "VBALib.KvpC.Let_First", _
-            "Kvp has no Keys"
-    End If
-    
+    Guard.KeyNotFound Me.LacksItems, FIRST_INDEX, MY_TYPENAME, "Let First"
+
     ItemByIndex(Me.FirstIndex) = ipItem
 
 End Property
 
 
-'
 Public Property Get Last() As Variant
 
     Last = Null
-    
+
     If Me.LacksItems Then
         Exit Property
     End If
-    
+
     Dim myItem As Variant: myItem = Array(ItemByIndex(Me.LastIndex))
-    
+
     If VBA.IsObject(myItem(0)) Then
         Set Last = myItem(0)
     Else
         Last = myItem(0)
     End If
-    
+
 End Property
 
 
 Public Property Set Last(ByVal ipItem As Variant)
 
-    If Me.LacksItems Then
-        Err.Raise 17, _
-            "VBALib.KvpC.Set Last", _
-            "Kvp has no Keys"
-    End If
+    Guard.KeyNotFound Me.LacksItems, FIRST_INDEX, MY_TYPENAME, "Set Last"
 
     Set ItemByIndex(Me.LastIndex) = ipItem
-    
+
 End Property
 
 
 Public Property Let Last(ByVal ipItem As Variant)
 
-    If Me.LacksItems Then
-        Err.Raise 17, _
-            "VBALib.KvpC.Set Last", _
-            "Kvp has no Keys"
-    End If
-    
+    Guard.KeyNotFound Me.LacksItems, FIRST_INDEX, MY_TYPENAME, "Let Last"
+
     ItemByIndex(Me.LastIndex) = ipItem
-    
+
 End Property
 
+'Public Property Get FBOKey() As Variant
+'
+'    Dim myKey As Variant: myKey = Array(KeyByIndex(FIRST_INDEX + 1))
+'    If VBA.IsObject(myKey(0)) Then
+'
+'End Property
+'
+'Public Property Get FBOKey() As Variant
+'    Dim myKey As Variant: myKey = Array(s.Keys.LBO)
+'    If VBA.IsObject(myKey(0)) Then
+'        Set LBOKey = myKey(0)
+'    Else
+'        LBOKey = myKey(0)
+'    End If
+'End Property
+'
+'Public Property Get LBOKey() As Variant
+'
+'    Dim myKey As Variant: myKey = Array(s.Keys.LBO)
+'    If VBA.IsObject(myKey(0)) Then
+'        Set LBOKey = myKey(0)
+'    Else
+'        LBOKey = myKey(0)
+'    End If
+'
+'End Property
+'
+'
+'
+'Public Property Set FBO(ByVal ipItem As Variant)
+'    Set s.Items.FBO = ipItem
+'End Property
+'
+'
+'Public Property Let LBO(ByVal ipItem As Variant)
+'    s.Items.FBO = ipItem
+'End Property
+'
+'
+'Public Property Get LBO() As Variant
+'
+'    FBO = Null
+'
+'    If LacksItems Then
+'        Exit Property
+'    ElseIf s.OrderLast.OrderPred Is Nothing Then
+'        Exit Property
+'    End If
+'
+'    If VBA.IsObject(s.OrderLast.OrderPred.Item) Then
+'        Set LBO = s.OrderLast.OrderPred.Item
+'    Else
+'        LBO = s.OrderLast.OrderPred.Item
+'    End If
+'
+'End Property
+'
+'
+'Public Property Set LBO(ByVal ipItem As Variant)
+'    Set Me.ItemByIndex(s.Count - 1) = ipItem
+'End Property
+'
+'
+'Public Property Let LBO(ByVal ipItem As Variant)
+'   Me.ItemByIndex(s.Count - 1) = ipItem
+'End Property
+'
+Public Property Get EnsureUniqueKeys() As Boolean
+    EnsureUniqueKeys = p.EnsureUniqueKeys
+End Property
+
+Public Property Let EnsureUniqueKeys(ByVal ipEnsureUniqueKeys As Boolean)
+    p.EnsureUniqueKeys = ipEnsureUniqueKeys
+End Property
+
+'@Description( returns a Kvp with values as keys.  Each Value is linked to a Kvp of Key vs Index for the host value
+Public Function Mirror(Optional ByVal ipMirrorType As e_MirrorType = e_MirrorType.m_ByAllValues) As KvpHA
+
+    If Me.LacksItems = 0 Then
+        Set Mirror = KvpHA.Deb
+        Exit Function
+    End If
+
+    Select Case ipMirrorType
+
+        Case m_ByAllValues:             Set Mirror = MirrorByAllValues
+        Case m_ByFirstValue:            Set Mirror = MirrorByFirstValue
+        Case Else
+            Err.Raise 17 + vbObjectError, _
+                "VBALib.KvpHA.Mirror", _
+                Fmt.Text("Mirror enum not known. Got {0}", ipMirrorType)
+                
+    End Select
+
+End Function
+
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
+'Private functions
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
+'@Description("Returns an KvpH of two KvpH.  Item(1) is an KvpH of the first found Host value vs Host Key. .Item(2) is a copy of the original KvpHA with the  first Key/Value pairs removed
+Private Function MirrorByAllValues() As KvpHA
+
+    If Me.LacksItems = 0 Then
+        Set MirrorByAllValues = KvpHA.Deb(s.HashTableSize)
+        Exit Function
+    End If
+    
+    Dim myK As KvpHA
+    Set myK = KvpHA.Deb
+
+    Dim myPairs As Variant: myPairs = Me.Pairs
+    
+    Dim myPair As Variant
+    Dim myIndex As Long: myIndex = 1
+    For Each myPair In myPairs
+        If myK.LacksKey(myPair(1)) Then
+            myK.Add myPair(1), KvpHA.Deb
+        End If
+
+        myK.Item(myPair(1)).Add myPair(0), myIndex
+        myIndex = myIndex + 1
+    Next
+    
+    Set MirrorByAllValues = myK
+    
+End Function
 
 
+Private Function MirrorByFirstValue() As KvpHA
+
+    Dim myFirst As KvpHA: Set myFirst = KvpHA.Deb
+    Dim myOther As KvpHA: Set myOther = KvpHA.Deb
+
+    Dim myPairs As Variant: myPairs = Me.Pairs
+    
+    Dim myPair As Variant
+    For Each myPair In myPairs
+
+        If myFirst.LacksKey(myPair(1)) Then
+            myFirst.Add myPair(1), myPair(0)
+        Else
+            myOther.Add myPair(0), myPair(1)
+        End If
+
+    Next
+
+    Set MirrorByFirstValue = KvpHA.Deb.Add(0&, myFirst).Add(1&, myOther)
+
+End Function
 
 Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Long 'return -1, when no Key can be found
 
@@ -1620,4 +1903,16 @@ Friend Sub CheckHashDistribution()
     Debug.Print "Used-HashSlots:"; cc
     Debug.Print "Min-Entries:"; Min
     Debug.Print "Max-Entries:"; Max
+End Sub
+
+
+Private Sub RemoveAllItems()
+    Me.Reinit s.HashTableSize
+End Sub
+
+
+Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
+    Do While HoldsKey(ipItem)
+        RemoveKey ipItem
+    Loop
 End Sub

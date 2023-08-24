@@ -5,14 +5,14 @@ Attribute VB_Name = "AA_ReadMe"
 
 
 '' Seq
-'Implement SeqH
-
-' Implement seqT
+'SeqH does not work well when data is constrained to just a few values.
+' This is because we end up with essentually a couple of related SEQL due to
+' small number of hash slots allocated.
+' This is justification for SeqT and KvpT
 
 'Kvp
 
-' Inserting by index is supported by all Kvp but not yet implemented.
-' Not sure I want to do this as it seems to go against the grain of a dictionary
+
 
 'Implment KvpT
 

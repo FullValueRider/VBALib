@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqC is a multipurpose Collection/ArrayList replacement.  It uses a collection to store the items.  Items are access using 1 based indexing. For a Keyed collection, use one of the Kvp classes"
@@ -24,7 +24,8 @@ Option Explicit
 
 Private Const MY_TYPENAME                       As String = "SeqC"
 Private Const FIRST_INDEX                       As Long = 1
-
+'@Ignore ConstantNotUsed
+Private Const DEFAULT_SIZE                      As Long = 1024
 Private Type State
     Host                                        As Collection
 End Type
@@ -96,24 +97,40 @@ Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqC
         Case VBA.IsArray(myItem):               Set ConstructInstance = AddRange(ArrayOp.Linearise(myItem))
         Case GroupInfo.IsContainer(myItem):     Set ConstructInstance = AddRange(myItem)
         Case GroupInfo.IsString(myItem):        Set ConstructInstance = AddRange(myItem)
-        Case GroupInfo.IsNumber(myItem):        Set ConstructInstance = ConstructInstanceByCount(VBA.CLng(myItem))
+        '@Ignore EmptyCaseBlock
+        Case GroupInfo.IsNumber(myItem):        ' do nothing  Set ConstructInstance = ConstructInstanceByCount(VBA.CLng(myItem))
         Case Else:                              Set ConstructInstance = AddItems(myItem)
     End Select
     
 End Function
 
 
+'@Ignore ParameterNotUsed
 Private Function ConstructInstanceByCount(ByRef ipSize As Long) As SeqC
-    
-    If ipSize < FIRST_INDEX Then
-        Set ConstructInstanceByCount = Me
-        Exit Function
-    End If
-    
-    Dim myCount As Long
-    For myCount = FIRST_INDEX To ipSize
-        s.Host.Add Empty
-    Next
+    ' We are using host.count to get the last index
+    ' If we preallocate slots we automatically move the position at which
+    ' items are added to the end of the preallocated slots.
+    ' To allow add and other functions to use preallocated slots we would need to
+    ' implement a lastindex pointer that is independent of Host.count, and which,
+    ' if the size of the seq grows past the preallocated slots adds computations
+    ' with no obvious advantage
+
+'    If ipSize < FIRST_INDEX Then
+'        Set ConstructInstanceByCount = Me
+'        Exit Function
+'    End If
+'
+'    Dim mySize As Long
+'    If ipSize < DEFAULT_SIZE Then
+'        mySize = 1024
+'    Else
+'        mySize = ipSize
+'    End If
+'
+'    Dim myCount As Long
+'    For myCount = FIRST_INDEX To mySize
+'        s.Host.Add Empty
+'    Next
     
     Set ConstructInstanceByCount = Me
     
@@ -193,14 +210,14 @@ Attribute Slice.VB_Description = "Returns a subset of the SeqC"
         Exit Function
     End If
     
-    GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.Host.Count, "SeqC.Slice"
+    Guard.IndexOutOfBounds ipStart, Me, "SeqC.Slice"
     
     Dim myRun As Long
     myRun = ipRun
     If myRun < FIRST_INDEX Then
         myRun = s.Host.Count - ipStart + 1
     Else
-        GuardIndexOutOfBounds myRun + ipStart - 1, FIRST_INDEX, s.Host.Count, "SeqC.Slice"
+        Guard.IndexOutOfBounds myRun + ipStart - 1, Me, "SeqC.Slice"
     End If
    
 
@@ -634,10 +651,10 @@ Attribute AddItems.VB_Description = "Adds one or more items . Return the Me inst
         Exit Function
     End If
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
 
-    AddRange myParamarray
+    AddRange myParamArray
 
     Set AddItems = Me
 
@@ -695,7 +712,7 @@ End Property
 
 Public Property Let Item(ByRef ipIndex As Long, ByVal ipItem As Variant)
     
-    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "SeqC.Let_Item"
+    Guard.IndexOutOfBounds ipIndex, Me, "Let_Item"
     
     s.Host.Add ipItem, after:=ipIndex
     s.Host.Remove ipIndex
@@ -705,7 +722,7 @@ End Property
 
 Public Property Set Item(ByRef ipIndex As Long, ByVal ipItem As Variant)
 
-    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.Host.Count, "SeqC.Set_Item"
+    Guard.IndexOutOfBounds ipIndex, Me, "SeqC.Set_Item"
   
     s.Host.Add ipItem, after:=ipIndex
     s.Host.Remove ipIndex
@@ -733,10 +750,10 @@ End Function
 Public Function InsertAtItems(ByRef ipIndex As Long, ParamArray ipParamarray() As Variant) As SeqC
 Attribute InsertAtItems.VB_Description = "Inserts one or more items starting at ipIndex"
     
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set InsertAtItems = InsertAtRange(ipIndex, myParamarray)
+    Set InsertAtItems = InsertAtRange(ipIndex, myParamArray)
     
 End Function
 
@@ -750,7 +767,7 @@ Attribute InsertAtRange.VB_Description = "For strings inserts individual charact
         Exit Function
     End If
     
-    GuardInvalidRangeItem ipRange, "SeqC.InsertAtRange"
+    Guard.InvalidRangeItem ipRange, MY_TYPENAME, "InsertAtRange"
     
     Dim myItems As IterItems: Set myItems = IterItems(ipRange).MoveToEndIndex
     
@@ -794,10 +811,10 @@ End Function
 Public Function RemoveItems(ParamArray ipParamarray() As Variant) As SeqC
 Attribute RemoveItems.VB_Description = "Removes the first encountered item from the SeqC"
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set RemoveItems = RemoveRange(myParamarray)
+    Set RemoveItems = RemoveRange(myParamArray)
     
     Set RemoveItems = Me
     
@@ -896,10 +913,10 @@ End Function
 Public Function RemoveIndexes(ParamArray ipParamarray() As Variant) As SeqC
 Attribute RemoveIndexes.VB_Description = "Removes the items at the Indexes.  Indexes are sorted before use."
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set RemoveIndexes = RemoveIndexesRange(myParamarray)
+    Set RemoveIndexes = RemoveIndexesRange(myParamArray)
     
     Set RemoveIndexes = Me
     
@@ -1094,7 +1111,7 @@ Attribute MapIt.VB_Description = "Returns a new Seq where each item in the Host 
     Dim myS As SeqC: Set myS = SeqC.Deb
     Set MapIt = myS
     
-    If s.Host.Count < FirstIndex Then
+    If s.Host.Count < Me.FirstIndex Then
         Exit Function
     End If
     
@@ -1186,10 +1203,10 @@ End Property
 
 Public Function Push(ParamArray ipParamarray() As Variant) As SeqC
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set Push = AddRange(myParamarray)
+    Set Push = AddRange(myParamArray)
     
 End Function
 
@@ -1253,10 +1270,10 @@ End Function
 
 Public Function enQueue(ParamArray ipParamarray() As Variant) As SeqC
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set enQueue = AddRange(myParamarray)
+    Set enQueue = AddRange(myParamArray)
     
 End Function
 

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqH"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqHSeqH is a multipurpose Collection/ArrayList replacement.  It uses a double linked list with two sets of links to manage hash clashes and ordr of addition/insertion to store the items.  Items are access using a single 1 based index. For a Keyed collection, use one of the Kvp classes"
@@ -38,7 +38,7 @@ Attribute VB_Description = "SeqHSeqH is a multipurpose Collection/ArrayList repl
 Option Explicit
 
 ' Hash-Multiplikator ' as derived from olaf schmidts cHashD
-Private Const HMul                          As Long = 3727
+'Private Const HMul                          As Long = 3727
 
 Private Const MY_TYPENAME                   As String = "SeqH"
 Private Const FIRST_INDEX                   As Long = 1
@@ -51,17 +51,17 @@ Private Const MIN_SEQ_SIZE                  As Long = 512
  
 Private Type State
     ' W is used in hash calculations
-    W()                                     As Integer
-    ' typedef used to access the data area of W()
-    saW                                     As SAFEARRAY1D
-    ' a feelgood typedef to allow consistent terminology between seq classes where the count of nodes in not provided by the Host object
-   ' Host                                    As Host
-    ' A value with all bits set to 1 which represents the number of hashslots available
-    ' it is used to AND intermediate values in the the hash calculation
-    ' to ensure that the hash is always within the range of available HashSlots
-    ' i.e. it is always a power of 2 minus 1
-    ' and consequenlty the number of hashslots can only be doubled or halved
-    HashSlotMask                            As Long
+'    W()                                     As Integer
+'    ' typedef used to access the data area of W()
+'    sAW                                     As SAFEARRAY1D
+'    ' a feelgood typedef to allow consistent terminology between seq classes where the count of nodes in not provided by the Host object
+'   ' Host                                    As Host
+'    ' A value with all bits set to 1 which represents the number of hashslots available
+'    ' it is used to AND intermediate values in the the hash calculation
+'    ' to ensure that the hash is always within the range of available HashSlots
+'    ' i.e. it is always a power of 2 minus 1
+'    ' and consequenlty the number of hashslots can only be doubled or halved
+'    HashSlotMask                            As Long
     
     ' An array where nodes are stored using their hash as the index.
     ' Each HashSlot holds a reference to a single node, which is the first node with a particular hash
@@ -77,9 +77,7 @@ Private Type State
     ' Node contain the last order
     OrderLast                               As SeqHNode
     
-'    ' flag used to prevent updating of the node order field
-'    ' when redistrubing hashes due to a resize.
-'    Resizing                                As Boolean
+    Hasher                                  As Hasher
     
 End Type
 
@@ -144,15 +142,17 @@ End Function
 
 Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqH
 
-    s.saW.cDims = 1
-    s.saW.cbElements = 2
-    s.saW.cLocks = 1
-    s.saW.fFeatures = &H11                       'FADF_AUTO=&H1 || FADF_FIXEDSIZE=&H10
-    BindArray s.W, VarPtr(s.saW)
-    SetSize 16383                                'Hangover from cHashD: at startup we set it up, to behave ideally for up to 16384 Items (0 to 16383)
+'    s.sAW.cDims = 1
+'    s.sAW.cbElements = 2
+'    s.sAW.cLocks = 1
+'    s.sAW.fFeatures = &H11                       'FADF_AUTO=&H1 || FADF_FIXEDSIZE=&H10
+'    BindArray s.W, VarPtr(s.sAW)
+'    SetSize 16384                                'Hangover from cHashD: sets the number of hashslots (we use 1 based index, cHAshD used 0 based index)
     
      ' Check to see if we return a default 'empty' seq
     If ArrayOp.LacksItems(ipFPA) Then
+        Set s.Hasher = Hasher.Deb
+        ReDim s.HashSlots(0 To s.Hasher.MaxHash)
         Set ConstructInstance = Me
         Exit Function
     End If
@@ -172,6 +172,18 @@ Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqH
         myItem = ipFPA
     End If
     
+    If GroupInfo.IsNumber(myItem) Then
+        Set s.Hasher = Hasher(myItem)
+        ReDim s.HashSlots(0 To s.Hasher.MaxHash)
+        Set ConstructInstance = Me
+        Exit Function
+    Else
+        Set s.Hasher = Hasher.Deb
+        ReDim s.HashSlots(0 To s.Hasher.MaxHash)
+    End If
+
+    
+    
     ' Resolve the items in the forwarded paramarray using the rules for
     ' instantiation as described above.
     Select Case True
@@ -179,7 +191,6 @@ Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqH
         Case VBA.IsArray(myItem):                   Set ConstructInstance = AddRange(ArrayOp.Linearise(myItem))
         Case GroupInfo.IsContainer(myItem):         Set ConstructInstance = AddRange(myItem)
         Case GroupInfo.IsString(myItem):            Set ConstructInstance = AddRange(myItem)
-        Case GroupInfo.IsNumber(myItem):            Set ConstructInstance = ConstructInstanceByCount(VBA.CLng(myItem))
         Case Else:                                  Set ConstructInstance = AddItems(myItem)
     End Select
     
@@ -194,7 +205,7 @@ Private Function ConstructInstanceByCount(Optional ByRef ipNewSize As Long = MIN
             Fmt.Dbg("Seq should have a size of at least 512 items. Got {0}", ipNewSize)
     End If
             
-    SetSize ipNewSize
+    Reinit ipNewSize
     
     Set ConstructInstanceByCount = Me
     
@@ -202,23 +213,22 @@ End Function
 
 '@Description("set the size of hash array to be the 2^n value just greater than ipNewSize")
 '@Ignore AssignedByValParameter
-Public Sub SetSize(Optional ByVal ipNewSize As Long)
-Attribute SetSize.VB_Description = "set the size of hash array to be the 2^n value just greater than ipNewSize"
+Public Sub Reinit(Optional ByVal ipNewSize As Long)
+Attribute Reinit.VB_Description = "set the size of hash array to be the 2^n value just greater than ipNewSize"
 
+    If s.Hasher Is Nothing Then
+        Set s.Hasher = Hasher(ipNewSize)
+    Else
+        s.Hasher.Reinit ipNewSize
+    End If
     If ipNewSize < 0 Then
         ipNewSize = MIN_SEQ_SIZE
     End If
 
-    ' calculate a long whose value is the first 2^n-1 that is greater than ipNewSize
-    ' this provides a bitfield of 1's used to set the maximum for a hash value
-    s.HashSlotMask = (2 ^ Int((VBA.Log(ipNewSize) / VBA.Log(2)) + 1)) - 1
-    If s.HashSlotMask < ipNewSize Then
-        s.HashSlotMask = (s.HashSlotMask + 1) * 2 - 1
-    End If
-    
     ' Redim without preserve should mean that we have no entries in s.HashSlots
-    ReDim s.HashSlots(FIRST_INDEX To s.HashSlotMask + 1)
-    p.Size = s.HashSlotMask
+    ReDim s.HashSlots(FIRST_INDEX To s.Hasher.MaxHash)
+    p.Size = s.Hasher.Size
+   
     If s.HashRoot Is Nothing Then
         Exit Sub
     End If
@@ -229,7 +239,7 @@ Attribute SetSize.VB_Description = "set the size of hash array to be the 2^n val
     
     Dim myNode As SeqHNode: Set myNode = s.HashRoot
     Do
-        myNode.Hash = GetHash(myNode.Item)
+        myNode.Hash = s.Hasher.OSHash(myNode.Item)
         Set myNode = myNode.HashSucc
     Loop Until myNode Is Nothing
     
@@ -344,14 +354,14 @@ Attribute Slice.VB_Description = "Returns a subset of the SeqH"
         Exit Function
     End If
 
-    GuardIndexOutOfBounds ipStart, FIRST_INDEX, s.OrderLast.Order, "SeqH.Slice"
+    Guard.IndexOutOfBounds ipStart, Me, "Slice"
 
     Dim myRun As Long
     myRun = ipRun
     If myRun < FIRST_INDEX Then
         myRun = s.OrderLast.Order - ipStart + 1
     Else
-        GuardIndexOutOfBounds myRun + ipStart - 1, FIRST_INDEX, s.OrderLast.Order, "SeqH.Slice"
+        Guard.IndexOutOfBounds myRun + ipStart - 1, Me, "SeqH.Slice"
     End If
 
     Dim myS As SeqH: Set myS = SeqH.Deb
@@ -691,7 +701,7 @@ Public Function IndexOf _
     End If
     
     ' exit  if the hash slot is not occupied
-    Dim myHash As Long: myHash = GetHash(ipItem)
+    Dim myHash As Long: myHash = s.Hasher.OSHash(ipItem)
     If s.HashSlots(myHash) Is Nothing Then
         Exit Function
     End If
@@ -795,7 +805,7 @@ Attribute Add.VB_Description = "Add a single item.  Returns the index at which t
     
     ' for an add we always appendbyorder
     
-    Dim myHash As Long: myHash = GetHash(ipItem)
+    Dim myHash As Long: myHash = s.Hasher.OSHash(ipItem)
     Dim myNewNode As SeqHNode: Set myNewNode = SeqHNode.Deb(myHash, ipItem)
     
     If s.HashRoot Is Nothing Then
@@ -832,10 +842,10 @@ Public Function AddItems(ParamArray ipParamarray() As Variant) As SeqH
         Exit Function
     End If
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
 
-    AddRange myParamarray
+    AddRange myParamArray
 
     Set AddItems = Me
 
@@ -896,7 +906,7 @@ End Property
 
 Public Property Let Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
 
-    GuardIndexOutOfBounds ipIndex, s.OrderRoot.Order, s.OrderLast.Order, "SeqH.Let_Item"
+    Guard.IndexOutOfBounds ipIndex, Me, "SeqH.Let_Item"
     
     Dim myNode As SeqHNode: Set myNode = GetNodeAt(ipIndex)
     myNode.Item = ipItem
@@ -906,7 +916,7 @@ End Property
 
 Public Property Set Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
  
-    GuardIndexOutOfBounds ipIndex, FIRST_INDEX, s.OrderLast.Order, "SeqH.Set_Item"
+    Guard.IndexOutOfBounds ipIndex, Me, "SeqH.Set_Item"
     
     Dim myNode As SeqHNode: Set myNode = GetNodeAt(ipIndex)
     Set myNode.Item = ipItem
@@ -922,7 +932,7 @@ Public Function InsertAt(ByVal ipIndex As Long, ByVal ipItem As Variant) As Long
     End If
     
     ' create the new node
-    Dim myHash As Long: myHash = GetHash(ipItem)
+    Dim myHash As Long: myHash = s.Hasher.OSHash(ipItem)
     Dim myNewNode As SeqHNode: Set myNewNode = SeqHNode.Deb(myHash, ipItem, ipOrder:=ipIndex)
     
     ' there are two strands to update, byHash and ByOrder
@@ -951,10 +961,10 @@ End Function
 
 Public Function InsertAtItems(ByVal ipIndex As Long, ParamArray ipParamarray() As Variant) As SeqH
     
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set InsertAtItems = InsertAtRange(ipIndex, myParamarray)
+    Set InsertAtItems = InsertAtRange(ipIndex, myParamArray)
     
 End Function
 
@@ -965,7 +975,7 @@ Public Function InsertAtRange(ByVal ipIndex As Long, ByRef ipRange As Variant) A
         Exit Function
     End If
 
-    GuardInvalidRangeItem ipRange, "SeqH.InsertAtRange"
+    Guard.InvalidRangeItem ipRange, "SeqH", "InsertAtRange"
     
     ' iterate in reverse so we can just keep inserting at ipIndex
     Dim myItems As IterItems: Set myItems = IterItems(ipRange).MoveToEndIndex
@@ -996,7 +1006,7 @@ Public Function Remove(ByRef ipItem As Variant) As Long
         Exit Function
     End If
     
-    Dim myHash As Long: myHash = GetHash(ipItem)
+    Dim myHash As Long: myHash = s.Hasher.OSHash(ipItem)
     Dim myNode As SeqHNode: Set myNode = s.HashSlots(myHash)
     
     If myNode Is Nothing Then
@@ -1013,10 +1023,10 @@ End Function
 Public Function RemoveItems(ParamArray ipParamarray() As Variant) As SeqH
 Attribute RemoveItems.VB_Description = "Removes the first encountered item from the Seq for each item in the ParamArray"
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set RemoveItems = RemoveRange(myParamarray)
+    Set RemoveItems = RemoveRange(myParamArray)
     
     Set RemoveItems = Me
     
@@ -1057,13 +1067,13 @@ Public Function RemoveAll(ParamArray ipParamarray() As Variant) As SeqH
         Exit Function
     End If
     
-    Dim myParamarray As Variant
+    Dim myParamArray As Variant
     '@Ignore AssignmentNotUsed
-    myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(ipParamarray)
+    myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(ipParamarray)
     
     Dim myParam As Variant
-    For Each myParam In myParamarray
+    For Each myParam In myParamArray
         RemoveAllSingleItem myParam
     Next
     
@@ -1207,10 +1217,10 @@ End Function
 Public Function RemoveIndexes(ParamArray ipParamarray() As Variant) As SeqH
 Attribute RemoveIndexes.VB_Description = "RemoveAt for a list of indexes.  Indexes are sorted and removed in reverse order"
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set RemoveIndexes = RemoveIndexesRange(myParamarray)
+    Set RemoveIndexes = RemoveIndexesRange(myParamArray)
     
     Set RemoveIndexes = Me
     
@@ -1362,7 +1372,7 @@ Attribute MappedIt.VB_Description = "Mutates the KvpA in place by applying the f
         Exit Function
     End If
     
-    Dim myNode As SeqHNode: Set SeqHNode = s.OrderRoot
+    Dim myNode As SeqHNode: Set myNode = s.OrderRoot
     Do
     
         Dim myItem As Variant: myItem = ipMapper.ExecMapper(myNode.Item)
@@ -1395,7 +1405,7 @@ Attribute MapIt.VB_Description = "Returns a KvpA.Deb by applying the function in
     End If
 
     
-    Dim myNode As SeqHNode: Set SeqHNode = s.OrderRoot
+    Dim myNode As SeqHNode: Set myNode = s.OrderRoot
     Do
         myS.Add ipMapper.ExecMapper(myNode.Item)(0)
         Set myNode = myNode.OrderSucc
@@ -1417,7 +1427,7 @@ Attribute FilterIt.VB_Description = "Returns a subset of the seq composed of ite
         Exit Function
     End If
     
-    Dim myNode As SeqHNode: Set SeqHNode = s.OrderRoot
+    Dim myNode As SeqHNode: Set myNode = s.OrderRoot
     Do
     
         If ipComparer.ExecCmp(myNode.Item) Then
@@ -1481,10 +1491,10 @@ End Property
 
 Public Function Push(ParamArray ipParamarray() As Variant) As SeqH
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set Push = AddRange(myParamarray)
+    Set Push = AddRange(myParamArray)
     
 End Function
 
@@ -1545,10 +1555,10 @@ End Function
 
 Public Function enQueue(ParamArray ipParamarray() As Variant) As SeqH
 
-    Dim myParamarray As Variant: myParamarray = ipParamarray
-    myParamarray = ArrayOp.Splat(myParamarray)
+    Dim myParamArray As Variant: myParamArray = ipParamarray
+    myParamArray = ArrayOp.Splat(myParamArray)
     
-    Set enQueue = AddRange(myParamarray)
+    Set enQueue = AddRange(myParamArray)
     
 End Function
 
@@ -2143,22 +2153,36 @@ Private Sub InsertbyHash(ByVal ipNewNode As SeqHNode)
 
     Do While myCurNode.Hash = ipNewNode.Hash
         ' check item is the same item as ipnewnode
-        If Comparers.EQ(myCurNode.Item, ipNewNode.Item) Then
-            ' check the next node is not nothing
-            If myCurNode.HashSucc Is Nothing Then
-                ' if ipnode.succ is nothing then by default
-                ' myNode is s.last so we can just append the new node
-                AppendByHash ipNewNode
-                Exit Sub
-            Else
-                Set myCurNode = myCurNode.HashSucc
-            End If
+        If Comparers.NEQ(myCurNode.Item, ipNewNode.Item) Then
+            Exit Do
+        End If
+        
+        ' check the next node is not nothing
+        If myCurNode.HashSucc Is Nothing Then
+            ' if ipnode.succ is nothing then by default
+            ' myNode is s.last so we can just append the new node
+            AppendByHash ipNewNode
+            Exit Sub
+        Else
+            Set myCurNode = myCurNode.HashSucc
         End If
     Loop
     
     ' at this point we have matching hashes but different items
     ' curnode is the node after the last item/hash match so we
     ' insert newnode before curnode
+    ' are we trying to insert at the start of the hashlist
+    If myCurNode.HashPred Is Nothing Then
+        Set ipNewNode.HashSucc = myCurNode 'myPred.Succ
+        Set myCurNode.HashPred = ipNewNode
+    
+    End If
+    
+'    If myCurNode.Succ Is Nothing Then
+'
+'
+'    End If
+    
     
     Set ipNewNode.HashPred = myCurNode.HashPred 'myPredNode
     Set ipNewNode.HashSucc = myCurNode 'myPred.Succ
@@ -2245,7 +2269,7 @@ Attribute GetNodeOf.VB_Description = "Returns the first node containing ipItem"
     End If
 
                    
-    Dim myNode As SeqHNode: Set myNode = s.HashSlots(GetHash(ipItem))
+    Dim myNode As SeqHNode: Set myNode = s.HashSlots(s.Hasher.OSHash(ipItem))
     If myNode Is Nothing Then
         Exit Function
     End If
@@ -2267,130 +2291,130 @@ Attribute GetNodeOf.VB_Description = "Returns the first node containing ipItem"
 End Function
 
 
-Private Function GetHash(ByRef ipItem As Variant) As Long
-
-    Dim D As Double
-    Dim L As LongPtr
-    Dim F As Single
-    Dim VT As VbVarType
-    Dim myHash As Long
-     
-    Dim C As Variant
-    C = VBA.CDec(C)
-     
-    myHash = s.HashSlotMask                              'init the HashValue (all bits to 1)
-    Dim myItem As Variant
-    If GroupInfo.IsContainer(ipItem) Or GroupInfo.IsItemObject(ipItem) Or GroupInfo.IsAdmin(ipItem) Then
-        myItem = GetItemAsString(ipItem)
-    Else
-        myItem = ipItem
-    End If
-
-    VT = VarType(myItem)
-    Select Case VT
-        Case vbString
-        
-            Dim myIndex As Long
-            For myIndex = 1 To VBA.Len(myItem)
-                
-                Dim myChar As Long
-                myChar = VBA.AscW(VBA.Mid$(myItem, myIndex, 1))
-                myHash = (myHash + myChar) * HMul And s.HashSlotMask
-                
-            Next
-                   
-            
-'        Case vbObject
+'Private Function s.hasher.oshash(ByRef ipItem As Variant) As Long
 '
-'            L = ObjPtr(myItem)
-'            s.saW.cElements1D = 2
-'            s.saW.pvData = VarPtr(L)
+'    Dim D As Double
+'    Dim L As LongPtr
+'    Dim F As Single
+'    Dim VT As VbVarType
+'    Dim myHash As Long
+'
+'    Dim C As Variant
+'    C = VBA.CDec(C)
+'
+'    myHash = s.HashSlotMask                              'init the HashValue (all bits to 1)
+'    Dim myItem As Variant
+'    If GroupInfo.IsContainer(ipItem) Or GroupInfo.IsItemObject(ipItem) Or GroupInfo.IsAdmin(ipItem) Then
+'        myItem = GetItemAsString(ipItem)
+'    Else
+'        myItem = ipItem
+'    End If
+'
+'    VT = VarType(myItem)
+'    Select Case VT
+'        Case vbString
+'
+'            Dim myIndex As Long
+'            For myIndex = 1 To VBA.Len(myItem)
+'
+'                Dim myChar As Long
+'                myChar = VBA.AscW(VBA.Mid$(myItem, myIndex, 1))
+'                myHash = (myHash + myChar) * HMul And s.HashSlotMask
+'
+'            Next
+'
+'
+''        Case vbObject
+''
+''            L = ObjPtr(myItem)
+''            s.saW.cElements1D = 2
+''            s.saW.pvData = VarPtr(L)
+''
+''            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 2 16Bit integers in the array)
+''            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
+''
+'        Case vbCurrency
+'
+'            C = myItem
+'            s.sAW.cElements1D = 4
+'            s.sAW.pvData = VarPtr(C)
+'
+'            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 4 16Bit integers in the array)
+'            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
+'            myHash = (myHash + s.W(2)) * HMul And s.HashSlotMask
+'            myHash = (myHash + s.W(3)) * HMul And s.HashSlotMask
+'
+'        Case vbLong, vbInteger, vbByte
+'
+'            L = myItem
+'            s.sAW.cElements1D = 2
+'            s.sAW.pvData = VarPtr(L)
 '
 '            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 2 16Bit integers in the array)
 '            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
 '
-        Case vbCurrency
-        
-            C = myItem
-            s.saW.cElements1D = 4
-            s.saW.pvData = VarPtr(C)
-            
-            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 4 16Bit integers in the array)
-            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
-            myHash = (myHash + s.W(2)) * HMul And s.HashSlotMask
-            myHash = (myHash + s.W(3)) * HMul And s.HashSlotMask
-         
-        Case vbLong, vbInteger, vbByte
-        
-            L = myItem
-            s.saW.cElements1D = 2
-            s.saW.pvData = VarPtr(L)
-            
-            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 2 16Bit integers in the array)
-            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
-            
-        Case vbDouble
-        
-            D = myItem: s.saW.cElements1D = 4
-            s.saW.pvData = VarPtr(D)
-            
-            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 4 16Bit integers in the array)
-            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
-            myHash = (myHash + s.W(2)) * HMul And s.HashSlotMask
-            myHash = (myHash + s.W(3)) * HMul And s.HashSlotMask
-            
-        Case vbDate
-        
-            D = ipItem
-            s.saW.cElements1D = 4
-            s.saW.pvData = VarPtr(D)
-            
-            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 4 16Bit integers in the array)
-            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
-            myHash = (myHash + s.W(2)) * HMul And s.HashSlotMask
-            myHash = (myHash + s.W(3)) * HMul And s.HashSlotMask
+'        Case vbDouble
+'
+'            D = myItem: s.sAW.cElements1D = 4
+'            s.sAW.pvData = VarPtr(D)
+'
+'            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 4 16Bit integers in the array)
+'            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
+'            myHash = (myHash + s.W(2)) * HMul And s.HashSlotMask
+'            myHash = (myHash + s.W(3)) * HMul And s.HashSlotMask
+'
+'        Case vbDate
+'
+'            D = ipItem
+'            s.sAW.cElements1D = 4
+'            s.sAW.pvData = VarPtr(D)
+'
+'            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 4 16Bit integers in the array)
+'            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
+'            myHash = (myHash + s.W(2)) * HMul And s.HashSlotMask
+'            myHash = (myHash + s.W(3)) * HMul And s.HashSlotMask
+'
+'        Case vbSingle
+'
+'            F = myItem
+'            s.sAW.cElements1D = 2
+'            s.sAW.pvData = VarPtr(F)
+'            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 2 16Bit integers in the array)
+'            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
+'
+'    End Select
+'    ' the hashslot array starts at 1 so we must add 1 below for the case where the hash is zero
+'    s.Hasher.OSHash = myHash + 1
+'
+'End Function
 
-        Case vbSingle
-        
-            F = myItem
-            s.saW.cElements1D = 2
-            s.saW.pvData = VarPtr(F)
-            myHash = (myHash + s.W(0)) * HMul And s.HashSlotMask 'loop-unrolling (we have only 2 16Bit integers in the array)
-            myHash = (myHash + s.W(1)) * HMul And s.HashSlotMask
-            
-    End Select
-    ' the hashslot array starts at 1 so we must add 1 below for the case where the hash is zero
-    GetHash = myHash + 1
-    
-End Function
-
-Private Function GetItemAsString(ByVal ipItem As Variant) As String
-
-    ' containers and arrays must be sorted if we are to have comparable hashes
-    Dim myResult As Variant
-    Select Case True
-        Case GroupInfo.IsArray(ipItem):
-            myResult = ArrayOp.Linearise(ipItem)
-            Sorters.ShakerSortArray myResult
-
-        Case GroupInfo.IsList(ipItem):
-            Sorters.ShakerSortByItem ipItem
-            Set myResult = ipItem
-            
-        Case GroupInfo.IsItemByToArray(ipItem)
-            myResult = ipItem.ToArray
-            Sorters.ShakerSortArray myResult
-            
-        Case GroupInfo.IsDictionary(ipItem)
-            myResult = ipItem.SPairs
-            
-        Case GroupInfo.IsItemObject(ipItem)
-            myResult = Stringifier.SetNoMarkup.StringifyItemObject(ipItem)
-    End Select
-        
-    GetItemAsString = Fmt.NoMarkup.Text("{0}", myResult)
-        
-End Function
+'Private Function GetItemAsString(ByVal ipItem As Variant) As String
+'
+'    ' containers and arrays must be sorted if we are to have comparable hashes
+'    Dim myResult As Variant
+'    Select Case True
+'        Case GroupInfo.IsArray(ipItem):
+'            myResult = ArrayOp.Linearise(ipItem)
+'            Sorters.ShakerSortArray myResult
+'
+'        Case GroupInfo.IsList(ipItem):
+'            Sorters.ShakerSortByItem ipItem
+'            Set myResult = ipItem
+'
+'        Case GroupInfo.IsItemByToArray(ipItem)
+'            myResult = ipItem.ToArray
+'            Sorters.ShakerSortArray myResult
+'
+'        Case GroupInfo.IsDictionary(ipItem)
+'            myResult = ipItem.SPairs
+'
+'        Case GroupInfo.IsItemObject(ipItem)
+'            myResult = Stringifier.SetNoMarkup.StringifyItemObject(ipItem)
+'    End Select
+'
+'    GetItemAsString = Fmt.NoMarkup.Text("{0}", myResult)
+'
+'End Function
 
 '@Ignore ProcedureCanBeWrittenAsFunction
 Private Sub RemoveNode(ByRef ipNode As SeqHNode)
@@ -2504,7 +2528,7 @@ Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
     ' in which case we have to search forward to find the item
     ' we also have to be mindful that whilst the hash of an item may be valid (the relevant hashslot is occupied)
     ' the item itself may not be in the seq
-    Dim myHash As Long: myHash = GetHash(ipItem)
+    Dim myHash As Long: myHash = s.Hasher.OSHash(ipItem)
     Dim myNode As SeqHNode: Set myNode = s.HashSlots(myHash)
     
     'check that that hashslot is occupied
@@ -2538,4 +2562,17 @@ Private Sub RemoveAllSingleItem(ByRef ipItem As Variant)
         
     Loop While Comparers.EQ(myNode.Item, ipItem)
     
+End Sub
+
+Public Sub Analyse()
+
+    Dim myCount As Long: myCount = 0
+    Dim myIndex As Long
+    For myIndex = LBound(s.HashSlots) To UBound(s.HashSlots)
+        If Not s.HashSlots(myIndex) Is Nothing Then
+            myCount = myCount + 1
+        End If
+    Next
+    
+    Fmt.Dbg "Hashslots used = {0}/{1}/{2}", myCount, Me.Count, s.HashSlotMask
 End Sub

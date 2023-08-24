@@ -380,7 +380,7 @@ Private Sub Test01f_CmpEq_Kvp()
     myResult(6) = myCmp.ExecCmp(VBA.CDate(42))
     myResult(7) = myCmp.ExecCmp("42")
     myResult(8) = myCmp.ExecCmp(Array(42))
-    myResult(9) = myCmp.ExecCmp(KvpH.Deb.AddPairs(SeqA("Hundred", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"), SeqA(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)))
+    myResult(9) = myCmp.ExecCmp(KvpHA.Deb.AddPairs(SeqA("Hundred", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"), SeqA(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)))
     myResult(10) = myCmp.ExecCmp(SeqL.Deb(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
     
     'Act:
@@ -1259,8 +1259,8 @@ Private Sub Test04f_CmpMTEq_Kvp()
     myResult(6) = myCmp.ExecCmp(VBA.CDate(42))
     myResult(7) = myCmp.ExecCmp("42")
     myResult(8) = myCmp.ExecCmp(Array(42))
-    myResult(9) = myCmp.ExecCmp(KvpH.Deb.AddPairs(SeqA("Hundred", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven"), SeqA(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)))
-    myResult(10) = myCmp.ExecCmp(KvpH.Deb.AddPairs(SeqA("Hundred", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"), SeqA(1, 2, 3, 4, 5, 6, 7, 8, 9)))
+    myResult(9) = myCmp.ExecCmp(KvpHA.Deb.AddPairs(SeqA("Hundred", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven"), SeqA(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)))
+    myResult(10) = myCmp.ExecCmp(KvpHA.Deb.AddPairs(SeqA("Hundred", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"), SeqA(1, 2, 3, 4, 5, 6, 7, 8, 9)))
     
     'Act:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName

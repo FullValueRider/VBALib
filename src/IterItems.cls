@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "IterItems"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A class to iterate any single dimension containers, strings and single items"
@@ -343,9 +343,8 @@ Attribute CurItem.VB_Description = "Get the items at the global + local offset. 
         Case GroupInfo.IsItemByToArray(s.Host):
             myResult = Array(s.Items(myLoc))
         Case GroupInfo.IsDictionary(s.Host):
-            Dim myKey As Variant: myKey = s.Keys(myLoc)
-            Dim myItem As Variant: myItem = s.Host.Item(myKey)
-            myResult = Array(myItem)
+            Dim myKey As Variant: myKey = Array(s.Keys(myLoc))
+            myResult = Array(s.Host.Item(myKey(0)))
         Case GroupInfo.IsIndexFrom1(s.Host):
             myResult = Array(s.Host.Item(myLoc))
         Case GroupInfo.IsIndexFrom0(s.Host):

@@ -100,96 +100,100 @@ Private Function ContainersEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As
 End Function
 
 Public Function NEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
-    
-    If GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
-        NEQ = ipLHS <> ipRHS
-        
-    ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
-        If VBA.Len(ipLHS) <> VBA.Len(ipRHS) Then
-            NEQ = True
-        Else
-            NEQ = ipLHS <> ipRHS
-        End If
-        
-    ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
-        NEQ = ipLHS <> ipRHS
-    
-    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
-        NEQ = Fmt.NoMarkup.Text("{0}", ipLHS) <> Fmt.NoMarkup.Text("{0}", ipRHS)
-   
-    ElseIf GroupInfo.IsItemObject(ipLHS) And GroupInfo.IsItemObject(ipRHS) Then
-        NEQ = Fmt.NoMarkup.Text("{0}", ipLHS) <> Fmt.NoMarkup.Text("{0}", ipRHS)
-       
-    ElseIf GroupInfo.IsContainer(ipLHS) And GroupInfo.IsContainer(ipRHS) Then
-        NEQ = ContainersNEQ(ipLHS, ipRHS)
-        
-    Else
-    
-        NEQ = True
-        
-    End If
-    
+    NEQ = Not EQ(ipLHS, ipRHS)
 End Function
-    
-Private Function ContainersNEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
-    
-    Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
-    Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
 
-    If myLItems.Size <> myRItems.Size Then
-        ContainersNEQ = True
-        Exit Function
-    End If
-        
-    If GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
-
-        If myLItems.Size <> myRItems.Size Then
-            ContainersNEQ = True
-            Exit Function
-        End If
-
-        Do
-
-            If NEQ(myLItems.CurKey(0), myRItems.CurKey(0)) Then
-                ContainersNEQ = True
-                Exit Function
-            End If
-            
-            If NEQ(myLItems.CurItem(0), myRItems.CurItem(0)) Then
-                ContainersNEQ = True
-                Exit Function
-            End If
-                
-        Loop While myLItems.MoveNext And myRItems.MoveNext
-       
-        ContainersNEQ = False
-            
-    ElseIf _
-        (GroupInfo.IsList(ipLHS) Or GroupInfo.IsArray(ipLHS)) _
-        And (GroupInfo.IsList(ipRHS) Or GroupInfo.IsArray(ipRHS)) _
-    Then
+'Public Function NEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+'
+'    If GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
+'        NEQ = ipLHS <> ipRHS
+'
+'    ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
+'        If VBA.Len(ipLHS) <> VBA.Len(ipRHS) Then
+'            NEQ = True
+'        Else
+'            NEQ = ipLHS <> ipRHS
+'        End If
+'
+'    ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
+'        NEQ = ipLHS <> ipRHS
+'
+'    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
+'        NEQ = Fmt.NoMarkup.Text("{0}", ipLHS) <> Fmt.NoMarkup.Text("{0}", ipRHS)
+'
+'    ElseIf GroupInfo.IsItemObject(ipLHS) And GroupInfo.IsItemObject(ipRHS) Then
+'        NEQ = Fmt.NoMarkup.Text("{0}", ipLHS) <> Fmt.NoMarkup.Text("{0}", ipRHS)
+'
+'    ElseIf GroupInfo.IsContainer(ipLHS) And GroupInfo.IsContainer(ipRHS) Then
+'        NEQ = ContainersNEQ(ipLHS, ipRHS)
+'
+'    Else
+'
+'        NEQ = True
+'
+'    End If
+'
+'End Function
     
-        If myLItems.Size <> myRItems.Size Then
-            ContainersNEQ = True
-            Exit Function
-        End If
-
-        Do
-            If NEQ(myLItems.CurItem(0), myRItems.CurItem(0)) Then
-                ContainersNEQ = True
-                Exit Function
-            End If
-        Loop While myLItems.MoveNext And myRItems.MoveNext
-        
-        ContainersNEQ = False
-        
-    Else
-    
-        ContainersNEQ = True
-        
-    End If
-    
-End Function
+'Private Function ContainersNEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+'
+'    Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
+'    Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
+'
+'    If myLItems.Size <> myRItems.Size Then
+'        ContainersNEQ = True
+'        Exit Function
+'    End If
+'
+'    If GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
+'
+'        If myLItems.Size <> myRItems.Size Then
+'            ContainersNEQ = True
+'            Exit Function
+'        End If
+'
+'        Do
+'
+'            If NEQ(myLItems.CurKey(0), myRItems.CurKey(0)) Then
+'                ContainersNEQ = True
+'                Exit Function
+'            End If
+'
+'            If NEQ(myLItems.CurItem(0), myRItems.CurItem(0)) Then
+'                ContainersNEQ = True
+'                Exit Function
+'            End If
+'
+'        Loop While myLItems.MoveNext And myRItems.MoveNext
+'
+'        ContainersNEQ = False
+'
+'    ElseIf _
+'        (GroupInfo.IsList(ipLHS) Or GroupInfo.IsArray(ipLHS)) _
+'        And (GroupInfo.IsList(ipRHS) Or GroupInfo.IsArray(ipRHS)) _
+'    Then
+'
+'        If myLItems.Size <> myRItems.Size Then
+'            ContainersNEQ = True
+'            Exit Function
+'        End If
+'
+'        Do
+'            If NEQ(myLItems.CurItem(0), myRItems.CurItem(0)) Then
+'                ContainersNEQ = True
+'                Exit Function
+'            End If
+'        Loop While myLItems.MoveNext And myRItems.MoveNext
+'
+'        ContainersNEQ = False
+'
+'    Else
+'
+'        ContainersNEQ = True
+'
+'    End If
+'
+'End Function
 
 Public Function MT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
     
@@ -285,11 +289,15 @@ Private Function ContainersMT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As
     
 End Function
 
+'Public Function MTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+'    MTEQ = Not LT(ipLHS, ipRHS)
+'End Function
+
 Public Function MTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
-    
+
     If GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
         MTEQ = ipLHS = ipRHS
-        
+
     ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
         If VBA.Len(ipLHS) > VBA.Len(ipRHS) Then
             MTEQ = True
@@ -298,61 +306,61 @@ Public Function MTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
         Else
             MTEQ = ipLHS >= ipRHS
         End If
-        
+
     ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
         MTEQ = ipLHS >= ipRHS
-    
+
     ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
         MTEQ = Fmt.NoMarkup.Text("{0}", ipLHS) = Fmt.NoMarkup.Text("{0}", ipRHS)
-   
+
     ElseIf GroupInfo.IsItemObject(ipLHS) And GroupInfo.IsItemObject(ipRHS) Then
         MTEQ = Fmt.NoMarkup.Text("{0}", ipLHS) >= Fmt.NoMarkup.Text("{0}", ipRHS)
-       
+
     ElseIf GroupInfo.IsContainer(ipLHS) And GroupInfo.IsContainer(ipRHS) Then
         MTEQ = ContainersMTEQ(ipLHS, ipRHS)
-        
+
     Else
         MTEQ = False
-        
+
     End If
-    
+
 End Function
-    
+
 Private Function ContainersMTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
-    
+
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
 
     If GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
-    
+
         If myLItems.Size < myRItems.Size Then
             ContainersMTEQ = False
             Exit Function
         ElseIf myLItems.Size > myRItems.Size Then
             ContainersMTEQ = True
         End If
-    
+
         Do
 
             If MTEQ(myLItems.CurKey(0), myRItems.CurKey(0)) Then
                 ContainersMTEQ = True
                 Exit Function
             End If
-            
+
             If MTEQ(myLItems.CurItem(0), myRItems.CurItem(0)) Then
                 ContainersMTEQ = True
                 Exit Function
             End If
-                
+
         Loop While myLItems.MoveNext And myRItems.MoveNext
-       
+
         ContainersMTEQ = False
-            
+
     ElseIf _
         (GroupInfo.IsList(ipLHS) Or GroupInfo.IsArray(ipLHS)) _
         And (GroupInfo.IsList(ipRHS) Or GroupInfo.IsArray(ipRHS)) _
     Then
-    
+
         If myLItems.Size < myRItems.Size Then
             ContainersMTEQ = False
             Exit Function
@@ -366,15 +374,15 @@ Private Function ContainersMTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) 
                 Exit Function
             End If
         Loop While myLItems.MoveNext And myRItems.MoveNext
-        
+
         ContainersMTEQ = False
-        
+
     Else
-    
+
         ContainersMTEQ = False
-        
+
     End If
-    
+
 End Function
 
 Public Function LT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
@@ -472,11 +480,15 @@ Private Function ContainersLT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As
     
 End Function
 
+'Public Function LTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+'    LTEQ = Not MT(ipLHS, ipRHS)
+'End Function
+
 Public Function LTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
-    
+
     If GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
         LTEQ = ipLHS = ipRHS
-        
+
     ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
         If VBA.Len(ipLHS) > VBA.Len(ipRHS) Then
             LTEQ = False
@@ -485,33 +497,33 @@ Public Function LTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
         Else
             LTEQ = ipLHS <= ipRHS
         End If
-        
+
     ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
         LTEQ = ipLHS <= ipRHS
-    
+
     ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
         LTEQ = Fmt.NoMarkup.Text("{0}", ipLHS) = Fmt.NoMarkup.Text("{0}", ipRHS)
-   
+
     ElseIf GroupInfo.IsItemObject(ipLHS) And GroupInfo.IsItemObject(ipRHS) Then
         LTEQ = Fmt.NoMarkup.Text("{0}", ipLHS) <= Fmt.NoMarkup.Text("{0}", ipRHS)
-       
+
     ElseIf GroupInfo.IsContainer(ipLHS) And GroupInfo.IsContainer(ipRHS) Then
         LTEQ = ContainersLTEQ(ipLHS, ipRHS)
-        
+
     Else
         LTEQ = False
-        
+
     End If
-    
+
 End Function
-    
+
 Private Function ContainersLTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
-    
+
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
 
     If GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
-    
+
         If myLItems.Size < myRItems.Size Then
             ContainersLTEQ = True
             Exit Function
@@ -526,16 +538,16 @@ Private Function ContainersLTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) 
                 ContainersLTEQ = True
                 Exit Function
             End If
-            
+
             If LTEQ(myLItems.CurItem(0), myRItems.CurItem(0)) Then
                 ContainersLTEQ = True
                 Exit Function
             End If
-                
+
         Loop While myLItems.MoveNext And myRItems.MoveNext
-       
+
         ContainersLTEQ = False
-            
+
     ElseIf _
         (GroupInfo.IsList(ipLHS) Or GroupInfo.IsArray(ipLHS)) _
         And (GroupInfo.IsList(ipRHS) Or GroupInfo.IsArray(ipRHS)) _
@@ -548,7 +560,7 @@ Private Function ContainersLTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) 
             ContainersLTEQ = False
             Exit Function
         End If
-        
+
 
         Do
             If LTEQ(myLItems.CurItem(0), myRItems.CurItem(0)) Then
@@ -556,13 +568,13 @@ Private Function ContainersLTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) 
                 Exit Function
             End If
         Loop While myLItems.MoveNext And myRItems.MoveNext
-        
+
         ContainersLTEQ = False
-        
+
     Else
-    
+
         ContainersLTEQ = False
-        
+
     End If
-    
+
 End Function

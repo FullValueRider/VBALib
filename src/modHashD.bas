@@ -36,4 +36,3 @@ Public Sub InitLWC()
     CharLowerBuffW LWC(-32768), 65536            '<-- and convert its whole content to LowerCase-WChars
 End Sub
 
-

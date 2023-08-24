@@ -628,7 +628,7 @@ Private Sub Test09_Clone()
     'Act:
     Dim myT As KvpH
     
-    Set myT = myK.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&)).Clone
+    Set myT = myK.AddPairs(SeqA(1&, 2&, 3&, 4&, 5&, 6&, 7&), SeqA(3&, "Hello", True, 1&, 2&, 3&, 4&)).clone
    
     myItemsResult = myT.Items
     myKeysResult = myT.Keys

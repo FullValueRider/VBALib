@@ -807,16 +807,22 @@ Private Sub Test06e_AddRange_Dictionary()
         .Add "There", 2
         .Add "World", 3
     End With
+'    Debug.Print
+'    myD.PrintByHash
+'    Debug.Print
+'    myD.PrintByOrder
     
     'Act:
-    Set mySeq = SeqH.Deb
-    mySeq.Add Empty
-    mySeq.Add Empty
-    mySeq.Add Empty
-    mySeq.Add Empty
-    mySeq.Add Empty
-
-    myResult = mySeq.AddRange(myD).ToArray
+    Set mySeq = SeqH.Deb.Fill(Empty, 5)
+    
+    mySeq.AddRange myD
+    
+'    Debug.Print
+'    myD.PrintByHash
+'    Debug.Print
+'    myD.PrintByOrder
+    
+    myResult = mySeq.ToArray
     myResult(6) = myResult(6)(0) & VBA.CStr(myResult(6)(1))
     myResult(7) = myResult(7)(0) & VBA.CStr(myResult(7)(1))
     myResult(8) = myResult(8)(0) & VBA.CStr(myResult(8)(1))

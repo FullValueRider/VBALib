@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "cHashC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@IGNOREModule
@@ -29,7 +29,7 @@ End Type
 
 
 Private W()                             As Integer
-Private saW                             As SAFEARRAY1D
+Private sAW                             As SAFEARRAY1D
 
 Private mLastExpectedMaxCount           As Long
 Private mLastH                          As Long  ' mEnsureUniqueKeys As Boolean,
@@ -46,18 +46,18 @@ Private mFUB                            As Long
 
 
 Private Sub Class_Initialize()
-    saW.cDims = 1:  saW.cbElements = 2
-    saW.cLocks = 1: saW.fFeatures = &H11         'FADF_AUTO=&H1 || FADF_FIXEDSIZE=&H10
-    BindArray W, VarPtr(saW)
+    sAW.cDims = 1:  sAW.cbElements = 2
+    sAW.cLocks = 1: sAW.fFeatures = &H11         'FADF_AUTO=&H1 || FADF_FIXEDSIZE=&H10
+    BindArray W, VarPtr(sAW)
 
     mCompareMode = vbBinaryCompare
-    ReInit 16384                                 'at startup we set it up, to behave ideally for up to 16384 Items
+    Reinit 16384                                 'at startup we set it up, to behave ideally for up to 16384 Items
 
     If LWC(97) = 0 Then InitLWC
 End Sub
 
 
-Public Sub ReInit(Optional ByVal ExpectedMaxCount As Long) ' Optional ByVal EnsureUniqueKeys As Boolean
+Public Sub Reinit(Optional ByVal ExpectedMaxCount As Long) ' Optional ByVal EnsureUniqueKeys As Boolean
     If ExpectedMaxCount <= 0 Then ExpectedMaxCount = mLastExpectedMaxCount
     If ExpectedMaxCount < 128 Then ExpectedMaxCount = 128
     mLastExpectedMaxCount = ExpectedMaxCount
@@ -77,7 +77,7 @@ End Sub
 
 
 Public Sub Clear()
-    ReInit
+    Reinit
 End Sub
 
 
@@ -105,13 +105,13 @@ Public Function Keys() As Variant()
 
     Dim i As Long
     Dim j As Long
-    Dim v() As Variant: ReDim v(0 To mCount - 1)
+    Dim V() As Variant: ReDim V(0 To mCount - 1)
     For i = 0 To mCount - 1
         Do While mKeys(j) = NoEntry: j = j + 1: Loop
-        VariantCopy v(i), ByVal VarPtr(mKeys(j)): j = j + 1
+        VariantCopy V(i), ByVal VarPtr(mKeys(j)): j = j + 1
     Next
 
-    Keys = v
+    Keys = V
 End Function
 
 
@@ -298,10 +298,10 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
 
     Select Case VT
         Case vbString
-            saW.cElements1D = VBA.Len(Key)
-            saW.pvData = StrPtr(Key)
+            sAW.cElements1D = VBA.Len(Key)
+            sAW.pvData = StrPtr(Key)
             If mCompareMode = 0 Then
-                For i = 0 To saW.cElements1D - 1
+                For i = 0 To sAW.cElements1D - 1
                     H = (H + W(i)) * HMul And HTUB
                 Next
                 If FindIndex = -1 Then Exit Function 'it's a "Hash-Only" Calculation
@@ -311,7 +311,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
                     If VarType(mKeys(FindIndex)) = VT Then If Key = mKeys(FindIndex) Then Exit Function
                 Next
             Else
-                For i = 0 To saW.cElements1D - 1: H = (H + LWC(W(i))) * HMul And HTUB: Next
+                For i = 0 To sAW.cElements1D - 1: H = (H + LWC(W(i))) * HMul And HTUB: Next
                 If FindIndex = -1 Then Exit Function 'it's a "Hash-Only" Calculation
 
                 For i = 0 To HashTable(H).Count - 1
@@ -321,7 +321,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
             End If
 
         Case vbObject
-            L = ObjPtr(Key): saW.cElements1D = 2: saW.pvData = VarPtr(L)
+            L = ObjPtr(Key): sAW.cElements1D = 2: sAW.pvData = VarPtr(L)
             H = (H + W(0)) * HMul And HTUB       'loop-unrolling (we have only 2 16Bit integers in the array)
             H = (H + W(1)) * HMul And HTUB
             If FindIndex = -1 Then Exit Function 'it's a "Hash-Only" Calculation
@@ -332,7 +332,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
             Next
 
         Case vbCurrency
-            C = Key: saW.cElements1D = 4: saW.pvData = VarPtr(C)
+            C = Key: sAW.cElements1D = 4: sAW.pvData = VarPtr(C)
             H = (H + W(0)) * HMul And HTUB       'loop-unrolling (we have only 4 16Bit integers in the array)
             H = (H + W(1)) * HMul And HTUB
             H = (H + W(2)) * HMul And HTUB
@@ -345,7 +345,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
             Next
 
         Case vbLong, vbInteger, vbByte
-            L = Key: saW.cElements1D = 2: saW.pvData = VarPtr(L)
+            L = Key: sAW.cElements1D = 2: sAW.pvData = VarPtr(L)
             H = (H + W(0)) * HMul And HTUB       'loop-unrolling (we have only 2 16Bit integers in the array)
             H = (H + W(1)) * HMul And HTUB
             If FindIndex = -1 Then Exit Function 'it's a "Hash-Only" Calculation
@@ -358,7 +358,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
             Next
 
         Case vbDouble
-            D = Key: saW.cElements1D = 4: saW.pvData = VarPtr(D)
+            D = Key: sAW.cElements1D = 4: sAW.pvData = VarPtr(D)
             H = (H + W(0)) * HMul And HTUB       'loop-unrolling (we have only 4 16Bit integers in the array)
             H = (H + W(1)) * HMul And HTUB
             H = (H + W(2)) * HMul And HTUB
@@ -371,7 +371,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
             Next
 
         Case vbDate
-            D = Key: saW.cElements1D = 4: saW.pvData = VarPtr(D)
+            D = Key: sAW.cElements1D = 4: sAW.pvData = VarPtr(D)
             H = (H + W(0)) * HMul And HTUB       'loop-unrolling (we have only 4 16Bit integers in the array)
             H = (H + W(1)) * HMul And HTUB
             H = (H + W(2)) * HMul And HTUB
@@ -384,7 +384,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
             Next
 
         Case vbSingle
-            F = Key: saW.cElements1D = 2: saW.pvData = VarPtr(F)
+            F = Key: sAW.cElements1D = 2: sAW.pvData = VarPtr(F)
             H = (H + W(0)) * HMul And HTUB       'loop-unrolling (we have only 2 16Bit integers in the array)
             H = (H + W(1)) * HMul And HTUB
             If FindIndex = -1 Then Exit Function 'it's a "Hash-Only" Calculation

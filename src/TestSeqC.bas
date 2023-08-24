@@ -216,7 +216,7 @@ Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
 
     'Arrange:
     Dim mySeq As SeqC
-    Set mySeq = SeqC.Deb(10)
+    Set mySeq = SeqC.Deb.Fill(Empty, 10)
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 10)
@@ -507,7 +507,7 @@ Private Sub Test03a_WriteItem()
 
     'Arrange:
     Dim mySeq As SeqC
-    Set mySeq = SeqC.Deb(10)
+    Set mySeq = SeqC.Deb.Fill(Empty, 10)
     mySeq.Item(1) = 42
     mySeq.Item(2) = "Hello"
     mySeq.Item(3) = 3.142
@@ -554,7 +554,7 @@ Private Sub Test04a_Add_MultipleItems()
     Dim myResult As Variant
 
     'Act:
-    Set mySeq = SeqC.Deb(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     myResult = mySeq.AddItems(42, "Hello", 3.142).ToArray
 
     'Assert:
@@ -592,7 +592,7 @@ Private Sub Test06a_AddRange_String()
     Dim myResult As Variant
 
     'Act:
-    Set mySeq = SeqC.Deb(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     myResult = mySeq.AddRange("Hello").ToArray
 
     'Assert:
@@ -629,7 +629,7 @@ Private Sub Test06b_AddRange_Array()
     Dim myResult As Variant
 
     'Act:
-    Set mySeq = SeqC.Deb(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     myResult = mySeq.AddRange(Array("H", "e", "l", "l", "o")).ToArray
 
     'Assert:
@@ -676,7 +676,7 @@ Private Sub Test06c_AddRange_Collection()
     End With
 
     'Act:
-    Set mySeq = SeqC(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     myResult = mySeq.AddRange(myC).ToArray
 
     'Assert:
@@ -723,7 +723,7 @@ Private Sub Test06d_AddRange_ArrayList()
     End With
 
     'Act:
-    Set mySeq = SeqC.Deb(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     myResult = mySeq.AddRange(myAL).ToArray
 
     'Assert:
@@ -768,7 +768,7 @@ Private Sub Test06e_AddRange_Dictionary()
     End With
 
     'Act:
-    Set mySeq = SeqC(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     myResult = mySeq.AddRange(myD).ToArray
     myResult(6) = myResult(6)(0) & VBA.CStr(myResult(6)(1))
     myResult(7) = myResult(7)(0) & VBA.CStr(myResult(7)(1))
@@ -812,7 +812,7 @@ Private Sub Test07a_InsertAt_SingleItems()
     ReDim myResult2(0 To 2)
 
     'Act:
-    Set mySeq = SeqC.Deb(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     myResult2(0) = mySeq.InsertAt(3, "Hello")
     myResult2(1) = mySeq.InsertAt(5, 42&)
     myResult2(2) = mySeq.InsertAt(7, 3.142)
@@ -853,7 +853,7 @@ Private Sub Test07b_InsertAt_MultipleItems()
     Dim myResult As Variant
 
     'Act:
-    Set mySeq = SeqC(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     mySeq.InsertAtItems 3, "Hello", 42&, 3.142
 
     myResult = mySeq.ToArray
@@ -898,7 +898,7 @@ End Sub
 '
 '    'Act:
 '
-'    Set mySeq = SeqC.Deb(5)
+'    Set mySeq = SeqC.Deb.Fill(empty, 5)
 '    myResult2 = mySeq.InsertAtItems(3, "Hello", 42&, 3.142).ToArray
 '
 '
@@ -939,7 +939,7 @@ Private Sub Test08a_InsertAtRange_String()
     Dim myResult As Variant
 
     'Act:
-    Set mySeq = SeqC.Deb(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     mySeq.InsertAtRange 3, "Hello"
 
     myResult = mySeq.ToArray
@@ -978,7 +978,7 @@ Private Sub Test08b_InsertAtRange_Array()
     Dim myResult As Variant
 
     'Act:
-    Set mySeq = SeqC.Deb(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     mySeq.InsertAtRange 3, Array("Hello", 42&, 3.142)
 
     myResult = mySeq.ToArray
@@ -1026,7 +1026,7 @@ Private Sub Test08c_InsertAtRange_Collection()
     End With
 
     'Act:
-    Set mySeq = SeqC(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     mySeq.InsertAtRange 3, myC
 
     myResult = mySeq.ToArray
@@ -1075,7 +1075,7 @@ Private Sub Test08d_InsertAtRange_ArrayList()
     End With
 
     'Act:
-    Set mySeq = SeqC.Deb(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     mySeq.InsertAtRange 3, myAL
 
     myResult = mySeq.ToArray
@@ -1124,7 +1124,7 @@ Private Sub Test08e_InsertAtRange_Dictionary()
     End With
 
     'Act:
-    Set mySeq = SeqC.Deb(5)
+    Set mySeq = SeqC.Deb.Fill(Empty, 5)
     mySeq.InsertAtRange 3, myD
     myResult = mySeq.ToArray
 
