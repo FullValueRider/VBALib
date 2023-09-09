@@ -56,7 +56,7 @@ Public Sub SeqATests()
 
     Test01_SeqObj
     
-    Test02a_InitByLong_10FirstIndex_LastIndex
+    Test02a_InitByLong_10GetFirstIndex_LastIndex
     Test02b_InitByString
     Test02c_InitByForEachArray
     Test02d_InitByForEachArrayList
@@ -209,7 +209,7 @@ End Sub
 
 
 '@TestMethod("SeqA")
-Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
+Private Sub Test02a_InitByLong_10GetFirstIndex_LastIndex()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
@@ -232,7 +232,7 @@ Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
     AssertExactAreEqual 1&, mySeq.FirstIndex, myProcedureName
-    AssertExactAreEqual 10&, mySeq.LastIndex, myProcedureName
+    AssertExactAreEqual 10&, mySeq.Lastindex, myProcedureName
     AssertExactAreEqual 10&, mySeq.Count, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2180,7 +2180,7 @@ Private Sub Test18a_KnownIndexes_Available()
     myResult(1) = mySeq.FirstIndex
     myResult(2) = mySeq.FBOIndex
     myResult(3) = mySeq.LBOIndex
-    myResult(4) = mySeq.LastIndex
+    myResult(4) = mySeq.Lastindex
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -2210,7 +2210,7 @@ Private Sub Test18b_KnownIndexes_Unavailable()
     'Arrange:
     Dim mySeq As SeqA
     Dim myExpected As Variant
-    myExpected = Array(-1&, -1&, -1&, -1&)
+    myExpected = Array(1&, 2&, -1&, -1&)
     ReDim Preserve myExpected(1 To 4)
 
     Dim myResult As Variant
@@ -2222,7 +2222,7 @@ Private Sub Test18b_KnownIndexes_Unavailable()
     myResult(1) = mySeq.FirstIndex
     myResult(2) = mySeq.FBOIndex
     myResult(3) = mySeq.LBOIndex
-    myResult(4) = mySeq.LastIndex
+    myResult(4) = mySeq.Lastindex
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName

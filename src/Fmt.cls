@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Fmt"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Class Fmt enables substitution of variables and control characters in strings using fields delineated by {} markers."
@@ -368,7 +368,7 @@ Attribute ReplaceVariableFieldByVariableString.VB_Description = "Replace each oc
     myReturn = ipFormatTemplate
     
     Dim myIndex As Long
-    For myIndex = ipSeq.FirstIndex To ipSeq.LastIndex
+    For myIndex = ipSeq.FirstIndex To ipSeq.Lastindex
     
         Dim myReplace As String
         ' Remember that {} fields start at 0

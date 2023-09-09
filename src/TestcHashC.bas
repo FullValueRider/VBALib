@@ -141,7 +141,7 @@ Private Sub Test03a_Add_MultipleItems()
     myH.Add "Hello"
     myH.Add 3.142
     
-    myResult = myH.Keys
+    myResult = myH.Items
     Sorters.ShakerSortArray myResult
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -181,7 +181,7 @@ Private Sub Test04a0_Remove_SingleItem()
     'Act:
     myH.Remove 42
 
-    myResult = myH.Keys
+    myResult = myH.Items
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -221,7 +221,7 @@ Private Sub Test05a_RemoveByIndex_SingleItem()
     'Act:
     myH.RemoveByIndex 3
 
-    myResult = myH.Keys
+    myResult = myH.Items
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -350,5 +350,4 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
-
 

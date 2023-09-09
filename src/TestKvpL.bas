@@ -188,8 +188,6 @@ Private Sub Test03_Add_Pairs()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim myK As KvpL
-    Set myK = KvpL.Deb
     
     Dim myItemsExpected As Variant
     myItemsExpected = Array(3, "Hello", True)
@@ -204,6 +202,7 @@ Private Sub Test03_Add_Pairs()
     Dim myKeysResult As Variant
     
     'Act:
+    Dim myK As KvpL: Set myK = KvpL.Deb
     myK.AddPairs SeqL(1, 2, 3), SeqL(3, "Hello", True)
    
     myItemsResult = myK.Items
@@ -321,7 +320,8 @@ Private Sub Test04c_SetItem()
     
     'Act:
     Set myK.Item(2) = SeqL(1&, 2&, 3&)
-    myResult = myK.Item(2&).ToArray
+    Set myResult = myK.Item(2&)
+    myResult = myResult.ToArray
     
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -933,7 +933,7 @@ Private Sub Test15b_KeyOf()
     Dim myResult As Variant
     
     'Act:
-    myResult = myK.KeyOf("Hello")
+    myResult = myK.KeyByItem("Hello")
     
     'Assert:
     AssertExactAreEqual myExpected, myResult, myProcedureName
@@ -1177,5 +1177,4 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
-
 

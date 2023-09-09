@@ -4,12 +4,13 @@ BEGIN
 END
 Attribute VB_Name = "SeqTNode"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
 '@Exposed
 '@Folder("Seq")
+'https://www.codeproject.com/KB/vb/TreapVb/Treapvb_src.zip
 Option Explicit
 
 Private Type State
@@ -18,6 +19,7 @@ Private Type State
     Priority                            As Long
     Left                                As SeqTNode
     Right                               As SeqTNode
+    Order                               As Long
     
 End Type
 
@@ -27,13 +29,14 @@ Private s                               As State
 Public Function Deb _
 ( _
     ByRef ipItem As Variant, _
-    ByVal ipPriority As Variant, _
+    ByRef ipPriority As Variant, _
+    Optional ByRef ipOrder As Long, _
     Optional ByRef ipLeft As SeqTNode = Nothing, _
     Optional ByRef ipRight As SeqTNode = Nothing _
 ) As SeqTNode
 Attribute Deb.VB_UserMemId = 0
     With New SeqTNode
-        Set Deb = .ConstructInstance(ipItem, ipPriority, ipLeft, ipRight)
+        Set Deb = .ConstructInstance(ipItem, ipPriority, ipOrder, ipLeft, ipRight)
     End With
 End Function
 
@@ -41,7 +44,8 @@ End Function
 Public Function ConstructInstance _
 ( _
     ByRef ipItem As Variant, _
-    ByVal ipPriority As Variant, _
+    ByRef ipPriority As Variant, _
+    ByRef ipOrder As Long, _
     ByRef ipLeft As SeqTNode, _
     ByRef ipRight As SeqTNode _
 ) As SeqTNode
@@ -53,6 +57,7 @@ Public Function ConstructInstance _
     End If
     
     s.Priority = ipPriority
+    s.Order = ipOrder
     Set s.Left = ipLeft
     Set s.Right = ipRight
     
@@ -102,3 +107,39 @@ End Property
 Public Property Set Right(ByVal ipRight As SeqTNode)
     Set s.Right = ipRight
 End Property
+
+
+Public Property Get Order() As Long
+    Order = s.Order
+End Property
+
+Public Property Let Order(ByVal ipOrder As Long)
+    If ipOrder < 1 Then
+        Err.Raise 17 + vbObjectError, _
+            "VBALib.SeqTNode.Let Order", _
+            Fmt.Text("Expecting an integer greater than zero.  Got '{0}'.", ipOrder)
+    End If
+    
+    s.Order = ipOrder
+    
+End Property
+
+'Public Function RotateRight() As SeqTNode
+'
+'    Dim myTmp As SeqTNode: Set myTmp = Me.Left
+'    Set Me.Left = Me.Left.Right
+'    Set myTmp.Right = Me
+'
+'    Set RotateRight = myTmp
+'
+'End Function
+'
+'Public Function RotateLeft() As SeqTNode
+'
+'    Dim myTmp As SeqTNode: Set myTmp = Me.Right
+'    Set Me.Right = Me.Right.Left
+'    Set myTmp.Left = Me
+'
+'    Set RotateLeft = myTmp
+'
+'End Function

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "IterItems"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A class to iterate any single dimension containers, strings and single items"
@@ -30,7 +30,7 @@ Private Type State
     Items                               As Variant ' Items if ipItems is a ToArray object
     
     FirstIndex                          As Long
-    LastIndex                           As Long
+    Lastindex                           As Long
     GlobalOffset                        As Long
     Size                                As Long
     StartIndex                          As Long
@@ -72,33 +72,33 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
     
             Set s.Host = ipItems
             s.FirstIndex = LBound(s.Keys)
-            s.LastIndex = UBound(s.Keys)
+            s.Lastindex = UBound(s.Keys)
             
         Case GroupInfo.IsItemByToArray(ipItems)
         
             s.Items = ipItems.ToArray
             Set s.Host = ipItems
             s.FirstIndex = LBound(s.Items)
-            s.LastIndex = UBound(s.Items)
+            s.Lastindex = UBound(s.Items)
             
         Case GroupInfo.IsString(ipItems)
         
             s.Host = ipItems
             s.FirstIndex = 1
-            s.LastIndex = VBA.Len(ipItems)
+            s.Lastindex = VBA.Len(ipItems)
             
         Case GroupInfo.IsIndexFrom1(ipItems)
         
             Set s.Host = ipItems
             ' cannot use firstindex lastindex as not supported by collection
             s.FirstIndex = 1
-            s.LastIndex = ipItems.Count
+            s.Lastindex = ipItems.Count
             
         Case GroupInfo.IsIndexFrom0(ipItems)
         
             Set s.Host = ipItems
             s.FirstIndex = 0
-            s.LastIndex = ipItems.Count - 1
+            s.Lastindex = ipItems.Count - 1
             
         Case GroupInfo.IsArray(ipItems)
             If ArrayOp.Ranks(ipItems) > 1 Then
@@ -108,7 +108,7 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
             End If
             s.Host = ipItems
             s.FirstIndex = LBound(ipItems)
-            s.LastIndex = UBound(ipItems)
+            s.Lastindex = UBound(ipItems)
             
         
         Case Else
@@ -119,15 +119,15 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
                 s.Host = ipItems
             End If
             s.FirstIndex = 1
-            s.LastIndex = 1
+            s.Lastindex = 1
             
     End Select
     
     s.StartIndex = s.FirstIndex
-    s.EndIndex = s.LastIndex
+    s.EndIndex = s.Lastindex
     s.Step = 1
     s.GlobalOffset = 0
-    s.Size = s.LastIndex - s.FirstIndex + 1
+    s.Size = s.Lastindex - s.FirstIndex + 1
     
 '    If s.Size = 0 Then
 '        AlertNoItems
@@ -166,7 +166,7 @@ Attribute FTS.VB_Description = "Sets the subrange and stepping to be used when u
         s.EndIndex = ipEndIndex
     End If
     
-    ' s.StartIndex = EnsureNumber(ipStartIndex, s.FirstIndex)
+    ' s.StartIndex = EnsureNumber(ipStartIndex, s.firstIndex)
     ' s.EndIndex = EnsureNumber(ipEndIndex, s.EndIndex)
     If s.Step < 1 Then
         AlertNegativeStep ipStep
@@ -233,7 +233,7 @@ Public Function MoveToFirst() As IterItems
 Attribute MoveToFirst.VB_Description = "Moves to firstindex, resets StartIndex stop EndIndex"
     s.GlobalOffset = 0
     s.StartIndex = s.FirstIndex
-    s.EndIndex = s.LastIndex
+    s.EndIndex = s.Lastindex
     s.Step = 1
     Set MoveToFirst = Me
 End Function
@@ -244,7 +244,7 @@ Public Function MoveToLast() As IterItems
 Attribute MoveToLast.VB_Description = "Moves to firstindex, resets StartIndex stop EndIndex"
     s.GlobalOffset = s.Size - 1
     s.StartIndex = s.FirstIndex
-    s.EndIndex = s.LastIndex
+    s.EndIndex = s.Lastindex
     s.Step = 1
     Set MoveToLast = Me
 End Function
@@ -311,9 +311,9 @@ End Function
 ' Attribute TryGetIndex.VB_Description = "Returns the native index of the specified item"
     
 '     Dim myNewIndex As Long
-'     myNewIndex = s.FirstIndex + s.GlobalOffset + (ipLocalOffset * s.Step)
+'     myNewIndex = s.firstIndex + s.GlobalOffset + (ipLocalOffset * s.Step)
     
-'     If myNewIndex >= s.FirstIndex And myNewIndex <= s.LastIndex Then
+'     If myNewIndex >= s.firstIndex And myNewIndex <= s.LastIndex Then
 '         ipIndex = myNewIndex
 '         TryGetIndex = True
 '     Else
@@ -467,8 +467,8 @@ Public Property Get StartIndex() As Long
     StartIndex = s.StartIndex
 End Property
 
-Public Property Get LastIndex() As Long
-    LastIndex = s.LastIndex
+Public Property Get Lastindex() As Long
+    Lastindex = s.Lastindex
 End Property
 
 Public Property Get EndIndex() As Long

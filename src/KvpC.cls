@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Dictionary using a SeqC for Keys and Items"
@@ -42,6 +42,7 @@ Private s                               As State
 
 Private Type Properties
     EnsureUniqueKeys                    As Boolean
+    FirstIndex                          As Long
 End Type
 
 Private p                               As Properties
@@ -58,6 +59,7 @@ End Function
 
 '@Ignore ParameterNotUsed
 Friend Function ConstructInstance(Optional ByRef ipInitialSize As Long = 0) As KvpC
+    p.FirstIndex = FIRST_INDEX
     Set s.Keys = SeqC.Deb.Fill(Empty, ipInitialSize)
     Set s.Items = SeqC.Deb.Fill(Empty, ipInitialSize)
     p.EnsureUniqueKeys = False
@@ -68,7 +70,7 @@ End Function
 Public Function Add(ByRef ipKey As Variant, ByRef ipItem As Variant) As KvpC
     
     Guard.KeyIsAdmin ipKey, MY_TYPENAME, "AddPairs"
-    Guard.EnsureUniqueKeys Me, ipKey, MY_TYPENAME, "AddPairs"
+    Guard.EnsureUniqueKeys ipKey, Me, "AddPairs"
     
     s.Keys.Add ipKey
     s.Items.Add ipItem
@@ -93,7 +95,7 @@ Public Function AddPairs(ByRef ipKeys As Variant, ByRef ipItems As Variant) As K
         Dim myKey As Variant: myKey = Array(myKeys.CurItem(0))
         
         Guard.KeyIsAdmin myKey(0), MY_TYPENAME, "AddPairs"
-        Guard.EnsureUniqueKeys Me, myKey(0), MY_TYPENAME, "AddPairs"
+        Guard.EnsureUniqueKeys myKey(0), Me, "AddPairs"
         
     
         s.Keys.Add myKey(0)
@@ -383,9 +385,9 @@ Attribute Remove.VB_Description = "Removes Key/Value pairs that exist in the Kvp
         Exit Function
     End If
     
-    Dim myParamArray As Variant: myParamArray = ArrayOp.Splat(ipParamarray)
+    Dim myParamarray As Variant: myParamarray = ArrayOp.Splat(ipParamarray)
     
-    Dim myKeys As IterItems: Set myKeys = IterItems(myParamArray)
+    Dim myKeys As IterItems: Set myKeys = IterItems(myParamarray)
     Do
 
         If Guard.KeyIsAdmin(myKeys.CurItem(0), MY_TYPENAME, "Remove", REPORT_BACK) Then
@@ -438,12 +440,12 @@ Public Function RemoveByIndex(ParamArray ipParamarray() As Variant) As KvpC
         Exit Function
     End If
     
-    Dim myParamArray As Variant: myParamArray = ipParamarray
-    myParamArray = ArrayOp.Splat(myParamArray)
+    Dim myParamarray As Variant: myParamarray = ipParamarray
+    myParamarray = ArrayOp.Splat(myParamarray)
     
-    Sorters.ShakerSortArray myParamArray
+    Sorters.ShakerSortArrayByIndex myParamarray
     
-    Dim myIndexes As IterItems: Set myIndexes = IterItems(myParamArray)
+    Dim myIndexes As IterItems: Set myIndexes = IterItems(myParamarray)
     Do
         Dim myIndex As Long
         If GroupInfo.IsNotNumber(myIndexes.CurItem(0)) Then
@@ -495,7 +497,7 @@ Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long
 
     Dim myCount As Long
     For myCount = 1 To ipRun
-        If myRemoveIndex >= s.Keys.LastIndex Then
+        If myRemoveIndex >= s.Keys.Lastindex Then
             Exit For
         End If
         s.Keys.RemoveAt myRemoveIndex
@@ -773,7 +775,7 @@ Attribute FilterIt.VB_Description = "Returns a Kvpc.Deb where the ICOmparer has 
     End If
 
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
+    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
         If ipComparer.ExecCmp(s.Items.Item(myIndex)) Then
             myK.Add s.Keys.Item(myIndex), s.Items.Item(myIndex)
         End If
@@ -839,7 +841,7 @@ Public Function CountIt(ByVal ipComparer As IComparer) As Long
     Dim myCount As Long
     myCount = 0
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
+    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
 
         If ipComparer.ExecCmp(s.Items.Item(myIndex)) Then
             myCount = myCount + 1
@@ -969,10 +971,10 @@ Public Function Pairs() As Variant
         Exit Function
     End If
     
-    Dim myA As Variant: ReDim myA(s.Keys.FirstIndex To s.Keys.LastIndex)
+    Dim myA As Variant: ReDim myA(s.Keys.FirstIndex To s.Keys.Lastindex)
     
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
+    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
         myA(myIndex) = Array(s.Keys.Item(myIndex), s.Items.Item(myIndex))
     Next
 
@@ -989,10 +991,10 @@ Public Function SPairs() As Variant
         Exit Function
     End If
     
-    Dim myA As Variant: ReDim myA(myKeys.FirstIndex To myKeys.LastIndex)
+    Dim myA As Variant: ReDim myA(myKeys.FirstIndex To myKeys.Lastindex)
     
     Dim myIndex As Long
-    For myIndex = myKeys.FirstIndex To myKeys.LastIndex
+    For myIndex = myKeys.FirstIndex To myKeys.Lastindex
         myA(myIndex) = Array(myKeys.Item(myIndex), Me.Item(myKeys.Item(myIndex)))
     Next
 
@@ -1011,7 +1013,7 @@ Public Function PairsAsSeq() As SeqC
     Dim myS As SeqC: Set myS = SeqC.Deb
     
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
+    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
         myS.Add Array(s.Keys.Item(myIndex), s.Items.Item(myIndex))
     Next
 
@@ -1021,12 +1023,12 @@ End Function
 
 
 Public Property Get FirstIndex() As Long
-    FirstIndex = FIRST_INDEX
+    FirstIndex = p.FirstIndex
 End Property
 
 
-Public Property Get LastIndex() As Long
-    LastIndex = s.Keys.LastIndex
+Public Property Get Lastindex() As Long
+    Lastindex = s.Keys.Lastindex
 End Property
 
 
@@ -1096,7 +1098,8 @@ End Property
 
 Public Property Let First(ByVal ipItem As Variant)
 
-    If s.Keys.Count = 0 Then
+    
+    If Me.LacksItems Then
         Err.Raise 17, "VBALib.KvpC.Let FirstItem", "VBALib.Kvp has no Keys"
     End If
 
@@ -1183,7 +1186,7 @@ Private Function MirrorByAllValues() As KvpC
     End If
 
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
+    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
 
         If myK.LacksKey(s.Keys.Item(myIndex)) Then
             myK.Add s.Items.Item(myIndex), KvpC.Deb
@@ -1207,7 +1210,7 @@ Private Function MirrorByFirstValue() As KvpC
     Set myOther = KvpC.Deb
 
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
+    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
 
         If myFirst.LacksKey(s.Items.Item(myIndex)) Then
             myFirst.Add s.Items.Item(myIndex), s.Keys.Item(myIndex)

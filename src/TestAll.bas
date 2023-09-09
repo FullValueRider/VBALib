@@ -14,7 +14,7 @@ Public VBATesting   As Boolean
 #End If
 
 
-Public Sub Main()
+ Public Sub Main()
   
     VBATesting = True
     Dim myTime As Variant: myTime = Timer
@@ -34,6 +34,7 @@ Public Sub Main()
     TestSeqA.SeqATests
     TestSeqC.SeqCTests
     TestSeqL.SeqLTests
+    TestSeqHC.SeqHCTests
     TestSeqHL.SeqHLTests
 
     TestKvpA.KvpATests
@@ -41,6 +42,8 @@ Public Sub Main()
     TestKvpHA.KvpHATests
     tESTkVPhl.KvpHLTests
     TestKvpL.KvpLTests
+    TestKvpLP.KvpLPTests
+    
     VBATesting = False
     
     Debug.Print

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SetH"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SetH is a multipurpose Collection/ArrayList replacement.  It uses a cHashD object to store the items.  Items are access using 1 based indexing. For a Keyed collection, use one of the Kvp classes"
@@ -106,7 +106,7 @@ Option Explicit
 '    GuardInsufficientCapacity ipInitialSize, "SetH.Deb"
 '
 '    Dim myCount As Long
-'    For myCount = FIRST_INDEX To ipInitialSize
+'    For myCount = p.firstindex To ipInitialSize
 '       s.Tmp.Add Empty
 '    Next
 '
@@ -303,7 +303,7 @@ Option Explicit
 '    If s.Host.Count < FIRST_INDEX Then
 '        FirstIndex = -1
 '    Else
-'        FirstIndex = FIRST_INDEX
+'        FirstIndex = p.firstindex
 '    End If
 '
 'End Function
@@ -327,7 +327,7 @@ Option Explicit
 '    If s.Host.Count < FIRST_INDEX + 1 Then
 '       FBOIndex = -1
 '    Else
-'        FBOIndex = FIRST_INDEX + 1
+'        FBOIndex = p.firstindex + 1
 '    End If
 '
 'End Function
@@ -1055,7 +1055,7 @@ Option Explicit
 '   GuardInvalidIndex 2, s.Host.Count, "SetH.Get_FBO"
 '
 '   Dim FBOIndex As Long
-'   FBOIndex = FIRST_INDEX + 1
+'   FBOIndex = p.firstindex + 1
 '
 '   If VBA.IsObject(s.Host.KeyByIndex(FBOIndex)) Then
 '       Set FBO = s.Host.KeyByIndex(FBOIndex)

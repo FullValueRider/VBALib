@@ -1,4 +1,4 @@
-Attribute VB_Name = "TestSeqH"
+Attribute VB_Name = "TestSeqHC"
 '@IgnoreModule
 '@TestModule
 '@Folder("Tests")
@@ -44,134 +44,134 @@ End Sub
 
 #End If
 
-Public Sub SeqHTests()
- 
+Public Sub SeqHCTests()
+
     #If twinbasic Then
-        Debug.Print CurrentProcedureName;
+        Debug.Print CurrentProcedureName,
     #Else
         GlobalAssert
         VBATesting = True
-        Debug.Print ErrEx.LiveCallstack.ProcedureName;
+        Debug.Print ErrEx.LiveCallstack.ProcedureName,
     #End If
 
     Test01_SeqObj
-    
+
     Test02a_InitByLong_10FirstIndex_LastIndex
     Test02b_InitByString
     Test02c_InitByForEachArray
     Test02d_InitByForEachArrayList
     Test02e_InitByForEachCollection
     Test02f_InitByDictionary
-    
+
     Test03a_WriteItem
-    
+
     Test04a_Add_MultipleItems
-    
+
     Test06a_AddRange_String
     Test06b_AddRange_Array
     Test06c_AddRange_Collection
     Test06d_AddRange_ArrayList
     Test06e_AddRange_Dictionary
-    
+
     Test07a_Insert_SingleItems
     Test07b_Insert_MultipleItems
-    
+
     Test08a_InsertAtRange_String
     Test08b_InsertAtRange_Array
     Test08c_InsertAtRange_Collection
     Test08d_InsertAtRange_ArrayList
     Test08e_InsertAtRange_Dictionary
-    
+
     Test09a0_Remove_SingleItem
-    
+
     Test09a_RemoveAt_SingleItem
     Test09b_RemoveAt_ThreeItems
-    
+
     Test10a_Remove_SingleItems
-    
+
     Test11a_RemoveRange_SingleItem
     Test11b_RemoveRange_ThreeItems
-    
+
     Test12a_RemoveIndexesRange_ThreeItems
-    
+
     Test13a_RemoveAll_DefaultAll
     Test13b_RemoveAll_Default_42AndHello
     Test13c_Reset
     Test13d_Clear
-    
+
     Test14a_Fill
-    
+
     Test15a_Slice
     Test15b_SliceToEnd
     Test15c_SliceRunOnly
     Test15d_Slice_Start3_End9_step2
     Test15e_Slice_Start3_End9_step2_ToCollection
     Test15f_Slice_Start3_End9_step2_ToArray
-    
+
     Test16a_Head
     Test16b_Head_3Items
     Test16c_HeadZeroItems
     Test16d_HeadFullSeq
-    
+
     Test17a_Tail
     Test17b_Tail_3Items
     Test17c_TailFullItems
     Test17d_TailZeroSeq
-    
+
     Test18a_KnownIndexes_Available
     Test18b_KnownIndexes_Unavailable
-    
+
     Test19a_KnownValues_Available
-    
+
     Test20a_IndexOf_WholeSeq_Present
     Test20b_IndexOf_WholeSeq_NotPresent
     Test20c_IndexOf_SubSeq_Present
     Test20d_IndexOf_SubSeq_NotPresent
-    
+
     Test21a_LastIndexOf_WholeSeq_Present
     Test21b_LastIndexOf_WholeSeq_NotPresent
     Test21c_LastIndexOf_SubSeq_Present
     Test21d_LastIndexOf_SubSeq_NotPresent
-    
+
     Test22a_Push
     Test22b_PushRange
-    
+
     Test23a_Pop
     Test23b_PopRange
     Test23c_PopRange_ExceedsHost
     Test23d_PopRange_NegativeRun
-    
+
     Test24a_Enqueue
     Test24b_EnqueueRange
-    
+
     Test25a_Dequeue
     Test25b_DeqeueRange
     Test25c_DequeueRange_ExceedsHost
-    
+
     Test26a_Sort
     Test26b_Sorted
-    
+
     Test27a_Reverse
     Test27b_Reversed
-    
+
     Test28a_Unique
     Test28b_Unique_SingleItem
     Test28c_Unique_NoItems
-    
+
     Test29a_SetOfCommon
     Test29b_SetOfHostOnly
     Test29c_SetOfParamOnly
     Test29d_SetOfNotCommon
     Test29e_SetOfUnique
-    
+
     Test30a_Swap
-    
-    Debug.Print vbTab, vbTab, vbTab, "Testing completed"
+
+    Debug.Print vbTab, vbTab, "Testing completed"
 
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test01_SeqObj()
 
     #If twinbasic Then
@@ -182,15 +182,15 @@ Private Sub Test01_SeqObj()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
-    Set mySeq = SeqH.Deb
+    Dim mySeq As SeqHC
+    Set mySeq = SeqHC.Deb
     Dim myExpected As Variant
-    myExpected = Array(True, "SeqH", "SeqH")
-    
+    myExpected = Array(True, "SeqHC", "SeqHC")
+
     Dim myResult(0 To 2) As Variant
-    
+
     'Act:
     myResult(0) = VBA.IsObject(mySeq)
     myResult(1) = VBA.TypeName(mySeq)
@@ -200,7 +200,7 @@ Private Sub Test01_SeqObj()
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -208,7 +208,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -218,27 +218,27 @@ Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
-    Set mySeq = SeqH(1000)
+    Dim mySeq As SeqHC
+    Set mySeq = SeqHC(1000)
     Dim myExpected As Variant
-    myExpected = -1&
-    ' SeqH is hash based.  the initialisation number sets the size of the hashslots required.
+    myExpected = 1&
+    ' SeqHC is hash based.  the initialisation number sets the size of the hashslots required.
     ' It does not preallocate items containing empty as this would just load a single hashslot
-    
+
     Dim myResult As Variant
-    
+
     'Act:
     myResult = mySeq.ToArray
     'Assert:
-    AssertExactAreEqual -1&, mySeq.FirstIndex, myProcedureName
-    AssertExactAreEqual -1&, mySeq.LastIndex, myProcedureName
+    AssertExactAreEqual 1&, mySeq.FirstIndex, myProcedureName
+    AssertExactAreEqual -1&, mySeq.Lastindex, myProcedureName
     AssertExactAreEqual -1&, mySeq.Count, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -246,7 +246,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test02b_InitByString()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -256,27 +256,27 @@ Private Sub Test02b_InitByString()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
     Dim myExpected As Variant
     myExpected = Array("H", "e", "l", "l", "o")
     ReDim Preserve myExpected(1 To 5)
-    
+
     Dim myResult As Variant
-    
-    Dim mySeq As SeqH
-    
+
+    Dim mySeq As SeqHC
+
     'Act:
-    Set mySeq = SeqH("Hello")
-    
+    Set mySeq = SeqHC("Hello")
+
     myResult = mySeq.ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -284,7 +284,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test02c_InitByForEachArray()
     '    #If twinbasic Then
     '        myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -315,12 +315,12 @@ Private Sub Test02c_InitByForEachArray()
     '
     '    Dim myResult As Variant
     '
-    '    Dim mySeq As SeqH
+    '    Dim mySeq As SeqHC
     '
     '    'Act:
     '    ' because we want to add an array rather than a forwarded
     '    ' param array we must encapsule the array in an array
-    '    Set mySeq = SeqH(myArray)
+    '    Set mySeq = SeqHC(myArray)
     '
     '    myResult = mySeq.ToArray
     '
@@ -337,7 +337,7 @@ Private Sub Test02c_InitByForEachArray()
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test02d_InitByForEachArrayList()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -347,11 +347,11 @@ Private Sub Test02d_InitByForEachArrayList()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
     Dim myAL As Object
     Set myAL = CreateObject("System.Collections.Arraylist")
-    
+
     With myAL
         .Add 1
         .Add 4
@@ -363,27 +363,27 @@ Private Sub Test02d_InitByForEachArrayList()
         .Add 6
         .Add 9
     End With
-    
+
     Dim myExpected As Variant
     myExpected = Array(1, 4, 7, 2, 5, 8, 3, 6, 9)
     ReDim Preserve myExpected(1 To 9)
-    
+
     Dim myResult As Variant
-    
-    Dim mySeq As SeqH
-    
+
+    Dim mySeq As SeqHC
+
     'Act:
-    Set mySeq = SeqH(myAL)
-    
+    Set mySeq = SeqHC(myAL)
+
     myResult = mySeq.ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-    
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -391,7 +391,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test02e_InitByForEachCollection()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -401,11 +401,11 @@ Private Sub Test02e_InitByForEachCollection()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
     Dim myC As Collection
     Set myC = New Collection
-    
+
     With myC
         .Add 1
         .Add 4
@@ -417,27 +417,27 @@ Private Sub Test02e_InitByForEachCollection()
         .Add 6
         .Add 9
     End With
-    
+
     Dim myExpected As Variant
     myExpected = Array(1, 4, 7, 2, 5, 8, 3, 6, 9)
     ReDim Preserve myExpected(1 To 9)
-    
+
     Dim myResult As Variant
-    
-    Dim mySeq As SeqH
-    
+
+    Dim mySeq As SeqHC
+
     'Act:
-    Set mySeq = SeqH(myC)
-    
+    Set mySeq = SeqHC(myC)
+
     myResult = mySeq.ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-    
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -445,7 +445,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test02f_InitByDictionary()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -455,46 +455,46 @@ Private Sub Test02f_InitByDictionary()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
     Dim myD As Scripting.Dictionary
     Set myD = New Scripting.Dictionary
-    
+
     With myD
         .Add "Hello", "World"
         .Add "Ten", 10&
         .Add "Thing", 3.142
-        
+
     End With
-    
+
     Dim myExpected As Variant
     myExpected = Array("Hello", "World", "Ten", 10&, "Thing", 3.142)
     ReDim Preserve myExpected(1 To 6)
-    
+
     Dim myResult As Variant
     ReDim myResult(1 To 6)
-    
-    Dim mySeq As SeqH
-    
+
+    Dim mySeq As SeqHC
+
     'Act:
-    Set mySeq = SeqH(myD)
+    Set mySeq = SeqHC(myD)
     Dim myTmp As Variant
     myTmp = mySeq.ToArray
-    
+
     myResult(1) = myTmp(1)(0)
     myResult(2) = myTmp(1)(1)
     myResult(3) = myTmp(2)(0)
     myResult(4) = myTmp(2)(1)
     myResult(5) = myTmp(3)(0)
     myResult(6) = myTmp(3)(1)
-        
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-    
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -502,7 +502,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test03a_WriteItem()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -512,33 +512,33 @@ Private Sub Test03a_WriteItem()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
-    Set mySeq = SeqH.Deb
+    Dim mySeq As SeqHC
+    Set mySeq = SeqHC.Deb
     mySeq.Add 1
     mySeq.Add 2
     mySeq.Add 3
-    
+
     mySeq.Item(1) = 42
     mySeq.Item(2) = "Hello"
     mySeq.Item(3) = 3.142
     Dim myExpected As Variant
     myExpected = Array(True, True, True)
-    
+
     Dim myResult As Variant
     ReDim myResult(0 To 2)
     'Act:
     myResult(0) = mySeq.Item(1) = 42
     myResult(1) = mySeq.Item(2) = "Hello"
     myResult(2) = mySeq.Item(3) = "3.142"
-   
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -546,7 +546,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test04a_Add_MultipleItems()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -556,31 +556,31 @@ Private Sub Test04a_Add_MultipleItems()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, 42, "Hello", 3.142)
     ReDim Preserve myExpected(1 To 8)
-      
+
     Dim myResult As Variant
-   
+
     'Act:
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     myResult = mySeq.AddItems(42, "Hello", 3.142).ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-   
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -588,7 +588,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test06a_AddRange_String()
 
     #If twinbasic Then
@@ -599,17 +599,17 @@ Private Sub Test06a_AddRange_String()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, "H", "e", "l", "l", "o")
     ReDim Preserve myExpected(1 To 10)
-   
+
     Dim myResult As Variant
-   
+
     'Act:
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
         mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
@@ -617,14 +617,14 @@ Private Sub Test06a_AddRange_String()
     mySeq.Add Empty
 
     myResult = mySeq.AddRange("Hello").ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-   
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -632,7 +632,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test06b_AddRange_Array()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -642,17 +642,17 @@ Private Sub Test06b_AddRange_Array()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, "H", "e", "l", "l", "o")
     ReDim Preserve myExpected(1 To 10)
-   
+
     Dim myResult As Variant
-   
+
     'Act:
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
         mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
@@ -660,14 +660,14 @@ Private Sub Test06b_AddRange_Array()
     mySeq.Add Empty
 
     myResult = mySeq.AddRange(Array("H", "e", "l", "l", "o")).ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-   
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -675,7 +675,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test06c_AddRange_Collection()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -685,15 +685,15 @@ Private Sub Test06c_AddRange_Collection()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, "H", "e", "l", "l", "o")
     ReDim Preserve myExpected(1 To 10)
-      
+
     Dim myResult As Variant
-   
+
     Dim myC As Collection
     Set myC = New Collection
     With myC
@@ -703,9 +703,9 @@ Private Sub Test06c_AddRange_Collection()
         .Add "l"
         .Add "o"
     End With
-    
+
     'Act:
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
         mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
@@ -713,14 +713,14 @@ Private Sub Test06c_AddRange_Collection()
     mySeq.Add Empty
 
     myResult = mySeq.AddRange(myC).ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-   
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -728,7 +728,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test06d_AddRange_ArrayList()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -738,15 +738,15 @@ Private Sub Test06d_AddRange_ArrayList()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, "H", "e", "l", "l", "o")
     ReDim Preserve myExpected(1 To 10)
-   
+
     Dim myResult As Variant
-   
+
     Dim myAL As Object
     Set myAL = CreateObject("System.Collections.Arraylist")
     With myAL
@@ -756,9 +756,9 @@ Private Sub Test06d_AddRange_ArrayList()
         .Add "l"
         .Add "o"
     End With
-    
+
     'Act:
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
         mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
@@ -766,14 +766,14 @@ Private Sub Test06d_AddRange_ArrayList()
     mySeq.Add Empty
 
     myResult = mySeq.AddRange(myAL).ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-   
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -781,7 +781,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test06e_AddRange_Dictionary()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -791,17 +791,17 @@ Private Sub Test06e_AddRange_Dictionary()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, "Hello1", "There2", "World3")
     ReDim Preserve myExpected(1 To 8)
-   
+
     Dim myResult As Variant
-   
-    Dim myD As KvpH
-    Set myD = KvpH.Deb
+
+    Dim myD As KvpA
+    Set myD = KvpA.Deb
     With myD
         .Add "Hello", 1
         .Add "There", 2
@@ -811,29 +811,29 @@ Private Sub Test06e_AddRange_Dictionary()
 '    myD.PrintByHash
 '    Debug.Print
 '    myD.PrintByOrder
-    
+
     'Act:
-    Set mySeq = SeqH.Deb.Fill(Empty, 5)
-    
+    Set mySeq = SeqHC.Deb.Fill(Empty, 5)
+
     mySeq.AddRange myD
-    
+
 '    Debug.Print
 '    myD.PrintByHash
 '    Debug.Print
 '    myD.PrintByOrder
-    
+
     myResult = mySeq.ToArray
     myResult(6) = myResult(6)(0) & VBA.CStr(myResult(6)(1))
     myResult(7) = myResult(7)(0) & VBA.CStr(myResult(7)(1))
     myResult(8) = myResult(8)(0) & VBA.CStr(myResult(8)(1))
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-   
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -841,7 +841,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test07a_Insert_SingleItems()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -851,34 +851,34 @@ Private Sub Test07a_Insert_SingleItems()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10, 20, "Hello", 30, 42&, 40, 3.142, 50)
     ReDim Preserve myExpected(1 To 8)
     Dim myExpected2 As Variant
     myExpected2 = Array(3&, 5&, 7&)
-      
+
     Dim myResult As Variant
     Dim myResult2 As Variant
     ReDim myResult2(0 To 2)
-    
+
     'Act:
-    Set mySeq = SeqH(10, 20, 30, 40, 50)
+    Set mySeq = SeqHC(10, 20, 30, 40, 50)
     myResult2(0) = mySeq.InsertAt(3, "Hello")
     myResult2(1) = mySeq.InsertAt(5, 42&)
     myResult2(2) = mySeq.InsertAt(7, 3.142)
-    
+
     myResult = mySeq.ToArray
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
     AssertExactSequenceEquals myExpected2, myResult2, myProcedureName
-   
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -886,7 +886,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test07b_Insert_MultipleItems()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -896,17 +896,17 @@ Private Sub Test07b_Insert_MultipleItems()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, "Hello", 42&, 3.142, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 8)
-   
+
     Dim myResult As Variant
-   
+
     'Act:
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
@@ -915,15 +915,15 @@ Private Sub Test07b_Insert_MultipleItems()
     mySeq.InsertAtItems 3, "Hello", 42&, 3.142
 
     myResult = mySeq.ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-   
-   
+
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -931,7 +931,7 @@ TestFail:
 End Sub
 
 
-''@TestMethod("SeqH")
+''@TestMethod("SeqHC")
 'Private Sub Test09a_InsertItems()
 '    #If twinbasic Then
 '        myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -943,7 +943,7 @@ End Sub
 '      on error GoTo TestFail
 '
 '    'Arrange:
-'    Dim mySeq As SeqH
+'    Dim mySeq As SeqHC
 '    Dim myExpected As Variant
 '    myExpected = Array(Empty, Empty, "Hello", 42&, 3.142, Empty, Empty, Empty)
 '    ReDim Preserve myExpected(1 To 8)
@@ -956,7 +956,7 @@ End Sub
 '
 '    'Act:
 '
-'    Set mySeq = SeqH
+'    Set mySeq = SeqHC
 '    myResult2 = mySeq.InsertItems(3, "Hello", 42&, 3.142).ToArray
 '
 '
@@ -976,7 +976,7 @@ End Sub
 'End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test08a_InsertAtRange_String()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -986,34 +986,34 @@ Private Sub Test08a_InsertAtRange_String()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
-    
+    Dim mySeq As SeqHC
+
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, "H", "e", "l", "l", "o", Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 10)
-    
+
     Dim myResult As Variant
-  
+
     'Act:
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.InsertAtRange 3, "Hello"
-   
+
     myResult = mySeq.ToArray
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-    
-   
+
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -1021,7 +1021,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test08b_InsertAtRange_Array()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1031,32 +1031,32 @@ Private Sub Test08b_InsertAtRange_Array()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, "Hello", 42&, 3.142, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 8)
-   
+
     Dim myResult As Variant
-    
+
     'Act:
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.InsertAtRange 3, Array("Hello", 42&, 3.142)
-    
+
     myResult = mySeq.ToArray
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-    
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -1064,7 +1064,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test08c_InsertAtRange_Collection()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1074,43 +1074,43 @@ Private Sub Test08c_InsertAtRange_Collection()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, "Hello", 42&, 3.142, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 8)
-    
+
     Dim myResult As Variant
-   
-    
+
+
     Dim myC As Collection
     Set myC = New Collection
     With myC
         .Add "Hello"
         .Add 42&
         .Add 3.142
-    
+
     End With
-    
+
     'Act:
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.InsertAtRange 3, myC
-    
+
     myResult = mySeq.ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-   
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -1118,7 +1118,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test08d_InsertAtRange_ArrayList()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1128,44 +1128,44 @@ Private Sub Test08d_InsertAtRange_ArrayList()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, "Hello", 42&, 3.142, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 8)
-    
+
     Dim myResult As Variant
-    
-    
+
+
     Dim myAL As Object
     Set myAL = CreateObject("System.collections.arraylist")
     With myAL
         .Add "Hello"
         .Add 42&
         .Add 3.142
-    
+
     End With
-    
+
     'Act:
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.Add Empty
     mySeq.InsertAtRange 3, myAL
-   
+
     myResult = mySeq.ToArray
-    
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-   
-   
+
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -1173,7 +1173,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test08e_InsertAtRange_Dictionary()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1183,41 +1183,41 @@ Private Sub Test08e_InsertAtRange_Dictionary()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-    
+
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10, 20, "Hello1", "There2", "World3", 30, 40, 50)
     ReDim Preserve myExpected(1 To 8)
-    
+
     Dim myResult As Variant
-    
+
     Dim myD As KvpA
     Set myD = KvpA.Deb
     With myD
         .Add "Hello", 1
         .Add "There", 2
         .Add "World", 3
-    
+
     End With
-    
+
     'Act:
-    Set mySeq = SeqH(10, 20, 30, 40, 50)
+    Set mySeq = SeqHC(10, 20, 30, 40, 50)
     mySeq.InsertAtRange 3, myD
     myResult = mySeq.ToArray
-   
+
     myResult(3) = myResult(3)(0) & VBA.CStr(myResult(3)(1))
     myResult(4) = myResult(4)(0) & VBA.CStr(myResult(4)(1))
     myResult(5) = myResult(5)(0) & VBA.CStr(myResult(5)(1))
-    
-    
+
+
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-   
+
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
-    
+
     Exit Sub
 TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
@@ -1225,7 +1225,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test09a0_Remove_SingleItem()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1237,13 +1237,13 @@ Private Sub Test09a0_Remove_SingleItem()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 5)
 
     Dim myResult As Variant
-    Set mySeq = SeqH(Empty, Empty, Empty, 42, Empty, Empty)
+    Set mySeq = SeqHC(Empty, Empty, Empty, 42, Empty, Empty)
 
     'Act:
     mySeq.Remove 42
@@ -1264,7 +1264,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test09a_RemoveAt_SingleItem()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1276,13 +1276,13 @@ Private Sub Test09a_RemoveAt_SingleItem()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 5)
 
     Dim myResult As Variant
-    Set mySeq = SeqH(Empty, Empty, Empty, 42, Empty, Empty)
+    Set mySeq = SeqHC(Empty, Empty, Empty, 42, Empty, Empty)
 
     'Act:
     mySeq.RemoveAt 4
@@ -1304,7 +1304,7 @@ End Sub
 
 
 '
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test09b_RemoveAt_ThreeItems()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1316,13 +1316,13 @@ Private Sub Test09b_RemoveAt_ThreeItems()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10, 20, 30, 40, 50)
     ReDim Preserve myExpected(1 To 5)
 
     Dim myResult As Variant
-    Set mySeq = SeqH(10, 42, 20, 30, 42, 40, 50, 42)
+    Set mySeq = SeqHC(10, 42, 20, 30, 42, 40, 50, 42)
 
     'Act:
     mySeq.RemoveIndexes 8, 2, 5
@@ -1343,7 +1343,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test10a_Remove_SingleItems()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1355,16 +1355,16 @@ Private Sub Test10a_Remove_SingleItems()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, 42, "Hello", "Hello", Empty, Empty, 42, Empty, Empty)
     ReDim Preserve myExpected(1 To 11)
 
     Dim myResult As Variant
-    Set mySeq = SeqH(Empty, 42, Empty, Empty, 42, "Hello", "Hello", "Hello", Empty, 3.142, Empty, 42, Empty, Empty)
+    Set mySeq = SeqHC(Empty, 42, Empty, Empty, 42, "Hello", "Hello", "Hello", Empty, 3.142, Empty, 42, Empty, Empty)
 
     'Act:
-    mySeq.RemoveRange SeqH(42, 3.142, "Hello")
+    mySeq.RemoveRange SeqHC(42, 3.142, "Hello")
 
     myResult = mySeq.ToArray
 
@@ -1382,7 +1382,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test11a_RemoveRange_SingleItem()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1394,16 +1394,16 @@ Private Sub Test11a_RemoveRange_SingleItem()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 5)
 
     Dim myResult As Variant
-    Set mySeq = SeqH(Empty, Empty, Empty, 42, Empty, Empty)
+    Set mySeq = SeqHC(Empty, Empty, Empty, 42, Empty, Empty)
 
     'Act:
-    mySeq.RemoveRange SeqH.Deb.AddItems(42)
+    mySeq.RemoveRange SeqHC.Deb.AddItems(42)
 
     myResult = mySeq.ToArray
 
@@ -1420,7 +1420,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test11b_RemoveRange_ThreeItems()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1432,16 +1432,16 @@ Private Sub Test11b_RemoveRange_ThreeItems()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 5)
 
     Dim myResult As Variant
-    Set mySeq = SeqH(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
+    Set mySeq = SeqHC(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
 
     'Act:
-    mySeq.RemoveRange SeqH(42, 42, 42)
+    mySeq.RemoveRange SeqHC(42, 42, 42)
 
     myResult = mySeq.ToArray
 
@@ -1460,7 +1460,7 @@ End Sub
 
 
 '
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test12a_RemoveIndexesRange_ThreeItems()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1472,16 +1472,16 @@ Private Sub Test12a_RemoveIndexesRange_ThreeItems()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 5)
 
     Dim myResult As Variant
-    Set mySeq = SeqH(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
+    Set mySeq = SeqHC(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
 
     'Act:
-    mySeq.RemoveIndexesRange SeqH(4, 5, 6)
+    mySeq.RemoveIndexesRange SeqHC(4, 5, 6)
 
     myResult = mySeq.ToArray
 
@@ -1499,7 +1499,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test13a_RemoveAll_DefaultAll()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1511,12 +1511,12 @@ Private Sub Test13a_RemoveAll_DefaultAll()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
     Dim myResult As Variant
-    Set mySeq = SeqH(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
+    Set mySeq = SeqHC(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
 
     'Act:
     mySeq.RemoveAll
@@ -1536,7 +1536,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test13b_RemoveAll_Default_42AndHello()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1548,13 +1548,13 @@ Private Sub Test13b_RemoveAll_Default_42AndHello()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty)
     ReDim myExpected(1 To 5)
 
     Dim myResult As Variant
-    Set mySeq = SeqH(Empty, "Hello", Empty, "Hello", "Hello", Empty, 42, 42, 42, Empty, Empty)
+    Set mySeq = SeqHC(Empty, "Hello", Empty, "Hello", "Hello", Empty, 42, 42, 42, Empty, Empty)
 
     'Act:
     mySeq.RemoveAll "Hello", 42
@@ -1574,7 +1574,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test13c_Reset()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1586,12 +1586,12 @@ Private Sub Test13c_Reset()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
     Dim myResult As Variant
-    Set mySeq = SeqH(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
+    Set mySeq = SeqHC(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
 
     'Act:
     mySeq.Reset
@@ -1611,7 +1611,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test13d_Clear()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1623,12 +1623,12 @@ Private Sub Test13d_Clear()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
     Dim myResult As Variant
-    Set mySeq = SeqH(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
+    Set mySeq = SeqHC(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
 
     'Act:
     mySeq.Clear
@@ -1648,7 +1648,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test14a_Fill()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1660,14 +1660,14 @@ Private Sub Test14a_Fill()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(True, True, True)
     ReDim Preserve myExpected(1 To 3)
 
     Dim myResult As Variant
     ReDim myResult(1 To 3)
-    Set mySeq = SeqH(Empty, Empty, Empty)
+    Set mySeq = SeqHC(Empty, Empty, Empty)
 
     'Act:
     mySeq.Fill 42, 10
@@ -1689,7 +1689,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test15a_Slice()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1701,14 +1701,14 @@ Private Sub Test15a_Slice()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(3&, 4&, 5&)
     ReDim Preserve myExpected(1 To 3)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Slice(3, 3).ToArray
@@ -1727,7 +1727,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test15b_SliceToEnd()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1739,14 +1739,14 @@ Private Sub Test15b_SliceToEnd()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
     ReDim Preserve myExpected(1 To 8)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Slice(3).ToArray
@@ -1765,7 +1765,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test15c_SliceRunOnly()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1777,14 +1777,14 @@ Private Sub Test15c_SliceRunOnly()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(1&, 2&, 3&, 4&)
     ReDim Preserve myExpected(1 To 4)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Slice(ipRun:=4).ToArray
@@ -1803,7 +1803,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test15d_Slice_Start3_End9_step2()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1815,14 +1815,14 @@ Private Sub Test15d_Slice_Start3_End9_step2()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(3&, 5&, 7&, 9&)
     ReDim Preserve myExpected(1 To 4)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Slice(3, 7, 2).ToArray
@@ -1841,7 +1841,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test15e_Slice_Start3_End9_step2_ToCollection()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1853,7 +1853,7 @@ Private Sub Test15e_Slice_Start3_End9_step2_ToCollection()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(3&, 5&, 7&, 9&)
     ReDim Preserve myExpected(1 To 4)
@@ -1861,7 +1861,7 @@ Private Sub Test15e_Slice_Start3_End9_step2_ToCollection()
     Dim myResult As Variant
     ReDim myResult(1 To 4)
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     Dim myC As Collection
@@ -1885,7 +1885,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test15f_Slice_Start3_End9_step2_ToArray()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1897,14 +1897,14 @@ Private Sub Test15f_Slice_Start3_End9_step2_ToArray()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(3&, 5&, 7&, 9&)
     ReDim Preserve myExpected(1 To 4)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Slice(3, 7, 2).ToArray
@@ -1923,7 +1923,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test16a_Head()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1935,14 +1935,14 @@ Private Sub Test16a_Head()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(1&)
     ReDim Preserve myExpected(1 To 1)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Head.ToArray
@@ -1961,7 +1961,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test16b_Head_3Items()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -1973,14 +1973,14 @@ Private Sub Test16b_Head_3Items()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(1&, 2&, 3&)
     ReDim Preserve myExpected(1 To 3)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Head(3).ToArray
@@ -1999,7 +1999,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test16c_HeadZeroItems()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2011,13 +2011,13 @@ Private Sub Test16c_HeadZeroItems()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Head(-2).Count
@@ -2036,7 +2036,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test16d_HeadFullSeq()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2048,14 +2048,14 @@ Private Sub Test16d_HeadFullSeq()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
     ReDim Preserve myExpected(1 To 10)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Head(42).ToArray
@@ -2074,7 +2074,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test17a_Tail()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2086,14 +2086,14 @@ Private Sub Test17a_Tail()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
     ReDim Preserve myExpected(1 To 9)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Tail.ToArray
@@ -2112,7 +2112,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test17b_Tail_3Items()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2124,14 +2124,14 @@ Private Sub Test17b_Tail_3Items()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(4&, 5&, 6&, 7&, 8&, 9&, 10&)
     ReDim Preserve myExpected(1 To 7)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Tail(3).ToArray
@@ -2150,7 +2150,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test17c_TailFullItems()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2162,13 +2162,13 @@ Private Sub Test17c_TailFullItems()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Tail(42).Count
@@ -2187,7 +2187,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test17d_TailZeroSeq()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2199,14 +2199,14 @@ Private Sub Test17d_TailZeroSeq()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
     ReDim Preserve myExpected(1 To 10)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
+    Set mySeq = SeqHC(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     myResult = mySeq.Tail(-2).ToArray
@@ -2225,7 +2225,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test18a_KnownIndexes_Available()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2237,7 +2237,7 @@ Private Sub Test18a_KnownIndexes_Available()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(1&, 2&, 9&, 10&)
     ReDim Preserve myExpected(1 To 4)
@@ -2245,13 +2245,13 @@ Private Sub Test18a_KnownIndexes_Available()
     Dim myResult As Variant
     ReDim myResult(1 To 4)
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult(1) = mySeq.FirstIndex
     myResult(2) = mySeq.FBOIndex
     myResult(3) = mySeq.LBOIndex
-    myResult(4) = mySeq.LastIndex
+    myResult(4) = mySeq.Lastindex
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -2267,7 +2267,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test18b_KnownIndexes_Unavailable()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2279,21 +2279,21 @@ Private Sub Test18b_KnownIndexes_Unavailable()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
-    myExpected = Array(-1&, -1&, -1&, -1&)
+    myExpected = Array(1&, 2&, -1&, -1&)
     ReDim Preserve myExpected(1 To 4)
 
     Dim myResult As Variant
     ReDim myResult(1 To 4)
 
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
 
     'Act:
     myResult(1) = mySeq.FirstIndex
     myResult(2) = mySeq.FBOIndex
     myResult(3) = mySeq.LBOIndex
-    myResult(4) = mySeq.LastIndex
+    myResult(4) = mySeq.Lastindex
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -2309,7 +2309,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test19a_KnownValues_Available()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2321,7 +2321,7 @@ Private Sub Test19a_KnownValues_Available()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 90&, 100&)
     ReDim Preserve myExpected(1 To 4)
@@ -2329,7 +2329,7 @@ Private Sub Test19a_KnownValues_Available()
     Dim myResult As Variant
     ReDim myResult(1 To 4)
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult(1) = mySeq.First
@@ -2352,7 +2352,7 @@ End Sub
 
 
 '
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test20a_IndexOf_WholeSeq_Present()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2364,13 +2364,13 @@ Private Sub Test20a_IndexOf_WholeSeq_Present()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = 5&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.IndexOf(50&)
@@ -2389,7 +2389,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test20b_IndexOf_WholeSeq_NotPresent()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2401,13 +2401,13 @@ Private Sub Test20b_IndexOf_WholeSeq_NotPresent()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.IndexOf(55&)
@@ -2426,7 +2426,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test20c_IndexOf_SubSeq_Present()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2438,13 +2438,13 @@ Private Sub Test20c_IndexOf_SubSeq_Present()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = 5&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.IndexOf(50&, 4, 4)
@@ -2463,7 +2463,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test20d_IndexOf_SubSeq_NotPresent()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2475,13 +2475,13 @@ Private Sub Test20d_IndexOf_SubSeq_NotPresent()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.IndexOf(20&, 4, 4)
@@ -2500,7 +2500,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test21a_LastIndexOf_WholeSeq_Present()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2512,13 +2512,13 @@ Private Sub Test21a_LastIndexOf_WholeSeq_Present()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = 5&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.LastIndexOf(50&)
@@ -2537,7 +2537,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test21b_LastIndexOf_WholeSeq_NotPresent()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2549,13 +2549,13 @@ Private Sub Test21b_LastIndexOf_WholeSeq_NotPresent()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.LastIndexOf(55&)
@@ -2574,7 +2574,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test21c_LastIndexOf_SubSeq_Present()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2586,13 +2586,13 @@ Private Sub Test21c_LastIndexOf_SubSeq_Present()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = 5&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.LastIndexOf(50&, 4, 4)
@@ -2611,7 +2611,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test21d_LastIndexOf_SubSeq_NotPresent()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2623,13 +2623,13 @@ Private Sub Test21d_LastIndexOf_SubSeq_NotPresent()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.LastIndexOf(20&, 4, 4)
@@ -2648,7 +2648,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test22a_Push()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2660,14 +2660,14 @@ Private Sub Test22a_Push()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 1000&)
     ReDim Preserve myExpected(1 To 11)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.Push(1000&).ToArray
@@ -2686,7 +2686,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test22b_PushRange()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2698,7 +2698,7 @@ Private Sub Test22b_PushRange()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 11&, 12&, 13&, 14&, 15&)
     ReDim Preserve myExpected(1 To 15)
@@ -2707,7 +2707,7 @@ Private Sub Test22b_PushRange()
 
     Dim myArray As Variant
     myArray = Array(11&, 12&, 13&, 14&, 15&)
-    Set mySeq = SeqH(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.PushRange(myArray).ToArray
@@ -2726,7 +2726,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test23a_Pop()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2738,7 +2738,7 @@ Private Sub Test23a_Pop()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = 100&
 
@@ -2749,7 +2749,7 @@ Private Sub Test23a_Pop()
     Dim myResult As Variant
     Dim myResult2 As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.Pop
@@ -2770,7 +2770,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test23b_PopRange()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2782,7 +2782,7 @@ Private Sub Test23b_PopRange()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(100&, 90&, 80&, 70&)
     ReDim Preserve myExpected(1 To 4)
@@ -2794,7 +2794,7 @@ Private Sub Test23b_PopRange()
     Dim myResult As Variant
     Dim myResult2 As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.PopRange(4).ToArray
@@ -2815,7 +2815,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test23c_PopRange_ExceedsHost()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2827,7 +2827,7 @@ Private Sub Test23c_PopRange_ExceedsHost()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(100&, 90&, 80&, 70&, 60&, 50&, 40&, 30&, 20&, 10&)
     ReDim Preserve myExpected(1 To 10)
@@ -2837,7 +2837,7 @@ Private Sub Test23c_PopRange_ExceedsHost()
     Dim myResult As Variant
     Dim myResult2 As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.PopRange(25).ToArray
@@ -2858,7 +2858,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test23d_PopRange_NegativeRun()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2870,7 +2870,7 @@ Private Sub Test23d_PopRange_NegativeRun()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
@@ -2881,7 +2881,7 @@ Private Sub Test23d_PopRange_NegativeRun()
     Dim myResult As Variant
     Dim myResult2 As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.PopRange(-2).Count
@@ -2902,7 +2902,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test24a_Enqueue()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2914,14 +2914,14 @@ Private Sub Test24a_Enqueue()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 1000&)
     ReDim Preserve myExpected(1 To 11)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.enQueue(1000&).ToArray
@@ -2940,7 +2940,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test24b_EnqueueRange()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2952,7 +2952,7 @@ Private Sub Test24b_EnqueueRange()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 11&, 12&, 13&, 14&, 15&)
     ReDim Preserve myExpected(1 To 15)
@@ -2961,7 +2961,7 @@ Private Sub Test24b_EnqueueRange()
 
     Dim myArray As Variant
     myArray = Array(11&, 12&, 13&, 14&, 15&)
-    Set mySeq = SeqH(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.EnqueueRange(myArray).ToArray
@@ -2980,7 +2980,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test25a_Dequeue()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -2992,7 +2992,7 @@ Private Sub Test25a_Dequeue()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = 10&
 
@@ -3003,7 +3003,7 @@ Private Sub Test25a_Dequeue()
     Dim myResult As Variant
     Dim myResult2 As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.Dequeue
@@ -3024,7 +3024,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test25b_DeqeueRange()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -3036,7 +3036,7 @@ Private Sub Test25b_DeqeueRange()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 40&)
     ReDim Preserve myExpected(1 To 4)
@@ -3048,7 +3048,7 @@ Private Sub Test25b_DeqeueRange()
     Dim myResult As Variant
     Dim myResult2 As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.DequeueRange(4).ToArray
@@ -3069,7 +3069,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test25c_DequeueRange_ExceedsHost()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -3081,7 +3081,7 @@ Private Sub Test25c_DequeueRange_ExceedsHost()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 10)
@@ -3093,7 +3093,7 @@ Private Sub Test25c_DequeueRange_ExceedsHost()
     Dim myResult As Variant
     Dim myResult2 As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.DequeueRange(25).ToArray
@@ -3114,7 +3114,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test26a_Sort()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -3126,14 +3126,14 @@ Private Sub Test26a_Sort()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 10)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
+    Set mySeq = SeqHC(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
 
     'Act:
     myResult = mySeq.Sort.ToArray
@@ -3152,7 +3152,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test26b_Sorted()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -3164,17 +3164,17 @@ Private Sub Test26b_Sorted()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 10)
 
-   
+
 
     Dim myResult As Variant
     Dim myResult2 As Variant
 
-    Set mySeq = SeqH(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
+    Set mySeq = SeqHC(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
 
     'Act:
     myResult = mySeq.Sorted.ToArray
@@ -3182,7 +3182,7 @@ Private Sub Test26b_Sorted()
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-    
+
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3195,7 +3195,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test27a_Reverse()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -3211,8 +3211,8 @@ Private Sub Test27a_Reverse()
     myExpected = Array(100&, 90&, 80&, 70&, 60&, 50&, 40&, 30&, 20&, 10&)
     ReDim Preserve myExpected(1 To 10)
 
-    Dim mySeq As SeqH
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Dim mySeq As SeqHC
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     Dim myResult As Variant
     'Act:
@@ -3232,7 +3232,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test27b_Reversed()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -3244,7 +3244,7 @@ Private Sub Test27b_Reversed()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(100&, 90&, 80&, 70&, 60&, 50&, 40&, 30&, 20&, 10&)
     ReDim Preserve myExpected(1 To 10)
@@ -3256,7 +3256,7 @@ Private Sub Test27b_Reversed()
     Dim myResult As Variant
     Dim myResult2 As Variant
 
-    Set mySeq = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
     myResult = mySeq.Reverse.ToArray
@@ -3277,7 +3277,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test28a_Unique()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -3289,14 +3289,14 @@ Private Sub Test28a_Unique()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 10)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(10&, 100&, 20&, 30&, 40&, 50&, 30&, 30&, 60&, 100&, 70&, 100&, 80&, 90&, 100&)
+    Set mySeq = SeqHC(10&, 100&, 20&, 30&, 40&, 50&, 30&, 30&, 60&, 100&, 70&, 100&, 80&, 90&, 100&)
 
     'Act:
     ' The array needs to be sorted because unique copies the first item encountered
@@ -3316,7 +3316,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test28b_Unique_SingleItem()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -3328,14 +3328,14 @@ Private Sub Test28b_Unique_SingleItem()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&)
     ReDim Preserve myExpected(1 To 1)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH.Deb.AddItems(10&)
+    Set mySeq = SeqHC.Deb.AddItems(10&)
 
     'Act:
     ' The array needs to be sorted because unique copies the first item encountered
@@ -3355,7 +3355,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test28c_Unique_NoItems()
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -3367,13 +3367,13 @@ Private Sub Test28c_Unique_NoItems()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = -1&
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH.Deb
+    Set mySeq = SeqHC.Deb
 
     'Act:
     ' The array needs to be sorted because unique copies the first item encountered
@@ -3393,7 +3393,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test29a_SetOfCommon()
 
     #If twinbasic Then
@@ -3406,14 +3406,14 @@ Private Sub Test29a_SetOfCommon()
     On Error GoTo TestFail
 
     'Arrange:
-   
+
     Dim myExpected As Variant
     myExpected = Array(50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 6)
 
     Dim myResult As Variant
-    Dim myLS As SeqH: Set myLS = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
-    Dim myRS As SeqH: Set myRS = SeqH(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+    Dim myLS As SeqHC: Set myLS = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Dim myRS As SeqHC: Set myRS = SeqHC(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:
     Set myResult = myLS.SetOf(m_Common, myRS)
@@ -3433,7 +3433,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test29b_SetOfHostOnly()
 
     #If twinbasic Then
@@ -3446,15 +3446,15 @@ Private Sub Test29b_SetOfHostOnly()
     On Error GoTo TestFail
 
     'Arrange:
-    
+
     Dim myExpected As Variant
     myExpected = Array(110&, 120&, 130&, 140&)
     ReDim Preserve myExpected(1 To 4)
 
     Dim myResult As Variant
 
-    Dim myLS As SeqH:     Set myLS = SeqH(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
-    Dim myRS As SeqH: Set myRS = SeqH(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
+    Dim myLS As SeqHC:     Set myLS = SeqHC(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+    Dim myRS As SeqHC: Set myRS = SeqHC(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     'Act:
     myResult = myLS.SetOf(m_HostOnly, myRS).ToArray
 
@@ -3472,7 +3472,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test29c_SetOfParamOnly()
 
     #If twinbasic Then
@@ -3485,17 +3485,17 @@ Private Sub Test29c_SetOfParamOnly()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 40&)
     ReDim Preserve myExpected(1 To 4)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+    Set mySeq = SeqHC(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:
-    Set myResult = mySeq.SetOf(m_ParamOnly, SeqH(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)))
+    Set myResult = mySeq.SetOf(m_ParamOnly, SeqHC(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)))
     myResult = myResult.ToArray
 
     'Assert:
@@ -3512,7 +3512,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test29d_SetOfNotCommon()
 
     #If twinbasic Then
@@ -3525,17 +3525,17 @@ Private Sub Test29d_SetOfNotCommon()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 40&, 110&, 120&, 130&, 140&)
     ReDim Preserve myExpected(1 To 8)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+    Set mySeq = SeqHC(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
-    'Act:  Again we need to sort The result SeqH to get the matching array
-    myResult = mySeq.SetOf(m_NotCommon, SeqH(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
+    'Act:  Again we need to sort The result SeqHC to get the matching array
+    myResult = mySeq.SetOf(m_NotCommon, SeqHC(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -3551,7 +3551,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test29e_SetOfUnique()
 
     #If twinbasic Then
@@ -3564,17 +3564,17 @@ Private Sub Test29e_SetOfUnique()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
     ReDim Preserve myExpected(1 To 14)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+    Set mySeq = SeqHC(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
-    'Act:  Again we need to sort The result SeqH to get the matching array
-    myResult = mySeq.SetOf(e_SetoF.m_Unique, SeqH(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
+    'Act:  Again we need to sort The result SeqHC to get the matching array
+    myResult = mySeq.SetOf(e_SetoF.m_Unique, SeqHC(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -3590,7 +3590,7 @@ TestFail:
 End Sub
 
 
-'@TestMethod("SeqH")
+'@TestMethod("SeqHC")
 Private Sub Test30a_Swap()
 
     #If twinbasic Then
@@ -3603,14 +3603,14 @@ Private Sub Test30a_Swap()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqH
+    Dim mySeq As SeqHC
     Dim myExpected As Variant
     myExpected = Array(140&, 130&, 120&, 110&, 100&, 90&, 80&, 70&, 60&, 50&)
     ReDim Preserve myExpected(1 To 10)
 
     Dim myResult As Variant
 
-    Set mySeq = SeqH(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
+    Set mySeq = SeqHC(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:
     mySeq.Swap 1, 10
@@ -3633,5 +3633,4 @@ TestFail:
     AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
-
 

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpHL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Dictionary using an array of hashed keys and a linked list to preserve order of addition."
@@ -88,6 +88,7 @@ Private s                                   As State
 Private Type Properties
     EnsureUniqueKeys                        As Boolean
     Size                                    As Long ' The dimmed size of s.HashSlots
+    FirstIndex                              As Long
 End Type
 
 
@@ -108,11 +109,7 @@ End Function
 
 Friend Function ConstructInstance(Optional ByVal ipHashSlots As Variant, Optional ByVal ipUniqueKeys As Boolean = ALLOW_DUPLICATE_KEYS) As KvpHL
 
-'    s.sAW.cDims = 1
-'    s.sAW.cbElements = 2
-'    s.sAW.cLocks = 1
-'    s.sAW.fFeatures = &H11                       'FADF_AUTO=&H1 || FADF_FIXEDSIZE=&H10
-'    BindArray s.W, VarPtr(s.sAW)
+    p.FirstIndex = FIRST_INDEX
     Set s.Hasher = Hasher(ipHashSlots)
     ReDim s.HashSlots(0 To s.Hasher.MaxHash)
     p.EnsureUniqueKeys = ipUniqueKeys
@@ -218,7 +215,7 @@ Public Function Add(ByRef ipKey As Variant, ByRef ipItem As Variant) As KvpHL
     Set Add = Me
     
     Guard.KeyIsAdmin ipKey, MY_TYPENAME, "Add"
-    Guard.EnsureUniqueKeys Me, ipKey, MY_TYPENAME, "Add"
+    Guard.EnsureUniqueKeys ipKey, Me, "Add"
 
     Dim myHash As Long: myHash = s.Hasher.OSHash(ipKey)
     Dim myNewNode As KvpHNode: Set myNewNode = KvpHNode(myHash, ipKey, ipItem)
@@ -264,7 +261,7 @@ Public Function AddPairs(ByRef ipKeys As Variant, ByRef ipItems As Variant) As K
         Dim myKey As Variant: myKey = Array(myKeys.CurItem(0))
         
         Guard.KeyIsAdmin myKey(0), MY_TYPENAME, "AddPairs"
-        Guard.EnsureUniqueKeys Me, myKey(0), "myTypeName", "AddPairs"
+        Guard.EnsureUniqueKeys myKey(0), Me, "AddPairs"
         
         Me.Add myKey(0), myItems.CurItem(0)
           
@@ -583,16 +580,16 @@ Attribute Remove.VB_Description = "Removes the first found key/item pair for eac
         Exit Function
     End If
     
-    Dim myParamArray As Variant: myParamArray = ipParamarray
+    Dim myParamarray As Variant: myParamarray = ipParamarray
     
-    If ArrayOp.LacksItems(myParamArray) Then
+    If ArrayOp.LacksItems(myParamarray) Then
         Exit Function
     End If
     
     '@Ignore AssignmentNotUsed
-    myParamArray = ArrayOp.Splat(myParamArray)
+    myParamarray = ArrayOp.Splat(myParamarray)
     
-    Set Remove = RemoveRange(myParamArray)
+    Set Remove = RemoveRange(myParamarray)
     
 End Function
 
@@ -709,18 +706,18 @@ Public Function RemoveAll(ParamArray ipParamarray() As Variant) As KvpHL
         Exit Function
     End If
     
-    Dim myParamArray As Variant: myParamArray = ipParamarray 'eliminates the need for vba.cvar()
+    Dim myParamarray As Variant: myParamarray = ipParamarray 'eliminates the need for vba.cvar()
     
-    If ArrayOp.LacksItems(myParamArray) Then
+    If ArrayOp.LacksItems(myParamarray) Then
         RemoveAllItems
         Exit Function
     End If
     
     '@Ignore AssignmentNotUsed
-    myParamArray = ArrayOp.Splat(myParamArray)
+    myParamarray = ArrayOp.Splat(myParamarray)
   
     Dim myKey As Variant
-    For Each myKey In myParamArray
+    For Each myKey In myParamarray
         RemoveAllSingleItem myKey
     Next
     
@@ -775,17 +772,17 @@ Public Function RemoveByIndex(ParamArray ipParamarray() As Variant) As KvpHL
         Exit Function
     End If
     
-    Dim myParamArray As Variant: myParamArray = ipParamarray
+    Dim myParamarray As Variant: myParamarray = ipParamarray
     
-    If ArrayOp.LacksItems(myParamArray) Then
+    If ArrayOp.LacksItems(myParamarray) Then
         Exit Function
     End If
     
     '@Ignore AssignmentNotUsed
-    myParamArray = ArrayOp.Splat(myParamArray)
+    myParamarray = ArrayOp.Splat(myParamarray)
     
     
-    Set RemoveByIndex = RemoveRangeByIndex(myParamArray)
+    Set RemoveByIndex = RemoveRangeByIndex(myParamarray)
     
 End Function
 
@@ -1244,9 +1241,9 @@ Public Function ItemsAsColl() As Collection
     
 End Function
 
-Public Function ItemsAsSeq() As SeqH
+Public Function ItemsAsSeq() As SeqHL
     
-    Dim myS As SeqH: Set myS = SeqH.Deb(s.Hasher.Size)
+    Dim myS As SeqHL: Set myS = SeqHL.Deb(s.Hasher.Size)
 
     If Me.LacksItems Then
         Set ItemsAsSeq = myS
@@ -1274,7 +1271,7 @@ Public Function Keys() As Variant
         Exit Function
     End If
 
-    Dim myA As Variant: ReDim myA(Me.FirstIndex To Me.LastIndex)
+    Dim myA As Variant: ReDim myA(Me.FirstIndex To Me.Lastindex)
 
     Dim myNode As KvpHNode: Set myNode = s.OrderRoot
     Do
@@ -1316,10 +1313,10 @@ Public Function KeysAsColl() As Collection
 End Function
 
 '@Description("Returns a seq of keys.")
-Public Function KeysAsSeq() As SeqH
+Public Function KeysAsSeq() As SeqHL
 Attribute KeysAsSeq.VB_Description = "Returns a seq of keys."
 
-    Dim myS As SeqH: Set myS = SeqH.Deb(p.Size)
+    Dim myS As SeqHL: Set myS = SeqHL.Deb(p.Size)
     
     If Me.LacksItems Then
         Set KeysAsSeq = myS
@@ -1347,7 +1344,7 @@ Public Function Pairs() As Variant
         Exit Function
     End If
     
-    Dim myA As Variant: ReDim myA(Me.FirstIndex To Me.LastIndex)
+    Dim myA As Variant: ReDim myA(Me.FirstIndex To Me.Lastindex)
     
     Dim myNode As KvpHNode: Set myNode = s.OrderRoot
     Do
@@ -1384,9 +1381,9 @@ Public Function PairsAsColl() As Collection
     
 End Function
 
-Public Function PairsAsSeq() As SeqH
+Public Function PairsAsSeq() As SeqHL
 
-    Dim myS As SeqH: Set myS = KeysAsSeq.Deb(s.Hasher.Size)
+    Dim myS As SeqHL: Set myS = KeysAsSeq.Deb(s.Hasher.Size)
 
     If myS.LacksItems Then
         Set PairsAsSeq = myS
@@ -1413,18 +1410,18 @@ Public Property Get FirstIndex() As Long
     If Me.LacksItems Then
         FirstIndex = -1
     Else
-        FirstIndex = FIRST_INDEX
+        FirstIndex = p.FirstIndex
     End If
     
 End Property
 
 
-Public Property Get LastIndex() As Long
+Public Property Get Lastindex() As Long
 
     If Me.LacksItems Then
-        LastIndex = -1
+        Lastindex = -1
     Else
-        LastIndex = s.OrderLast.Order
+        Lastindex = s.OrderLast.Order
     End If
 End Property
 
@@ -1437,13 +1434,13 @@ Attribute FBOIndex.VB_Description = "Returns the index of the second item in the
     ElseIf s.OrderRoot.OrderSucc Is Nothing Then
         FBOIndex = -1
     Else
-        FBOIndex = FIRST_INDEX + 1
+        FBOIndex = p.FirstIndex + 1
     End If
     
 End Function
 
 
-'Description("Returns the index of the second to last item in the SeqH, or -1 if the SeqH has lees than 2 items")
+'Description("Returns the index of the second to last item in the SeqHL, or -1 if the SeqHL has lees than 2 items")
 Public Function LBOIndex() As Long
 
     If s.OrderRoot Is Nothing Then
@@ -1722,7 +1719,7 @@ Private Function MirrorByAllValues() As KvpHL
     Dim myNode As KvpHNode: Set myNode = s.OrderRoot
     Do
         If myK.LacksKey(myNode.Item) Then
-            myK.Add myNode.Item, KvpL.Deb
+            myK.Add myNode.Item, KvpLP.Deb
         End If
 
         myK.Item(myNode.Item).Add myNode.Item, myNode.Order
@@ -2016,7 +2013,7 @@ Private Sub RemoveNode(ByRef ipNode As KvpHNode)
     ' wemust also remember to update roo/last nodes as appropriate
     
     ' check for the case of a single node
-    If s.OrderLast.Order = FIRST_INDEX Then
+    If s.OrderLast.Order = p.FirstIndex Then
         Set s.HashSlots(ipNode.Hash) = Nothing
         Set ipNode = Nothing
         Set s.HashRoot = Nothing

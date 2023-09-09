@@ -665,7 +665,7 @@ Private Sub Test06a_Strs_CountOf_char()
     Dim myResult As Long
    
     'Act:
-    myResult = Strs.CountOf("Hello World", "l")
+    myResult = Strs.Countof("Hello World", "l")
     'Assert:
     AssertExactAreEqual myExpected, myResult, myProcedureName
     
@@ -700,7 +700,7 @@ Private Sub Test06b_Strs_CountOf_subStr()
     Dim myResult As Long
    
     'Act:
-    myResult = Strs.CountOf("Hello Worldel", "el")
+    myResult = Strs.Countof("Hello Worldel", "el")
     'Assert:
     AssertExactAreEqual myExpected, myResult, myProcedureName
     

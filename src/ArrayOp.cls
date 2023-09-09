@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "ArrayOp"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -240,9 +240,9 @@ Public Function FirstIndex(ByRef ipArray As Variant, Optional ByVal ipRank As Lo
 End Function
 
 
-Public Function LastIndex(ByRef ipArray As Variant, Optional ByVal ipRank As Long = 1) As Variant
+Public Function Lastindex(ByRef ipArray As Variant, Optional ByVal ipRank As Long = 1) As Variant
     
-    LastIndex = Null
+    Lastindex = Null
     
     If LacksItems(ipArray) Then
         Exit Function
@@ -252,7 +252,7 @@ Public Function LastIndex(ByRef ipArray As Variant, Optional ByVal ipRank As Lon
     myRanks = Ranks(ipArray)
     
     If ipRank >= 1 And ipRank <= myRanks Then
-        LastIndex = UBound(ipArray, ipRank)
+        Lastindex = UBound(ipArray, ipRank)
     End If
    
 End Function

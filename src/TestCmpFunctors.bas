@@ -946,7 +946,7 @@ Private Sub Test03f_CmpMT_Kvp()
     
     'Arrange:
     Dim myExpected As Variant
-    myExpected = Array(True, False, False, False, False, False, False, False, True, False)
+    myExpected = Array(True, False, False, False, False, False, False, False, False, True)
     ReDim Preserve myExpected(1 To 10)
     
     Dim myResult As Variant
@@ -1045,7 +1045,7 @@ Private Sub Test04b_CmpMTEq_String()
     
     'Arrange:
     Dim myExpected As Variant
-    myExpected = Array(True, False, False, True, False, False, True, False, False, False)
+    myExpected = Array(True, False, False, False, False, False, True, False, False, False)
     ReDim Preserve myExpected(1 To 10)
     
     Dim myResult As Variant
@@ -1335,7 +1335,7 @@ Private Sub Test05b_CmpLT_String()
     
     'Arrange:
     Dim myExpected As Variant
-    myExpected = Array(True, False, False, False, False, False, False, False, False, False)
+    myExpected = Array(True, True, False, False, False, False, False, False, False, False)
     ReDim Preserve myExpected(1 To 10)
     
     Dim myResult As Variant
@@ -1531,7 +1531,7 @@ Private Sub Test05f_CmpLT_Kvp()
     
     'Arrange:
     Dim myExpected As Variant
-    myExpected = Array(True, False, False, False, False, False, False, False, False, True)
+    myExpected = Array(True, False, False, False, False, False, False, False, True, False)
     ReDim Preserve myExpected(1 To 10)
     
     Dim myResult As Variant

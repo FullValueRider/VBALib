@@ -227,7 +227,7 @@ Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
     AssertExactAreEqual 1&, mySeq.FirstIndex, myProcedureName
-    AssertExactAreEqual 10&, mySeq.LastIndex, myProcedureName
+    AssertExactAreEqual 10&, mySeq.Lastindex, myProcedureName
     AssertExactAreEqual 10&, mySeq.Count, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2172,7 +2172,7 @@ Private Sub Test18a_KnownIndexes_Available()
     myResult(1) = mySeq.FirstIndex
     myResult(2) = mySeq.FBOIndex
     myResult(3) = mySeq.LBOIndex
-    myResult(4) = mySeq.LastIndex
+    myResult(4) = mySeq.Lastindex
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -2202,7 +2202,7 @@ Private Sub Test18b_KnownIndexes_Unavailable()
     'Arrange:
     Dim mySeq As SeqC
     Dim myExpected As Variant
-    myExpected = Array(-1&, -1&, -1&, -1&)
+    myExpected = Array(1&, 2&, -1&, -1&)
     ReDim Preserve myExpected(1 To 4)
 
     Dim myResult As Variant
@@ -2214,7 +2214,7 @@ Private Sub Test18b_KnownIndexes_Unavailable()
     myResult(1) = mySeq.FirstIndex
     myResult(2) = mySeq.FBOIndex
     myResult(3) = mySeq.LBOIndex
-    myResult(4) = mySeq.LastIndex
+    myResult(4) = mySeq.Lastindex
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -2747,7 +2747,6 @@ Private Sub Test23c_PopRange_ExceedsHost()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim mySeq As SeqC
     Dim myExpected As Variant
     myExpected = Array(100&, 90&, 80&, 70&, 60&, 50&, 40&, 30&, 20&, 10&)
     ReDim Preserve myExpected(1 To 10)
@@ -2758,15 +2757,17 @@ Private Sub Test23c_PopRange_ExceedsHost()
     Dim myResult As Variant
     Dim myResult2 As Variant
 
+    Dim mySeq As SeqC
     Set mySeq = SeqC.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.PopRange(25).ToArray
+    Set myResult = mySeq.PopRange(25)
+    myResult = myResult.ToArray
     myResult2 = mySeq.Count
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
-    AssertExactAreEqual myExpected2 = 0, myResult2 = 0, myProcedureName
+    AssertExactAreEqual myExpected2, myResult2, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

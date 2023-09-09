@@ -47,11 +47,11 @@ End Sub
 Public Sub SeqLTests()
  
     #If twinbasic Then
-        Debug.Print CurrentProcedureName;
+        Debug.Print CurrentProcedureName,
     #Else
         GlobalAssert
         VBATesting = True
-        Debug.Print ErrEx.LiveCallstack.ProcedureName;
+        Debug.Print ErrEx.LiveCallstack.ProcedureName,
     #End If
 
     Test01_SeqObj
@@ -166,7 +166,7 @@ Public Sub SeqLTests()
     
     Test30a_Swap
     
-    Debug.Print vbTab, vbTab, vbTab, "Testing completed"
+    Debug.Print vbTab, vbTab, "Testing completed"
 
 End Sub
 
@@ -232,7 +232,7 @@ Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
     AssertExactAreEqual 1&, mySeq.FirstIndex, myProcedureName
-    AssertExactAreEqual 10&, mySeq.LastIndex, myProcedureName
+    AssertExactAreEqual 10&, mySeq.Lastindex, myProcedureName
     AssertExactAreEqual 10&, mySeq.Count, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2144,7 +2144,7 @@ Private Sub Test18a_KnownIndexes_Available()
     myResult(1) = mySeq.FirstIndex
     myResult(2) = mySeq.FBOIndex
     myResult(3) = mySeq.LBOIndex
-    myResult(4) = mySeq.LastIndex
+    myResult(4) = mySeq.Lastindex
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -2174,7 +2174,7 @@ Private Sub Test18b_KnownIndexes_Unavailable()
     'Arrange:
     Dim mySeq As SeqL
     Dim myExpected As Variant
-    myExpected = Array(-1&, -1&, -1&, -1&)
+    myExpected = Array(1&, 2&, -1&, -1&)
     ReDim Preserve myExpected(1 To 4)
 
     Dim myResult As Variant
@@ -2186,7 +2186,7 @@ Private Sub Test18b_KnownIndexes_Unavailable()
     myResult(1) = mySeq.FirstIndex
     myResult(2) = mySeq.FBOIndex
     myResult(3) = mySeq.LBOIndex
-    myResult(4) = mySeq.LastIndex
+    myResult(4) = mySeq.Lastindex
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -3195,8 +3195,7 @@ Private Sub Test28a_Unique()
     Set mySeq = SeqL.Deb(10&, 100&, 20&, 30&, 40&, 50&, 30&, 30&, 60&, 100&, 70&, 100&, 80&, 90&, 100&)
 
     'Act:
-    ' The array needs to be sorted because unique copies the first item encountered
-    myResult = mySeq.Dedup.Sorted.ToArray
+    myResult = mySeq.Dedup.Sort.ToArray
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName

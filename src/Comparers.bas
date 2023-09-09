@@ -1,55 +1,91 @@
 Attribute VB_Name = "Comparers"
 '@Folder("Helpers")
 Option Explicit
+' **Length vs content
+' Comparison of strings in VBA shows that the default behaviour
+' Is based on content then length
 
-' Comparisons of ipLHS and ipRHS are based on the following priorities
-' 1. ipLHS and ipRHS must be in the same group
-' 2. Containers objects must have the same number of items to proceed to a comparison of content
-' 3. Dictionaries are compared in order of Key/Value pairs.
-' 4. Lists and Arrays are compared based on order of items
-' 5. Admin types are compared based on their string representation
-' 6. Strings must be the same length to proceed to a comparison of content
-' 7. Comparison of string content is according to the current Option Compare setting
-' 7. Boolean and Admin items can only ever be EQ or NEQ
+' To avoid discombobulation the Comparers below should follow the same rule.
 
-Public Function EQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+' We also need to be aware that in some cases comparing against types
+' classes as admin is a legitimate comparison, e.g. Nothing is an acceptable
+' comparison for  any object.
+
+' There are also two additional considerations
+' Do comparisons need to be type specific within a type group
+' i.e. Integer2 is not the same as long 2
+' for container classes does the comparison need to respect the order of items
+' i.e. [2,3] is not the same as [3,2].
+
+' Finally, when using fmt.Text to obtain string representations of objects for comparision purposed
+' we need to make sure that markup is not used
+
+' A word about admin types
+' empty coerces to 0 for numbers and vb
+
+' We also need to be aware
+Public Function EQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRef ipTypes As Boolean = False, Optional ByRef ipOrder As Boolean = True, Optional ByRef ipMismatchIsFalse As Boolean = True) As Boolean
     
-    If GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
+    ' If type comparison is required the test can exit early if the Types Do not match
+    If ipTypes Then
+        If VBA.TypeName(ipLHS) <> VBA.TypeName(ipRHS) Then
+            EQ = False
+            Exit Function
+        End If
+    End If
+    
+    ' A value cannot be equal to nothing
+    If GroupInfo.IsAdmin(ipLHS) Xor GroupInfo.IsAdmin(ipRHS) Then
+        EQ = False
+        
+    ' all admin values are considered equal
+    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
+        EQ = VBA.TypeName(ipLHS) = VBA.TypeName(ipRHS)
+        
+    ElseIf GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
         EQ = ipLHS = ipRHS
         
     ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
-        If VBA.Len(ipLHS) <> VBA.Len(ipRHS) Then
-            EQ = False
-        Else
             EQ = ipLHS = ipRHS
-        End If
         
     ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
         EQ = ipLHS = ipRHS
-    
-    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
-        EQ = Fmt.NoMarkup.Text("{0}", ipLHS) = Fmt.NoMarkup.Text("{0}", ipRHS)
+        
+    ElseIf GroupInfo.IsContainer(ipLHS) Or GroupInfo.IsContainer(ipRHS) Then
+        EQ = ContainersEQ(ipLHS, ipRHS, ipTypes, ipOrder, ipMismatchIsFalse)
    
     ElseIf GroupInfo.IsItemObject(ipLHS) And GroupInfo.IsItemObject(ipRHS) Then
         EQ = Fmt.NoMarkup.Text("{0}", ipLHS) = Fmt.NoMarkup.Text("{0}", ipRHS)
        
-    ElseIf GroupInfo.IsContainer(ipLHS) And GroupInfo.IsContainer(ipRHS) Then
-        EQ = ContainersEQ(ipLHS, ipRHS)
-    
+    ' User is trying to compare two different types
+    ' the Comparers do not support type cooercion
+    ' its good for the users soul.
     Else
-        EQ = False
+        If ipMismatchIsFalse Then
+            EQ = False
+        Else
+            TypeMismatch ipLHS, ipRHS
+        End If
         
     End If
     
 End Function
     
-Private Function ContainersEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+Private Function ContainersEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, ByRef ipTypes As Boolean, ByRef ipOrder As Boolean, ByRef ipMismatchIsFalse As Boolean) As Boolean
     
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
 
+    ' VBA returns true for 'Nothing is Nothing'
+    If IsNothing(ipLHS) And IsNothing(ipRHS) Then
+        ContainersEQ = False
         
-    If GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
+    ' If one object is nothing they cannot be equal
+    ElseIf IsNothing(ipLHS) Or IsNothing(ipRHS) Then
+        ContainersEQ = False
+        
+        
+    ElseIf GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
     
        If myLItems.Size <> myRItems.Size Then
             ContainersEQ = False
@@ -93,142 +129,65 @@ Private Function ContainersEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As
         
     Else
     
-        ContainersEQ = False
+        If ipMismatchIsFalse Then
+            ContainersEQ = False
+        Else
+            TypeMismatch ipLHS, ipRHS
+        End If
         
     End If
     
 End Function
 
-Public Function NEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
-    NEQ = Not EQ(ipLHS, ipRHS)
+Public Function NEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRef ipTypes As Boolean = False, Optional ByRef ipOrder As Boolean = True, Optional ByRef ipMismatchIsFalse As Boolean = True) As Boolean
+    NEQ = Not EQ(ipLHS, ipRHS, ipTypes, ipOrder, ipMismatchIsFalse)
 End Function
 
-'Public Function NEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
-'
-'    If GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
-'        NEQ = ipLHS <> ipRHS
-'
-'    ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
-'        If VBA.Len(ipLHS) <> VBA.Len(ipRHS) Then
-'            NEQ = True
-'        Else
-'            NEQ = ipLHS <> ipRHS
-'        End If
-'
-'    ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
-'        NEQ = ipLHS <> ipRHS
-'
-'    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
-'        NEQ = Fmt.NoMarkup.Text("{0}", ipLHS) <> Fmt.NoMarkup.Text("{0}", ipRHS)
-'
-'    ElseIf GroupInfo.IsItemObject(ipLHS) And GroupInfo.IsItemObject(ipRHS) Then
-'        NEQ = Fmt.NoMarkup.Text("{0}", ipLHS) <> Fmt.NoMarkup.Text("{0}", ipRHS)
-'
-'    ElseIf GroupInfo.IsContainer(ipLHS) And GroupInfo.IsContainer(ipRHS) Then
-'        NEQ = ContainersNEQ(ipLHS, ipRHS)
-'
-'    Else
-'
-'        NEQ = True
-'
-'    End If
-'
-'End Function
-    
-'Private Function ContainersNEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
-'
-'    Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
-'    Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
-'
-'    If myLItems.Size <> myRItems.Size Then
-'        ContainersNEQ = True
-'        Exit Function
-'    End If
-'
-'    If GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
-'
-'        If myLItems.Size <> myRItems.Size Then
-'            ContainersNEQ = True
-'            Exit Function
-'        End If
-'
-'        Do
-'
-'            If NEQ(myLItems.CurKey(0), myRItems.CurKey(0)) Then
-'                ContainersNEQ = True
-'                Exit Function
-'            End If
-'
-'            If NEQ(myLItems.CurItem(0), myRItems.CurItem(0)) Then
-'                ContainersNEQ = True
-'                Exit Function
-'            End If
-'
-'        Loop While myLItems.MoveNext And myRItems.MoveNext
-'
-'        ContainersNEQ = False
-'
-'    ElseIf _
-'        (GroupInfo.IsList(ipLHS) Or GroupInfo.IsArray(ipLHS)) _
-'        And (GroupInfo.IsList(ipRHS) Or GroupInfo.IsArray(ipRHS)) _
-'    Then
-'
-'        If myLItems.Size <> myRItems.Size Then
-'            ContainersNEQ = True
-'            Exit Function
-'        End If
-'
-'        Do
-'            If NEQ(myLItems.CurItem(0), myRItems.CurItem(0)) Then
-'                ContainersNEQ = True
-'                Exit Function
-'            End If
-'        Loop While myLItems.MoveNext And myRItems.MoveNext
-'
-'        ContainersNEQ = False
-'
-'    Else
-'
-'        ContainersNEQ = True
-'
-'    End If
-'
-'End Function
 
-Public Function MT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+Public Function MT(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRef ipTypes As Boolean = False, Optional ByRef ipOrder As Boolean = True, Optional ByRef ipMismatchIsFalse As Boolean = True) As Boolean
     
-    If GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
+    If ipTypes Then
+        If VBA.TypeName(ipLHS) <> VBA.TypeName(ipRHS) Then
+            MT = False
+            Exit Function
+        End If
+    End If
+
+    If GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
+        MT = False
+    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsNotAdmin(ipRHS) Then
+        MT = False
+    ElseIf GroupInfo.IsNotAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
+        MT = True
+        
+    ElseIf GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
         MT = False
         
     ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
-        If VBA.Len(ipLHS) > VBA.Len(ipRHS) Then
-            MT = True
-        ElseIf VBA.Len(ipLHS) < VBA.Len(ipRHS) Then
-            MT = False
-        Else
             MT = ipLHS > ipRHS
-        End If
         
     ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
         MT = ipLHS > ipRHS
-    
-    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
-        MT = False
    
     ElseIf GroupInfo.IsItemObject(ipLHS) And GroupInfo.IsItemObject(ipRHS) Then
         MT = Fmt.NoMarkup.Text("{0}", ipLHS) > Fmt.NoMarkup.Text("{0}", ipRHS)
        
     ElseIf GroupInfo.IsContainer(ipLHS) And GroupInfo.IsContainer(ipRHS) Then
-        MT = ContainersMT(ipLHS, ipRHS)
+        MT = ContainersMT(ipLHS, ipRHS, ipTypes, ipOrder, ipMismatchIsFalse)
         
     Else
-        MT = False
+    
+        If ipMismatchIsFalse Then
+            MT = False
+        Else
+            TypeMismatch ipLHS, ipRHS
+        End If
         
     End If
     
 End Function
     
-Private Function ContainersMT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+Private Function ContainersMT(ByRef ipLHS As Variant, ByRef ipRHS As Variant, ByRef ipTypes As Boolean, ByRef ipOrder As Boolean, ByRef ipMismatchIsFalse As Boolean) As Boolean
     
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
@@ -283,7 +242,11 @@ Private Function ContainersMT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As
         
     Else
     
-        ContainersMT = False
+        If ipMismatchIsFalse Then
+            ContainersMT = False
+        Else
+            TypeMismatch ipLHS, ipRHS
+        End If
         
     End If
     
@@ -293,40 +256,51 @@ End Function
 '    MTEQ = Not LT(ipLHS, ipRHS)
 'End Function
 
-Public Function MTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+Public Function MTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRef ipTypes As Boolean = False, Optional ByRef ipOrder As Boolean = True, Optional ByRef ipMismatchIsFalse As Boolean = True) As Boolean
 
-    If GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
+    If ipTypes Then
+        If VBA.TypeName(ipLHS) <> VBA.TypeName(ipRHS) Then
+            MTEQ = False
+            Exit Function
+        End If
+    End If
+
+
+    If GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
+        MTEQ = True
+    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsNotAdmin(ipRHS) Then
+        MTEQ = False
+    ElseIf GroupInfo.IsNotAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
+        MTEQ = True
+
+    ElseIf GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
         MTEQ = ipLHS = ipRHS
 
     ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
-        If VBA.Len(ipLHS) > VBA.Len(ipRHS) Then
-            MTEQ = True
-        ElseIf VBA.Len(ipLHS) < VBA.Len(ipRHS) Then
-            MTEQ = False
-        Else
-            MTEQ = ipLHS >= ipRHS
-        End If
+        MTEQ = ipLHS >= ipRHS
 
     ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
         MTEQ = ipLHS >= ipRHS
-
-    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
-        MTEQ = Fmt.NoMarkup.Text("{0}", ipLHS) = Fmt.NoMarkup.Text("{0}", ipRHS)
 
     ElseIf GroupInfo.IsItemObject(ipLHS) And GroupInfo.IsItemObject(ipRHS) Then
         MTEQ = Fmt.NoMarkup.Text("{0}", ipLHS) >= Fmt.NoMarkup.Text("{0}", ipRHS)
 
     ElseIf GroupInfo.IsContainer(ipLHS) And GroupInfo.IsContainer(ipRHS) Then
-        MTEQ = ContainersMTEQ(ipLHS, ipRHS)
+        MTEQ = ContainersMTEQ(ipLHS, ipRHS, ipTypes, ipOrder, ipMismatchIsFalse)
 
     Else
-        MTEQ = False
+            
+        If ipMismatchIsFalse Then
+            MTEQ = False
+        Else
+            TypeMismatch ipLHS, ipRHS
+        End If
 
     End If
 
 End Function
 
-Private Function ContainersMTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+Private Function ContainersMTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, ByRef ipTypes As Boolean, ByRef ipOrder As Boolean, ByRef ipMismatchIsFalse As Boolean) As Boolean
 
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
@@ -378,27 +352,42 @@ Private Function ContainersMTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) 
         ContainersMTEQ = False
 
     Else
-
-        ContainersMTEQ = False
-
+    
+        If ipMismatchIsFalse Then
+            ContainersMTEQ = False
+        Else
+            TypeMismatch ipLHS, ipRHS
+        End If
+        
     End If
 
 End Function
 
-Public Function LT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+Public Function LT(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRef ipTypes As Boolean = False, Optional ByRef ipOrder As Boolean = True, Optional ByRef ipMismatchIsFalse As Boolean = True) As Boolean
     
-    If GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
+    If ipTypes Then
+        If VBA.TypeName(ipLHS) <> VBA.TypeName(ipRHS) Then
+            LT = False
+            Exit Function
+        End If
+    End If
+
+    
+    If GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
+        LT = False
+        
+    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsNotAdmin(ipRHS) Then
+        LT = True
+        
+    ElseIf GroupInfo.IsNotAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
+        LT = False
+
+    ElseIf GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
         LT = False
         
     ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
-        If VBA.Len(ipLHS) > VBA.Len(ipRHS) Then
-            LT = False
-        ElseIf VBA.Len(ipLHS) < VBA.Len(ipRHS) Then
-            LT = True
-        Else
-            LT = ipLHS < ipRHS
-        End If
-        
+        LT = ipLHS < ipRHS
+
     ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
         LT = ipLHS < ipRHS
     
@@ -409,17 +398,21 @@ Public Function LT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
         LT = Fmt.NoMarkup.Text("{0}", ipLHS) < Fmt.NoMarkup.Text("{0}", ipRHS)
        
     ElseIf GroupInfo.IsContainer(ipLHS) And GroupInfo.IsContainer(ipRHS) Then
-        LT = ContainersLT(ipLHS, ipRHS)
+        LT = ContainersLT(ipLHS, ipRHS, ipTypes, ipOrder, ipMismatchIsFalse)
         
     Else
     
-        LT = False
+        If ipMismatchIsFalse Then
+            LT = False
+        Else
+            TypeMismatch ipLHS, ipRHS
+        End If
         
     End If
     
 End Function
     
-Private Function ContainersLT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+Private Function ContainersLT(ByRef ipLHS As Variant, ByRef ipRHS As Variant, ByRef ipTypes As Boolean, ByRef ipOrder As Boolean, ByRef ipMismatchIsFalse As Boolean) As Boolean
     
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
@@ -474,7 +467,11 @@ Private Function ContainersLT(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As
         
     Else
     
-        ContainersLT = False
+        If ipMismatchIsFalse Then
+            ContainersLT = False
+        Else
+            TypeMismatch ipLHS, ipRHS
+        End If
         
     End If
     
@@ -484,19 +481,28 @@ End Function
 '    LTEQ = Not MT(ipLHS, ipRHS)
 'End Function
 
-Public Function LTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+Public Function LTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRef ipTypes As Boolean = False, Optional ByRef ipOrder As Boolean = True, Optional ByRef ipMismatchIsFalse As Boolean = True) As Boolean
 
-    If GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
+    If ipTypes Then
+        If VBA.TypeName(ipLHS) <> VBA.TypeName(ipRHS) Then
+            LTEQ = False
+            Exit Function
+        End If
+    End If
+
+    
+    If GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
+        LTEQ = True
+    ElseIf GroupInfo.IsAdmin(ipLHS) And GroupInfo.IsNotAdmin(ipRHS) Then
+        LTEQ = True
+    ElseIf GroupInfo.IsNotAdmin(ipLHS) And GroupInfo.IsAdmin(ipRHS) Then
+        LTEQ = False
+
+    ElseIf GroupInfo.IsBoolean(ipLHS) And GroupInfo.IsBoolean(ipRHS) Then
         LTEQ = ipLHS = ipRHS
 
     ElseIf GroupInfo.IsString(ipLHS) And GroupInfo.IsString(ipRHS) Then
-        If VBA.Len(ipLHS) > VBA.Len(ipRHS) Then
-            LTEQ = False
-        ElseIf VBA.Len(ipLHS) < VBA.Len(ipRHS) Then
-            LTEQ = True
-        Else
-            LTEQ = ipLHS <= ipRHS
-        End If
+        LTEQ = ipLHS <= ipRHS
 
     ElseIf GroupInfo.IsNumber(ipLHS) And GroupInfo.IsNumber(ipRHS) Then
         LTEQ = ipLHS <= ipRHS
@@ -508,16 +514,21 @@ Public Function LTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
         LTEQ = Fmt.NoMarkup.Text("{0}", ipLHS) <= Fmt.NoMarkup.Text("{0}", ipRHS)
 
     ElseIf GroupInfo.IsContainer(ipLHS) And GroupInfo.IsContainer(ipRHS) Then
-        LTEQ = ContainersLTEQ(ipLHS, ipRHS)
+        LTEQ = ContainersLTEQ(ipLHS, ipRHS, ipTypes, ipOrder, ipMismatchIsFalse)
 
     Else
-        LTEQ = False
-
+    
+        If ipMismatchIsFalse Then
+            LTEQ = False
+        Else
+            TypeMismatch ipLHS, ipRHS
+        End If
+        
     End If
 
 End Function
 
-Private Function ContainersLTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) As Boolean
+Private Function ContainersLTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, ByRef ipTypes As Boolean, ByRef ipOrder As Boolean, ByRef ipMismatchIsFalse As Boolean) As Boolean
 
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
@@ -572,9 +583,21 @@ Private Function ContainersLTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant) 
         ContainersLTEQ = False
 
     Else
-
-        ContainersLTEQ = False
-
+    
+        If ipMismatchIsFalse Then
+            ContainersLTEQ = False
+        Else
+            TypeMismatch ipLHS, ipRHS
+        End If
+        
     End If
 
 End Function
+
+Private Sub TypeMismatch(ByRef ipLHS As Variant, ByRef ipRHS As Variant)
+
+    Err.Raise 17 + vbObjectError, _
+        "VBALib.Comparer", _
+        Fmt.Text("ipLHS was {0}:{1}, ipRHS was {2}:{3).", VBA.TypeName(ipLHS), ipLHS, VBA.TypeName(ipRHS), ipRHS)
+        
+End Sub

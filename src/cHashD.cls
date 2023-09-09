@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "cHashD"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@IgnoreModule
@@ -17,7 +17,9 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private Const NoEntry                       As Currency = -98765432123456@
+'Private Const NoEntry                       As Currency = -98765432123456@
+Private Const FIRST_INDEX                   As Long = 1
+Private Const LACKS_ITEMS                   As Long = -1
 'fixed HashSlot-amount and Hash-Multiplikator
 Private Const DynTakeOver                   As Long = 4
 Private Const HMul                          As Long = 3727
@@ -35,7 +37,6 @@ Private Type State
      LastExpectedMaxCount                   As Long
      EnsureUniqueKeys                       As Boolean
      LastH                                  As Long
-     Count                                  As Long
      DTUB                                   As Long
      HashTableSize                          As Long
      CompareMode                            As VbCompareMethod
@@ -52,6 +53,11 @@ End Type
 
 Private s                                   As State
 
+Private Type Properties
+     Count                                  As Long
+End Type
+
+Private p                                   As Properties
 
 Private Sub Class_Initialize()
 
@@ -98,22 +104,48 @@ Public Sub Reinit(Optional ByVal ExpectedMaxCount As Long, Optional ByVal Ensure
     s.DTUB = s.LastExpectedMaxCount
     ReDim s.Keys(0 To s.DTUB)
     ReDim s.Values(0 To s.DTUB)
-    s.Count = 0
+    p.Count = 0
     s.FCount = 0
     s.FUB = 16
     ReDim s.FIndexes(0 To s.FUB)
     
 End Sub
 
+Public Function HashTableSize() As Long
+    HashTableSize = s.HashTableSize
+End Function
 
 Public Sub Clear()
     Reinit
 End Sub
 
 
-Public Property Get Count() As Long
-    Count = s.Count
-End Property
+Public Function Count(Optional ipKey As Variant) As Long
+    Count = LACKS_ITEMS
+    
+    If p.Count < 1 Then
+        Exit Function
+    End If
+    
+     If VBA.IsMissing(ipKey) Then
+        Count = p.Count
+        Exit Function
+    End If
+    
+    Dim myCount As Long: myCount = 0
+    
+    Dim myIndex As Long
+    For myIndex = LBound(s.Keys) To UBound(s.Keys)
+        If Not VBA.IsEmpty(s.Keys(myIndex)) Then
+            If Comparers.EQ(s.Keys(myIndex), ipKey) Then
+                myCount = myCount + 1
+            End If
+        End If
+    Next
+    
+    Count = myCount
+    
+End Function
 
 
 Public Property Get HasUniqueKeys() As Boolean
@@ -133,7 +165,7 @@ End Property
 
 Public Function Keys() As Variant()
 
-    If s.Count = 0 Then
+    If p.Count = 0 Then
         Keys = Array()
         Exit Function
     End If
@@ -141,11 +173,11 @@ Public Function Keys() As Variant()
     Dim i As Long
     Dim j As Long
     Dim V() As Variant
-    ReDim V(0 To s.Count - 1)
+    ReDim V(0 To p.Count - 1)
     
-    For i = 0 To s.Count - 1
+    For i = 0 To p.Count - 1
     
-        Do While s.Values(j) = NoEntry
+        Do While VBA.IsEmpty(s.Keys(j))
             j = j + 1
         Loop
         
@@ -158,10 +190,36 @@ Public Function Keys() As Variant()
     
 End Function
 
+Public Function KeysAsColl() As Collection
+
+    Dim myC As Collection: Set myC = New Collection
+    If p.Count = 0 Then
+        Set KeysAsColl = myC
+        Exit Function
+    End If
+    
+    Dim i As Long
+    Dim j As Long
+    
+    For i = 0 To p.Count - 1
+    
+        Do While VBA.IsEmpty(s.Keys(j))
+            j = j + 1
+        Loop
+        
+        myC.Add s.Keys(j)
+        j = j + 1
+        
+    Next
+    
+    Set KeysAsColl = myC
+    
+End Function
+
 
 Public Function Items() As Variant()
 
-    If s.Count = 0 Then
+    If p.Count = 0 Then
         Items = Array()
         Exit Function
     End If
@@ -170,10 +228,10 @@ Public Function Items() As Variant()
     Dim j As Long
     
     Dim V() As Variant
-    ReDim V(0 To s.Count - 1)
+    ReDim V(0 To p.Count - 1)
     
-    For i = 0 To s.Count - 1
-        Do While s.Values(j) = NoEntry
+    For i = 0 To p.Count - 1
+        Do While VBA.IsEmpty(s.Values(j))
             j = j + 1
         Loop
     
@@ -189,7 +247,7 @@ End Function
 
 Public Function Pairs() As Variant()             'hand-out the Key-Values in a Pairs-Array
 
-    If s.Count = 0 Then
+    If p.Count = 0 Then
         Pairs = Array()
         Exit Function
     End If
@@ -198,12 +256,12 @@ Public Function Pairs() As Variant()             'hand-out the Key-Values in a P
     Dim j As Long
     
     Dim V() As Variant
-    ReDim V(0 To s.Count - 1)
+    ReDim V(0 To p.Count - 1)
     
-    For i = 0 To s.Count - 1
+    For i = 0 To p.Count - 1
     
-        Do While s.Values(j) = NoEntry
-            j = j + 1:
+        Do While VBA.IsEmpty(s.Values(j))
+            j = j + 1
         Loop
         
         V(i) = Array(s.Keys(j), s.Values(j))
@@ -250,7 +308,7 @@ Public Sub Add(ByRef Key As Variant, ByRef Item As Variant)
     End If
     
     'add the new Pair, prolonging the Keys- and Values-arrays
-    If s.DTUB < s.Count Then
+    If s.DTUB < p.Count Then
         s.DTUB = (s.DTUB + 16) * 1.3
         ReDim Preserve s.Keys(0 To s.DTUB)
         ReDim Preserve s.Values(0 To s.DTUB)
@@ -260,7 +318,7 @@ Public Sub Add(ByRef Key As Variant, ByRef Item As Variant)
         s.FCount = s.FCount - 1
         i = s.FIndexes(s.FCount)
     Else
-        i = s.Count
+        i = p.Count
     End If
     
     VariantCopyInd ByVal VarPtr(s.Values(i)), ByVal VarPtr(Item)
@@ -293,14 +351,14 @@ Public Sub Add(ByRef Key As Variant, ByRef Item As Variant)
     
     s.HashTable(H).Count = s.HashTable(H).Count + 1
     
-    s.Count = s.Count + 1
+    p.Count = p.Count + 1
     
 End Sub
 
 
 Public Sub Remove(ByRef Key As Variant)
 
-    If s.Count = 0 Then
+    If p.Count = 0 Then
         Exit Sub
     End If
     
@@ -358,9 +416,9 @@ Public Sub Remove(ByRef Key As Variant)
     s.FIndexes(s.FCount) = Idx
     s.FCount = s.FCount + 1
     
-    s.Keys(Idx) = NoEntry
-    s.Values(Idx) = NoEntry
-    s.Count = s.Count - 1
+    s.Keys(Idx) = Empty
+    s.Values(Idx) = Empty
+    p.Count = p.Count - 1
     
 End Sub
 
@@ -386,7 +444,7 @@ End Function
 
 Public Property Get KeyByIndex(ByVal IndexZeroBased As Long) As Variant
 
-    If IndexZeroBased < 0 Or IndexZeroBased >= s.Count Then
+    If IndexZeroBased < 0 Or IndexZeroBased >= p.Count Then
         Err.Raise 9
     End If
     
@@ -401,7 +459,7 @@ End Property
 
 Public Property Get ItemByIndex(ByVal IndexZeroBased As Long) As Variant
 
-    If IndexZeroBased < 0 Or IndexZeroBased >= s.Count Then
+    If IndexZeroBased < 0 Or IndexZeroBased >= p.Count Then
         Err.Raise 9
     End If
     
@@ -416,7 +474,7 @@ End Property
 
 Public Property Let ItemByIndex(ByVal IndexZeroBased As Long, ByVal RHS As Variant)
 
-    If IndexZeroBased < 0 Or IndexZeroBased >= s.Count Then
+    If IndexZeroBased < 0 Or IndexZeroBased >= p.Count Then
         Err.Raise 9
     End If
     
@@ -431,7 +489,7 @@ End Property
 
 Public Property Set ItemByIndex(ByVal IndexZeroBased As Long, ByVal RHS As Variant)
 
-    If IndexZeroBased < 0 Or IndexZeroBased >= s.Count Then
+    If IndexZeroBased < 0 Or IndexZeroBased >= p.Count Then
         Err.Raise 9
     End If
     
@@ -781,7 +839,7 @@ Friend Sub CheckHashDistribution()
             cc = cc + 1
         End If
     Next
-    Debug.Print "Distribution of"; s.Count; "entries over a HashTable with"; UBound(s.HashTable) + 1; "slots:"
+    Debug.Print "Distribution of"; p.Count; "entries over a HashTable with"; UBound(s.HashTable) + 1; "slots:"
     Debug.Print "Used-HashSlots:"; cc
     Debug.Print "Min-Entries:"; Min
     Debug.Print "Max-Entries:"; Max

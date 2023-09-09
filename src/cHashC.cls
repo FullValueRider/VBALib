@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "cHashC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@IGNOREModule
@@ -14,7 +14,6 @@ Attribute VB_Exposed = True
 ' cHashD, Olaf Schmidt in August 2016 (enhanced about mixed, variable KeyTypes and Remove-functions in 2020)
 Option Explicit
 
-Private Const NoEntry                   As Currency = -98765432123456@
 Private Const DynTakeOver               As Long = 4
 Private Const HMul                      As Long = 3727 'fixed HashSlot-amount and Hash-Multiplikator
 Private Const MY_TYPENAME               As String = "cHashC"
@@ -36,9 +35,9 @@ Private mLastH                          As Long  ' mEnsureUniqueKeys As Boolean,
 Private mCount                          As Long
 Private mDTUB                           As Long
 Private mHashTableSize                  As Long
-Private mCompareMode                    As VbCompareMethod
+'Private mCompareMode                    As VbCompareMethod
 Private HashTable()                     As HashTableEntry
-Private mKeys()                         As Variant
+Private mItems()                         As Variant
 'three vars, to handle the deletes
 Private mFIndexes()                     As Long
 Private mFCount                         As Long
@@ -46,33 +45,45 @@ Private mFUB                            As Long
 
 
 Private Sub Class_Initialize()
-    sAW.cDims = 1:  sAW.cbElements = 2
-    sAW.cLocks = 1: sAW.fFeatures = &H11         'FADF_AUTO=&H1 || FADF_FIXEDSIZE=&H10
+    sAW.cDims = 1
+    sAW.cbElements = 2
+    sAW.cLocks = 1
+    sAW.fFeatures = &H11         'FADF_AUTO=&H1 || FADF_FIXEDSIZE=&H10
     BindArray W, VarPtr(sAW)
 
-    mCompareMode = vbBinaryCompare
+    'mCompareMode = vbBinaryCompare
     Reinit 16384                                 'at startup we set it up, to behave ideally for up to 16384 Items
 
     If LWC(97) = 0 Then InitLWC
+    
 End Sub
 
 
-Public Sub Reinit(Optional ByVal ExpectedMaxCount As Long) ' Optional ByVal EnsureUniqueKeys As Boolean
-    If ExpectedMaxCount <= 0 Then ExpectedMaxCount = mLastExpectedMaxCount
-    If ExpectedMaxCount < 128 Then ExpectedMaxCount = 128
+Public Sub Reinit(Optional ByVal ExpectedMaxCount As Long)
+
+    If ExpectedMaxCount <= 0 Then
+        ExpectedMaxCount = mLastExpectedMaxCount
+    End If
+    If ExpectedMaxCount < 128 Then
+        ExpectedMaxCount = 128
+    End If
     mLastExpectedMaxCount = ExpectedMaxCount
-    'mEnsureUniqueKeys = EnsureUniqueKeys
 
     mHashTableSize = 16
-    Do Until mHashTableSize * 2 > ExpectedMaxCount: mHashTableSize = mHashTableSize * 2: Loop
-    If mHashTableSize > 524288 Then mHashTableSize = 524288 ' 2^19
+    Do Until mHashTableSize * 2 > ExpectedMaxCount
+        mHashTableSize = mHashTableSize * 2
+    Loop
+    If mHashTableSize > 524288 Then
+        mHashTableSize = 524288 ' 2^19
+    End If
     ReDim HashTable(0 To mHashTableSize - 1)
 
     mDTUB = mLastExpectedMaxCount
-    ReDim mKeys(0 To mDTUB) As Variant
-    'ReDim mValues(0 To mDTUB) As Variant
+    ReDim mItems(0 To mDTUB) As Variant
     mCount = 0
-    mFCount = 0: mFUB = 16: ReDim mFIndexes(0 To mFUB)
+    mFCount = 0
+    mFUB = 16
+    ReDim mFIndexes(0 To mFUB)
 End Sub
 
 
@@ -86,60 +97,39 @@ Public Property Get Count() As Long
 End Property
 
 
-'Public Property Get HasUniqueKeys() As Boolean
-'  HasUniqueKeys = mEnsureUniqueKeys
+'Public Property Get StringCompareMode() As VbCompareMethod
+'    StringCompareMode = mCompareMode
+'End Property
+'
+'
+'Public Property Let StringCompareMode(ByVal RHS As VbCompareMethod)
+'    mCompareMode = RHS
 'End Property
 
-Public Property Get StringCompareMode() As VbCompareMethod
-    StringCompareMode = mCompareMode
-End Property
 
+Public Function Items() As Variant()
 
-Public Property Let StringCompareMode(ByVal RHS As VbCompareMethod)
-    mCompareMode = RHS
-End Property
-
-
-Public Function Keys() As Variant()
-    If mCount = 0 Then Keys = Array(): Exit Function
+    If mCount = 0 Then
+        Items = Array()
+        Exit Function
+    End If
 
     Dim i As Long
     Dim j As Long
     Dim V() As Variant: ReDim V(0 To mCount - 1)
     For i = 0 To mCount - 1
-        Do While mKeys(j) = NoEntry: j = j + 1: Loop
-        VariantCopy V(i), ByVal VarPtr(mKeys(j)): j = j + 1
+        Do While IsEmpty(mItems(j))
+            j = j + 1
+        Loop
+        VariantCopy V(i), ByVal VarPtr(mItems(j)): j = j + 1
     Next
 
-    Keys = V
+    Items = V
+    
 End Function
 
-
-'Public Function Items() As Variant()
-'  If mCount = 0 Then Items = Array(): Exit Function
-'
-'  Dim i As Long, j As Long, v() As Variant: ReDim v(0 To mCount - 1)
-'  For i = 0 To mCount - 1
-'    Do While mValues(j) = NoEntry: j = j + 1: Loop
-'    VariantCopy v(i), ByVal VarPtr(mValues(j)): j = j + 1
-'  Next
-'
-'  Items = v
-'End Function
-'Public Function Pairs() As Variant() 'hand-out the Key-Values in a Pairs-Array
-'  If mCount = 0 Then Pairs = Array(): Exit Function
-'
-'  Dim i As Long, j As Long, v() As Variant: ReDim v(0 To mCount - 1)
-'  For i = 0 To mCount - 1
-'    Do While mValues(j) = NoEntry: j = j + 1: Loop
-'    v(i) = Array(mKeys(j), mValues(j)): j = j + 1
-'  Next
-'
-'  Pairs = v
-'End Function
-
-Public Function Exists(ByRef Key As Variant) As Boolean
-    Exists = FindIndex(Key) >= 0
+Public Function Exists(ByRef ipItem As Variant) As Boolean
+    Exists = FindIndex(ipItem) >= 0
 End Function
 
 
@@ -149,26 +139,24 @@ Public Sub Add(ByRef Key As Variant)
     Dim i As Long
     If mLastH Then
         H = mLastH: mLastH = 0
-        '  ElseIf mEnsureUniqueKeys Then
-        '    If FindIndex(Key, H) >= 0 Then Err.Raise 457
     Else
-        H = -1: FindIndex Key, H                 'a Value of -1 for H will skip the Index-Search, returning only H
+        H = -1
+        FindIndex Key, H                 'a Value of -1 for H will skip the Index-Search, returning only H
     End If
 
     'add the new Pair, prolonging the Keys- and Values-arrays
     If mDTUB < mCount Then
         mDTUB = (mDTUB + 16) * 1.3
-        ReDim Preserve mKeys(0 To mDTUB)
-        'ReDim Preserve mValues(0 To mDTUB)
+        ReDim Preserve mItems(0 To mDTUB)
     End If
 
     If mFCount > 0 Then
-        mFCount = mFCount - 1: i = mFIndexes(mFCount)
+        mFCount = mFCount - 1
+        i = mFIndexes(mFCount)
     Else
         i = mCount
     End If
-    'VariantCopyInd ByVal VarPtr(mValues(i)), ByVal VarPtr(Item)
-    VariantCopyInd ByVal VarPtr(mKeys(i)), ByVal VarPtr(Key)
+    VariantCopyInd ByVal VarPtr(mItems(i)), ByVal VarPtr(Key)
 
     'add the new DataIndex to the proper Hash-Buckets
     Select Case HashTable(H).Count
@@ -188,14 +176,16 @@ Public Sub Add(ByRef Key As Variant)
 End Sub
 
 
-Public Sub Remove(ByRef Key As Variant)
+Public Sub Remove(ByRef ipItem As Variant)
     If mCount = 0 Then Exit Sub
     Dim H As Long
     Dim Idx As Long
     Dim i As Long
     Dim j As Long
-    Idx = FindIndex(Key, H)
-    If Idx < 0 Then Err.Raise 5
+    Idx = FindIndex(ipItem, H)
+    If Idx < 0 Then
+        Err.Raise 5
+    End If
 
     For i = 0 To HashTable(H).Count - 2
         If i < DynTakeOver Then
@@ -214,32 +204,36 @@ Public Sub Remove(ByRef Key As Variant)
     Next
     HashTable(H).Count = i
 
-    If mFUB < mFCount Then mFUB = mFUB + mFUB: ReDim Preserve mFIndexes(0 To mFUB)
-    mFIndexes(mFCount) = Idx: mFCount = mFCount + 1
+    If mFUB < mFCount Then
+        mFUB = mFUB + mFUB
+        ReDim Preserve mFIndexes(0 To mFUB)
+    End If
+    
+    mFIndexes(mFCount) = Idx
+    mFCount = mFCount + 1
 
-    mKeys(Idx) = NoEntry
-    'mValues(Idx) = NoEntry
+    mItems(Idx) = Empty
     mCount = mCount - 1
 End Sub
 
 
 Public Sub RemoveByIndex(ByVal IndexZeroBased As Long)
-    Remove KeyByIndex(IndexZeroBased)
+    Remove ItemByIndex(IndexZeroBased)
 End Sub
 
 
-Public Function IndexByKey(ByRef Key As Variant) As Long
+Public Function IndexByItem(ByRef Key As Variant) As Long
     Dim Idx As Long
     Idx = FindIndex(Key)
     If Idx >= 0 And mFCount > 0 Then AdjustIndex Idx, True
-    IndexByKey = Idx
+    IndexByItem = Idx
 End Function
 
 
-Public Property Get KeyByIndex(ByVal IndexZeroBased As Long) As Variant
+Public Property Get ItemByIndex(ByVal IndexZeroBased As Long) As Variant
     If IndexZeroBased < 0 Or IndexZeroBased >= mCount Then Err.Raise 9
     If mFCount Then AdjustIndex IndexZeroBased
-    VariantCopy KeyByIndex, ByVal VarPtr(mKeys(IndexZeroBased))
+    VariantCopy ItemByIndex, ByVal VarPtr(mItems(IndexZeroBased))
 End Property
 
 
@@ -300,7 +294,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
         Case vbString
             sAW.cElements1D = VBA.Len(Key)
             sAW.pvData = StrPtr(Key)
-            If mCompareMode = 0 Then
+            'If mCompareMode = 0 Then
                 For i = 0 To sAW.cElements1D - 1
                     H = (H + W(i)) * HMul And HTUB
                 Next
@@ -308,17 +302,17 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
 
                 For i = 0 To HashTable(H).Count - 1
                     If i < DynTakeOver Then FindIndex = HashTable(H).DataIdxsStat(i) Else FindIndex = HashTable(H).DataIdxsDyn(i)
-                    If VarType(mKeys(FindIndex)) = VT Then If Key = mKeys(FindIndex) Then Exit Function
+                    If VarType(mItems(FindIndex)) = VT Then If Key = mItems(FindIndex) Then Exit Function
                 Next
-            Else
-                For i = 0 To sAW.cElements1D - 1: H = (H + LWC(W(i))) * HMul And HTUB: Next
-                If FindIndex = -1 Then Exit Function 'it's a "Hash-Only" Calculation
-
-                For i = 0 To HashTable(H).Count - 1
-                    If i < DynTakeOver Then FindIndex = HashTable(H).DataIdxsStat(i) Else FindIndex = HashTable(H).DataIdxsDyn(i)
-                    If VarType(mKeys(FindIndex)) = VT Then If StrComp(Key, mKeys(FindIndex), mCompareMode) = 0 Then Exit Function
-                Next
-            End If
+'            Else
+'                For i = 0 To sAW.cElements1D - 1: H = (H + LWC(W(i))) * HMul And HTUB: Next
+'                If FindIndex = -1 Then Exit Function 'it's a "Hash-Only" Calculation
+'
+'                For i = 0 To HashTable(H).Count - 1
+'                    If i < DynTakeOver Then FindIndex = HashTable(H).DataIdxsStat(i) Else FindIndex = HashTable(H).DataIdxsDyn(i)
+'                    If VarType(mItems(FindIndex)) = VT Then If StrComp(Key, mItems(FindIndex), mCompareMode) = 0 Then Exit Function
+'                Next
+'            End If
 
         Case vbObject
             L = ObjPtr(Key): sAW.cElements1D = 2: sAW.pvData = VarPtr(L)
@@ -328,7 +322,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
 
             For i = 0 To HashTable(H).Count - 1
                 If i < DynTakeOver Then FindIndex = HashTable(H).DataIdxsStat(i) Else FindIndex = HashTable(H).DataIdxsDyn(i)
-                If VarType(mKeys(FindIndex)) = VT Then If Key Is mKeys(FindIndex) Then Exit Function
+                If VarType(mItems(FindIndex)) = VT Then If Key Is mItems(FindIndex) Then Exit Function
             Next
 
         Case vbCurrency
@@ -341,7 +335,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
 
             For i = 0 To HashTable(H).Count - 1
                 If i < DynTakeOver Then FindIndex = HashTable(H).DataIdxsStat(i) Else FindIndex = HashTable(H).DataIdxsDyn(i)
-                If VarType(mKeys(FindIndex)) = VT Then If C = mKeys(FindIndex) Then Exit Function
+                If VarType(mItems(FindIndex)) = VT Then If C = mItems(FindIndex) Then Exit Function
             Next
 
         Case vbLong, vbInteger, vbByte
@@ -352,8 +346,8 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
 
             For i = 0 To HashTable(H).Count - 1
                 If i < DynTakeOver Then FindIndex = HashTable(H).DataIdxsStat(i) Else FindIndex = HashTable(H).DataIdxsDyn(i)
-                Select Case VarType(mKeys(FindIndex))
-                    Case vbLong, vbInteger, vbByte: If L = mKeys(FindIndex) Then Exit Function
+                Select Case VarType(mItems(FindIndex))
+                    Case vbLong, vbInteger, vbByte: If L = mItems(FindIndex) Then Exit Function
                 End Select
             Next
 
@@ -367,7 +361,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
 
             For i = 0 To HashTable(H).Count - 1
                 If i < DynTakeOver Then FindIndex = HashTable(H).DataIdxsStat(i) Else FindIndex = HashTable(H).DataIdxsDyn(i)
-                If VarType(mKeys(FindIndex)) = VT Then If D = mKeys(FindIndex) Then Exit Function
+                If VarType(mItems(FindIndex)) = VT Then If D = mItems(FindIndex) Then Exit Function
             Next
 
         Case vbDate
@@ -380,7 +374,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
 
             For i = 0 To HashTable(H).Count - 1
                 If i < DynTakeOver Then FindIndex = HashTable(H).DataIdxsStat(i) Else FindIndex = HashTable(H).DataIdxsDyn(i)
-                If VarType(mKeys(FindIndex)) = VT Then If D = mKeys(FindIndex) Then Exit Function
+                If VarType(mItems(FindIndex)) = VT Then If D = mItems(FindIndex) Then Exit Function
             Next
 
         Case vbSingle
@@ -391,7 +385,7 @@ Private Function FindIndex(ByRef Key As Variant, Optional ByRef H As Long) As Lo
 
             For i = 0 To HashTable(H).Count - 1
                 If i < DynTakeOver Then FindIndex = HashTable(H).DataIdxsStat(i) Else FindIndex = HashTable(H).DataIdxsDyn(i)
-                If VarType(mKeys(FindIndex)) = VT Then If F = mKeys(FindIndex) Then Exit Function
+                If VarType(mItems(FindIndex)) = VT Then If F = mItems(FindIndex) Then Exit Function
             Next
     End Select
 

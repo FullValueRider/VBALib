@@ -16,8 +16,6 @@ Dim Item As Variant
   
   Debug.Print " Count of Test-Entries:"; TestEntryCount; vbLf
     
-  
-
     T = VBA.Timer
     Dim mySA As SeqA: Set mySA = SeqA.Deb
     Debug.Print "Initialising SeqA", VBA.Timer - T & "msec"
@@ -28,8 +26,8 @@ Dim Item As Variant
     Dim mySL As SeqL: Set mySL = SeqL.Deb
     Debug.Print "Initialising SeqL", VBA.Timer - T & "msec"
     T = VBA.Timer
-    Dim mySH As SeqH: Set mySH = SeqH.Deb
-    mySH.SetSize 32767
+    Dim mySH As SeqHL: Set mySH = SeqHL.Deb
+    mySH.Reinit 32767
     Debug.Print "Initialising SeqL", VBA.Timer - T & "msec"
     T = VBA.Timer
     Dim myTC As Collection: Set myTC = New Collection

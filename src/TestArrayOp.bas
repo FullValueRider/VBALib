@@ -604,15 +604,15 @@ Public Sub Test05b_LastIndex()
     
     'Act:
     Dim myResult(0 To 7) As Variant
-    myResult(0) = CVar(ArrayOp.LastIndex(myLong))
-    myResult(1) = CVar(ArrayOp.LastIndex(myvar))
-    myResult(2) = CVar(ArrayOp.LastIndex(myArray1))
-    myResult(3) = CVar(ArrayOp.LastIndex(myArray2))
-    myResult(4) = CVar(ArrayOp.LastIndex(myArray3))
-    myResult(5) = CVar(ArrayOp.LastIndex(myArray4, 1))
+    myResult(0) = CVar(ArrayOp.Lastindex(myLong))
+    myResult(1) = CVar(ArrayOp.Lastindex(myvar))
+    myResult(2) = CVar(ArrayOp.Lastindex(myArray1))
+    myResult(3) = CVar(ArrayOp.Lastindex(myArray2))
+    myResult(4) = CVar(ArrayOp.Lastindex(myArray3))
+    myResult(5) = CVar(ArrayOp.Lastindex(myArray4, 1))
     
-    myResult(6) = CVar(ArrayOp.LastIndex(myArray5, 2))
-    myResult(7) = CVar(ArrayOp.LastIndex(myArray6, 3))
+    myResult(6) = CVar(ArrayOp.Lastindex(myArray5, 2))
+    myResult(7) = CVar(ArrayOp.Lastindex(myArray6, 3))
     
     'Assert:
     AssertExactSequenceEquals ArrayOp.MapIt(myExpected, mpReplaceNull.Deb), ArrayOp.MapIt(myResult, mpReplaceNull.Deb), myProcedureName

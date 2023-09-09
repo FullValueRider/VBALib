@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Strs"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule FunctionReturnValueDiscarded, IndexedDefaultMemberAccess
@@ -264,20 +264,20 @@ End Function
 
 
 '@Description("Counts the ocurrence of a non overlapping substring")
-Public Function CountOf(ByVal ipCountIn As String, ByVal ipCountMe As String) As Long
-Attribute CountOf.VB_Description = "Counts the ocurrence of a non overlapping substring"
+Public Function Countof(ByVal ipCountIn As String, ByVal ipCountMe As String) As Long
+Attribute Countof.VB_Description = "Counts the ocurrence of a non overlapping substring"
 
     If VBA.Len(ipCountMe) = 0 Then
-        CountOf = -1
+        Countof = -1
         Exit Function
     End If
     
     If VBA.Len(ipCountIn) = 0 Then
-        CountOf = -1
+        Countof = -1
         Exit Function
     End If
   
-    CountOf = (VBA.Len(ipCountIn) - VBA.Len(VBA.Replace(ipCountIn, ipCountMe, vbNullString))) / VBA.Len(ipCountMe)
+    Countof = (VBA.Len(ipCountIn) - VBA.Len(VBA.Replace(ipCountIn, ipCountMe, vbNullString))) / VBA.Len(ipCountMe)
     
 End Function
 
@@ -490,7 +490,7 @@ Public Function Sort(ByRef ipString As String) As String
     
     Dim myChars As Variant
     myChars = Strs.ToChars(ipString)
-    Sorters.ShakerSortArray myChars
+    Sorters.ShakerSortArrayByIndex myChars
     Sort = Join(myChars, vbNullString)
   
 End Function
