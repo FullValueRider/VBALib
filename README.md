@@ -34,8 +34,8 @@ Please remember that I am a human being and consequently, as I don't have a buil
 ## Overview of library contents
 
 The library offers
-- a degree of enhanced reflection,  e.g. GroupInfo.IsNumber, GroupInfo.IsContainer, GroupInfo.IsList etc, Similarly for Arrays, ArrayInfo.Ranks, ArrayInfo.Count, ArrayInfo.HoldsItems etc
-- enhanced Collections (SeqA, SeqC, SeqL with SeqAL, SeqH planned.)
+- a degree of enhanced reflection,  e.g. GroupInfo.IsNumber, GroupInfo.IsContainer, GroupInfo.IsList etc, Similarly for Arrays, ArrayOp.Ranks, ArrayOp.Count, ArrayOp.HoldsItems etc
+- enhanced Collections (SeqA, SeqC, SeqL etc.)
 - an en enhanced DIctionaries (KvpA,KvpC, KvpL with KvpAL and KvpH planned)
 - string interpolation for formatting strings (formatting characters and positional variables)
 - Map, Reduce,Filter,and Count functionality on seq and Kvp classes and a set of functions to use in such operations
