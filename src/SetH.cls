@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SetH"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SetH is a multipurpose Collection/ArrayList replacement.  It uses a cHashD object to store the items.  Items are access using 1 based indexing. For a Keyed collection, use one of the Kvp classes"

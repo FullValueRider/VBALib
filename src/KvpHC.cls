@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpHC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@IgnoreModule

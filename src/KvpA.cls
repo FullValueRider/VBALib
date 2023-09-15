@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Dictionary using a SeqA for Keys and Items"
@@ -18,17 +18,17 @@ Attribute VB_Description = "Dictionary using a SeqA for Keys and Items"
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
 Option Explicit
 
-Const MY_TYPENAME                       As String = "KvpA"
-Const FIRST_INDEX                       As Long = 1
+Private Const MY_TYPENAME                       As String = "KvpA"
+Private Const FIRST_INDEX                       As Long = 1
 Private Const REPORT_BACK                       As Boolean = True
-
+Private Const DEFAULT_SIZE                      As Long = 16
 Private Type State
-    Keys                                 As SeqA
-    Items                                As SeqA
+    Keys                                        As SeqA
+    Items                                       As SeqA
 End Type
 
 
-Private s                               As State
+Private s                                       As State
 
 ' Checking for duplicate keys is a linear time process
 ' for KvpA, KvpC and KvpL.  Consequently for **ALL** Kvp classes
@@ -40,14 +40,14 @@ Private s                               As State
 ' extract unique keys using the UniqueKeys method.
 
 Private Type Properties
-    EnsureUniqueKeys                    As Boolean
-    FirstIndex                          As Long
+    EnsureUniqueKeys                            As Boolean
+    FirstIndex                                  As Long
 End Type
 
-Private p                               As Properties
+Private p                                       As Properties
 
 '@Defaultmember
-Public Function Deb(Optional ByVal ipInitialSize As Long = 1024) As KvpA
+Public Function Deb(Optional ByVal ipInitialSize As Long = DEFAULT_SIZE) As KvpA
 Attribute Deb.VB_UserMemId = 0
     With New KvpA
         Set Deb = .ConstructInstance(ipInitialSize)

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqA is a Collection/ArrayList replacement. Items are stored in an Array.  Indexing is 1 based. Order of addition is preserved. Keys are not supported (See Kvp classes)"
@@ -253,7 +253,7 @@ Public Property Let Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
 
     Guard.IndexOutOfBounds ipIndex, Me, "Let Item"
     
-    s.Host(ipIndex) = ipItem
+    VariantCopy s.Host(ipIndex), ipItem
  
 End Property
 

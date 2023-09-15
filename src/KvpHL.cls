@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpHL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Dictionary using an array of hashed keys and a linked list to preserve order of addition."

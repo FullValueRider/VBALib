@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqTNode"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -13,6 +13,13 @@ Attribute VB_Exposed = True
 'https://www.codeproject.com/KB/vb/TreapVb/Treapvb_src.zip
 Option Explicit
 
+'' SeqTNode is used to manage the treap structure in SeqT
+'' SeqT allows items to be deleted by Index, where index is
+'' the order of addition to the SeqT.
+'' When a node is deleted by index the deletion will fail
+'' if the pointer to the node in the parent node cannot be
+'' updated appropritely
+
 Private Type State
     
     Item                                As Variant
@@ -20,6 +27,7 @@ Private Type State
     Left                                As SeqTNode
     Right                               As SeqTNode
     Order                               As Long
+  '  Parent                              As SeqTNode
     
 End Type
 
@@ -108,6 +116,13 @@ Public Property Set Right(ByVal ipRight As SeqTNode)
     Set s.Right = ipRight
 End Property
 
+Public Property Get Parent() As SeqTNode
+    Set Parent = s.Parent
+End Property
+
+Public Property Set Parent(ByVal ipParent As SeqTNode)
+    Set s.Parent = ipParent
+End Property
 
 Public Property Get Order() As Long
     Order = s.Order
@@ -124,22 +139,22 @@ Public Property Let Order(ByVal ipOrder As Long)
     
 End Property
 
-'Public Function RotateRight() As SeqTNode
-'
-'    Dim myTmp As SeqTNode: Set myTmp = Me.Left
-'    Set Me.Left = Me.Left.Right
-'    Set myTmp.Right = Me
-'
-'    Set RotateRight = myTmp
-'
-'End Function
-'
-'Public Function RotateLeft() As SeqTNode
-'
-'    Dim myTmp As SeqTNode: Set myTmp = Me.Right
-'    Set Me.Right = Me.Right.Left
-'    Set myTmp.Left = Me
-'
-'    Set RotateLeft = myTmp
-'
-'End Function
+Public Function RotateRight() As SeqTNode
+
+    Dim myTmp As SeqTNode: Set myTmp = Me.Left
+    Set Me.Left = Me.Left.Right
+    Set myTmp.Right = Me
+
+    Set RotateRight = myTmp
+
+End Function
+
+Public Function RotateLeft() As SeqTNode
+
+    Dim myTmp As SeqTNode: Set myTmp = Me.Right
+    Set Me.Right = Me.Right.Left
+    Set myTmp.Left = Me
+
+    Set RotateLeft = myTmp
+
+End Function

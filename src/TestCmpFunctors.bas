@@ -381,7 +381,7 @@ Private Sub Test01f_CmpEq_Kvp()
     myResult(7) = myCmp.ExecCmp("42")
     myResult(8) = myCmp.ExecCmp(Array(42))
     myResult(9) = myCmp.ExecCmp(KvpHA.Deb.AddPairs(SeqA("Hundred", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"), SeqA(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)))
-    myResult(10) = myCmp.ExecCmp(SeqL.Deb(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+    myResult(10) = myCmp.ExecCmp(SeqL(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
     
     'Act:
     AssertStrictSequenceEquals myExpected, myResult, myProcedureName
@@ -711,8 +711,8 @@ Private Sub Test03a_CmpMT_Numbers()
     Dim myCmp As IComparer
     Set myCmp = cmpMT(42&)
     
-    myResult(1) = myCmp.ExecCmp(43)
-    myResult(2) = myCmp.ExecCmp(VBA.CByte(42))
+    myResult(1) = myCmp.ExecCmp(43)                         ' True
+    myResult(2) = myCmp.ExecCmp(VBA.CByte(42))              ' False
     myResult(3) = myCmp.ExecCmp(True)
     myResult(4) = myCmp.ExecCmp(VBA.CDec(42))
     myResult(5) = myCmp.ExecCmp(VBA.CLngLng(42))

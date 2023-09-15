@@ -20,7 +20,7 @@ Public Sub Swap(ByRef ipLHS As Variant, ByRef ipRHS As Variant)
     End If
     
     If VBA.IsObject(myTemp) Then
-        Set ipLHS = myTemp
+        Set ipRHS = myTemp
     Else
         ipRHS = myTemp
     End If

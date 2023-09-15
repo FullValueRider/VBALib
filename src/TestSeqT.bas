@@ -39,8 +39,7 @@ End Sub
 
 #End If
 
-Public Sub SeqTTests()
- 
+ Public Sub SeqTTests()
  
     #If twinbasic Then
         Debug.Print CurrentProcedureName;
@@ -258,7 +257,7 @@ Private Sub Test02b_InitByString()
         myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-    On Error GoTo TestFail
+    'On Error GoTo TestFail
 
     'Arrange:
     Dim myExpected As Variant
@@ -513,22 +512,25 @@ Private Sub Test03a_WriteItem()
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
     On Error GoTo TestFail
-
+    
     'Arrange:
     Dim mySeq As SeqT
-    Set mySeq = SeqT.Deb.Fill(Empty, 10)
+
+    Set mySeq = SeqT(10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150)
     mySeq.Item(1) = 42
-    mySeq.Item(2) = "Hello"
-    mySeq.Item(3) = 3.142
+    mySeq.Item(4) = "Hello"
+    mySeq.Item(8) = 3.142
+    
     Dim myExpected As Variant
-    myExpected = Array(True, True, True)
+    myExpected = Array(42, "Hello", 3.142)
 
     Dim myResult As Variant
     ReDim myResult(0 To 2)
     'Act:
-    myResult(0) = mySeq.Item(1) = 42
-    myResult(1) = mySeq.Item(2) = "Hello"
-    myResult(2) = mySeq.Item(3) = "3.142"
+    
+    myResult(0) = mySeq.Item(1)
+    myResult(1) = mySeq.Item(4)
+    myResult(2) = mySeq.Item(8)
 
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
@@ -1170,11 +1172,11 @@ Private Sub Test09a0_Remove_SingleItem()
     'Arrange:
     Dim mySeq As SeqT
     Dim myExpected As Variant
-    myExpected = Array(Empty, Empty, Empty, Empty, Empty)
+    myExpected = Array(10, 20, 30, 50, 60)
     ReDim Preserve myExpected(1 To 5)
 
     Dim myResult As Variant
-    Set mySeq = SeqT.Deb(Array(Empty, Empty, Empty, 42, Empty, Empty))
+    Set mySeq = SeqT(10, 20, 30, 42, 50, 60)
 
     'Act:
     mySeq.Remove 42
@@ -1248,16 +1250,16 @@ Private Sub Test09b_RemoveAt_ThreeItems()
     'Arrange:
     Dim mySeq As SeqT
     Dim myExpected As Variant
-    myExpected = Array(1, 1, 1, 1, 1)
+    myExpected = Array(10, 20, 30, 40, 50)
     ReDim Preserve myExpected(1 To 5)
 
     Dim myResult As Variant
-    Set mySeq = SeqT.Deb(Array(1, 42, 1, 1, 42, 1, 1, 42))
+    Set mySeq = SeqT(10, 42, 20, 30, 42, 40, 50, 42)
 
     'Act:
-    Debug.Print "Removing Indexes",
+    'Debug.Print "Removing Indexes",
     mySeq.RemoveIndexes 8, 2, 5
-    Debug.Print "Removed Indexes"
+    'Debug.Print "Removed Indexes"
 
     myResult = mySeq.ToArray
 
@@ -1296,8 +1298,13 @@ Private Sub Test10a_Remove_SingleItems()
     Set mySeq = SeqT(1, 42, 1, 1, 42, "Hello", "Hello", "Hello", 1, 3.142, 1, 42, 1, 1)
 
     'Act:
+'    Debug.Print
+'    Debug.Print
+    'mySeq.PrintByOrder
     mySeq.RemoveItems 42, 3.142, "Hello"
-
+'    Debug.Print
+'    Debug.Print
+'    mySeq.PrintByOrder
     myResult = mySeq.Sort.ToArray
 
     'Assert:
@@ -1374,7 +1381,7 @@ Private Sub Test11b_RemoveIndexesRange_ThreeItems()
     Set mySeq = SeqT.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
 
     'Act:
-    mySeq.RemoveIndexesRange SeqT(5, 4, 6)
+    mySeq.RemoveIndexesRange SeqA(5, 4, 6)
 
     myResult = mySeq.ToArray
 

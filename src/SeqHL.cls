@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqHL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqHL is a Collection/ArrayList replacement. Items are stored in an Array/Quadruple linkied list using a hash value. Order of addition is preserved.  Indexing is 1 based. Keys are not supported (See Kvp classes)"

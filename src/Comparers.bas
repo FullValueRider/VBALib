@@ -23,13 +23,15 @@ Option Explicit
 ' A word about admin types
 ' empty coerces to 0 for numbers and vb
 
+'***ToDO Updat Fmt text to have a version that includes types.  This will simplify the continer comparers.
+
 ' We also need to be aware
 Public Function EQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRef ipTypes As Boolean = False, Optional ByRef ipOrder As Boolean = True, Optional ByRef ipMismatchIsFalse As Boolean = True) As Boolean
     
     ' If type comparison is required the test can exit early if the Types Do not match
     If ipTypes Then
         If VBA.TypeName(ipLHS) <> VBA.TypeName(ipRHS) Then
-            EQ = False
+            EQ = MismatchOrderer(ipLHS) = MismatchOrderer(ipRHS)
             Exit Function
         End If
     End If
@@ -62,7 +64,7 @@ Public Function EQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRe
     ' its good for the users soul.
     Else
         If ipMismatchIsFalse Then
-            EQ = False
+            EQ = False 'MismatchOrderer(ipLHS) = MismatchOrderer(ipRHS)
         Else
             TypeMismatch ipLHS, ipRHS
         End If
@@ -148,7 +150,7 @@ Public Function MT(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRe
     
     If ipTypes Then
         If VBA.TypeName(ipLHS) <> VBA.TypeName(ipRHS) Then
-            MT = False
+            MT = MismatchOrderer(ipLHS) > MismatchOrderer(ipRHS)
             Exit Function
         End If
     End If
@@ -178,7 +180,7 @@ Public Function MT(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRe
     Else
     
         If ipMismatchIsFalse Then
-            MT = False
+            MT = False 'MismatchOrderer(ipLHS) > MismatchOrderer(ipRHS)
         Else
             TypeMismatch ipLHS, ipRHS
         End If
@@ -260,7 +262,7 @@ Public Function MTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional By
 
     If ipTypes Then
         If VBA.TypeName(ipLHS) <> VBA.TypeName(ipRHS) Then
-            MTEQ = False
+            MTEQ = MismatchOrderer(ipLHS) >= MismatchOrderer(ipRHS)
             Exit Function
         End If
     End If
@@ -291,7 +293,7 @@ Public Function MTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional By
     Else
             
         If ipMismatchIsFalse Then
-            MTEQ = False
+            MTEQ = False 'MismatchOrderer(ipLHS) >= MismatchOrderer(ipRHS)
         Else
             TypeMismatch ipLHS, ipRHS
         End If
@@ -367,7 +369,7 @@ Public Function LT(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRe
     
     If ipTypes Then
         If VBA.TypeName(ipLHS) <> VBA.TypeName(ipRHS) Then
-            LT = False
+            LT = MismatchOrderer(ipLHS) < MismatchOrderer(ipRHS)
             Exit Function
         End If
     End If
@@ -403,7 +405,7 @@ Public Function LT(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional ByRe
     Else
     
         If ipMismatchIsFalse Then
-            LT = False
+            LT = False  'MismatchOrderer(ipLHS) < MismatchOrderer(ipRHS)
         Else
             TypeMismatch ipLHS, ipRHS
         End If
@@ -485,7 +487,7 @@ Public Function LTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional By
 
     If ipTypes Then
         If VBA.TypeName(ipLHS) <> VBA.TypeName(ipRHS) Then
-            LTEQ = False
+            LTEQ = MismatchOrderer(ipLHS) <= MismatchOrderer(ipRHS)
             Exit Function
         End If
     End If
@@ -519,7 +521,7 @@ Public Function LTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, Optional By
     Else
     
         If ipMismatchIsFalse Then
-            LTEQ = False
+            LTEQ = False '  MismatchOrderer(ipLHS) <= MismatchOrderer(ipRHS)
         Else
             TypeMismatch ipLHS, ipRHS
         End If
@@ -601,3 +603,40 @@ Private Sub TypeMismatch(ByRef ipLHS As Variant, ByRef ipRHS As Variant)
         Fmt.Text("ipLHS was {0}:{1}, ipRHS was {2}:{3).", VBA.TypeName(ipLHS), ipLHS, VBA.TypeName(ipRHS), ipRHS)
         
 End Sub
+
+
+' Comparer needs a method to resolve problems associated with returning false
+' when types do not match e.g. both LT and MT return false.
+' this means that code elsewhere can never resolve
+' so we need to set a prority for different types so that MT/LT can return true or false
+' To do this we assign a sinle numerical value to a TypeGroup
+' so that Lt or MT can return a true or false.
+' The assignments are
+' Admin = 0
+' Boolean = 1
+' Number = 2
+' String = 3
+' ItemObject = 4
+' Array = 5
+' Container = 6
+
+    
+            
+Private Function MismatchOrderer(ByRef ipItem As Variant) As Long
+    Select Case True
+        Case GroupInfo.IsAdmin(ipItem)
+            MismatchOrderer = 0
+        Case GroupInfo.IsBoolean(ipItem)
+            MismatchOrderer = 1
+        Case GroupInfo.IsNumber(ipItem)
+            MismatchOrderer = 2
+        Case GroupInfo.IsString(ipItem)
+            MismatchOrderer = 3
+        Case GroupInfo.IsItemObject(ipItem)
+            MismatchOrderer = 4
+        Case GroupInfo.IsArray(ipItem)
+            MismatchOrderer = 5
+        Case GroupInfo.IsContainer(ipItem)
+            MismatchOrderer = 6
+    End Select
+End Function

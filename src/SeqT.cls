@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqT"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -16,7 +16,7 @@ Option Explicit
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 ' Items are accessed using 1 based indexing
 ' Not enumerable via NewEnum (See Iteritems)
-' Keys are not supported (see Kvp classes)
+' Keys are not supported (see Kvp classes)r
 ' Preserves order of addition.
 ' Insertion at a defined order position is supported
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
@@ -33,7 +33,8 @@ Private Const NOT_FOUND                         As Long = -1
 Private Type State
     Root                                        As SeqTNode
     Last                                        As SeqTNode
-    Order                                       As SeqC
+    Order                                       As SeqA
+    Result                                      As Variant
 End Type
 
 Private s                                       As State
@@ -76,11 +77,11 @@ Attribute Deb.VB_UserMemId = 0
 End Function
 
 Public Function ConstructInstance(ByRef ipFpa As Variant) As SeqT
-
+    
     VBA.Randomize
     Set s.Root = Nothing
     Set s.Last = Nothing
-    Set s.Order = SeqC.Deb
+    Set s.Order = SeqA.Deb
     
     
     If ArrayOp.LacksItems(ipFpa) Then
@@ -125,12 +126,13 @@ End Function
 ' Core methods - essential for making the class work and status of the object
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
 Public Function Add(ByRef ipItem As Variant) As Long
-   
+    'Debug.Print
+    'Debug.Print "Adding ", ipItem
     Dim myNode As SeqTNode: Set myNode = SeqTNode(ipItem, GetPriority)
-    Set s.Root = InsertNode(myNode, s.Root)
+    Set s.Root = InsertNode(s.Root, myNode)
     s.Order.Add myNode
-    myNode.Order = s.Order.Lastindex
-    Add = s.Order.Lastindex
+    UpdateOrder s.Order.Lastindex
+    Add = Me.Lastindex
     
 End Function
 
@@ -170,7 +172,7 @@ Public Function InsertAt(ByRef ipIndex As Long, ByRef ipItem As Variant) As Long
 Attribute InsertAt.VB_Description = "Inserts one or more items starting at ipIndex. Returns the index of the inserted item"
 
     InsertAt = INDEX_OUT_OF_BOUNDS
-
+    
     If Guard.IndexOutOfBounds(ipIndex, Me, "InsertAt", Guard.REPORT_BACK) Then
         Exit Function
     End If
@@ -210,15 +212,27 @@ Public Property Let Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
     ' Because the underlying structure is a treap we can't just replace the
     ' item in a node.  Instead we have to delete the existing node and then
     ' replace with a new node. The replacement ensures that the new node
-    ' has the same location in s.order however, due to the way in which a
+    ' has the same location in s.order but due to the way in which a
     ' node is constructed the new node will be in a different position in the
     ' treap and the treap istelf will have some reorganistion due to rotations.
-    Set s.Root = DeleteNodeAt(s.Order.Item(ipIndex), s.Root)
-    InsertAt ipIndex, ipItem
-
+    
+    RemoveAt ipIndex
+    ' The removal means that we could have a case where ipindex now exceeds
+    ' the lastindex because we just deleted lastindex.  In this case we cannot just
+    ' insertat because the index won't exist so we have to do an insertnode
+    ' and then an s.order.add
+    If ipIndex = Me.Lastindex + 1 Then
+        Dim myNode As SeqTNode: Set myNode = SeqTNode(ipItem, GetPriority)
+        InsertNode s.Root, myNode
+        s.Order.Add myNode
+        UpdateOrder ipIndex
+    Else
+        InsertAt ipIndex, ipItem
+    End If
+        
 End Property
 
-
+ 
 Public Property Set Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
 
     Guard.IndexOutOfBounds ipIndex, Me, "Set Item"
@@ -226,11 +240,23 @@ Public Property Set Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
     ' Because the underlying structure is a treap we can't just replace the
     ' item in a node.  Instead we have to delete the existing node and then
     ' replace with a new node. The replacement ensures that the new node
-    ' has the same location in s.order however, due to the way in which a
+    ' has the same location in s.order but due to the way in which a
     ' node is constructed the new node will be in a different position in the
     ' treap and the treap istelf will have some reorganistion due to rotations.
-    Set s.Root = DeleteNodeAt(s.Order.Item(ipIndex), s.Root)
-    InsertAt ipIndex, ipItem
+    
+    RemoveAt ipIndex
+    ' The removal means that we could have a case where ipindex now exceeds
+    ' the lastindex because we just deleted lastindex.  In this case we cannot just
+    ' insertat because the index won't exist so we have to do an insertnode
+    ' and then an s.order.add
+    If ipIndex = Me.Lastindex + 1 Then
+        Dim myNode As SeqTNode: Set myNode = SeqTNode(ipItem, GetPriority)
+        InsertNode s.Root, myNode
+        s.Order.Add myNode
+        UpdateOrder ipIndex
+    Else
+        InsertAt ipIndex, ipItem
+    End If
 
 End Property
 
@@ -242,16 +268,19 @@ Public Function Remove(ByRef ipItem As Variant) As Long
         Exit Function
     End If
     
-    ' updating of order is done during delete node
-    Set s.Root = DeleteNode(ipItem, s.Root)
+    Set s.Root = DeleteNode(s.Root, ipItem)
+    ' The deletion of the node occurs at the lowest point of the recursion
+    ' so we use a parameter external to DeleteNode to record the
+    ' index of the node that is deleted
+    Remove = s.Result
     
 End Function
 
 '@Description("Removes the item at the specified index")
 Public Function RemoveAt(ByRef ipIndex As Long) As Long
 Attribute RemoveAt.VB_Description = "Removes the item at the specified index"
-    Debug.Print "At RemoveAt",
-    Fmt.Dbg "{0},{1},{2}", s.Order.Item(1).Item, s.Order.Item(1).Left, s.Order.Item(1).Right
+    'Debug.Print "RemoveAt ",
+    'Fmt.Dbg "{0},{1},{2}", s.Order.Item(1).Item, s.Order.Item(1).Left, s.Order.Item(1).Right
     RemoveAt = NOT_FOUND
     
     If Me.LacksItems Then
@@ -264,12 +293,40 @@ Attribute RemoveAt.VB_Description = "Removes the item at the specified index"
     
     
     Dim myNode As SeqTNode: Set myNode = s.Order.Item(ipIndex)
-    Set s.Root = DeleteNodeAt(myNode, s.Root)
-        
+    'Debug.Print
+    'Debug.Print
+    'Debug.Print "Deleting Index", ipIndex, " node is ", myNode.Order, myNode.Item
+    myNode.Priority = -1
+   '@Ignore AssignmentNotUsed
+   
+   'Debug.Print "Searching from root ", s.Root.Item
+   Set myNode = DeleteNodeAt(s.Root, myNode.Item, ipIndex) ', ipItem)
+    
+'    s.Order.Item(ipIndex) = Nothing
+'    s.Order.RemoveAt ipIndex
+'
+'    'Set myNode = Nothing
+'
+'    UpdateOrder ipIndex
     RemoveAt = ipIndex
     
 End Function
 
+'
+'Private Function NodeIsLowerPriority(ByRef ipNode As Variant) As Boolean
+'
+'    If IsNotNothing(ipNode.Right) Then
+'        NodeIsLowerPriority = ipNode.Priority < ipNode.Right.Priority
+'        Exit Function
+'    End If
+'
+'    If IsNotNothing(ipNode.Left) Then
+'        NodeIsLowerPriority = ipNode.Priority < ipNode.Left.Priority
+'        ExiIndex t Function
+'    End If
+'
+'
+'End Function
 
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
 ' Sugar methods' Add to the flexibility of the seq class
@@ -407,9 +464,9 @@ End Function
 '
 '    If IsNotNothing(ipNode.Left) And IsNotNothing(ipNode.Right) Then
 '        If ipNode.Left.Priority < ipNode.Right.Priority Then
-'            Debug.Print ipNode.Item, "Is balanced", ipNode.Left.Priority, ipNode.Right.Priority
+'            'Debug.Print ipNode.Item, "Is balanced", ipNode.Left.Priority, ipNode.Right.Priority
 '        Else
-'            Debug.Print ipNode.Item, "Not balanced", ipNode.Left.Priority, ipNode.Right.Priority
+'            'Debug.Print ipNode.Item, "Not balanced", ipNode.Left.Priority, ipNode.Right.Priority
 '        End If
 '    End If
 '
@@ -807,7 +864,12 @@ Attribute RemoveRange.VB_Description = "Remove items in the specified range of I
     End If
     
     Do
-        Remove myItems.CurItem(0)
+        ''Debug.Print "Removing", myItems.CurItem(0)
+        Dim myA() As Variant: myA = Array(myItems.CurItem(0))
+        Remove myA(0)
+        'Debug.Print
+        'Debug.Print
+        'Me.PrintByOrder
     Loop While myItems.MoveNext
  
 End Function
@@ -900,15 +962,10 @@ Attribute RemoveIndexesRange.VB_Description = "Remove items in the specified ran
     'Remove the sorted indexes in reverse order
     Dim myItems As IterItems: Set myItems = IterItems(myS).MoveToEndIndex
     Do
+        Dim myItem As Variant: myItem = myItems.CurItem(0)
+        'Debug.Print "Removing Index", myItem
+        RemoveAt VBA.CLng(myItem)
         
-        Dim myIndex As Long: myIndex = myItems.CurItem(0)
-        Debug.Print
-        Debug.Print "Deleting ", myIndex,
-        Dim myNode As SeqTNode: Set myNode = s.Order.Item(myIndex)
-        Debug.Print " Item ", myNode.Item,
-        Set s.Root = DeleteNodeAt(myNode, s.Root)
-        Debug.Print "Deleted"
-        Set myNode = Nothing
     Loop While myItems.MovePrev
     
     Set RemoveIndexesRange = Me
@@ -1658,36 +1715,42 @@ End Function
 ' Private methods
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
 '@Description("Returns the node that was rotated to root position.")
-Private Function InsertNode(ByVal ipNewNode As SeqTNode, ByVal ipCurnode As SeqTNode) As SeqTNode
+'@Ignore AssignedByValParameter
+Private Function InsertNode(ByVal ipCurnode As SeqTNode, ByVal ipNewNode As SeqTNode) As SeqTNode
 Attribute InsertNode.VB_Description = "Returns the node that was rotated to root position."
-   
+    'Debug.Print "InsertNode",
+    If IsNothing(ipCurnode) Then
+        'Debug.Print "ipCurNode is nothing, setting to newnode", ipNewNode.Item
+        Set InsertNode = ipNewNode
+        Exit Function
+    End If
+    'Debug.Print ipNewNode.Item
+
     Select Case True
-        
-        Case IsNothing(ipCurnode)
-            ' when root is nothing or we have reached a leaf node
-            Set InsertNode = ipNewNode
-            
-        ' <Items get stored left, = or > item get stored right
-        ' if we wanted unique items we would have a separate test
-        ' for eq and error if eq
-        Case Comparers.LT(ipNewNode.Item, ipCurnode.Item)
-            Set ipCurnode.Left = InsertNode(ipNewNode, ipCurnode.Left)
+        Case Comparers.LTEQ(ipNewNode.Item, ipCurnode.Item)
+            'Debug.Print "NewNode is <= than CurNode", ipNewNode.Item, ipCurnode.Item
+            'Debug.Print "Setting left child  to ", ipNewNode.Item
+            Set ipCurnode.Left = InsertNode(ipCurnode.Left, ipNewNode)
             If ipCurnode.Left.Priority > ipCurnode.Priority Then
-                Set InsertNode = rightRotate(ipCurnode)
-            Else
-                Set InsertNode = ipCurnode
+                'Debug.Print "Left priority > parent", ipCurnode.Left.Priority, ipCurnode.Priority
+                'Debug.Print "Rotating root to right child"
+                Set ipCurnode = RotateRootToRightChild(ipCurnode)
             End If
                 
         
         Case Else
-            Set ipCurnode.Right = InsertNode(ipNewNode, ipCurnode.Right)
+            'Debug.Print "NewNode is > than CurNode", ipNewNode.Item, ipCurnode.Item
+            'Debug.Print "Setting right child to to ", ipNewNode.Item
+            Set ipCurnode.Right = InsertNode(ipCurnode.Right, ipNewNode)
             If ipCurnode.Right.Priority > ipCurnode.Priority Then
-                Set InsertNode = leftRotate(ipCurnode)
-            Else
-                Set InsertNode = ipCurnode
+                'Debug.Print "Right priority > parent", ipCurnode.Right.Priority, ipCurnode.Priority
+                'Debug.Print "Rotating root to leftt child"
+                Set ipCurnode = RotateRootToLeftChild(ipCurnode)
             End If
             
     End Select
+    
+    Set InsertNode = ipCurnode
     
 End Function
 
@@ -1695,13 +1758,23 @@ End Function
 Private Function GetNodeOf(ByVal ipNode As SeqTNode, ByRef ipItem As Variant) As SeqTNode
 Attribute GetNodeOf.VB_Description = "Returns the first node with a matching Item or nothing"
 
-    Select Case True
-        Case IsNothing(ipNode):                     Set GetNodeOf = Nothing
-        Case Comparers.EQ(ipItem, ipNode.Item):     Set GetNodeOf = ipNode
-        Case Comparers.MT(ipItem, ipNode.Item):     Set GetNodeOf = GetNodeOf(ipNode.Right, ipItem)
-        Case Else:                                  Set GetNodeOf = GetNodeOf(ipNode.Left, ipItem)
-    End Select
-     
+    If IsNothing(ipNode) Then
+        Set GetNodeOf = ipNode
+        Exit Function
+    End If
+    
+    If Comparers.EQ(ipNode.Item, ipItem) Then
+        Set GetNodeOf = ipNode
+        Exit Function
+    End If
+    
+    If Comparers.LT(ipNode.Item, ipItem) Then
+        Set GetNodeOf = GetNodeOf(ipNode.Right, ipItem)
+        Exit Function
+    End If
+    
+    Set GetNodeOf = GetNodeOf(ipNode.Left, ipItem)
+        
 End Function
 
 
@@ -1712,182 +1785,250 @@ Private Function GetPriority() As Variant
         GetPriority = VBA.CVar(VBA.CLng(VBA.Rnd(1) * (Globals.maxLong - 1)))
 End Function
 
-''@Ignore AssignedByValParameter
-'Private Function DeleteNode(ByRef ipItem As Variant, ByVal ipCurnode As SeqTNode) As SeqTNode
-'
-'    Dim myTmp As SeqTNode
-'    ' Base case
-'    If IsNothing(ipCurnode) Then
-'        Set DeleteNode = Nothing
-'        Exit Function
-'    End If
-'
-'    ' IF ipItemS IS NOT AT ipNode
-'    Select Case True
-'        Case Comparers.LT(ipItem, ipCurnode.Item):         Set ipCurnode.Left = DeleteNode(ipItem, ipCurnode.Left)
-'        Case Comparers.MT(ipItem, ipCurnode.Item):         Set ipCurnode.Right = DeleteNode(ipItem, ipCurnode.Right)
-'        Case Else
-'
-'            If ipCurnode.Left Is Nothing Then
-'
-'                s.Order.RemoveAt ipCurnode.Order
-'                UpdateOrder ipCurnode.Order
-'
-'                Set myTmp = ipCurnode.Right
-'                Set ipCurnode = Nothing
-'                Set DeleteNode = myTmp   ' Make right child as ipNode
-'                 Exit Function
-'            ' If Right is nothing
-'            ElseIf ipCurnode.Right Is Nothing Then
-'
-'                s.Order.RemoveAt ipCurnode.Order
-'                UpdateOrder ipCurnode.Order
-'
-'                Set myTmp = ipCurnode.Left
-'                Set ipCurnode = Nothing
-'                Set DeleteNode = myTmp  ' Make left child as ipNode
-'                Exit Function
-'            ' If ipItem is at ipNode and both left and right are not NULL
-'            ElseIf ipCurnode.Left.Priority < ipCurnode.Right.Priority Then
-'                Set ipCurnode = leftRotate(ipCurnode)
-'                Set ipCurnode.Left = DeleteNode(ipItem, ipCurnode.Left)
-'            Else
-'                Set ipCurnode = rightRotate(ipCurnode)
-'                Set ipCurnode.Right = DeleteNode(ipItem, ipCurnode.Right)
-'            End If
-'    End Select
-'
-'    'p.Size = p.Size - 1
-'    Set DeleteNode = ipCurnode
-'
-'End Function
-Private Function DeleteNode(ByRef ipItem As Variant, ByRef ipCurnode As SeqTNode)
 
-    If IsNotNothing(ipCurnode) Then
-        If Comparers.EQ(ipItem, ipCurnode.Item) Then
-            If IsNothing(ipCurnode.Left) And IsNothing(ipCurnode.righ) Then
-                Set DeleteNode = Nothing
-            Else
-                If IsNothing(ipCurnode.Left) Then
-                    Set DeleteNode = ipCurnode.Right
-                ElseIf IsNothing(ipCurnode.Right) Then
-                    Set DeleteNode = ipCurnode.Left
-                Else
-                    If ipCurnode.Right.Priority > ipCurnode.Left.Priority Then
-                        leftRotate ipCurnode
-                        Set curnode.Left = DeleteNode(ipItem, ipCurnode.Left)
-                    Else
-                        rightRotate (ipCurnode)
-                        Set curnode.Right = DeleteNode(ipItem, ipCurnode.Right)
-                    End If
-                End If
-            End If
-        ElseIf Comparers.LT(ipItem, ipCurnode.Item) Then
-            ipCurnode.Left = DeleteNode(ipItem, ipCurnode)
-        ElseIf Comparers.MT(ipItem, icurnode.Key) Then
-            ipCurnode.Right = DeleteNode(ipItem, ipCurnode.Right)
-        End If
-    Set DeleteNode = ipCurnode
-            
-End Function
 
 '@Ignore AssignedByValParameter
-Private Function DeleteNodeAt(ByRef ipNode As SeqTNode, ByVal ipCurnode As SeqTNode) As SeqTNode
+Private Function DeleteNode(ByVal ipRoot As SeqTNode, ByVal ipItem As Variant) As SeqTNode
+' NB Root does not refer to s.Root, rather, it is the first node in the current substree
+' 1) If node is a leaf, delete it.
+' 2) If node has one child NULL and other as non-NULL, replace node with the non-empty child.
+' 3) If node has both children as non-NULL, find max of left and right children.
+'  a) If priority of right child is greater, perform left rotation at node
+'  b) If priority of left child is greater, perform right rotation at node.
+'The idea of step 3 is to move the node to down so that we end up with either case 1 or case 2.
+
     Dim myTmp As SeqTNode
-    Select Case True
     
-        Case IsNothing(ipCurnode)
-            Set DeleteNodeAt = ipCurnode
+    If IsNothing(ipRoot) Then
+        ''Debug.Print "Root is nothing found"
+        Set DeleteNode = ipRoot
+        Exit Function
+    End If
             
-        Case Comparers.LT(ipNode.Item, ipCurnode.Item)
-            Set ipCurnode.Left = DeleteNodeAt(ipNode, ipCurnode.Left)
+    If Comparers.LT(ipItem, ipRoot.Item) Then
+        'If IsNothing(ipRoot.Left) Then 'Debug.Print "Moving left from", ipRoot.Item, " to nothing"
+        'Debug.Print "Moving left from ", ipRoot.Item, " to ", ipRoot.Left.Item
+        Set ipRoot.Left = DeleteNode(ipRoot.Left, ipItem)
             
-        Case Comparers.MT(ipNode.Item, ipCurnode.Item)
-            Set ipCurnode.Right = DeleteNodeAt(ipNode, ipCurnode.Right)
+    ElseIf Comparers.MT(ipItem, ipRoot.Item) Then
+        'If IsNothing(ipRoot.Right) Then 'Debug.Print "Moving right from ", ipRoot.Item, " to nothing"
+        'Debug.Print "Moving right from ", ipRoot.Item, " to ", ipRoot.Right.Item
+        Set ipRoot.Right = DeleteNode(ipRoot.Right, ipItem)
+            
+    ' to get to this point ipcurnode.item == item
+    ' why does there not appear to be code that actually deletes a leaf.
+    ElseIf IsNothing(ipRoot.Left) And IsNothing(ipRoot.Right) Then
         
-        Case Else
-            ' ipNode.Item = ipCurnode.item
-            ' we now need to match item/nodepairs
-            
-            Set ipCurnode = DeleteNodeAtByOrder(ipNode, ipCurnode)
-            Select Case True
-            
-                Case IsNothing(ipCurnode.Left)
-                    Set myTmp = ipCurnode.Right
-                    Set ipCurnode = Nothing
-                    Set DeleteNodeAt = myTmp
-                
-                Case IsNothing(ipCurnode.Right)
-                    Set myTmp = ipCurnode.Left
-                    Set ipCurnode = Nothing
-                    Set DeleteNodeAt = myTmp
-                    
-                Case ipCurnode.Left.Priority < ipCurnode.Right.Priority
-                    Set ipCurnode = leftRotate(ipCurnode)
-                    Set ipCurnode.Left = DeleteNodeAt(ipNode, ipCurnode.Left)
-                    
-                Case Else
-                    Set ipCurnode = rightRotate(Root)
-                    Set ipCurnode.Right = DeleteNodeAtIndex(ipNode, ipCurnode.Right)
-            
-            End Select
-                  
-        End Select
- 
-    Set DeleteNodeAt = ipCurnode
+        'Set ipRoot = s.Order.Item(ipIndex)
+        'Debug.Print "No Children, Deleting", ipRoot.Item
+        s.Result = ipRoot.Order
+        s.Order.Item(s.Result) = Nothing
+        s.Order.RemoveAt VBA.CLng(s.Result)
+        UpdateOrder VBA.CVar(s.Result)
+        Set ipRoot = Nothing
+        Set DeleteNode = ipRoot
+        'Exit Function
+        
+    ElseIf IsNothing(ipRoot.Left) Then
+        'Debug.Print "No Left Child, Deleting", ipRoot.Item
+        Set myTmp = ipRoot.Right
+        s.Result = ipRoot.Order
+        s.Order.Item(s.Result) = Nothing
+        s.Order.RemoveAt VBA.CLng(s.Result)
+        UpdateOrder VBA.CVar(s.Result)
+        Set ipRoot = Nothing
+        Set ipRoot = myTmp
+        'Set DeleteNode = myTmp
+        'Exit Function
+        
+    ElseIf IsNothing(ipRoot.Right) Then
+        'Debug.Print "No Right Child, Deleting", ipRoot.Item
+        Set myTmp = ipRoot.Left
+        s.Result = ipRoot.Order
+        s.Order.Item(s.Result) = Nothing
+        s.Order.RemoveAt VBA.CLng(s.Result)
+        UpdateOrder VBA.CVar(s.Result)
+        Set ipRoot = Nothing
+        Set ipRoot = myTmp
+        'Set DeleteNode = myTmp
+        'Exit Function
+        
+    ElseIf ipRoot.Left.Priority < ipRoot.Right.Priority Then
+        ''Debug.Print "Rotate Left"
+        Set ipRoot = RotateRootToLeftChild(ipRoot)
+        Set ipRoot.Left = DeleteNode(ipRoot.Left, ipItem)
+    
+    Else
+        ''Debug.Print "RotateRight"
+    
+        Set ipRoot = RotateRootToRightChild(ipRoot)
+        Set ipRoot.Right = DeleteNode(ipRoot.Right, ipItem)
+    
+    End If
+        
+  
+
+    Set DeleteNode = ipRoot
     
 End Function
 
-Private Function DeleteNodeAtByOrder(ByRef ipNode As SeqTNode, ByRef ipCurnode As SeqTNode) As SeqTNode
 
-        ' This function is called only when
-        ' ipCurnodeItem =ipNode.Item and ipcurnode.order <> ipNode.order
-        ' the method will only search for nodes matching ipNode.Item
-        Select Case True
-    
-        Case IsNothing(ipCurnode)
-            Set DeleteNodeAt = ipCurnode
-            
-        Case Comparers.LT(ipNode.Item, ipCurnode.Item)
-            Set ipCurnode.Left = DeleteNodeAt(ipNode, ipCurnode.Left)
-            
-        Case Comparers.MT(ipNode.Item, ipCurnode.Item)
-            Set ipCurnode.Right = DeleteNodeAt(ipNode, ipCurnode.Right)
-        
-        Case Else
-            ' ipNode.Item = ipCurnode.item
-            ' we now need to match item/nodepairs
-            
-            Set ipCurnode = DeleteNodeAtByOrder(ipNode, ipCurnode)
-            Select Case True
-            
-                Case IsNothing(ipCurnode.Left)
-                    Set myTmp = ipCurnode.Right
-                    Set ipCurnode = Nothing
-                    Set DeleteNodeAt = myTmp
-                
-                Case IsNothing(ipCurnode.Right)
-                    Set myTmp = ipCurnode.Left
-                    Set ipCurnode = Nothing
-                    Set DeleteNodeAt = myTmp
-                    
-                Case ipCurnode.Left.Priority < ipCurnode.Right.Priority
-                    Set ipCurnode = leftRotate(ipCurnode)
-                    Set ipCurnode.Left = DeleteNodeAt(ipNode, ipCurnode.Left)
-                    
-                Case Else
-                    Set ipCurnode = righttotate(Root)
-                    Set ipCurnode.Right = DeleteNodeAtIndex(ipNode, ipCurnode.Right)
-            
-            End Select
-                  
-        End Select
-        
-            
-           
+
+
+'@Ignore AssignedByValParameter
+Private Function DeleteNodeAt(ByVal ipRoot As SeqTNode, ByRef ipItem As Variant, ByRef ipIndex As Long) As SeqTNode  ' , ByVal ipItemNode As SeqTNode
+
+' 1) If node is a leaf, delete it.
+' 2) If node has one child NULL and other as non-NULL, replace node with the non-empty child.
+' 3) If node has both children as non-NULL, find max of left and right children.
+'  a) If priority of right child is greater, perform left rotation at node
+'  b) If priority of left child is greater, perform right rotation at node.
+'The idea of step 3 is to move the node to down so that we end up with either case 1 or case 2.
+    Dim myTmp As SeqTNode
+
+    If IsNothing(ipRoot) Then
+        'Debug.Print "Sub tree Root is nothing"
+        Set DeleteNodeAt = ipRoot
+        Exit Function
+    End If
+
+    If Comparers.LT(ipItem, ipRoot.Item) Then
+       ' If IsNothing(ipRoot.Left) Then 'Debug.Print "Moving left from", ipRoot.Item, " to nothing"
+        'Debug.Print "Moving left from ", ipRoot.Item, " to ", ipRoot.Left.Item
+        Set ipRoot.Left = DeleteNodeAt(ipRoot.Left, ipItem, ipIndex)
+
+    ElseIf Comparers.MT(ipItem, ipRoot.Item) Then
+       ' If IsNothing(ipRoot.Right) Then 'Debug.Print "Moving right from ", ipRoot.Item, " to nothing"
+        'Debug.Print "Moving right from ", ipRoot.Item, " to ", ipRoot.Right.Item
+        Set ipRoot.Right = DeleteNodeAt(ipRoot.Right, ipItem, ipIndex)
+
+    ' to get to this point ipcurnode.item == item
+    ' why does there not appear to be code that actually deletes a leaf.
+    ElseIf Comparers.EQ(ipRoot.Item, ipItem) And ipRoot.Order <> ipIndex Then
+            'Debug.Print "Items match", ipRoot.Item, ipItem
+            'Debug.Print "Index mismatch", ipRoot.Order, ipIndex
+
+'            If IsNothing(ipRoot.Left) And IsNothing(ipRoot.Right) And (ipRoot.Order = ipIndex) Then
+'
+'                Set ipRoot = s.Order.Item(ipIndex)
+'                'Debug.Print "EqualItems: Equal Order: Deleting when both children exist", ipRoot.Item
+'                s.Result = ipIndex
+'                s.Order.Item(s.Result) = Nothing
+'                s.Order.RemoveAt VBA.CLng(s.Result)
+'                UpdateOrder VBA.CVar(s.Result)
+'                Set ipRoot = Nothing
+''                Set DeleteNodeAt = ipRoot
+''                Exit Function
+
+            If IsNotNothing(ipRoot.Left) Then
+                If Comparers.EQ(ipRoot.Left.Item, ipItem) Then
+                    'Debug.Print "Equal Items: FindingIndex: Moving Left from ", ipRoot.Item, " to ", ipRoot.Left.Item
+                    Set ipRoot = DeleteNodeAt(ipRoot.Left, ipItem, ipIndex)
+
+                End If
+
+            ElseIf IsNotNothing(ipRoot.Right) Then
+                If Comparers.EQ(ipRoot.Right.Item, ipItem) Then
+                    'Debug.Print "Equal items: Finding Index: Moving right from ", ipRoot.Item, " to ", ipRoot.Right.Item
+                    Set ipRoot = DeleteNodeAt(ipRoot.Right, ipItem, ipIndex)
+                End If
+
+
+            ElseIf Comparers.EQ(ipRoot.Left.Item, ipRoot.Item) And (ipRoot.Left.Priority <= ipRoot.Right.Priority) Then
+                'Debug.Print "Equal Items: FInding Index: rotating left based on priority"
+                Set ipRoot = RotateRootToLeftChild(ipRoot)
+                Set ipRoot.Left = DeleteNodeAt(ipRoot.Left, ipItem, ipIndex)
+
+            ElseIf Comparers.EQ(ipRoot.Right.Item, ipRoot.Item) And (ipRoot.Left.Priority > ipRoot.Right.Priority) Then
+                'Debug.Print "Equal Items: FInding Index: rotating right based on priority"
+                Set ipRoot = RotateRootToRightChild(ipRoot)
+                Set ipRoot.Right = DeleteNodeAt(ipRoot.Right, ipItem, ipIndex)
+
+'            Else
+'
+'                Debug.Print "oops in mismatched indexes branch"
+'                Stop
+            End If
+
+            Exit Function
+
+'            If Comparers.EQ(ipRoot.Left.Item, ipItem) Then
+'                If IsNothing(ipRoot.Left) Then 'Debug.Print "Equal Items: Moving Left from ", ipRoot.Item, " to nothing"
+'                'Debug.Print "Equal Items: Moving Left from ", ipRoot.Item, " to ", ipRoot.Left.Item
+'                Set ipRoot = DeleteNodeAt(ipRoot.Left, ipItem, ipIndex)
+'
+'            ElseIf Comparers.EQ(ipRoot.Right.Item, ipItem) Then
+'                If IsNothing(ipRoot.LRight) Then 'Debug.Print "Moving Left from ", ipRoot.Item, " to nothing"
+'                'Debug.Print "Moving right from ", ipRoot.Item, " to ", ipRoot.Right.Item
+'                Set ipRoot = DeleteNodeAt(ipRoot.Left, ipItem, ipIndex)
+'            End If
+
+
+
+        ElseIf IsNothing(ipRoot.Left) And IsNothing(ipRoot.Right) And (ipRoot.Order = ipIndex) Then
+
+            Set ipRoot = s.Order.Item(ipIndex)
+            'Debug.Print "Deleting when neither child exists", ipRoot.Item
+            s.Result = ipIndex
+            s.Order.Item(s.Result) = Nothing
+            s.Order.RemoveAt VBA.CLng(s.Result)
+            UpdateOrder VBA.CVar(s.Result)
+            Set ipRoot = Nothing
+            Set DeleteNodeAt = ipRoot
+            Exit Function
+
+        ElseIf IsNothing(ipRoot.Left) And ipRoot.Order = ipIndex Then
+                Set ipRoot = s.Order.Item(ipIndex)
+                'Debug.Print "Deleting when left child is nothing", ipRoot.Item
+                Set myTmp = ipRoot.Right
+                s.Result = ipIndex
+                s.Order.Item(s.Result) = Nothing
+                s.Order.RemoveAt VBA.CLng(s.Result)
+                UpdateOrder VBA.CVar(s.Result)
+                Set ipRoot = Nothing
+                Set DeleteNodeAt = myTmp
+                Exit Function
+
+        ElseIf IsNothing(ipRoot.Right) And ipRoot.Order = ipIndex Then
+            Set ipRoot = s.Order.Item(ipIndex)
+            'Debug.Print "Deleting when right child is nothing", ipRoot.Item
+            Set myTmp = ipRoot.Left
+            s.Result = ipIndex
+            s.Order.Item(ipIndex) = Nothing
+            s.Order.RemoveAt VBA.CLng(ipIndex)
+            UpdateOrder VBA.CVar(ipIndex)
+            Set ipRoot = Nothing
+            Set DeleteNodeAt = myTmp
+            Exit Function
+
+'        ElseIf Comparers.EQ(ipItem, ipRoot.Item) And (ipRoot.Left.Priority <= ipRoot.Right.Priority) Then
+'
+'            Set ipRoot = RotateRootToLeftChild(ipRoot)
+'            Set ipRoot.Left = DeleteNodeAt(ipRoot.Left, ipItem, ipIndex)
+'
+'        ElseIf Comparers.EQ(ipItem, ipRoot.Item) And (ipRoot.Left.Priority > ipRoot.Right.Priority) Then
+'
+'
+'            Set ipRoot = RotateRootToRightChild(ipRoot)
+'            Set ipRoot.Right = DeleteNodeAt(ipRoot.Right, ipItem, ipIndex)
+
+
+'        Else
+'
+'            'Debug.Print "Can't find Item/order combination", ipItem, ipIndex
+'            Stop
+        End If
+
+
+    Set DeleteNodeAt = ipRoot
+
 End Function
 
-Private Function rightRotate(ByVal y As SeqTNode) As SeqTNode
+
+
+Private Function RotateRootToRightChild(ByVal y As SeqTNode) As SeqTNode
+    'Debug.Print "Rotating Right: root is", y.Item, " left child is ", y.Left.Item
+    ' Formerly RightRotate
     Dim x As SeqTNode: Set x = y.Left
     Dim myTmp As SeqTNode: Set myTmp = x.Right
      
@@ -1896,10 +2037,15 @@ Private Function rightRotate(ByVal y As SeqTNode) As SeqTNode
     Set y.Left = myTmp
      
     ' Return new root
-    Set rightRotate = x
+   ' Dim myRight As Long: If IsNothing(x.Right) Then myRight = 0 Else myRight = x.Right.Item
+    'Debug.Print "After rotation: root is ", x.Item, " right child is"; myRight
+    Set RotateRootToRightChild = x
 End Function
 
-Private Function leftRotate(ByVal x As SeqTNode) As SeqTNode
+Private Function RotateRootToLeftChild(ByVal x As SeqTNode) As SeqTNode
+' Formerly leftrotate
+'Debug.Print "Rotating Left: root  is", x.Item, " right child is ", x.Right.Item
+    
     Dim y As SeqTNode: Set y = x.Right
     Dim myTmp As SeqTNode: Set myTmp = y.Left
      
@@ -1908,30 +2054,56 @@ Private Function leftRotate(ByVal x As SeqTNode) As SeqTNode
     Set x.Right = myTmp
      
     ' Return new root
-    Set leftRotate = y
+    'Dim myLeft As variant: If IsNothing(y.Left) Then myLeft = 0 Else myLeft = y.Left.Item
+    'Debug.Print "After rotation: root is ", y.Item, " left child is "; myLeft
+    Set RotateRootToLeftChild = y
     
 End Function
 
 
-Public Sub PrintByPriority()
+Public Sub PrintByOrder()
+    'Debug.Print "Root is ", s.Root.Item
     inorder s.Root
+    
 End Sub
 Private Sub inorder(ByVal ipNode As SeqTNode)
 
-    If ipNode Is Nothing Then
-        Exit Sub
+    If IsNotNothing(ipNode) Then
+      
+        inorder ipNode.Left
+        Debug.Print "key:", ipNode.Item, "| priority:", ipNode.Priority, " ",
+        If IsNotNothing(ipNode.Left) Then
+            Debug.Print " | left child:", ipNode.Left.Item,
+        End If
+        
+        If IsNotNothing(ipNode.Right) Then
+            Debug.Print " | right child:", ipNode.Right.Item, " ",
+        End If
+        
+        Debug.Print
+        inorder ipNode.Right
+        
     End If
     
-    inorder ipNode.Left
-    Debug.Print "key:", ipNode.Item, "| priority:", ipNode.Priority, " ",
-    If IsNotNothing(ipNode.Left) Then
-        Debug.Print " | left child:", ipNode.Left.Item,
-    End If
-    If IsNotNothing(ipNode.Right) Then
-        Debug.Print " | right child:", ipNode.Right.Item, " ",
-    End If
-    Debug.Print
-    inorder ipNode.Right
+End Sub
+
+Public Sub PrintByColl()
+
+    Dim myIndex As Long
+    For myIndex = Me.FirstIndex To Me.Lastindex
+        Dim myNode As SeqTNode: Set myNode = s.Order.Item(myIndex)
+        Debug.Print "key:", myNode.Item, "| priority:", myNode.Priority, " ",
+        If IsNotNothing(myNode.Left) Then
+            Debug.Print " | left child:", myNode.Left.Item,
+        End If
+        
+        If IsNotNothing(myNode.Right) Then
+            Debug.Print " | right child:", myNode.Right.Item, " ",
+        End If
+        
+        Debug.Print
+    Next
+    
 End Sub
 
 Private Function NotFound(ByRef ipItem As Variant) As Boolean

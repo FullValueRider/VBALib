@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqC is a Collection/ArrayList replacement.  Items are stored in a Collection.  Indexing is 1 based. Order of addition is preserved. Keys are not supported (see Kvp classes)"
@@ -174,7 +174,7 @@ Attribute InsertAt.VB_Description = "Inserts one or more items starting at ipInd
 
 End Function
 
-Public Property Get Item(ByRef ipIndex As Long) As Variant
+Public Property Get Item(ByVal ipIndex As Long) As Variant
 
     Item = Null
     
@@ -193,7 +193,7 @@ Public Property Get Item(ByRef ipIndex As Long) As Variant
 End Property
 
 
-Public Property Let Item(ByRef ipIndex As Long, ByVal ipItem As Variant)
+Public Property Let Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
     
     Guard.IndexOutOfBounds ipIndex, Me, "Let_Item"
     
@@ -203,7 +203,7 @@ Public Property Let Item(ByRef ipIndex As Long, ByVal ipItem As Variant)
 End Property
 
 
-Public Property Set Item(ByRef ipIndex As Long, ByVal ipItem As Variant)
+Public Property Set Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
 
     Guard.IndexOutOfBounds ipIndex, Me, "SeqC.Set_Item"
   

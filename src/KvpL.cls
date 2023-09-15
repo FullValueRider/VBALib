@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "KvpL is a Key/Value pair dictionary where the keys and values are held in a double linked list"

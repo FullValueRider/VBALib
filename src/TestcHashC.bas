@@ -132,7 +132,7 @@ Private Sub Test03a_Add_MultipleItems()
     Dim myH As cHashC
     Dim myExpected As Variant
     myExpected = Array(42, "Hello", 3.142)
-    Sorters.ShakerSortArray myExpected
+    Sorters.ShakerSortArrayByIndex myExpected
     Dim myResult As Variant
 
     'Act:
@@ -142,7 +142,7 @@ Private Sub Test03a_Add_MultipleItems()
     myH.Add 3.142
     
     myResult = myH.Items
-    Sorters.ShakerSortArray myResult
+    Sorters.ShakerSortArrayByIndex myResult
     'Assert:
     AssertExactSequenceEquals myExpected, myResult, myProcedureName
 

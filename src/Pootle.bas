@@ -25,13 +25,26 @@ Sub TestTreap()
     Debug.Print myT.Add("Day")
     Debug.Print myT.Count
     myT.PrintByPriority
+    Debug.Print
+    Debug.Print
+    myT.PrintByOrder
+    myT.RemoveAt myT.Lastindex
+    Debug.Print
+    Debug.Print
+    myT.PrintByOrder
+    
     Dim myT1 As SeqT
     Set myT1 = myT.Sort
     Debug.Print
     Debug.Print
 
     myT1.PrintByPriority
-    myT.RemoveAt 3
+    myT1.PrintByOrder
+    myT1.Remove "World"
+    Debug.Print
+    Debug.Print
+    
+    myT1.PrintByPriority
     
 End Sub
 
@@ -110,85 +123,101 @@ Sub TestPerm()
 End Sub
 
 
-Sub testfmtdbgarray()
 
-    Fmt.Dbg "{0},{1},{2},{3}", 10, 20, 30, 40
-    Dim myD As KvpA
-    Set myD = KvpA.Deb
-    myD.AddPairs SeqA("One", "Two", "Three", "Four"), SeqA(1, 2, 3, 4)
-    Fmt.Dbg "{0}", myD
-
-    Fmt.Dbg "{0}", Array(Array(1, 2, 3, 4))
+Sub TestSeqT()
+    Dim myT As SeqT: Set myT = SeqT.Deb
+    
+    Dim myValue As Long
+    For myValue = 10 To 200 Step 10
+        myT.Add myValue
+    Next
+    
+    
+    Debug.Print
+    Debug.Print "Inorder traversal of the given tree"
+    'myT.PrintByOrder
+     
+    Debug.Print
+    Debug.Print "Delete 20"
+    myT.Remove 20
+    Debug.Print "Inorder traversal of the modified tree"
+    'myT.PrintByOrder
+    
+    Debug.Print "Delete 300"
+    myT.Remove 3000
+    Debug.Print "Inorder traversal of the modified tree"
+    'myT.PrintByOrder
+    Debug.Print
+    Debug.Print "Delete 500"
+    Debug.Print
+    
+    myT.Remove 500
+    Debug.Print "Inorder traversal of the modified tree"
+    'myT.PrintByOrder
+    Debug.Print
+    Debug.Print "Remove 510"
+    myT.Remove 510
+    Debug.Print
+    Debug.Print "Remove 730"
+    myT.Remove 730
+ 
+    Debug.Print
+    Debug.Print "Seeking 500"
+    If myT.HoldsItem(500) Then
+        Debug.Print "500 found"
+    Else
+        Debug.Print "500 Not Found"
+    End If
+    Debug.Print
+    Debug.Print "Order collection"
+    'myT.PrintByColl
 End Sub
 
-
-Sub testredim()
-
-    Dim myNodes() As KvpHNode
-    ReDim myNodes(1 To 100)
-    Dim myNode As KvpHNode: Set myNode = KvpHNode(1, 1, 1)
-    Set myNodes(1) = myNode
+Sub TestSeqTAt()
+    Dim myT As SeqT: Set myT = SeqT.Deb
     
-    ReDim myNodes(1 To 50)
+    Dim myA As Variant: myA = Array(90, 20, 150, 30, 120, 40, 70, 90, 100, 110, 50, 130, 140, 60, 160, 80, 170, 190, 200, 90, 10, 90, 90, 90)
+    Dim myItem As Variant
+    For Each myItem In myA
+        myT.Add myItem
+'        Debug.Print
+'        myT.PrintByOrder
+'        Debug.Print
+'        myT.PrintByColl
+    Next
+    
+    
+    Debug.Print
+    Debug.Print "Inorder traversal of the given tree"
+    myT.PrintByOrder
+     
+    Debug.Print
+    Debug.Print "Delete at 2"
+    myT.RemoveAt 2
+    Debug.Print "Inorder traversal of the modified tree"
+    myT.PrintByOrder
+    
+    Debug.Print "Delete at 8"
+    myT.RemoveAt 8
+    Debug.Print "Inorder traversal of the modified tree"
+    myT.PrintByOrder
+    Debug.Print
+    Debug.Print "Delete At 14"
+    
+    myT.RemoveAt 14
+    Debug.Print "Inorder traversal of the modified tree"
+    myT.PrintByOrder
+    
+    
+ 
+    Debug.Print
+    Debug.Print "Seeking 50"
+    If myT.HoldsItem(50) Then
+        Debug.Print "50 found"
+    Else
+        Debug.Print "50 Not Found"
+    End If
+    Debug.Print
+    Debug.Print "Order collection"
+    myT.PrintByColl
 End Sub
-
-
-Sub TestHTub()
-
-    Dim myK As KvpHA
-    Set myK = KvpHA.Deb
-    myK.Reinit 1000
-    
-    
-End Sub
-
-Sub TestAssert()
-
-' #If Not twinBasic Then
-'     On Error GoTo Boom
-'     Set Assert = CreateObject("Rubberduck.AssertClass")
-
-'     Dim myExpected As Variant: myExpected = Array(1, 2, 3)
-'     Dim myResult As Variant: myResult = Array(1, 2, "4")
-
-'     Assert.SequenceEquals myExpected, myResult, "Whoops"
-    
-    
-'     Dim myNum1 As Variant: myNum1 = 10
-'     Dim myNum2 As Variant: myNum2 = 20
-    
-'     Assert.AreEqual myNum1, myNum2, "Whoops"
-    
-'     Debug.Print "Why didn't it go boom"
-'     Exit Sub
-    
-' Boom:
-'     Debug.Print "It went boom"
-' #End If
-End Sub
-
-
-'Sub testShakersort()
-'
-'    Dim myA As Variant = Array(20, 10, 60, 100, 50, 40, 90, 30, 70, 80)
-'    ' Fmt.Dbg "{0}", myA
-'    ' Sorters.ShakerSortArray myA
-'    'Debug.Print Stringifier.StringifyArray(myA)
-'    'Fmt.Dbg "{0}", myA
-'    Dim mySeq As SeqH = SeqH(myA)
-'    'Debug.Print Stringifier.StringifyItemByIndex(mySeq)
-'    Fmt.Dbg("{0}", mySeq)
-'    ' Dim myIndex As Long
-'    ' For myIndex = mySeq.FirstIndex To mySeq.LastIndex
-'    '     Debug.Print mySeq.Item(myIndex),
-'    ' Next
-'    ' Debug.Print
-'    Set mySeq = mySeq.Sorted
-'    ' Debug.Print Stringifier.StringifyItemByIndex(mySeq)
-'    ' For myIndex = mySeq.FirstIndex To mySeq.LastIndex
-'    '     Debug.Print mySeq.Item(myIndex),
-'    ' Next
-'    Fmt.Dbg("{0}", mySeq)
-'
-'
-'End Sub

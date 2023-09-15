@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqHA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "SeqHA is a multipurpose Collection/ArrayList replacement.  It uses cHashD to store Items using the keys of cHashd.  Items are access using a single 1 based index. For a Keyed collection, use one of the Kvp classes"
