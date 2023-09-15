@@ -9,7 +9,7 @@ And thus started the treadmill because reducing one pattern to a class highlight
 
 This library represent my current ' State of the art' for pure VBA.  I have a parallel project in twinBasic which is in the refactoring doldrums at present whilst I try to eliminate the use of variants.
 
-Run the tests from TestAll.  Do not use Rubberduck unit testing. There are currently over 400 tests and Rubberduck just grinds to a halt.
+Run the tests from TestAll.  Rubberduck unit testing is now working but is very slow (for the current 700+ tests it takes about 12 minutes).  Recent updates to code have slowed the manual tests quite a bit from around 20 seconds to nearly 180 !! But I also notice quite a lot of variability in the manual timings.
 
 I'm currently using the MIT license **BUT** if you find yourslf using any of the library code for commercial reasons please make a contribution proportional to the utility you gained.
 
@@ -34,8 +34,8 @@ Please remember that I am a human being and consequently, as I don't have a buil
 ## Overview of library contents
 
 The library offers
-- a degree of enhanced reflection,  e.g. GroupInfo.IsNumber, GroupInfo.IsContainer, GroupInfo.IsList etc, Similarly for Arrays, ArrayInfo.Ranks, ArrayInfo.Count, ArrayInfo.HoldsItems etc
-- enhanced Collections (SeqA, SeqC, SeqL with SeqAL, SeqH planned.)
+- a degree of enhanced reflection,  e.g. GroupInfo.IsNumber, GroupInfo.IsContainer, GroupInfo.IsList etc, Similarly for Arrays, ArrayOp.Ranks, ArrayOp.Count, ArrayOp.HoldsItems etc
+- enhanced Collections (SeqA, SeqC, SeqL etc.)
 - an en enhanced DIctionaries (KvpA,KvpC, KvpL with KvpAL and KvpH planned)
 - string interpolation for formatting strings (formatting characters and positional variables)
 - Map, Reduce,Filter,and Count functionality on seq and Kvp classes and a set of functions to use in such operations
