@@ -194,9 +194,9 @@ End Function
 
 
 '@Description("Ln. Log to base e to provide a more distictive function than of VBA which used Log for log to base e")
-Public Function Ln(ByVal ipX As Double) As Double
-Attribute Ln.VB_Description = "Ln. Log to base e to provide a more distictive function than of VBA which used Log for log to base e"
-    Ln = VBA.Log(ipX)
+Public Function lN(ByVal ipX As Double) As Double
+Attribute lN.VB_Description = "Ln. Log to base e to provide a more distictive function than of VBA which used Log for log to base e"
+    lN = VBA.Log(ipX)
 End Function
 
 

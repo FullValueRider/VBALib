@@ -25,7 +25,7 @@ Public Sub ShakerSortArrayByIndex(ByRef iopArray As Variant)
     
     Dim i As Long
     Dim j As Long
-    Dim k As Long
+    Dim K As Long
     Dim iMin As Long
     Dim iMax As Long
     Dim varSwap As Variant
@@ -37,22 +37,22 @@ Public Sub ShakerSortArrayByIndex(ByRef iopArray As Variant)
     Do While i > iMin
         j = i
         Do While j > iMin
-            For k = iMin To i - j
-                If Comparers.MT(iopArray(k), iopArray(k + j)) Then
-                    If VBA.IsObject(iopArray(k)) Then
-                        Set varSwap = iopArray(k)
+            For K = iMin To i - j
+                If Comparers.MT(iopArray(K), iopArray(K + j)) Then
+                    If VBA.IsObject(iopArray(K)) Then
+                        Set varSwap = iopArray(K)
                     Else
-                        varSwap = iopArray(k)
+                        varSwap = iopArray(K)
                     End If
-                    If VBA.IsObject(iopArray(k + j)) Then
-                        Set iopArray(k) = iopArray(k + j)
+                    If VBA.IsObject(iopArray(K + j)) Then
+                        Set iopArray(K) = iopArray(K + j)
                     Else
-                        iopArray(k) = iopArray(k + j)
+                        iopArray(K) = iopArray(K + j)
                     End If
                     If VBA.IsObject(varSwap) Then
-                        Set iopArray(k + j) = varSwap
+                        Set iopArray(K + j) = varSwap
                     Else
-                        iopArray(k + j) = varSwap
+                        iopArray(K + j) = varSwap
                     End If
                 End If
             Next
@@ -133,7 +133,7 @@ Public Sub ShakerSortArrayByItemOfIndex(ByRef iopArray As Variant)
     
     Dim i As Long
     Dim j As Long
-    Dim k As Long
+    Dim K As Long
     Dim iMin As Long
     Dim iMax As Long
     Dim varSwap As Variant
@@ -145,12 +145,12 @@ Public Sub ShakerSortArrayByItemOfIndex(ByRef iopArray As Variant)
     Do While i > iMin
         j = i
         Do While j > iMin
-            For k = iMin To i - j
-                If Comparers.MT(iopArray(k).Item, iopArray(k + j).Item) Then
+            For K = iMin To i - j
+                If Comparers.MT(iopArray(K).Item, iopArray(K + j).Item) Then
                     
-                    Set varSwap = iopArray(k)
-                    Set iopArray(k) = iopArray(k + j)
-                    Set iopArray(k + j) = varSwap
+                    Set varSwap = iopArray(K)
+                    Set iopArray(K) = iopArray(K + j)
+                    Set iopArray(K + j) = varSwap
                    
                 End If
             Next
@@ -206,7 +206,7 @@ Public Sub ShakerSortByItem(ByVal iopS As Object)
     
     Dim i As Long
     Dim j As Long
-    Dim k As Long
+    Dim K As Long
     Dim iMin As Long
     Dim iMax As Long
     Dim varSwap As Variant
@@ -218,22 +218,22 @@ Public Sub ShakerSortByItem(ByVal iopS As Object)
     Do While i > iMin
         j = i
         Do While j > iMin
-            For k = iMin To i - j
-                If Comparers.MT(iopS.Item(k), iopS.Item(k + j)) Then
-                    If VBA.IsObject(iopS.Item(k)) Then
-                        Set varSwap = iopS.Item(k)
+            For K = iMin To i - j
+                If Comparers.MT(iopS.Item(K), iopS.Item(K + j)) Then
+                    If VBA.IsObject(iopS.Item(K)) Then
+                        Set varSwap = iopS.Item(K)
                     Else
-                        varSwap = iopS.Item(k)
+                        varSwap = iopS.Item(K)
                     End If
-                    If VBA.IsObject(iopS.Item(k + j)) Then
-                        Set iopS.Item(k) = iopS.Item(k + j)
+                    If VBA.IsObject(iopS.Item(K + j)) Then
+                        Set iopS.Item(K) = iopS.Item(K + j)
                     Else
-                        iopS.Item(k) = iopS.Item(k + j)
+                        iopS.Item(K) = iopS.Item(K + j)
                     End If
                     If VBA.IsObject(varSwap) Then
-                        Set iopS.Item(k + j) = varSwap
+                        Set iopS.Item(K + j) = varSwap
                     Else
-                        iopS.Item(k + j) = varSwap
+                        iopS.Item(K + j) = varSwap
                     End If
                 End If
             Next
@@ -312,7 +312,7 @@ Public Sub ShakerSortByItemOfItem(ByVal iopS As Object)
     
     Dim i As Long
     Dim j As Long
-    Dim k As Long
+    Dim K As Long
     Dim iMin As Long
     Dim iMax As Long
     Dim varSwap As Variant
@@ -324,13 +324,13 @@ Public Sub ShakerSortByItemOfItem(ByVal iopS As Object)
     Do While i > iMin
         j = i
         Do While j > iMin
-            For k = iMin To i - j
-                If Comparers.MT(iopS.Item(k).Item, iopS.Item(k + j).Item) Then
+            For K = iMin To i - j
+                If Comparers.MT(iopS.Item(K).Item, iopS.Item(K + j).Item) Then
                     
-                    Set varSwap = iopS.Item(k)
-                    Set iopS.Item(k) = iopS.Item(k + j)
-                    Set iopS.Item(k + j) = varSwap
-                    iopS.Item(k + j) = varSwap
+                    Set varSwap = iopS.Item(K)
+                    Set iopS.Item(K) = iopS.Item(K + j)
+                    Set iopS.Item(K + j) = varSwap
+                    iopS.Item(K + j) = varSwap
                     
                 End If
             Next

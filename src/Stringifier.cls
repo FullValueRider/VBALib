@@ -226,18 +226,20 @@ End Function
 
 Friend Function StringifyItemByIndex(ByRef ipItemByIndex As Variant) As String
     
-    If ipItemByIndex.Count = 0 Then
-        StringifyItemByIndex s.ObjectMarkup.Left & s.ObjectMarkup.Right
+    Dim myItems As IterItems: Set myItems = IterItems(ipItemByIndex)
+    
+    If myItems.LacksItems Then
+        StringifyItemByIndex = s.ObjectMarkup.Left & "Empty ItemByIndex" & s.ObjectMarkup.Right
+        Exit Function
     End If
     
-    Dim myS As SeqC
-    Set myS = SeqC.Deb
+    Dim myS As SeqC: Set myS = SeqC.Deb
     
-    Dim myItems As IterItems: Set myItems = IterItems(ipItemByIndex)
     Do
-        Dim myItem As Variant:        myItem = myItems.CurItem(0)
-        myS.Add StringifyItem(myItem)
+        Dim myItem() As Variant: myItem = Array(myItems.CurItem(0))
+        myS.Add StringifyItem(myItem(0))
     Loop While myItems.MoveNext
+    
     Dim myArray As Variant: myArray = myS.ToArray
     Dim myString As String: myString = VBA.Join(myArray, s.ObjectMarkup.Separator)
     StringifyItemByIndex = s.ObjectMarkup.Left & myString & s.ObjectMarkup.Right

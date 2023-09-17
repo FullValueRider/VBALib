@@ -116,15 +116,15 @@ Public Function ToChars(ByRef ipString As String) As Variant
         Exit Function
     End If
     
-    Dim myResult As Variant
-    ReDim myResult(1 To myLen)
+    Dim myresult As Variant
+    ReDim myresult(1 To myLen)
     
     Dim myIndex As Long
     For myIndex = 1 To myLen
-        myResult(myIndex) = VBA.Mid$(ipString, myIndex, 1)
+        myresult(myIndex) = VBA.Mid$(ipString, myIndex, 1)
     Next
     
-    ToChars = myResult
+    ToChars = myresult
     
 End Function
 

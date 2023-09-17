@@ -25,8 +25,8 @@ End Type
 Private s                               As State
 
 
-Private Property Get IMapper_Typename() As String
-    IMapper_Typename = MY_TYPENAME
+Private Property Get IMapper_TypeName() As String
+    IMapper_TypeName = MY_TYPENAME
 End Property
 
 
@@ -35,25 +35,25 @@ Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
 Attribute IMapper_ExecMapper.VB_Description = "Converts the Items in the to the specifiied Type"
    
     On Error Resume Next
-    Dim myResult As Variant
+    Dim myresult As Variant
     Select Case s.Conversion
         
-        Case e_ConvertTo.m_HexStr:          myResult = Hex$(ipHostItem)
-        Case e_ConvertTo.m_OctStr:          myResult = Oct$(ipHostItem)
-        Case e_ConvertTo.m_GroupName:       myResult = GroupInfo.Name(ipHostItem)
-        Case e_ConvertTo.m_GroupId:         myResult = GroupInfo.Id(ipHostItem)
-        Case e_ConvertTo.m_boolean:         myResult = VBA.CBool(ipHostItem)
-        Case e_ConvertTo.m_Byte:            myResult = VBA.CByte(ipHostItem)
-        Case e_ConvertTo.m_Currency:        myResult = VBA.CCur(ipHostItem)
-        Case e_ConvertTo.m_Date::           myResult = VBA.CDate(ipHostItem)
-        Case e_ConvertTo.m_Double:          myResult = VBA.CDbl(ipHostItem)
-        Case e_ConvertTo.m_Decimal:         myResult = VBA.CDec(ipHostItem)
-        Case e_ConvertTo.M_Integer:         myResult = VBA.CInt(ipHostItem)
-        Case e_ConvertTo.m_Long:            myResult = VBA.CLng(ipHostItem)
-        Case e_ConvertTo.m_LongLong:        myResult = VBA.CLngLng(ipHostItem)
-        Case e_ConvertTo.m_LongPtr:         myResult = VBA.CLngPtr(ipHostItem)
-        Case e_ConvertTo.m_Single:          myResult = VBA.CSng(ipHostItem)
-        Case e_ConvertTo.m_string::         myResult = VBA.CStr(ipHostItem)
+        Case e_ConvertTo.m_HexStr:          myresult = Hex$(ipHostItem)
+        Case e_ConvertTo.m_OctStr:          myresult = Oct$(ipHostItem)
+        Case e_ConvertTo.m_GroupName:       myresult = GroupInfo.Name(ipHostItem)
+        Case e_ConvertTo.m_GroupId:         myresult = GroupInfo.Id(ipHostItem)
+        Case e_ConvertTo.m_boolean:         myresult = VBA.CBool(ipHostItem)
+        Case e_ConvertTo.m_Byte:            myresult = VBA.CByte(ipHostItem)
+        Case e_ConvertTo.m_Currency:        myresult = VBA.CCur(ipHostItem)
+        Case e_ConvertTo.m_Date::           myresult = VBA.CDate(ipHostItem)
+        Case e_ConvertTo.m_Double:          myresult = VBA.CDbl(ipHostItem)
+        Case e_ConvertTo.m_Decimal:         myresult = VBA.CDec(ipHostItem)
+        Case e_ConvertTo.M_Integer:         myresult = VBA.CInt(ipHostItem)
+        Case e_ConvertTo.m_Long:            myresult = VBA.CLng(ipHostItem)
+        Case e_ConvertTo.m_LongLong:        myresult = VBA.CLngLng(ipHostItem)
+        Case e_ConvertTo.m_LongPtr:         myresult = VBA.CLngPtr(ipHostItem)
+        Case e_ConvertTo.m_Single:          myresult = VBA.CSng(ipHostItem)
+        Case e_ConvertTo.m_string::         myresult = VBA.CStr(ipHostItem)
         
         Case Else
         
@@ -65,7 +65,7 @@ Attribute IMapper_ExecMapper.VB_Description = "Converts the Items in the to the 
     End Select
     
     If Err.Number = 0 Then
-        IMapper_ExecMapper = Array(myResult)
+        IMapper_ExecMapper = Array(myresult)
     Else
         IMapper_ExecMapper = Array(ipHostItem)
     End If

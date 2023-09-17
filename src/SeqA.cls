@@ -168,11 +168,12 @@ Attribute Add.VB_Description = "Add a single item.  Returns the index at which t
 
     Dim myIndex As Long: myIndex = GetNextIndex
 
-    If VBA.IsObject(ipItem) Then
-        Set s.Host(myIndex) = ipItem
-    Else
-        s.Host(myIndex) = ipItem
-    End If
+    VariantCopy s.Host(myIndex), ipItem
+'    If VBA.IsObject(ipItem) Then
+'        Set s.Host(myIndex) = ipItem
+'    Else
+'        s.Host(myIndex) = ipItem
+'    End If
     
     Add = myIndex
     

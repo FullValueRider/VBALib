@@ -6,15 +6,15 @@ Option Explicit
         
 Public Sub AssertExactAreEqual(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
     
-#If twinbasic Then
+#If TWINBASIC Then
     Assert.Strict.AreEqual ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
         Dim myExpected As String: myExpected = Fmt.Text("{0}: {1}", VBA.TypeName(ipExpected), ipExpected)
-        Dim myResult As String: myResult = Fmt.Text("{0}: {1}", VBA.TypeName(ipResult), ipResult)
+        Dim myresult As String: myresult = Fmt.Text("{0}: {1}", VBA.TypeName(ipResult), ipResult)
         
-        If myExpected <> myResult Then
-            Fmt.Dbg "{0}: Exact AreEqual assertion failed: {nl}{1}{nl}{2}", ipWhere, myExpected, myResult
+        If myExpected <> myresult Then
+            Fmt.Dbg "{0}: Exact AreEqual assertion failed: {nl}{1}{nl}{2}", ipWhere, myExpected, myresult
         End If
     Else
         Assert.AreEqual ipExpected, ipResult, ipWhere
@@ -26,17 +26,17 @@ End Sub
 
 Public Sub AssertExactAreNotEqual(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
     
-#If twinbasic Then
+#If TWINBASIC Then
     Assert.Strict.AreNotEqual ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
         Dim myExpected As String: myExpected = Fmt.Text("{0}: {1}", VBA.TypeName(ipExpected), ipExpected)
-        Dim myResult As String: myResult = Fmt.Text("{0}: {1}", VBA.TypeName(ipResult), ipResult)
+        Dim myresult As String: myresult = Fmt.Text("{0}: {1}", VBA.TypeName(ipResult), ipResult)
         
         
-        If myExpected = myResult Then
+        If myExpected = myresult Then
             'Debug.Print
-            Fmt.Dbg "{0}: Exact AreEqual assertion failed: {nt}{1}{nt}{2}", ipWhere, myExpected, myResult
+            Fmt.Dbg "{0}: Exact AreEqual assertion failed: {nt}{1}{nt}{2}", ipWhere, myExpected, myresult
         End If
     Else
         Assert.AreNotEqual ipExpected, ipResult, ipWhere
@@ -49,16 +49,16 @@ End Sub
 
 Public Sub AssertStrictSequenceEquals(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
     
-#If twinbasic Then
+#If TWINBASIC Then
     Assert.Strict.SequenceEquals ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
         Dim myExpected As String: myExpected = Fmt.Text("{0}", Array(ipExpected))
-        Dim myResult As String: myResult = Fmt.Text("{0}", Array(ipResult))
+        Dim myresult As String: myresult = Fmt.Text("{0}", Array(ipResult))
         
-        If myExpected <> myResult Then
+        If myExpected <> myresult Then
             'Debug.Print
-            Fmt.Dbg "{0}: Strict SequenceEquals assertion failed: {nt}{1}{nt}{2}", ipWhere, myExpected, myResult
+            Fmt.Dbg "{0}: Strict SequenceEquals assertion failed: {nt}{1}{nt}{2}", ipWhere, myExpected, myresult
         End If
     Else
         Assert.SequenceEquals ipExpected, ipResult, ipWhere
@@ -69,16 +69,16 @@ End Sub
 
 Public Sub AssertStrictNotSequenceEquals(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
     
-#If twinbasic Then
+#If TWINBASIC Then
     Assert.Strict.NotSequenceEquals ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
         Dim myExpected As String: myExpected = Fmt.Text("{0}", ipExpected)
-        Dim myResult As String: myResult = Fmt.Text("{0}", ipResult)
+        Dim myresult As String: myresult = Fmt.Text("{0}", ipResult)
         
-        If myExpected = myResult Then
+        If myExpected = myresult Then
             'Debug.Print
-            Fmt.Dbg "SequenceEquals assertion failed: {0}{nt}{1}{nt}{2}", ipWhere, myExpected, myResult
+            Fmt.Dbg "SequenceEquals assertion failed: {0}{nt}{1}{nt}{2}", ipWhere, myExpected, myresult
         End If
     Else
         Assert.SequenceEquals ipExpected, ipResult, ipWhere
@@ -89,7 +89,7 @@ End Sub
 
 Public Sub AssertExactSequenceEquals(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
     
-#If twinbasic Then
+#If TWINBASIC Then
     Assert.exact.SequenceEquals ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
@@ -127,11 +127,11 @@ Public Sub AssertExactSequenceEquals(ByRef ipExpected As Variant, ipResult As Va
         
                 
         Dim myExpected As String: myExpected = VBA.Join(myE, ",")
-        Dim myResult As String: myResult = VBA.Join(myR, ",")
+        Dim myresult As String: myresult = VBA.Join(myR, ",")
         
-        If myExpected <> myResult Then
+        If myExpected <> myresult Then
             'Debug.Print
-            Fmt.Dbg "{0}: SequenceEquals assertion failed: {0}{nt}{1}{nt}{2}", ipWhere, myExpected, myResult
+            Fmt.Dbg "{0}: SequenceEquals assertion failed: {0}{nt}{1}{nt}{2}", ipWhere, myExpected, myresult
         End If
     Else
         Assert.SequenceEquals ipExpected, ipResult, ipWhere
@@ -176,7 +176,7 @@ End Sub
 
 Public Sub AssertExactAreSame(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
     
-    #If twinbasic Then
+    #If TWINBASIC Then
         Assert.Strict.AreSame ipExpected, ipResult, ipWhere
     #Else
         Assert.AreSame ipExpected, ipResult, ipWhere

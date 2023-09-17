@@ -349,7 +349,7 @@ Attribute ToArray.VB_Description = "Returns a shallow copy of the SeqC as an Arr
     End If
     
     Dim myS As SeqA
-    #If twinbasic Then
+    #If TWINBASIC Then
     
         Set myS = SeqA(s.Host.Items)
         
@@ -717,7 +717,7 @@ Attribute AddItems.VB_Description = "Adds one or more items . Return the Me inst
         Exit Function
     End If
 
-    Dim myParamarray As Variant: myParamarray = ArrayOp.Splat(VBA.CVar(ipParamarray))
+    Dim myParamarray As Variant: myParamarray = VBA.CVar(ipParamarray)
 
     AddRange myParamarray
 
@@ -741,10 +741,11 @@ Attribute AddRange.VB_Description = "Add an array, list type, dictionary type, o
     End If
     
     Do
+        Dim myA() As Variant: myA = Array(myItems.CurItem(0))
         If GroupInfo.IsDictionary(ipRange) Then
             Me.Add Array(myItems.CurKey(0), myItems.CurItem(0))
         Else
-            Me.Add myItems.CurItem(0)
+            Me.Add myA(0)
         End If
         
     Loop While myItems.MoveNext
@@ -847,7 +848,7 @@ Attribute RemoveAll.VB_Description = "If the ParamArray is empty, removes all it
     
     If ArrayOp.LacksItems(myParamarray) Then
   
-        #If twinbasic Then
+        #If TWINBASIC Then
             s.Host.Clear
         #Else
             RemoveAllItems
@@ -1437,13 +1438,14 @@ Attribute MapIt.VB_Description = "Returns a new Seq where each item in the Host 
     Dim myS As SeqC: Set myS = SeqC.Deb
     Set MapIt = myS
     
-    If s.Host.Count < Me.FirstIndex Then
+    If Me.LacksItems Then
         Exit Function
     End If
     
     Dim myItems As IterItems: Set myItems = IterItems(s.Host)
     Do
-        myS.Add ipMapper.ExecMapper(myItems.CurItem(0))(0)
+        Static myA() As Variant: myA = ipMapper.ExecMapper(myItems.CurItem(0))
+        myS.Add myA(0)
     Loop While myItems.MoveNext
     
     Set MapIt = myS

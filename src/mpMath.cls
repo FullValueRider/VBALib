@@ -27,7 +27,7 @@ Public Enum Fx
     Factorial
     Floor
     IsPrime
-    Ln
+    lN
     Log
     Rnd
     TriangularNumber
@@ -56,8 +56,8 @@ End Type
 Private s                     As State
 
 
-Private Property Get IMapper_Typename() As String
-    IMapper_Typename = MY_TYPENAME
+Private Property Get IMapper_TypeName() As String
+    IMapper_TypeName = MY_TYPENAME
 End Property
 
 
@@ -105,7 +105,7 @@ Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         Case Root: IMapper_ExecMapper = Array(ipHostItem ^ (1 / s.OptionalParam))
         Case IsPrime: IMapper_ExecMapper = Array(Maths.IsPrime(ipHostItem))
         Case Factorial: IMapper_ExecMapper = Array(Maths.Factorial(ipHostItem))
-        Case Ln: IMapper_ExecMapper = Array(Maths.Ln(ipHostItem))
+        Case lN: IMapper_ExecMapper = Array(Maths.lN(ipHostItem))
         Case Log: IMapper_ExecMapper = Array(Maths.Log(ipHostItem))
         Case TriangularNumber: IMapper_ExecMapper = Array(Maths.TriangularNumber(ipHostItem))
     

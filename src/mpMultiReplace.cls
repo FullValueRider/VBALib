@@ -18,7 +18,7 @@ Const MY_TYPENAME                   As String = "mpMultiReplace"
 
 Private Type State
 
-    FindReplaceItems                As SeqC
+    FindReplaceItems                As Variant
         
 End Type
 
@@ -26,8 +26,8 @@ End Type
 Private s                           As State
 
 
-Private Property Get IMapper_Typename() As String
-    IMapper_Typename = MY_TYPENAME
+Private Property Get IMapper_TypeName() As String
+    IMapper_TypeName = MY_TYPENAME
 End Property
 
 
@@ -44,7 +44,7 @@ End Function
 
 '@Description("Takes a jagged array of find/replacepairs")
 '@DefaultMember
-Public Function Deb(ByRef ipFindReplaceItems As SeqC) As mpMultiReplace
+Public Function Deb(ByRef ipFindReplaceItems As Variant) As mpMultiReplace
 Attribute Deb.VB_Description = "Takes a jagged array of find/replacepairs"
 Attribute Deb.VB_UserMemId = 0
     With New mpMultiReplace
@@ -53,9 +53,9 @@ Attribute Deb.VB_UserMemId = 0
 End Function
 
 
-Friend Function ConstructInstance(ByRef ipFindReplaceItems As SeqC) As mpMultiReplace
+Friend Function ConstructInstance(ByRef ipFindReplaceItems As Variant) As mpMultiReplace
         
-    Set s.FindReplaceItems = ipFindReplaceItems
+    s.FindReplaceItems = ipFindReplaceItems
     Set ConstructInstance = Me
         
 End Function

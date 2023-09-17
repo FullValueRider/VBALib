@@ -24,7 +24,7 @@ Sub TestTreap()
     Debug.Print myT.Add("Nice")
     Debug.Print myT.Add("Day")
     Debug.Print myT.Count
-    myT.PrintByPriority
+    myT.PrintByOrder
     Debug.Print
     Debug.Print
     myT.PrintByOrder
@@ -38,13 +38,13 @@ Sub TestTreap()
     Debug.Print
     Debug.Print
 
-    myT1.PrintByPriority
     myT1.PrintByOrder
+    myT1.PrintByColl
     myT1.Remove "World"
     Debug.Print
     Debug.Print
     
-    myT1.PrintByPriority
+    myT1.PrintByOrder
     
 End Sub
 
@@ -180,16 +180,16 @@ Sub TestSeqTAt()
     Dim myItem As Variant
     For Each myItem In myA
         myT.Add myItem
-'        Debug.Print
-'        myT.PrintByOrder
-'        Debug.Print
-'        myT.PrintByColl
+        Debug.Print
+        myT.PrintByOrder
+        Debug.Print
+        myT.PrintByColl
     Next
     
     
-    Debug.Print
-    Debug.Print "Inorder traversal of the given tree"
-    myT.PrintByOrder
+'    Debug.Print
+'    Debug.Print "Inorder traversal of the given tree"
+'    myT.PrintByOrder
      
     Debug.Print
     Debug.Print "Delete at 2"

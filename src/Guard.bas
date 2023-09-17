@@ -31,22 +31,22 @@ End Property
 
 Public Function IndexNotFound(ByVal ipIndex As Long, ByVal ipIndexed As Object, ByRef ipMethod As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
 
-    Dim myResult As Boolean: myResult = ipIndexed.LacksItems
+    Dim myresult As Boolean: myresult = ipIndexed.LacksItems
     
-    If Not myResult Then
+    If Not myresult Then
         If ipIndex < ipIndexed.FirstIndex Or ipIndex > ipIndexed.Lastindex Then
-            myResult = False
+            myresult = False
         End If
     End If
     
-    If Not myResult Then
-        IndexNotFound = myResult
+    If Not myresult Then
+        IndexNotFound = myresult
         Exit Function
     End If
     
     If p.ReportBackAction = m_ReportBackContinue Then
         If ipReportBack Then
-            IndexNotFound = myResult
+            IndexNotFound = myresult
             Exit Function
         End If
     End If
@@ -62,11 +62,11 @@ End Function
 ' In such cases ipREPORT_BACK should be set to true
 Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByRef ipKvp As Object, ByRef ipMethod As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
 
-    Dim myResult As Long: myResult = ((ipIndex < ipKvp.FirstIndex) Or (ipIndex > ipKvp.Lastindex))
+    Dim myresult As Long: myresult = ((ipIndex < ipKvp.FirstIndex) Or (ipIndex > ipKvp.Lastindex))
     
-    IndexOutOfBounds = myResult
+    IndexOutOfBounds = myresult
     
-    If Not myResult Then
+    If Not myresult Then
         Exit Function
     End If
     
@@ -85,17 +85,17 @@ End Function
 
 Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipModule As String, ByRef ipMethod As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
 
-    Dim myResult As Boolean
+    Dim myresult As Boolean
     Select Case GroupInfo.Id(ipRange)
     
-        Case e_Group.m_string, e_Group.m_array, e_Group.m_List, e_Group.m_Dictionary:       myResult = False
-        Case Else:                                                                          myResult = True
+        Case e_Group.m_string, e_Group.m_array, e_Group.m_List, e_Group.m_Dictionary:       myresult = False
+        Case Else:                                                                          myresult = True
             
     End Select
     
-    InvalidRangeItem = myResult
+    InvalidRangeItem = myresult
     
-    If Not myResult Then
+    If Not myresult Then
         Exit Function
     End If
     
@@ -156,10 +156,10 @@ End Function
 
 Public Function KeyIsAdmin(ByRef ipAdmin As Variant, ByRef ipModule As String, ByRef ipMethod As String, Optional ByVal ipREPORT_BACK As Boolean = False) As Boolean
 
-    Dim myResult As Boolean: myResult = GroupInfo.IsNotAdmin(ipAdmin)
+    Dim myresult As Boolean: myresult = GroupInfo.IsNotAdmin(ipAdmin)
     
-    If myResult Then
-        KeyIsAdmin = Not myResult
+    If myresult Then
+        KeyIsAdmin = Not myresult
         Exit Function
     End If
     
@@ -184,10 +184,10 @@ Public Function EnsureUniqueKeys(ByRef ipKey As Variant, ByVal ipKvp As Object, 
         Exit Function
     End If
     
-    Dim myResult As Boolean: myResult = ipKvp.LacksKey(ipKey)
+    Dim myresult As Boolean: myresult = ipKvp.LacksKey(ipKey)
     
-    If myResult Then
-        EnsureUniqueKeys = myResult
+    If myresult Then
+        EnsureUniqueKeys = myresult
         Exit Function
     End If
     

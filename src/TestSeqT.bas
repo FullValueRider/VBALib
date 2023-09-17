@@ -6,7 +6,7 @@ Option Explicit
 Option Private Module
 
 Private Fakes As Object
-#If twinbasic Then
+#If TWINBASIC Then
     'Do nothing
 #Else
 
@@ -41,7 +41,7 @@ End Sub
 
  Public Sub SeqTTests()
  
-    #If twinbasic Then
+    #If TWINBASIC Then
         Debug.Print CurrentProcedureName;
     #Else
         GlobalAssert
@@ -177,7 +177,7 @@ End Sub
 '@TestMethod("SeqT")
 Private Sub Test01_SeqObj()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -192,14 +192,14 @@ Private Sub Test01_SeqObj()
     Dim myExpected As Variant
     myExpected = Array(True, "SeqT", "SeqT")
     
-    Dim myResult(0 To 2) As Variant
+    Dim myresult(0 To 2) As Variant
     
     'Act:
-    myResult(0) = VBA.IsObject(mySeq)
-    myResult(1) = VBA.TypeName(mySeq)
-    myResult(2) = mySeq.TypeName
+    myresult(0) = VBA.IsObject(mySeq)
+    myresult(1) = VBA.TypeName(mySeq)
+    myresult(2) = mySeq.TypeName
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -213,7 +213,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -228,12 +228,12 @@ Private Sub Test02a_InitByLong_10FirstIndex_LastIndex()
     Dim myExpected As Variant
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 10)
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     'Act:
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     AssertExactAreEqual 1&, mySeq.FirstIndex, myProcedureName
     AssertExactAreEqual 10&, mySeq.Lastindex, myProcedureName
     AssertExactAreEqual 10&, mySeq.Count, myProcedureName
@@ -250,7 +250,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test02b_InitByString()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -264,17 +264,17 @@ Private Sub Test02b_InitByString()
     myExpected = Array("H", "e", "l", "l", "o")
     ReDim Preserve myExpected(1 To 5)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Dim mySeq As SeqT
 
     'Act:
     Set mySeq = SeqT.Deb("Hello")
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -288,7 +288,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test02c_InitByForEachArray()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -315,17 +315,17 @@ Private Sub Test02c_InitByForEachArray()
     myExpected = Array(1&, 4&, 7&, 2&, 5&, 8&, 3&, 6&, 9&)
     ReDim Preserve myExpected(1 To 9)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Dim mySeq As SeqT
 
     'Act:
     Set mySeq = SeqT.Deb(myArray)
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -339,7 +339,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test02d_InitByForEachArrayList()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -368,17 +368,17 @@ Private Sub Test02d_InitByForEachArrayList()
     myExpected = Array(1, 4, 7, 2, 5, 8, 3, 6, 9)
     ReDim Preserve myExpected(1 To 9)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Dim mySeq As SeqT
 
     'Act:
     Set mySeq = SeqT.Deb(myAL)
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -393,7 +393,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test02e_InitByForEachCollection()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -422,17 +422,17 @@ Private Sub Test02e_InitByForEachCollection()
     myExpected = Array(1, 4, 7, 2, 5, 8, 3, 6, 9)
     ReDim Preserve myExpected(1 To 9)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Dim mySeq As SeqT
 
     'Act:
     Set mySeq = SeqT.Deb(myC)
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -447,7 +447,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test02f_InitByDictionary()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -471,8 +471,8 @@ Private Sub Test02f_InitByDictionary()
     myExpected = Array("Hello", "World", "Ten", 10&, "Thing", 3.142)
     ReDim Preserve myExpected(1 To 6)
 
-    Dim myResult As Variant
-    ReDim myResult(1 To 6)
+    Dim myresult As Variant
+    ReDim myresult(1 To 6)
 
     Dim mySeq As SeqT
 
@@ -481,15 +481,15 @@ Private Sub Test02f_InitByDictionary()
     Dim myTmp As Variant
     myTmp = mySeq.ToArray
 
-    myResult(1) = myTmp(1)(0)
-    myResult(2) = myTmp(1)(1)
-    myResult(3) = myTmp(2)(0)
-    myResult(4) = myTmp(2)(1)
-    myResult(5) = myTmp(3)(0)
-    myResult(6) = myTmp(3)(1)
+    myresult(1) = myTmp(1)(0)
+    myresult(2) = myTmp(1)(1)
+    myresult(3) = myTmp(2)(0)
+    myresult(4) = myTmp(2)(1)
+    myresult(5) = myTmp(3)(0)
+    myresult(6) = myTmp(3)(1)
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -504,7 +504,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test03a_WriteItem()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -524,16 +524,16 @@ Private Sub Test03a_WriteItem()
     Dim myExpected As Variant
     myExpected = Array(42, "Hello", 3.142)
 
-    Dim myResult As Variant
-    ReDim myResult(0 To 2)
+    Dim myresult As Variant
+    ReDim myresult(0 To 2)
     'Act:
     
-    myResult(0) = mySeq.Item(1)
-    myResult(1) = mySeq.Item(4)
-    myResult(2) = mySeq.Item(8)
+    myresult(0) = mySeq.Item(1)
+    myresult(1) = mySeq.Item(4)
+    myresult(2) = mySeq.Item(8)
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -547,7 +547,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test04a_Add_MultipleItems()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -562,14 +562,14 @@ Private Sub Test04a_Add_MultipleItems()
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, 42, "Hello", 3.142)
     ReDim Preserve myExpected(1 To 8)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     'Act:
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
-    myResult = mySeq.AddItems(42, "Hello", 3.142).ToArray
+    myresult = mySeq.AddItems(42, "Hello", 3.142).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -585,7 +585,7 @@ End Sub
 '@TestMethod("SeqT")
 Private Sub Test06a_AddRange_String()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -600,14 +600,14 @@ Private Sub Test06a_AddRange_String()
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, "H", "e", "l", "l", "o")
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     'Act:
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
-    myResult = mySeq.AddRange("Hello").ToArray
+    myresult = mySeq.AddRange("Hello").ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -622,7 +622,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test06b_AddRange_Array()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -637,14 +637,14 @@ Private Sub Test06b_AddRange_Array()
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, "H", "e", "l", "l", "o")
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     'Act:
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
-    myResult = mySeq.AddRange(Array("H", "e", "l", "l", "o")).ToArray
+    myresult = mySeq.AddRange(Array("H", "e", "l", "l", "o")).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -659,7 +659,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test06c_AddRange_Collection()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -674,7 +674,7 @@ Private Sub Test06c_AddRange_Collection()
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, "H", "e", "l", "l", "o")
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Dim myC As Collection
     Set myC = New Collection
@@ -688,10 +688,10 @@ Private Sub Test06c_AddRange_Collection()
 
     'Act:
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
-    myResult = mySeq.AddRange(myC).ToArray
+    myresult = mySeq.AddRange(myC).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -706,7 +706,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test06d_AddRange_ArrayList()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -721,7 +721,7 @@ Private Sub Test06d_AddRange_ArrayList()
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, "H", "e", "l", "l", "o")
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Dim myAL As Object
     Set myAL = CreateObject("System.Collections.Arraylist")
@@ -735,10 +735,10 @@ Private Sub Test06d_AddRange_ArrayList()
 
     'Act:
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
-    myResult = mySeq.AddRange(myAL).ToArray
+    myresult = mySeq.AddRange(myAL).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -753,7 +753,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test06e_AddRange_Dictionary()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -768,7 +768,7 @@ Private Sub Test06e_AddRange_Dictionary()
     myExpected = Array(Empty, Empty, Empty, Empty, Empty, "Hello1", "There2", "World3")
     ReDim Preserve myExpected(1 To 8)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Dim myD As KvpC
     Set myD = KvpC.Deb
@@ -780,13 +780,13 @@ Private Sub Test06e_AddRange_Dictionary()
 
     'Act:
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
-    myResult = mySeq.AddRange(myD).ToArray
-    myResult(6) = myResult(6)(0) & VBA.CStr(myResult(6)(1))
-    myResult(7) = myResult(7)(0) & VBA.CStr(myResult(7)(1))
-    myResult(8) = myResult(8)(0) & VBA.CStr(myResult(8)(1))
+    myresult = mySeq.AddRange(myD).ToArray
+    myresult(6) = myresult(6)(0) & VBA.CStr(myresult(6)(1))
+    myresult(7) = myresult(7)(0) & VBA.CStr(myresult(7)(1))
+    myresult(8) = myresult(8)(0) & VBA.CStr(myresult(8)(1))
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -801,7 +801,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test07a_InsertAt_SingleItems()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -818,7 +818,7 @@ Private Sub Test07a_InsertAt_SingleItems()
     Dim myExpected2 As Variant
     myExpected2 = Array(3&, 5&, 7&)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Dim myResult2 As Variant
     ReDim myResult2(0 To 2)
 
@@ -828,9 +828,9 @@ Private Sub Test07a_InsertAt_SingleItems()
     myResult2(1) = mySeq.InsertAt(5, 42&)
     myResult2(2) = mySeq.InsertAt(7, 3.142)
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     AssertExactSequenceEquals myExpected2, myResult2, myProcedureName
 
 TestExit:
@@ -846,7 +846,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test07b_InsertAt_MultipleItems()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -861,16 +861,16 @@ Private Sub Test07b_InsertAt_MultipleItems()
     myExpected = Array(Empty, Empty, "Hello", 42&, 3.142, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 8)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     'Act:
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
     mySeq.InsertAtItems 3, "Hello", 42&, 3.142
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 
 TestExit:
@@ -931,7 +931,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test08a_InsertAtRange_String()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -947,15 +947,15 @@ Private Sub Test08a_InsertAtRange_String()
     myExpected = Array(Empty, Empty, "H", "e", "l", "l", "o", Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     'Act:
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
     mySeq.InsertAtRange 3, "Hello"
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 
 TestExit:
@@ -971,7 +971,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test08b_InsertAtRange_Array()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -986,15 +986,15 @@ Private Sub Test08b_InsertAtRange_Array()
     myExpected = Array(Empty, Empty, "Hello", 42&, 3.142, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 8)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     'Act:
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
     mySeq.InsertAtRange 3, Array("Hello", 42&, 3.142)
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1009,7 +1009,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test08c_InsertAtRange_Collection()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1024,7 +1024,7 @@ Private Sub Test08c_InsertAtRange_Collection()
     myExpected = Array(Empty, Empty, "Hello", 42&, 3.142, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 8)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
 
     Dim myC As Collection
@@ -1040,10 +1040,10 @@ Private Sub Test08c_InsertAtRange_Collection()
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
     mySeq.InsertAtRange 3, myC
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1058,7 +1058,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test08d_InsertAtRange_ArrayList()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1073,7 +1073,7 @@ Private Sub Test08d_InsertAtRange_ArrayList()
     myExpected = Array(Empty, Empty, "Hello", 42&, 3.142, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 8)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
 
     Dim myAL As Object
@@ -1089,10 +1089,10 @@ Private Sub Test08d_InsertAtRange_ArrayList()
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
     mySeq.InsertAtRange 3, myAL
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 
 TestExit:
@@ -1108,7 +1108,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test08e_InsertAtRange_Dictionary()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1123,7 +1123,7 @@ Private Sub Test08e_InsertAtRange_Dictionary()
     myExpected = Array(Empty, Empty, "Hello1", "There2", "World3", Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 8)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Dim myD As KvpC
     Set myD = KvpC.Deb
@@ -1137,15 +1137,15 @@ Private Sub Test08e_InsertAtRange_Dictionary()
     'Act:
     Set mySeq = SeqT.Deb.Fill(Empty, 5)
     mySeq.InsertAtRange 3, myD
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
-    myResult(3) = myResult(3)(0) & VBA.CStr(myResult(3)(1))
-    myResult(4) = myResult(4)(0) & VBA.CStr(myResult(4)(1))
-    myResult(5) = myResult(5)(0) & VBA.CStr(myResult(5)(1))
+    myresult(3) = myresult(3)(0) & VBA.CStr(myresult(3)(1))
+    myresult(4) = myresult(4)(0) & VBA.CStr(myresult(4)(1))
+    myresult(5) = myresult(5)(0) & VBA.CStr(myresult(5)(1))
 
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1160,7 +1160,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test09a0_Remove_SingleItem()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1175,16 +1175,16 @@ Private Sub Test09a0_Remove_SingleItem()
     myExpected = Array(10, 20, 30, 50, 60)
     ReDim Preserve myExpected(1 To 5)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT(10, 20, 30, 42, 50, 60)
 
     'Act:
     mySeq.Remove 42
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1199,7 +1199,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test09a_RemoveAt_SingleItem()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1214,16 +1214,16 @@ Private Sub Test09a_RemoveAt_SingleItem()
     myExpected = Array(1, 1, 1, 1, 1)
     ReDim Preserve myExpected(1 To 5)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT.Deb(Array(1, 1, 1, 42, 1, 1))
 
     'Act:
     mySeq.RemoveAt 4
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1238,7 +1238,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test09b_RemoveAt_ThreeItems()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1253,7 +1253,7 @@ Private Sub Test09b_RemoveAt_ThreeItems()
     myExpected = Array(10, 20, 30, 40, 50)
     ReDim Preserve myExpected(1 To 5)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT(10, 42, 20, 30, 42, 40, 50, 42)
 
     'Act:
@@ -1261,10 +1261,10 @@ Private Sub Test09b_RemoveAt_ThreeItems()
     mySeq.RemoveIndexes 8, 2, 5
     'Debug.Print "Removed Indexes"
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1279,7 +1279,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test10a_Remove_SingleItems()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1294,7 +1294,7 @@ Private Sub Test10a_Remove_SingleItems()
     myExpected = Array(1, 1, 1, 1, 1, 1, 1, 42, 42, "Hello", "Hello")
     ReDim Preserve myExpected(1 To 11)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT(1, 42, 1, 1, 42, "Hello", "Hello", "Hello", 1, 3.142, 1, 42, 1, 1)
 
     'Act:
@@ -1305,10 +1305,10 @@ Private Sub Test10a_Remove_SingleItems()
 '    Debug.Print
 '    Debug.Print
 '    mySeq.PrintByOrder
-    myResult = mySeq.Sort.ToArray
+    myresult = mySeq.Sort.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1323,7 +1323,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test11a_RemoveRange_SingleItem()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1338,16 +1338,16 @@ Private Sub Test11a_RemoveRange_SingleItem()
     myExpected = Array(Empty, Empty, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 5)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT.Deb(Array(Empty, Empty, Empty, 42, Empty, Empty))
 
     'Act:
     mySeq.RemoveRange SeqT.Deb.AddItems(42)
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1362,7 +1362,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test11b_RemoveIndexesRange_ThreeItems()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1377,16 +1377,16 @@ Private Sub Test11b_RemoveIndexesRange_ThreeItems()
     myExpected = Array(Empty, Empty, Empty, Empty, Empty)
     ReDim Preserve myExpected(1 To 5)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
 
     'Act:
     mySeq.RemoveIndexesRange SeqA(5, 4, 6)
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1401,7 +1401,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test12a_RemoveRange_SingleItem()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1416,16 +1416,16 @@ Private Sub Test12a_RemoveRange_SingleItem()
     myExpected = Array(Empty, Empty, Empty, 42, 42, Empty, Empty)
     ReDim Preserve myExpected(1 To 7)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT(Empty, Empty, Empty, 42, 42, 42, Empty, Empty)
 
     'Act:
     mySeq.RemoveRange SeqT.Deb.AddItems(42)
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1440,7 +1440,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test13a_RemoveAll_DefaultAll()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1454,15 +1454,15 @@ Private Sub Test13a_RemoveAll_DefaultAll()
     Dim myExpected As Variant
     myExpected = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
 
     'Act:
     mySeq.RemoveAll
-    myResult = mySeq.Count
+    myresult = mySeq.Count
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1477,7 +1477,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test13b_RemoveAll_Default_42AndHello()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1492,15 +1492,15 @@ Private Sub Test13b_RemoveAll_Default_42AndHello()
     myExpected = Array(Empty, Empty, Empty, Empty, Empty)
     ReDim myExpected(1 To 5)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT.Deb(Empty, "Hello", Empty, "Hello", "Hello", Empty, 42, 42, 42, Empty, Empty)
 
     'Act:
     mySeq.RemoveAll "Hello", 42
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1515,7 +1515,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test13c_Reset()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1529,15 +1529,15 @@ Private Sub Test13c_Reset()
     Dim myExpected As Variant
     myExpected = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
 
     'Act:
     mySeq.Reset
-    myResult = mySeq.Count
+    myresult = mySeq.Count
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1552,7 +1552,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test13d_Clear()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1566,15 +1566,15 @@ Private Sub Test13d_Clear()
     Dim myExpected As Variant
     myExpected = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set mySeq = SeqT.Deb(Array(Empty, Empty, Empty, 42, 42, 42, Empty, Empty))
 
     'Act:
     mySeq.Clear
-    myResult = mySeq.Count
+    myresult = mySeq.Count
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1589,7 +1589,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test14a_Fill()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1604,18 +1604,18 @@ Private Sub Test14a_Fill()
     myExpected = Array(True, True, True)
     ReDim Preserve myExpected(1 To 3)
 
-    Dim myResult As Variant
-    ReDim myResult(1 To 3)
+    Dim myresult As Variant
+    ReDim myresult(1 To 3)
     Set mySeq = SeqT.Deb(Array(Empty, Empty, Empty))
 
     'Act:
     mySeq.Fill 42, 10
-    myResult(1) = mySeq.Count = 13
-    myResult(2) = mySeq.Item(4) = 42&
-    myResult(3) = mySeq.Item(13) = 42&
+    myresult(1) = mySeq.Count = 13
+    myresult(2) = mySeq.Item(4) = 42&
+    myresult(3) = mySeq.Item(13) = 42&
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1630,7 +1630,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test15a_Slice()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1645,15 +1645,15 @@ Private Sub Test15a_Slice()
     myExpected = Array(3&, 4&, 5&)
     ReDim Preserve myExpected(1 To 3)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Slice(3, 3).ToArray
+    myresult = mySeq.Slice(3, 3).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1668,7 +1668,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test15b_SliceToEnd()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1683,15 +1683,15 @@ Private Sub Test15b_SliceToEnd()
     myExpected = Array(3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
     ReDim Preserve myExpected(1 To 8)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Slice(3).ToArray
+    myresult = mySeq.Slice(3).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1706,7 +1706,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test15c_SliceRunOnly()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1721,15 +1721,15 @@ Private Sub Test15c_SliceRunOnly()
     myExpected = Array(1&, 2&, 3&, 4&)
     ReDim Preserve myExpected(1 To 4)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Slice(ipRun:=4).ToArray
+    myresult = mySeq.Slice(ipRun:=4).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1744,7 +1744,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test15d_Slice_Start3_End9_step2()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1759,15 +1759,15 @@ Private Sub Test15d_Slice_Start3_End9_step2()
     myExpected = Array(3&, 5&, 7&, 9&)
     ReDim Preserve myExpected(1 To 4)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Slice(3, 7, 2).ToArray
+    myresult = mySeq.Slice(3, 7, 2).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1782,7 +1782,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test15e_Slice_Start3_End9_step2_ToCollection()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1797,21 +1797,21 @@ Private Sub Test15e_Slice_Start3_End9_step2_ToCollection()
     myExpected = Array(3&, 5&, 7&, 9&)
     ReDim Preserve myExpected(1 To 4)
 
-    Dim myResult As Variant
-    ReDim myResult(1 To 4)
+    Dim myresult As Variant
+    ReDim myresult(1 To 4)
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
     Dim myC As Collection
     Set myC = mySeq.Slice(3, 7, 2).ToCollection
-    myResult(1) = myC.Item(1)
-    myResult(2) = myC.Item(2)
-    myResult(3) = myC.Item(3)
-    myResult(4) = myC.Item(4)
+    myresult(1) = myC.Item(1)
+    myresult(2) = myC.Item(2)
+    myresult(3) = myC.Item(3)
+    myresult(4) = myC.Item(4)
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1826,7 +1826,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test15f_Slice_Start3_End9_step2_ToArray()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1841,15 +1841,15 @@ Private Sub Test15f_Slice_Start3_End9_step2_ToArray()
     myExpected = Array(3&, 5&, 7&, 9&)
     ReDim Preserve myExpected(1 To 4)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Slice(3, 7, 2).ToArray
+    myresult = mySeq.Slice(3, 7, 2).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1864,7 +1864,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test16a_Head()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1879,15 +1879,15 @@ Private Sub Test16a_Head()
     myExpected = Array(1&)
     ReDim Preserve myExpected(1 To 1)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Head.ToArray
+    myresult = mySeq.Head.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1902,7 +1902,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test16b_Head_3Items()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1917,15 +1917,15 @@ Private Sub Test16b_Head_3Items()
     myExpected = Array(1&, 2&, 3&)
     ReDim Preserve myExpected(1 To 3)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Head(3).ToArray
+    myresult = mySeq.Head(3).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1940,7 +1940,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test16c_HeadZeroItems()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1954,15 +1954,15 @@ Private Sub Test16c_HeadZeroItems()
     Dim myExpected As Variant
     myExpected = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Head(-2).Count
+    myresult = mySeq.Head(-2).Count
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1977,7 +1977,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test16d_HeadFullSeq()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1992,15 +1992,15 @@ Private Sub Test16d_HeadFullSeq()
     myExpected = Array(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Head(42).ToArray
+    myresult = mySeq.Head(42).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2015,7 +2015,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test17a_Tail()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2030,15 +2030,15 @@ Private Sub Test17a_Tail()
     myExpected = Array(2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
     ReDim Preserve myExpected(1 To 9)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Tail.ToArray
+    myresult = mySeq.Tail.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2053,7 +2053,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test17b_Tail_3Items()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2068,15 +2068,15 @@ Private Sub Test17b_Tail_3Items()
     myExpected = Array(4&, 5&, 6&, 7&, 8&, 9&, 10&)
     ReDim Preserve myExpected(1 To 7)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Tail(3).ToArray
+    myresult = mySeq.Tail(3).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2091,7 +2091,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test17c_TailFullItems()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2105,15 +2105,15 @@ Private Sub Test17c_TailFullItems()
     Dim myExpected As Variant
     myExpected = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Tail(42).Count
+    myresult = mySeq.Tail(42).Count
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2128,7 +2128,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test17d_TailZeroSeq()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2143,15 +2143,15 @@ Private Sub Test17d_TailZeroSeq()
     myExpected = Array(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 9&, 10&)
 
     'Act:
-    myResult = mySeq.Tail(-2).ToArray
+    myresult = mySeq.Tail(-2).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2166,7 +2166,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test18a_KnownIndexes_Available()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2181,19 +2181,19 @@ Private Sub Test18a_KnownIndexes_Available()
     myExpected = Array(1&, 2&, 9&, 10&)
     ReDim Preserve myExpected(1 To 4)
 
-    Dim myResult As Variant
-    ReDim myResult(1 To 4)
+    Dim myresult As Variant
+    ReDim myresult(1 To 4)
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult(1) = mySeq.FirstIndex
-    myResult(2) = mySeq.FBOIndex
-    myResult(3) = mySeq.LBOIndex
-    myResult(4) = mySeq.Lastindex
+    myresult(1) = mySeq.FirstIndex
+    myresult(2) = mySeq.FBOIndex
+    myresult(3) = mySeq.LBOIndex
+    myresult(4) = mySeq.Lastindex
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2208,7 +2208,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test18b_KnownIndexes_Unavailable()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2223,19 +2223,19 @@ Private Sub Test18b_KnownIndexes_Unavailable()
     myExpected = Array(1&, 2&, -1&, -1&)
     ReDim Preserve myExpected(1 To 4)
 
-    Dim myResult As Variant
-    ReDim myResult(1 To 4)
+    Dim myresult As Variant
+    ReDim myresult(1 To 4)
 
     Set mySeq = SeqT.Deb
 
     'Act:
-    myResult(1) = mySeq.FirstIndex
-    myResult(2) = mySeq.FBOIndex
-    myResult(3) = mySeq.LBOIndex
-    myResult(4) = mySeq.Lastindex
+    myresult(1) = mySeq.FirstIndex
+    myresult(2) = mySeq.FBOIndex
+    myresult(3) = mySeq.LBOIndex
+    myresult(4) = mySeq.Lastindex
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2250,7 +2250,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test19a_KnownValues_Available()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2265,19 +2265,19 @@ Private Sub Test19a_KnownValues_Available()
     myExpected = Array(10&, 20&, 90&, 100&)
     ReDim Preserve myExpected(1 To 4)
 
-    Dim myResult As Variant
-    ReDim myResult(1 To 4)
+    Dim myresult As Variant
+    ReDim myresult(1 To 4)
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult(1) = mySeq.First
-    myResult(2) = mySeq.FBO
-    myResult(3) = mySeq.LBO
-    myResult(4) = mySeq.Last
+    myresult(1) = mySeq.First
+    myresult(2) = mySeq.FBO
+    myresult(3) = mySeq.LBO
+    myresult(4) = mySeq.Last
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2292,7 +2292,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test20a_IndexOf_WholeSeq_Present()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2306,15 +2306,15 @@ Private Sub Test20a_IndexOf_WholeSeq_Present()
     Dim myExpected As Variant
     myExpected = 5&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.IndexOf(50&)
+    myresult = mySeq.IndexOf(50&)
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2329,7 +2329,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test20b_IndexOf_WholeSeq_NotPresent()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2343,15 +2343,15 @@ Private Sub Test20b_IndexOf_WholeSeq_NotPresent()
     Dim myExpected As Variant
     myExpected = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.IndexOf(55&)
+    myresult = mySeq.IndexOf(55&)
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2366,7 +2366,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test20c_IndexOf_SubSeq_Present()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2380,15 +2380,15 @@ Private Sub Test20c_IndexOf_SubSeq_Present()
     Dim myExpected As Variant
     myExpected = 5&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.IndexOf(50&, 4, 4)
+    myresult = mySeq.IndexOf(50&, 4, 4)
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2403,7 +2403,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test20d_IndexOf_SubSeq_NotPresent()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2417,15 +2417,15 @@ Private Sub Test20d_IndexOf_SubSeq_NotPresent()
     Dim myExpected As Variant
     myExpected = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.IndexOf(20&, 4, 4)
+    myresult = mySeq.IndexOf(20&, 4, 4)
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2440,7 +2440,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test21a_LastIndexOf_WholeSeq_Present()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2454,15 +2454,15 @@ Private Sub Test21a_LastIndexOf_WholeSeq_Present()
     Dim myExpected As Variant
     myExpected = 5&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.LastIndexOf(50&)
+    myresult = mySeq.LastIndexOf(50&)
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2477,7 +2477,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test21b_LastIndexOf_WholeSeq_NotPresent()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2491,15 +2491,15 @@ Private Sub Test21b_LastIndexOf_WholeSeq_NotPresent()
     Dim myExpected As Variant
     myExpected = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.LastIndexOf(55&)
+    myresult = mySeq.LastIndexOf(55&)
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2514,7 +2514,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test21c_LastIndexOf_SubSeq_Present()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2528,15 +2528,15 @@ Private Sub Test21c_LastIndexOf_SubSeq_Present()
     Dim myExpected As Variant
     myExpected = 5&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.LastIndexOf(50&, 4, 4)
+    myresult = mySeq.LastIndexOf(50&, 4, 4)
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2551,7 +2551,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test21d_LastIndexOf_SubSeq_NotPresent()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2565,15 +2565,15 @@ Private Sub Test21d_LastIndexOf_SubSeq_NotPresent()
     Dim myExpected As Variant
     myExpected = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.LastIndexOf(20&, 4, 4)
+    myresult = mySeq.LastIndexOf(20&, 4, 4)
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2588,7 +2588,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test22a_Push()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2603,15 +2603,15 @@ Private Sub Test22a_Push()
     myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 1000&)
     ReDim Preserve myExpected(1 To 11)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.Push(1000&).ToArray
+    myresult = mySeq.Push(1000&).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2626,7 +2626,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test22b_PushRange()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2641,17 +2641,17 @@ Private Sub Test22b_PushRange()
     myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 11&, 12&, 13&, 14&, 15&)
     ReDim Preserve myExpected(1 To 15)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Dim myArray As Variant
     myArray = Array(11&, 12&, 13&, 14&, 15&)
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.PushRange(myArray).ToArray
+    myresult = mySeq.PushRange(myArray).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2666,7 +2666,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test23a_Pop()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2684,17 +2684,17 @@ Private Sub Test23a_Pop()
     myExpected2 = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&)
     ReDim Preserve myExpected2(1 To 9)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Dim myResult2 As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.Pop
+    myresult = mySeq.Pop
     myResult2 = mySeq.ToArray
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     AssertExactSequenceEquals myExpected2, myResult2, myProcedureName
 
 TestExit:
@@ -2710,7 +2710,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test23b_PopRange()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2729,17 +2729,17 @@ Private Sub Test23b_PopRange()
     myExpected2 = Array(10&, 20&, 30&, 50&, 50&, 60&)
     ReDim Preserve myExpected2(1 To 6)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Dim myResult2 As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.PopRange(4).ToArray
+    myresult = mySeq.PopRange(4).ToArray
     myResult2 = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     AssertExactSequenceEquals myExpected2, myResult2, myProcedureName
 
 TestExit:
@@ -2755,7 +2755,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test23c_PopRange_ExceedsHost()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2772,19 +2772,19 @@ Private Sub Test23c_PopRange_ExceedsHost()
     Dim myExpected2 As Variant
     myExpected2 = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Dim myResult2 As Variant
 
     Dim mySeq As SeqT
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    Set myResult = mySeq.PopRange(25)
-    myResult = myResult.ToArray
+    Set myresult = mySeq.PopRange(25)
+    myresult = myresult.ToArray
     myResult2 = mySeq.Count
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     AssertExactAreEqual myExpected2, myResult2, myProcedureName
 
 TestExit:
@@ -2800,7 +2800,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test23d_PopRange_NegativeRun()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2818,17 +2818,17 @@ Private Sub Test23d_PopRange_NegativeRun()
     myExpected2 = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected2(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Dim myResult2 As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.PopRange(-2).Count
+    myresult = mySeq.PopRange(-2).Count
     myResult2 = mySeq.ToArray
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     AssertExactSequenceEquals myExpected2, myResult2, myProcedureName
 
 TestExit:
@@ -2844,7 +2844,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test24a_Enqueue()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2859,15 +2859,15 @@ Private Sub Test24a_Enqueue()
     myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 1000&)
     ReDim Preserve myExpected(1 To 11)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.enQueue(1000&).ToArray
+    myresult = mySeq.enQueue(1000&).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2882,7 +2882,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test24b_EnqueueRange()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2897,17 +2897,17 @@ Private Sub Test24b_EnqueueRange()
     myExpected = Array(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&, 11&, 12&, 13&, 14&, 15&)
     ReDim Preserve myExpected(1 To 15)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Dim myArray As Variant
     myArray = Array(11&, 12&, 13&, 14&, 15&)
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.EnqueueRange(myArray).ToArray
+    myresult = mySeq.EnqueueRange(myArray).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -2922,7 +2922,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test25a_Dequeue()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2940,17 +2940,17 @@ Private Sub Test25a_Dequeue()
     myExpected2 = Array(20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected2(1 To 9)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Dim myResult2 As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 50&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.Dequeue
+    myresult = mySeq.Dequeue
     myResult2 = mySeq.ToArray
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     AssertExactSequenceEquals myExpected2, myResult2, myProcedureName
 
 TestExit:
@@ -2966,7 +2966,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test25b_DeqeueRange()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -2985,17 +2985,17 @@ Private Sub Test25b_DeqeueRange()
     myExpected2 = Array(50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected2(1 To 6)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Dim myResult2 As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.DequeueRange(4).ToArray
+    myresult = mySeq.DequeueRange(4).ToArray
     myResult2 = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     AssertExactSequenceEquals myExpected2, myResult2, myProcedureName
 
 TestExit:
@@ -3011,7 +3011,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test25c_DequeueRange_ExceedsHost()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3030,17 +3030,17 @@ Private Sub Test25c_DequeueRange_ExceedsHost()
     myExpected2 = -1&
 
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Dim myResult2 As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.DequeueRange(25).ToArray
+    myresult = mySeq.DequeueRange(25).ToArray
     myResult2 = mySeq.Count
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     AssertExactAreEqual myExpected2 = 0, myResult2 = 0, myProcedureName
 
 TestExit:
@@ -3056,7 +3056,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test26a_Sort()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3071,15 +3071,15 @@ Private Sub Test26a_Sort()
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
 
     'Act:
-    myResult = mySeq.Sort.ToArray
+    myresult = mySeq.Sort.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3094,7 +3094,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test26b_Sorted()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3109,17 +3109,17 @@ Private Sub Test26b_Sorted()
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Dim myResult2 As Variant
 
     Set mySeq = SeqT.Deb(30&, 70&, 40&, 50&, 60&, 80&, 20&, 90&, 10&, 100&)
 
     'Act:
-    myResult = mySeq.Sorted.ToArray
+    myresult = mySeq.Sorted.ToArray
     myResult2 = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3134,7 +3134,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test27a_Reverse()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3151,12 +3151,12 @@ Private Sub Test27a_Reverse()
     Dim mySeq As SeqT
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     'Act:
-    myResult = mySeq.Reverse.ToArray
+    myresult = mySeq.Reverse.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3171,7 +3171,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test27b_Reversed()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3190,17 +3190,17 @@ Private Sub Test27b_Reversed()
     myExpected2 = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected2(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Dim myResult2 As Variant
 
     Set mySeq = SeqT.Deb(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
 
     'Act:
-    myResult = mySeq.Reverse.ToArray
+    myresult = mySeq.Reverse.ToArray
     myResult2 = mySeq.Reversed.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     AssertExactSequenceEquals myExpected, myResult2, myProcedureName
 
 TestExit:
@@ -3216,7 +3216,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test28a_Unique()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3231,18 +3231,18 @@ Private Sub Test28a_Unique()
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(10&, 100&, 20&, 30&, 40&, 50&, 30&, 30&, 60&, 100&, 70&, 100&, 80&, 90&, 100&)
 
     'Act:
     ' The array needs to be sorted because unique copies the first item encountered
-    Set myResult = mySeq.Dedup
-    Set myResult = myResult.Sorted
-    myResult = myResult.ToArray
+    Set myresult = mySeq.Dedup
+    Set myresult = myresult.Sorted
+    myresult = myresult.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3257,7 +3257,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test28b_Unique_SingleItem()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3272,16 +3272,16 @@ Private Sub Test28b_Unique_SingleItem()
     myExpected = Array(10&)
     ReDim Preserve myExpected(1 To 1)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb.AddItems(10&)
 
     'Act:
     ' The array needs to be sorted because unique copies the first item encountered
-    myResult = mySeq.Dedup.Sorted.ToArray
+    myresult = mySeq.Dedup.Sorted.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3296,7 +3296,7 @@ End Sub
 
 '@TestMethod("SeqT")
 Private Sub Test28c_Unique_NoItems()
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3310,16 +3310,16 @@ Private Sub Test28c_Unique_NoItems()
     Dim myExpected As Variant
     myExpected = -1&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb
 
     'Act:
     ' The array needs to be sorted because unique copies the first item encountered
-    myResult = mySeq.Count
+    myresult = mySeq.Count
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3335,7 +3335,7 @@ End Sub
 '@TestMethod("SeqT")
 Private Sub Test29a_SetOfCommon()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3350,15 +3350,15 @@ Private Sub Test29a_SetOfCommon()
     myExpected = Array(50&, 60&, 70&, 80&, 90&, 100&)
     ReDim Preserve myExpected(1 To 6)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:
-    myResult = mySeq.SetOf(m_Common, SeqT(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).ToArray
+    myresult = mySeq.SetOf(m_Common, SeqT(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3374,7 +3374,7 @@ End Sub
 '@TestMethod("SeqT")
 Private Sub Test29b_SetOfHostOnly()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3389,15 +3389,15 @@ Private Sub Test29b_SetOfHostOnly()
     myExpected = Array(110&, 120&, 130&, 140&)
     ReDim Preserve myExpected(1 To 4)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:
-    myResult = mySeq.SetOf(m_HostOnly, SeqT(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)).ToArray
+    myresult = mySeq.SetOf(m_HostOnly, SeqT(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3413,7 +3413,7 @@ End Sub
 '@TestMethod("SeqT")
 Private Sub Test29c_SetOfParamOnly()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3428,15 +3428,15 @@ Private Sub Test29c_SetOfParamOnly()
     myExpected = Array(10&, 20&, 30&, 40&)
     ReDim Preserve myExpected(1 To 4)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:
-    myResult = mySeq.SetOf(m_ParamOnly, SeqT(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).ToArray
+    myresult = mySeq.SetOf(m_ParamOnly, SeqT(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3452,7 +3452,7 @@ End Sub
 '@TestMethod("SeqT")
 Private Sub Test29d_SetOfNotCommon()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3467,15 +3467,15 @@ Private Sub Test29d_SetOfNotCommon()
     myExpected = Array(10&, 20&, 30&, 40&, 110&, 120&, 130&, 140&)
     ReDim Preserve myExpected(1 To 8)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:  Again we need to sort The result SeqT to get the matching array
-    myResult = mySeq.SetOf(m_NotCommon, SeqT(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
+    myresult = mySeq.SetOf(m_NotCommon, SeqT(Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&))).Sorted.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3491,7 +3491,7 @@ End Sub
 '@TestMethod("SeqT")
 Private Sub Test29e_SetOfUnique()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3506,15 +3506,15 @@ Private Sub Test29e_SetOfUnique()
     myExpected = Array(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
     ReDim Preserve myExpected(1 To 14)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
     'Act:  Again we need to sort The result SeqT to get the matching array
-    myResult = mySeq.SetOf(e_SetoF.m_Unique, SeqT(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)).Sorted.ToArray
+    myresult = mySeq.SetOf(e_SetoF.m_Unique, SeqT(10&, 20&, 30&, 40&, 50&, 60&, 70&, 80&, 90&, 100&)).Sorted.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -3530,7 +3530,7 @@ End Sub
 '@TestMethod("SeqT")
 Private Sub Test30a_Swap()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -3545,7 +3545,7 @@ Private Sub Test30a_Swap()
     myExpected = Array(140&, 130&, 120&, 110&, 100&, 90&, 80&, 70&, 60&, 50&)
     ReDim Preserve myExpected(1 To 10)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     Set mySeq = SeqT.Deb(50&, 60&, 70&, 80&, 90&, 100&, 110&, 120&, 130&, 140&)
 
@@ -3556,10 +3556,10 @@ Private Sub Test30a_Swap()
     mySeq.Swap 4, 7
     mySeq.Swap 5, 6
 
-    myResult = mySeq.ToArray
+    myresult = mySeq.ToArray
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

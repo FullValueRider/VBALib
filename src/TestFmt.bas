@@ -9,7 +9,7 @@ Option Private Module
 'Private Assert As Object
 'Private Fakes As Object
 
-#If twinbasic Then
+#If TWINBASIC Then
     'Do nothing
 #Else
 
@@ -48,7 +48,7 @@ End Sub
 Public Sub FmtTests()
 
     
-    #If twinbasic Then
+    #If TWINBASIC Then
         Debug.Print CurrentProcedureName; vbTab, vbTab,
     #Else
         GlobalAssert
@@ -72,7 +72,7 @@ End Sub
 '@TestMethod("Fmt")
 Private Sub Test01a_Fmt_Text_Nothing()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -88,14 +88,14 @@ Private Sub Test01a_Fmt_Text_Nothing()
     '@Ignore EmptyStringLiteral
     myExpected = ""
     
-    Dim myResult As String
+    Dim myresult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = Fmt.Text(vbNullString)
+    myresult = Fmt.Text(vbNullString)
     'Assert:
    
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -111,7 +111,7 @@ End Sub
 '@TestMethod("Fmt")
 Private Sub Test01b_Fmt_Text_NoParams()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -126,14 +126,14 @@ Private Sub Test01b_Fmt_Text_NoParams()
     Dim myExpected As String
     myExpected = "Hello {0} World{0}"
     
-    Dim myResult As String
+    Dim myresult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = Fmt.Text("Hello {0} World{0}")
+    myresult = Fmt.Text("Hello {0} World{0}")
     'Assert:
    
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -149,7 +149,7 @@ End Sub
 '@TestMethod("Fmt")
 Private Sub Test01c_Fmt_Text_NoSubstitutions()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -164,14 +164,14 @@ Private Sub Test01c_Fmt_Text_NoSubstitutions()
     Dim myExpected As String
     myExpected = "Hello World"
     
-    Dim myResult As String
+    Dim myresult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = Fmt.Text("Hello World", 1, "One", 3.142)
+    myresult = Fmt.Text("Hello World", 1, "One", 3.142)
     'Assert:
    
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -187,7 +187,7 @@ End Sub
 '@TestMethod("Fmt")
 Private Sub Test01d_Fmt_Text_Formatting_Threevbcrlf()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -201,14 +201,14 @@ Private Sub Test01d_Fmt_Text_Formatting_Threevbcrlf()
     Dim myExpected As String
     myExpected = "Hello " & vbCrLf & vbCrLf & vbCrLf & " World"
     
-    Dim myResult As String
+    Dim myresult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = Fmt.Text("Hello {nl3} World", 1, "One", 3.142)
+    myresult = Fmt.Text("Hello {nl3} World", 1, "One", 3.142)
     'Assert:
    
-    AssertExactAreEqual VBA.Len(myExpected), VBA.Len(myResult), myProcedureName
+    AssertExactAreEqual VBA.Len(myExpected), VBA.Len(myresult), myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -224,7 +224,7 @@ End Sub
 '@TestMethod("Fmt")
 Private Sub Test01e_Fmt_Text_Formatting_Threeplainquotes()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -239,14 +239,14 @@ Private Sub Test01e_Fmt_Text_Formatting_Threeplainquotes()
     Dim myExpected As String
     myExpected = "Hello ''' World"
     
-    Dim myResult As String
+    Dim myresult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = Fmt.Text("Hello {sq3} World", 1, "One", 3.142)
+    myresult = Fmt.Text("Hello {sq3} World", 1, "One", 3.142)
     'Assert:
    
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -262,7 +262,7 @@ End Sub
 '@TestMethod("Fmt")
 Private Sub Test01f_Fmt_Text_Formatting_Zeroplainquotes()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -277,14 +277,14 @@ Private Sub Test01f_Fmt_Text_Formatting_Zeroplainquotes()
     Dim myExpected As String
     myExpected = "Hello  World"
     
-    Dim myResult As String
+    Dim myresult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = Fmt.Text("Hello {sq0} World", 1, "One", 3.142)
+    myresult = Fmt.Text("Hello {sq0} World", 1, "One", 3.142)
     'Assert:
    
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -300,7 +300,7 @@ End Sub
 '@TestMethod("Fmt")
 Private Sub Test01g_Fmt_Text_Formatting_ThreeVariables()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -315,14 +315,14 @@ Private Sub Test01g_Fmt_Text_Formatting_ThreeVariables()
     Dim myExpected As String
     myExpected = "Hello 1 One World [1,2,3] {3}"
     
-    Dim myResult As String
+    Dim myresult As String
     Dim myC As KvpC
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = Fmt.Text("Hello {0} {1} World {2} {3}", 1, "One", Array(1, 2, 3))
+    myresult = Fmt.Text("Hello {0} {1} World {2} {3}", 1, "One", Array(1, 2, 3))
     'Assert:
    
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

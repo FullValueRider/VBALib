@@ -273,9 +273,9 @@ Attribute MapIt.VB_Description = "Returns a new 1 dimension array with 1 based i
     Dim myItem As Variant
     For Each myItem In ipArray
     
-        Dim myResult As Variant
-        myResult = ipMapper.ExecMapper(myItem)
-        VariantCopy myA(mySize), myResult(0)
+        Dim myresult As Variant
+        myresult = ipMapper.ExecMapper(myItem)
+        VariantCopy myA(mySize), myresult(0)
         mySize = mySize + 1
         
     Next
@@ -387,7 +387,7 @@ Attribute Splat.VB_Description = "If paramarray is an array which contains a sin
     
 End Function
 
-Public Function Linearise(ByRef ipArray As Variant) As Variant
+Public Function Linearise(ByRef ipArray As Variant, Optional ByVal ipBase As Long = 1) As Variant
 
     If ArrayOp.Ranks(ipArray) = 1 Then
         Linearise = ipArray
@@ -398,9 +398,9 @@ Public Function Linearise(ByRef ipArray As Variant) As Variant
     mySize = ArrayOp.Count(ipArray)
     
     Dim myA As Variant
-    ReDim myA(1 To mySize)
+    ReDim myA(ipBase To mySize + ipBase)
     
-    Dim myIndex As Long: myIndex = 1
+    Dim myIndex As Long: myIndex = ipBase
     Dim myItem As Variant
     For Each myItem In ipArray
         If VBA.IsObject(myItem) Then

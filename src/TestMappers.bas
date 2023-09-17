@@ -9,7 +9,7 @@ Option Base 1
 'Private Assert As Object
 'Private Fakes As Object
 
-#If twinbasic Then
+#If TWINBASIC Then
     'Do nothing
 #Else
 
@@ -47,7 +47,7 @@ End Sub
 
 Public Sub MapperTests()
  
-    #If twinbasic Then
+    #If TWINBASIC Then
         Debug.Print CurrentProcedureName;
     #Else
         GlobalAssert
@@ -80,7 +80,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test01a_mpDec_Default()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -95,16 +95,16 @@ Private Sub Test01a_mpDec_Default()
     myExpected = Array(2&, "Nan", 3&, 4&, 5&, "Nan")
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     Dim mySeq As SeqC
     Set mySeq = SeqC(3&, "4", 4&, 5&, 6&, "Six")
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = mySeq.MapIt(mpDec.Deb).ToArray
+    myresult = mySeq.MapIt(mpDec.Deb).ToArray
    
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -120,7 +120,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test01b_mpDec_1()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -137,13 +137,13 @@ Private Sub Test01b_mpDec_1()
     Dim mySeq As SeqC
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = mySeq.MapIt(mpDec(1)).ToArray
+    myresult = mySeq.MapIt(mpDec(1)).ToArray
    
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -159,7 +159,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test01c_mpDec_3()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -176,13 +176,13 @@ Private Sub Test01c_mpDec_3()
     Dim mySeq As SeqC
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = mySeq.MapIt(mpDec(3)).ToArray
+    myresult = mySeq.MapIt(mpDec(3)).ToArray
    
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -198,7 +198,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test02a_mpInc_Default()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -215,13 +215,13 @@ Private Sub Test02a_mpInc_Default()
     Dim mySeq As SeqC
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = mySeq.MapIt(mpInc.Deb).ToArray
+    myresult = mySeq.MapIt(mpInc.Deb).ToArray
    
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -237,7 +237,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test02b_mpInc_1()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -252,16 +252,16 @@ Private Sub Test02b_mpInc_1()
     myExpected = Array(4&, "5", 5&, 6&, 7&, "Siy")
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
 
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = mySeq.MapIt(mpInc(1)).ToArray
+    myresult = mySeq.MapIt(mpInc(1)).ToArray
    
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -277,7 +277,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test02c_mpInc_3()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -292,16 +292,16 @@ Private Sub Test02c_mpInc_3()
     myExpected = Array(6&, "7", 7&, 8&, 9&, "Sj0")
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
 
     Set mySeq = SeqC.Deb(3&, "4", 4&, 5&, 6&, "Six")
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult = mySeq.MapIt(mpInc(3)).ToArray
+    myresult = mySeq.MapIt(mpInc(3)).ToArray
    
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -317,7 +317,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03a_mpIndex_mpInc_SeqC()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -332,8 +332,8 @@ Private Sub Test03a_mpIndex_mpInc_SeqC()
     myExpected = Array(2, 3, "4")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myResult As Variant
-    ReDim myResult(1 To 3)
+    Dim myresult As Variant
+    ReDim myresult(1 To 3)
     
     Dim mySeq As SeqC
     Set mySeq = SeqC(SeqC(1, 1, 1), SeqC(2, 2, 2), SeqC(3, "3", 3))
@@ -344,11 +344,11 @@ Private Sub Test03a_mpIndex_mpInc_SeqC()
     Dim myIndex As mpByIndex: Set myIndex = mpByIndex(myInc, 2)
     Set myTmp = mySeq.MapIt(myIndex)
     myTmp = myTmp.ToArray
-    myResult(1) = myTmp(1).Item(2)
-    myResult(2) = myTmp(2).Item(2)
-    myResult(3) = myTmp(3).Item(2)
+    myresult(1) = myTmp(1).Item(2)
+    myresult(2) = myTmp(2).Item(2)
+    myresult(3) = myTmp(3).Item(2)
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -364,7 +364,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03b_mpIndex_mpInc_Collection()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -379,8 +379,8 @@ Private Sub Test03b_mpIndex_mpInc_Collection()
     myExpected = Array(2, 3, "4")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myResult As Variant
-    ReDim myResult(1 To 3)
+    Dim myresult As Variant
+    ReDim myresult(1 To 3)
     
     Dim myC1 As Collection
     Set myC1 = New Collection
@@ -407,11 +407,11 @@ Private Sub Test03b_mpIndex_mpInc_Collection()
     Dim myTmp As Variant
     Set myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 2))
     
-    myResult(1) = myTmp.Item(1).Item(2)
-    myResult(2) = myTmp.Item(2).Item(2)
-    myResult(3) = myTmp.Item(3).Item(2)
+    myresult(1) = myTmp.Item(1).Item(2)
+    myresult(2) = myTmp.Item(2).Item(2)
+    myresult(3) = myTmp.Item(3).Item(2)
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -427,7 +427,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03c_mpIndex_mpInc_ArrayList()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -442,8 +442,8 @@ Private Sub Test03c_mpIndex_mpInc_ArrayList()
     myExpected = Array(2, 3, "4")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myResult As Variant
-    ReDim myResult(1 To 3)
+    Dim myresult As Variant
+    ReDim myresult(1 To 3)
     
     Dim myAL1 As ArrayList
     Set myAL1 = New ArrayList
@@ -469,11 +469,11 @@ Private Sub Test03c_mpIndex_mpInc_ArrayList()
     'Act:
     Dim myTmp As Variant
     myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 2)).ToArray
-    myResult(1) = myTmp(1).Item(2)
-    myResult(2) = myTmp(2).Item(2)
-    myResult(3) = myTmp(3).Item(2)
+    myresult(1) = myTmp(1).Item(2)
+    myresult(2) = myTmp(2).Item(2)
+    myresult(3) = myTmp(3).Item(2)
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -489,7 +489,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03d_mpIndex_mpInc_Array()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -504,8 +504,8 @@ Private Sub Test03d_mpIndex_mpInc_Array()
     myExpected = Array(2, 3, "4")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myResult As Variant
-    ReDim myResult(1 To 3)
+    Dim myresult As Variant
+    ReDim myresult(1 To 3)
     
     Dim mySeq As SeqC
     Set mySeq = SeqC(Array(1, 1, 1), Array(2, 2, 2), Array(3, "3", 3))
@@ -513,11 +513,11 @@ Private Sub Test03d_mpIndex_mpInc_Array()
     'Act:
     Dim myTmp As Variant
     myTmp = mySeq.MapIt(mpByIndex(mpInc(1), 2)).ToArray
-    myResult(1) = myTmp(1)(2)
-    myResult(2) = myTmp(2)(2)
-    myResult(3) = myTmp(3)(2)
+    myresult(1) = myTmp(1)(2)
+    myresult(2) = myTmp(2)(2)
+    myresult(3) = myTmp(3)(2)
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -533,7 +533,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03e_mpIndex_mpInc_Dictionary()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -548,8 +548,8 @@ Private Sub Test03e_mpIndex_mpInc_Dictionary()
     myExpected = Array(2, 3, "4")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myResult As Variant
-    ReDim myResult(1 To 3)
+    Dim myresult As Variant
+    ReDim myresult(1 To 3)
     
     Dim myD1 As KvpC
     Set myD1 = KvpC.Deb
@@ -575,11 +575,11 @@ Private Sub Test03e_mpIndex_mpInc_Dictionary()
     'Act:
     Dim myTmp As Variant
     myTmp = mySeq.MapIt(mpByIndex(mpInc(1), "two")).ToArray
-    myResult(1) = myTmp(1).Item("two")
-    myResult(2) = myTmp(2).Item("two")
-    myResult(3) = myTmp(3).Item("two")
+    myresult(1) = myTmp(1).Item("two")
+    myresult(2) = myTmp(2).Item("two")
+    myresult(3) = myTmp(3).Item("two")
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -595,7 +595,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test03f_mpIndex_mpInc_String()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -610,17 +610,17 @@ Private Sub Test03f_mpIndex_mpInc_String()
     myExpected = Array("Iello", "Uhere", "Xorld")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     Dim mySeq As SeqC
     Set mySeq = SeqC("Hello", "There", "World")
     
     'Act:
-    myResult = mySeq.MapIt(mpByIndex(mpInc(1), 1)).ToArray
+    myresult = mySeq.MapIt(mpByIndex(mpInc(1), 1)).ToArray
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -636,7 +636,7 @@ End Sub
 '@TestMethod("Mapper")
 Private Sub Test04a_mpInner()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -656,19 +656,19 @@ Private Sub Test04a_mpInner()
     Dim mySeq As SeqC
     Set mySeq = SeqC(SeqC(1, 2, 3), SeqC(2, 3, 4), SeqC(3, 4, 5))
     
-    Dim myResult As Variant
-    ReDim myResult(1 To 3)
+    Dim myresult As Variant
+    ReDim myresult(1 To 3)
     Dim myTmp As SeqC
     'Act: Apply the mpInc 'function' to each item of the in the inner SeqC
     Set myTmp = mySeq.MapIt(mpInner(mpInc.Deb))
-    myResult(1) = myTmp.Item(1).ToArray
-    myResult(2) = myTmp.Item(2).ToArray
-    myResult(3) = myTmp.Item(3).ToArray
+    myresult(1) = myTmp.Item(1).ToArray
+    myresult(2) = myTmp.Item(2).ToArray
+    myresult(3) = myTmp.Item(3).ToArray
     
     'Assert:
-    AssertExactSequenceEquals myExpected(1), myResult(1), myProcedureName
-    AssertExactSequenceEquals myExpected(2), myResult(2), myProcedureName
-    AssertExactSequenceEquals myExpected(3), myResult(3), myProcedureName
+    AssertExactSequenceEquals myExpected(1), myresult(1), myProcedureName
+    AssertExactSequenceEquals myExpected(2), myresult(2), myProcedureName
+    AssertExactSequenceEquals myExpected(3), myresult(3), myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

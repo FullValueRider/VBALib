@@ -6,7 +6,7 @@ Option Explicit
 Public myProcedureName As String
 Public myComponentName As String
 Public VBATesting   As Boolean
-#If twinbasic Then
+#If TWINBASIC Then
     ' Do Nothing
 #Else
     Public Assert As Object
@@ -52,7 +52,7 @@ Public VBATesting   As Boolean
 End Sub
 
 Public Sub GlobalAssert()
-    #If twinbasic Then
+    #If TWINBASIC Then
         ' do nothing
     #Else
         If Not ErrEx.IsEnabled Then

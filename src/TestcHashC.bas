@@ -8,7 +8,7 @@ Option Private Module
 'Private Assert As Object
 'Private Fakes As Object
 
-#If twinbasic Then
+#If TWINBASIC Then
     'Do nothing
 #Else
 
@@ -47,7 +47,7 @@ End Sub
 Public Sub cHashCTests()
 
     
-    #If twinbasic Then
+    #If TWINBASIC Then
         Debug.Print CurrentProcedureName; vbTab, vbTab,
     #Else
         GlobalAssert
@@ -73,14 +73,14 @@ Private Sub Test01_SeqObj()
     Dim myExpected As Variant
     myExpected = Array(True, "cHashC", "cHashC")
     
-    Dim myResult(0 To 2) As Variant
+    Dim myresult(0 To 2) As Variant
     
     'Act:
-    myResult(0) = VBA.IsObject(myH)
-    myResult(1) = VBA.TypeName(myH)
-    myResult(2) = myH.TypeName
+    myresult(0) = VBA.IsObject(myH)
+    myresult(1) = VBA.TypeName(myH)
+    myresult(2) = myH.TypeName
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -101,7 +101,7 @@ Private Sub Test02a_Add_MultipleItems_Count()
     Dim myExpected As Variant
     myExpected = 3&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     'Act:
     Set myH = New cHashC
@@ -109,9 +109,9 @@ Private Sub Test02a_Add_MultipleItems_Count()
     myH.Add "Hello"
     myH.Add 3.142
     
-    myResult = myH.Count
+    myresult = myH.Count
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -133,7 +133,7 @@ Private Sub Test03a_Add_MultipleItems()
     Dim myExpected As Variant
     myExpected = Array(42, "Hello", 3.142)
     Sorters.ShakerSortArrayByIndex myExpected
-    Dim myResult As Variant
+    Dim myresult As Variant
 
     'Act:
     Set myH = New cHashC
@@ -141,10 +141,10 @@ Private Sub Test03a_Add_MultipleItems()
     myH.Add "Hello"
     myH.Add 3.142
     
-    myResult = myH.Items
-    Sorters.ShakerSortArrayByIndex myResult
+    myresult = myH.Items
+    Sorters.ShakerSortArrayByIndex myresult
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -167,7 +167,7 @@ Private Sub Test04a0_Remove_SingleItem()
     myExpected = Array(Empty, Empty, Empty, Empty, Empty)
     'ReDim Preserve myExpected(1 To 5)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set myH = New cHashC
     With myH
         .Add Empty
@@ -181,10 +181,10 @@ Private Sub Test04a0_Remove_SingleItem()
     'Act:
     myH.Remove 42
 
-    myResult = myH.Items
+    myresult = myH.Items
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -207,7 +207,7 @@ Private Sub Test05a_RemoveByIndex_SingleItem()
     myExpected = Array(1, 100, 2, 43, 5)
     'ReDim Preserve myExpected(1 To 5)
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     Set myH = New cHashC
     With myH
         .Add 1
@@ -221,10 +221,10 @@ Private Sub Test05a_RemoveByIndex_SingleItem()
     'Act:
     myH.RemoveByIndex 3
 
-    myResult = myH.Items
+    myresult = myH.Items
 
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -246,7 +246,7 @@ Private Sub Test6a_Clear()
     Dim myExpected As Variant
     myExpected = 0&
 
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     Set myH = New cHashC
     With myH
@@ -260,10 +260,10 @@ Private Sub Test6a_Clear()
 
     'Act:
     myH.Clear
-    myResult = myH.Count
+    myresult = myH.Count
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -285,7 +285,7 @@ Private Sub Test7a_Exists_True()
     Dim myExpected As Boolean
     myExpected = True
 
-    Dim myResult As Boolean
+    Dim myresult As Boolean
     
     Set myH = New cHashC
     With myH
@@ -298,10 +298,10 @@ Private Sub Test7a_Exists_True()
     End With
 
     'Act:
-    myResult = myH.Exists(100&)
+    myresult = myH.Exists(100&)
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -323,7 +323,7 @@ Private Sub Test7b_Exists_False()
     Dim myExpected As Boolean
     myExpected = False
 
-    Dim myResult As Boolean
+    Dim myresult As Boolean
     
     Set myH = New cHashC
     With myH
@@ -336,10 +336,10 @@ Private Sub Test7b_Exists_False()
     End With
 
     'Act:
-    myResult = myH.Exists(1000&)
+    myresult = myH.Exists(1000&)
 
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
 
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

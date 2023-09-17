@@ -333,32 +333,32 @@ Attribute CurItem.VB_Description = "Get the items at the global + local offset. 
         Exit Property
     End If
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     Select Case True
     
         Case GroupInfo.IsArray(s.Host):
-            myResult = Array(s.Host(myLoc))
+            myresult = Array(s.Host(myLoc))
         Case GroupInfo.IsString(s.Host):
-            myResult = Array(VBA.Mid$(s.Host, myLoc, 1))
+            myresult = Array(VBA.Mid$(s.Host, myLoc, 1))
         Case GroupInfo.IsItemByToArray(s.Host):
-            myResult = Array(s.Items(myLoc))
+            myresult = Array(s.Items(myLoc))
         Case GroupInfo.IsDictionary(s.Host):
             Dim myKey As Variant: myKey = Array(s.Keys(myLoc))
-            myResult = Array(s.Host.Item(myKey(0)))
+            myresult = Array(s.Host.Item(myKey(0)))
         Case GroupInfo.IsIndexFrom1(s.Host):
-            myResult = Array(s.Host.Item(myLoc))
+            myresult = Array(s.Host.Item(myLoc))
         Case GroupInfo.IsIndexFrom0(s.Host):
-            myResult = Array(s.Host.Item(myLoc))
+            myresult = Array(s.Host.Item(myLoc))
         Case Else:
-            myResult = Array(s.Host)
+            myresult = Array(s.Host)
         
     End Select
     
     
-    If VBA.IsObject(myResult(0)) Then
-        Set CurItem = myResult(0)
+    If VBA.IsObject(myresult(0)) Then
+        Set CurItem = myresult(0)
     Else
-        CurItem = myResult(0)
+        CurItem = myresult(0)
     End If
      
 End Property
@@ -375,7 +375,7 @@ Public Property Let CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant
     
     Select Case True
     
-        Case GroupInfo.IsArray(s.Host):             s.Host(s.FirstIndex + myLoc) = ipItem
+        Case GroupInfo.IsArray(s.Host):             VariantCopyInd s.Host(s.FirstIndex + myLoc), ipItem
         Case GroupInfo.IsString(s.Host):            Mid$(s.Host, myLoc, 1) = ipItem
         Case GroupInfo.IsItemByToArray(s.Host):     s.Items(myLoc) = ipItem
         Case GroupInfo.IsDictionary(s.Host):        s.Host.Item(myLoc) = ipItem
@@ -398,7 +398,7 @@ Public Property Set CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant
     
     Select Case True
     
-        Case GroupInfo.IsArray(s.Host):             Set s.Host(s.FirstIndex + myLoc) = ipItem
+        Case GroupInfo.IsArray(s.Host):             VariantCopy s.Host(s.FirstIndex + myLoc), ipItem
             'Case GroupInfo.IsString(s.Host):            Mid$(s.Host, myLoc, 1) = ipItem
         Case GroupInfo.IsItemByToArray(s.Host):     Set s.Items(myLoc) = ipItem
         Case GroupInfo.IsDictionary(s.Host):        Set s.Host.Item(myLoc) = ipItem
@@ -419,23 +419,23 @@ Public Property Get CurKey(ByVal ipLocalOffset As Long) As Variant
         Exit Property
     End If
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     Select Case True
     
-        Case GroupInfo.IsArray(s.Host):                 myResult = Array(myLoc)
-        Case GroupInfo.IsString(s.Host):                myResult = Array(myLoc)
-        Case GroupInfo.IsItemByToArray(s.Host):         myResult = Array(myLoc)
-        Case GroupInfo.IsDictionary(s.Host):            myResult = Array(s.Keys(myLoc))
-        Case GroupInfo.IsIndexFrom0(s.Host):            myResult = Array(myLoc)
-        Case GroupInfo.IsIndexFrom1(s.Host):            myResult = Array(myLoc)
-        Case Else:                                      myResult = Array(1)
+        Case GroupInfo.IsArray(s.Host):                 myresult = Array(myLoc)
+        Case GroupInfo.IsString(s.Host):                myresult = Array(myLoc)
+        Case GroupInfo.IsItemByToArray(s.Host):         myresult = Array(myLoc)
+        Case GroupInfo.IsDictionary(s.Host):            myresult = Array(s.Keys(myLoc))
+        Case GroupInfo.IsIndexFrom0(s.Host):            myresult = Array(myLoc)
+        Case GroupInfo.IsIndexFrom1(s.Host):            myresult = Array(myLoc)
+        Case Else:                                      myresult = Array(1)
             
     End Select
     
-    If VBA.IsObject(myResult(0)) Then
-        Set CurKey = myResult(0)
+    If VBA.IsObject(myresult(0)) Then
+        Set CurKey = myresult(0)
     Else
-        CurKey = myResult(0)
+        CurKey = myresult(0)
     End If
 
 End Property

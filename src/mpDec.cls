@@ -40,8 +40,8 @@ Friend Function ConstructInstance(ByVal ipDecrement As Variant) As mpDec
 End Function
 
 
-Private Property Get IMapper_Typename() As String
-    IMapper_Typename = MY_TYPENAME
+Private Property Get IMapper_TypeName() As String
+    IMapper_TypeName = MY_TYPENAME
 End Property
 
 

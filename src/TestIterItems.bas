@@ -9,7 +9,7 @@ Option Private Module
 'Private Assert As Object
 'Private Fakes As Object
 
-#If twinbasic Then
+#If TWINBASIC Then
     'Do nothing
 #Else
 
@@ -47,7 +47,7 @@ End Sub
 
 Public Sub IterItemsTests()
     
-    #If twinbasic Then
+    #If TWINBASIC Then
         Debug.Print CurrentProcedureName;
     #Else
         GlobalAssert
@@ -95,7 +95,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test01a_IsObjectAndName()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -108,19 +108,19 @@ Private Sub Test01a_IsObjectAndName()
     Dim myExpected As Variant
     myExpected = Array(True, "IterItems", "IterItems")
     
-    Dim myResult As Variant
-    ReDim myResult(0 To 2)
+    Dim myresult As Variant
+    ReDim myresult(0 To 2)
     
     Dim myI As IterItems
     Set myI = IterItems(SeqC(1, 2, 3, 4, 5))
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myResult(0) = VBA.IsObject(myI)
-    myResult(1) = VBA.TypeName(myI)
-    myResult(2) = myI.TypeName
+    myresult(0) = VBA.IsObject(myI)
+    myresult(1) = VBA.TypeName(myI)
+    myresult(2) = myI.TypeName
    
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -136,7 +136,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test02a_GetItem0Seq()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -149,7 +149,7 @@ Private Sub Test02a_GetItem0Seq()
     Dim myExpected As Variant
     myExpected = 1
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     'Act:  Again we need to sort The result SeqC to get the matching array
     Dim myS As SeqC
@@ -157,10 +157,10 @@ Private Sub Test02a_GetItem0Seq()
     Dim myI As IterItems
     Set myI = IterItems(myS)
        
-    myResult = myI.CurItem(0)
+    myresult = myI.CurItem(0)
    
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -176,7 +176,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test02b_GetItem0SeqAfterThreeMovenext()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -189,18 +189,18 @@ Private Sub Test02b_GetItem0SeqAfterThreeMovenext()
     Dim myExpected As Variant
     myExpected = Array(True, True, True, 40)
     
-    Dim myResult As Variant
-    ReDim myResult(0 To 3)
+    Dim myresult As Variant
+    ReDim myresult(0 To 3)
     
     'Act:  Again we need to sort The result SeqC to get the matching array
     Dim myI As IterItems
     Set myI = IterItems(SeqC(10, 20, 30, 40, 50))
-    myResult(0) = myI.MoveNext
-    myResult(1) = myI.MoveNext
-    myResult(2) = myI.MoveNext
-    myResult(3) = myI.CurItem(0)
+    myresult(0) = myI.MoveNext
+    myresult(1) = myI.MoveNext
+    myresult(2) = myI.MoveNext
+    myresult(3) = myI.CurItem(0)
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -216,7 +216,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test02c_GetItem0SeqAfterThreeMoveNextTwoMovePrev()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -229,20 +229,20 @@ Private Sub Test02c_GetItem0SeqAfterThreeMoveNextTwoMovePrev()
     Dim myExpected As Variant
     myExpected = Array(True, True, True, True, True, 20)
     
-    Dim myResult As Variant
-    ReDim myResult(0 To 5)
+    Dim myresult As Variant
+    ReDim myresult(0 To 5)
     
     'Act:  Again we need to sort The result SeqC to get the matching array
     Dim myI As IterItems
     Set myI = IterItems(SeqC(10, 20, 30, 40, 50))
-    myResult(0) = myI.MoveNext
-    myResult(1) = myI.MoveNext
-    myResult(2) = myI.MoveNext
-    myResult(3) = myI.MovePrev
-    myResult(4) = myI.MovePrev
-    myResult(5) = myI.CurItem(0)
+    myresult(0) = myI.MoveNext
+    myresult(1) = myI.MoveNext
+    myresult(2) = myI.MoveNext
+    myresult(3) = myI.MovePrev
+    myresult(4) = myI.MovePrev
+    myresult(5) = myI.CurItem(0)
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -258,7 +258,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test03a_GetItemSeqAtOffset3()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -271,7 +271,7 @@ Private Sub Test03a_GetItemSeqAtOffset3()
     Dim myExpected As Variant
     myExpected = 80
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -282,9 +282,9 @@ Private Sub Test03a_GetItemSeqAtOffset3()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurItem(3)
+    myresult = myI.CurItem(3)
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -300,7 +300,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test03b_GetItemSeqAtOffsetMinus3()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -313,7 +313,7 @@ Private Sub Test03b_GetItemSeqAtOffsetMinus3()
     Dim myExpected As Variant
     myExpected = 20
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -324,9 +324,9 @@ Private Sub Test03b_GetItemSeqAtOffsetMinus3()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurItem(-3)
+    myresult = myI.CurItem(-3)
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -342,7 +342,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test03c_GetItemSeqIndexGreaterThanSize()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -355,7 +355,7 @@ Private Sub Test03c_GetItemSeqIndexGreaterThanSize()
     Dim myExpected As Variant
     myExpected = True
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -366,10 +366,10 @@ Private Sub Test03c_GetItemSeqIndexGreaterThanSize()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurItem(5)
+    myresult = myI.CurItem(5)
     
     'Assert:
-    AssertExactAreEqual myExpected, VBA.IsNull(myResult), myProcedureName
+    AssertExactAreEqual myExpected, VBA.IsNull(myresult), myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -385,7 +385,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test03d_GetItemSeqIndexDeforeIndex1()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -398,7 +398,7 @@ Private Sub Test03d_GetItemSeqIndexDeforeIndex1()
     Dim myExpected As Variant
     myExpected = True
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -409,10 +409,10 @@ Private Sub Test03d_GetItemSeqIndexDeforeIndex1()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurItem(-5)
+    myresult = myI.CurItem(-5)
     
     'Assert:
-    AssertExactAreEqual myExpected, VBA.IsNull(myResult), myProcedureName
+    AssertExactAreEqual myExpected, VBA.IsNull(myresult), myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -428,7 +428,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test04a_GetKeySeq()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -441,7 +441,7 @@ Private Sub Test04a_GetKeySeq()
     Dim myExpected As Variant
     myExpected = 5&
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -454,10 +454,10 @@ Private Sub Test04a_GetKeySeq()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurKey(0)
+    myresult = myI.CurKey(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -473,7 +473,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test04b_GetIndexSeq()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -486,7 +486,7 @@ Private Sub Test04b_GetIndexSeq()
     Dim myExpected As Variant
     myExpected = 4&
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -499,10 +499,10 @@ Private Sub Test04b_GetIndexSeq()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurOffset(0)
+    myresult = myI.CurOffset(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -518,7 +518,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test05a_GetItemArray()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -535,7 +535,7 @@ Private Sub Test05a_GetItemArray()
     myArray = Array(10, 20, 30, 40, 50, 60, 70, 80, 90)
     ReDim Preserve myArray(-4 To 4)
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     'Act:
     Dim myI As IterItems
@@ -545,10 +545,10 @@ Private Sub Test05a_GetItemArray()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurItem(0)
+    myresult = myI.CurItem(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -564,7 +564,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test05b_GetKeyArray()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -581,7 +581,7 @@ Private Sub Test05b_GetKeyArray()
     myArray = Array(10, 20, 30, 40, 50, 60, 70, 80, 90)
     ReDim Preserve myArray(-4 To 4)
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -592,10 +592,10 @@ Private Sub Test05b_GetKeyArray()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurKey(0)
+    myresult = myI.CurKey(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -611,7 +611,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test05c_GetIndexArray()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -628,7 +628,7 @@ Private Sub Test05c_GetIndexArray()
     myArray = Array(10, 20, 30, 40, 50, 60, 70, 80, 90)
     ReDim Preserve myArray(-4 To 4)
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:  Again we need to sort The result SeqC to get the matching array
@@ -639,10 +639,10 @@ Private Sub Test05c_GetIndexArray()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurOffset(0)
+    myresult = myI.CurOffset(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -658,7 +658,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test06a_GetItemCollection()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -692,13 +692,13 @@ Private Sub Test06a_GetItemCollection()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     'Act:
-    myResult = myI.CurItem(0)
+    myresult = myI.CurItem(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -714,7 +714,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test06b_GetKeyCollection()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -741,7 +741,7 @@ Private Sub Test06b_GetKeyCollection()
         .Add 90
     End With
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:
@@ -752,10 +752,10 @@ Private Sub Test06b_GetKeyCollection()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurKey(0)
+    myresult = myI.CurKey(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -771,7 +771,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test06c_GetIndexCollection()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -805,14 +805,14 @@ Private Sub Test06c_GetIndexCollection()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:
-    myResult = myI.CurOffset(0)
+    myresult = myI.CurOffset(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -828,7 +828,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test07a_GetItemArrayList()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -862,13 +862,13 @@ Private Sub Test07a_GetItemArrayList()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     'Act:
-    myResult = myI.CurItem(0)
+    myresult = myI.CurItem(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -884,7 +884,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test07b_GetKeyArrayList()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -911,7 +911,7 @@ Private Sub Test07b_GetKeyArrayList()
         .Add 90
     End With
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:
@@ -922,10 +922,10 @@ Private Sub Test07b_GetKeyArrayList()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurKey(0)
+    myresult = myI.CurKey(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -941,7 +941,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test07c_GetIndexArrayList()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -975,14 +975,14 @@ Private Sub Test07c_GetIndexArrayList()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:
-    myResult = myI.CurOffset(0)
+    myresult = myI.CurOffset(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -998,7 +998,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test08a_GetItemDictionary()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1032,13 +1032,13 @@ Private Sub Test08a_GetItemDictionary()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     'Act:
-    myResult = myI.CurItem(0)
+    myresult = myI.CurItem(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1054,7 +1054,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test08b_GetKeyDictionary()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1081,7 +1081,7 @@ Private Sub Test08b_GetKeyDictionary()
         .Add "Ninety", 90
     End With
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:
@@ -1092,10 +1092,10 @@ Private Sub Test08b_GetKeyDictionary()
     myI.MoveNext
     myI.MoveNext
     
-    myResult = myI.CurKey(0)
+    myresult = myI.CurKey(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1111,7 +1111,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test08c_GetIndexDIctionary()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1145,14 +1145,14 @@ Private Sub Test08c_GetIndexDIctionary()
     myI.MoveNext
     myI.MoveNext
     
-    Dim myResult As Variant
+    Dim myresult As Variant
     
     
     'Act:
-    myResult = myI.CurOffset(0)
+    myresult = myI.CurOffset(0)
     
     'Assert:
-    AssertExactAreEqual myExpected, myResult, myProcedureName
+    AssertExactAreEqual myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1170,7 +1170,7 @@ End Sub
 '@TestMethod("IterItems")
 Private Sub Test09a_GetIndexDictionary()
 
-    #If twinbasic Then
+    #If TWINBASIC Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1203,19 +1203,19 @@ Private Sub Test09a_GetIndexDictionary()
     
     
     
-    Dim myResult As Variant
-    ReDim myResult(0 To 8)
+    Dim myresult As Variant
+    ReDim myresult(0 To 8)
     
     'Act:
     Do
             
-        myResult(myI.CurOffset(0)) = VBA.CVar(myI.CurItem(0))
+        myresult(myI.CurOffset(0)) = VBA.CVar(myI.CurItem(0))
         
     Loop While myI.MoveNext
     
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertExactSequenceEquals myExpected, myresult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

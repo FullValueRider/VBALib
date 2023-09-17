@@ -301,7 +301,7 @@ Attribute RemoveAt.VB_Description = "Removes the item at the specified index"
    
    'Debug.Print "Searching from root ", s.Root.Item
    Set myNode = DeleteNodeAt(s.Root, myNode.Item, ipIndex) ', ipItem)
-    
+    'DeleteNodeAt myNode
 '    s.Order.Item(ipIndex) = Nothing
 '    s.Order.RemoveAt ipIndex
 '
@@ -531,7 +531,7 @@ Attribute First.VB_Description = "Assigns to the Item at FirstIndex"
         Exit Property
     End If
     
-    Set s.Root = DeleteNodeAt(s.Order.First, s.Root)
+    Set s.Root = DeleteNodeAt(s.Order.First, s.Root, Me.FirstIndex)
     InsertAt s.Order.FirstIndex, ipItem
     
 End Property
@@ -547,7 +547,7 @@ Attribute First.VB_Description = "Assigns to the Item at FirstIndex"
         Exit Property
     End If
     
-    Set s.Root = DeleteNodeAt(s.Order.First, s.Root)
+    Set s.Root = DeleteNodeAt(s.Order.First, s.Root, Me.FirstIndex)
     InsertAt s.Order.FirstIndex, ipItem
     
 End Property
@@ -580,7 +580,7 @@ Attribute Last.VB_Description = "Assigns to the Item at LastIndex"
         Exit Property
     End If
     
-    Set s.Root = DeleteNodeAt(s.Order.Last, s.Root)
+    Set s.Root = DeleteNodeAt(s.Order.Last, s.Root, Me.Lastindex)
     InsertAt s.Order.Lastindex, ipItem
    
 End Property
@@ -594,7 +594,7 @@ Attribute Last.VB_Description = "Assigns to the Item at LastIndex"
         Exit Property
     End If
     
-    Set s.Root = DeleteNodeAt(s.Order.Last, s.Root)
+    Set s.Root = DeleteNodeAt(s.Order.Last, s.Root, Me.Lastindex)
     InsertAt s.Order.Lastindex, ipItem
    
 End Property
@@ -615,14 +615,14 @@ End Property
 '@Description("Assigns to the Item at First but one Index")
 Public Property Let FBO(ByVal ipItem As Variant)
 Attribute FBO.VB_Description = "Assigns to the Item at First but one Index"
-    Set s.Root = DeleteNodeAt(s.Order.FBO, s.Root)
+    Set s.Root = DeleteNodeAt(s.Order.FBO, s.Root, Me.FBOIndex)
     InsertAt s.Order.FBOIndex, ipItem
 End Property
 
 '@Description("Assigns to the Item at First but one Index")
 Public Property Set FBO(ByVal ipItem As Variant)
 Attribute FBO.VB_Description = "Assigns to the Item at First but one Index"
-    Set s.Root = DeleteNodeAt(s.Order.FBO, s.Root)
+    Set s.Root = DeleteNodeAt(s.Order.FBO, s.Root, Me.FBOIndex)
     InsertAt s.Order.FBOIndex, ipItem
 End Property
 
@@ -641,14 +641,14 @@ End Property
 '@Description("Assigns to the Item at First but one Index")
 Public Property Let LBO(ByVal ipItem As Variant)
 Attribute LBO.VB_Description = "Assigns to the Item at First but one Index"
-    Set s.Root = DeleteNodeAt(s.Order.LBO, s.Root)
+    Set s.Root = DeleteNodeAt(s.Order.LBO, s.Root, Me.LBOIndex)
     InsertAt s.Order.LBOIndex, ipItem
 End Property
 
 '@Description("Assigns to the Item at First but one Index")
 Public Property Set LBO(ByVal ipItem As Variant)
 Attribute LBO.VB_Description = "Assigns to the Item at First but one Index"
-    Set s.Root = DeleteNodeAt(s.Order.LBO, s.Root)
+    Set s.Root = DeleteNodeAt(s.Order.LBO, s.Root, Me.LBOIndex)
     InsertAt s.Order.LBOIndex, ipItem
 End Property
 
@@ -890,7 +890,7 @@ Attribute RemoveAll.VB_Description = "If the ParamArray is empty, removes all it
   
         RemoveAllItems s.Root
         Set s.Order = Nothing
-        Set s.Order = SeqC.Deb
+        Set s.Order = SeqA.Deb
         Set s.Root = Nothing
         Exit Function
         
@@ -2025,7 +2025,6 @@ Private Function DeleteNodeAt(ByVal ipRoot As SeqTNode, ByRef ipItem As Variant,
 End Function
 
 
-
 Private Function RotateRootToRightChild(ByVal y As SeqTNode) As SeqTNode
     'Debug.Print "Rotating Right: root is", y.Item, " left child is ", y.Left.Item
     ' Formerly RightRotate
@@ -2062,7 +2061,8 @@ End Function
 
 
 Public Sub PrintByOrder()
-    'Debug.Print "Root is ", s.Root.Item
+
+    Debug.Print "Root is ", s.Root.Item
     inorder s.Root
     
 End Sub
@@ -2088,7 +2088,7 @@ Private Sub inorder(ByVal ipNode As SeqTNode)
 End Sub
 
 Public Sub PrintByColl()
-
+    Debug.Print "Root is ", s.Root.Item
     Dim myIndex As Long
     For myIndex = Me.FirstIndex To Me.Lastindex
         Dim myNode As SeqTNode: Set myNode = s.Order.Item(myIndex)
