@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Sys"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A location for global helper methods"
@@ -16,3 +16,18 @@ Option Explicit
 
 
 '@ModuleDescription("A location for global helper methods")
+
+Public Function IsNothing(ByRef ipItem As Variant) As Boolean
+
+    If VBA.IsObject(ipItem) Then
+        IsNothing = ipItem Is Nothing
+    Else
+        IsNothing = False
+    End If
+    
+End Function
+
+
+Public Function IsNotNothing(ByRef ipItem As Variant) As Boolean
+    IsNotNothing = Not IsNothing(ipItem)
+End Function

@@ -8,7 +8,7 @@ Option Private Module
 'Private Assert As Object
 'Private Fakes As Object
 
-#If TWINBASIC Then
+#If twinbasic Then
     'Do nothing
 #Else
 
@@ -42,7 +42,7 @@ End Sub
 
 Public Sub StrsTests()
  
-    #If TWINBASIC Then
+    #If twinbasic Then
         Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab, vbTab,
     #Else
         GlobalAssert
@@ -111,7 +111,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test01a_strs_BinToNum_Byte()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -126,18 +126,18 @@ Private Sub Test01a_strs_BinToNum_Byte()
     myExpected = Array(CByte(0), CByte(3), CByte(128), CByte(255))
     ReDim Preserve myExpected(1 To 4)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 4)
+    Dim myResult As Variant
+    ReDim myResult(1 To 4)
 
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult(1) = Strs.BinToNum("00")
-    myresult(2) = Strs.BinToNum("0011")
-    myresult(3) = Strs.BinToNum("10000000")
-    myresult(4) = Strs.BinToNum("11111111")
+    myResult(1) = Strs.BinToNum("00")
+    myResult(2) = Strs.BinToNum("0011")
+    myResult(3) = Strs.BinToNum("10000000")
+    myResult(4) = Strs.BinToNum("11111111")
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -153,7 +153,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test01b_strs_BinToNum_Integer()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -168,20 +168,20 @@ Private Sub Test01b_strs_BinToNum_Integer()
     myExpected = Array(CInt(0), CInt(3), CInt(-3), CInt(3), CInt(128), CInt(255))
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 6)
+    Dim myResult As Variant
+    ReDim myResult(1 To 6)
 
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult(1) = Strs.BinToNum("0_0000_0000")
-    myresult(2) = Strs.BinToNum("00_0000_0011")
-    myresult(3) = Strs.BinToNum("1000_0000_0000_0011")
-    myresult(4) = Strs.BinToNum("0000_0000_0000_0011")
-    myresult(5) = Strs.BinToNum("0000_0000_1000_0000")
-    myresult(6) = Strs.BinToNum("0000_0000_1111_1111")
+    myResult(1) = Strs.BinToNum("0_0000_0000")
+    myResult(2) = Strs.BinToNum("00_0000_0011")
+    myResult(3) = Strs.BinToNum("1000_0000_0000_0011")
+    myResult(4) = Strs.BinToNum("0000_0000_0000_0011")
+    myResult(5) = Strs.BinToNum("0000_0000_1000_0000")
+    myResult(6) = Strs.BinToNum("0000_0000_1111_1111")
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -197,7 +197,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test01c_strs_BinToNum_Long()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -212,20 +212,20 @@ Private Sub Test01c_strs_BinToNum_Long()
     myExpected = Array(CLng(0), CLng(3), CLng(-3), CLng(3), CLng(128), CLng(255))
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 6)
+    Dim myResult As Variant
+    ReDim myResult(1 To 6)
 
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult(1) = Strs.BinToNum("0_0000_0000_0000_0000_0000_0000")
-    myresult(2) = Strs.BinToNum("00_0000_0000_0000_0000_0000_0011")
-    myresult(3) = Strs.BinToNum("1000_0000_0000_0000_0000_0000_0000_0011")
-    myresult(4) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_0000_0011")
-    myresult(5) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_1000_0000")
-    myresult(6) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_1111_1111")
+    myResult(1) = Strs.BinToNum("0_0000_0000_0000_0000_0000_0000")
+    myResult(2) = Strs.BinToNum("00_0000_0000_0000_0000_0000_0011")
+    myResult(3) = Strs.BinToNum("1000_0000_0000_0000_0000_0000_0000_0011")
+    myResult(4) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_0000_0011")
+    myResult(5) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_1000_0000")
+    myResult(6) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_1111_1111")
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -241,7 +241,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test01d_strs_BinToNum_LongLong()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -256,20 +256,20 @@ Private Sub Test01d_strs_BinToNum_LongLong()
     myExpected = Array(CLngLng(0), CLngLng(3), CLngLng(-3), CLngLng(3), CLngLng(128), CLngLng(255))
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 6)
+    Dim myResult As Variant
+    ReDim myResult(1 To 6)
 
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult(1) = Strs.BinToNum("0_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000")
-    myresult(2) = Strs.BinToNum("00_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0011")
-    myresult(3) = Strs.BinToNum("1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0011")
-    myresult(4) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0011")
-    myresult(5) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_1000_0000")
-    myresult(6) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_1111_1111")
+    myResult(1) = Strs.BinToNum("0_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000")
+    myResult(2) = Strs.BinToNum("00_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0011")
+    myResult(3) = Strs.BinToNum("1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0011")
+    myResult(4) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0011")
+    myResult(5) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_1000_0000")
+    myResult(6) = Strs.BinToNum("0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_1111_1111")
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -285,7 +285,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test02a_Strs_Dedup_Default()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -300,14 +300,14 @@ Private Sub Test02a_Strs_Dedup_Default()
     Dim myExpected As String
     myExpected = "Hello World"
     
-    Dim myresult As String
+    Dim myResult As String
    
    
     'Act:
    
-    myresult = Strs.Dedup("Hello   World")
+    myResult = Strs.Dedup("Hello   World")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -323,7 +323,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test02b_Strs_Dedup()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -338,14 +338,14 @@ Private Sub Test02b_Strs_Dedup()
     Dim myExpected As String
     myExpected = "Helo World"
     
-    Dim myresult As String
+    Dim myResult As String
    
    
     'Act:
    
-    myresult = Strs.Dedup("Heeellllo   Worlld", Strs.ToChars("el "))
+    myResult = Strs.Dedup("Heeellllo   Worlld", Strs.ToChars("el "))
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -361,7 +361,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test03a_Strs_Trimmer_Default()
     
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -376,14 +376,14 @@ Private Sub Test03a_Strs_Trimmer_Default()
     Dim myExpected As String
     myExpected = "Hello World"
     
-    Dim myresult As String
+    Dim myResult As String
    
    
     'Act:
    
-    myresult = Strs.Trimmer(" ,  ;   Hello World ,,,  ;")
+    myResult = Strs.Trimmer(" ,  ;   Hello World ,,,  ;")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -399,7 +399,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test03b_Strs_Trimmer_Spaces()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -414,14 +414,14 @@ Private Sub Test03b_Strs_Trimmer_Spaces()
     Dim myExpected As String
     myExpected = "Hello World,"
     
-    Dim myresult As String
+    Dim myResult As String
    
    
     'Act:
    
-    myresult = Strs.Trimmer("     Hello World,     ", " ")
+    myResult = Strs.Trimmer("     Hello World,     ", " ")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -437,7 +437,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test04a_Strs_PadRight_Default()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -451,12 +451,12 @@ Private Sub Test04a_Strs_PadRight_Default()
     Dim myExpected As String
     myExpected = "Hello World                     "
     
-    Dim myresult As String
+    Dim myResult As String
    
     'Act:
-    myresult = Strs.PadRight("Hello World", 32)
+    myResult = Strs.PadRight("Hello World", 32)
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -472,7 +472,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test04b_Strs_PadRight_hash()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -486,12 +486,12 @@ Private Sub Test04b_Strs_PadRight_hash()
     Dim myExpected As String
     myExpected = "Hello World#####################"
     
-    Dim myresult As String
+    Dim myResult As String
    
     'Act:
-    myresult = Strs.PadRight("Hello World", 32, "#")
+    myResult = Strs.PadRight("Hello World", 32, "#")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -507,7 +507,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test04c_Strs_PadRight_abcd()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -521,12 +521,12 @@ Private Sub Test04c_Strs_PadRight_abcd()
     Dim myExpected As String
     myExpected = "Hello Worldabcdabcdabcdabcdabcda"
     
-    Dim myresult As String
+    Dim myResult As String
    
     'Act:
-    myresult = Strs.PadRight("Hello World", 32, "abcd")
+    myResult = Strs.PadRight("Hello World", 32, "abcd")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -542,7 +542,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test05a_Strs_PadLeft_Default()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -556,13 +556,13 @@ Private Sub Test05a_Strs_PadLeft_Default()
     Dim myExpected As String
     myExpected = "                     Hello World"
     
-    Dim myresult As String
+    Dim myResult As String
    
     'Act:
-    myresult = Strs.PadLeft("Hello World", 32)
+    myResult = Strs.PadLeft("Hello World", 32)
     'Assert:
     
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -578,7 +578,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test05b_Strs_PadLeft_hash()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -592,12 +592,12 @@ Private Sub Test05b_Strs_PadLeft_hash()
     Dim myExpected As String
     myExpected = "#####################Hello World"
     
-    Dim myresult As String
+    Dim myResult As String
    
     'Act:
-    myresult = Strs.PadLeft("Hello World", 32, "#")
+    myResult = Strs.PadLeft("Hello World", 32, "#")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -613,7 +613,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test05c_Strs_PadLeft_abcd()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -627,12 +627,12 @@ Private Sub Test05c_Strs_PadLeft_abcd()
     Dim myExpected As String
     myExpected = "dabcdabcdabcdabcdabcdHello World"
     
-    Dim myresult As String
+    Dim myResult As String
    
     'Act:
-    myresult = Strs.PadLeft("Hello World", 32, "abcd")
+    myResult = Strs.PadLeft("Hello World", 32, "abcd")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -648,7 +648,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test06a_Strs_CountOf_char()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -662,12 +662,12 @@ Private Sub Test06a_Strs_CountOf_char()
     Dim myExpected As Long
     myExpected = 3
     
-    Dim myresult As Long
+    Dim myResult As Long
    
     'Act:
-    myresult = Strs.Countof("Hello World", "l")
+    myResult = Strs.Countof("Hello World", "l")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -683,7 +683,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test06b_Strs_CountOf_subStr()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -697,12 +697,12 @@ Private Sub Test06b_Strs_CountOf_subStr()
     Dim myExpected As Long
     myExpected = 2
     
-    Dim myresult As Long
+    Dim myResult As Long
    
     'Act:
-    myresult = Strs.Countof("Hello Worldel", "el")
+    myResult = Strs.Countof("Hello Worldel", "el")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -718,7 +718,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test07a_SubStr_Default()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -734,11 +734,11 @@ Private Sub Test07a_SubStr_Default()
     ReDim Preserve myExpected(1 To 3)
     
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     'Act:
-    myresult = Strs.ToSubStr("Hello,There,World")
+    myResult = Strs.ToSubStr("Hello,There,World")
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -754,7 +754,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test07b_SubStr_ab()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -769,12 +769,12 @@ Private Sub Test07b_SubStr_ab()
     myExpected = Split("Hello_ab_There_ab_World", "_ab_")
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     'Act:
-    myresult = Strs.ToSubStr("Hello_ab_There_ab_World", "_ab_")
+    myResult = Strs.ToSubStr("Hello_ab_There_ab_World", "_ab_")
    
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -790,7 +790,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test08a_Repeat_Default()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -804,11 +804,11 @@ Private Sub Test08a_Repeat_Default()
     Dim myExpected As String
     myExpected = "        "
    
-    Dim myresult As String
+    Dim myResult As String
     'Act:
-    myresult = Strs.Repeat(" ", 8)
+    myResult = Strs.Repeat(" ", 8)
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -824,7 +824,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test08b_Repeat_Hello()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -838,11 +838,11 @@ Private Sub Test08b_Repeat_Hello()
     Dim myExpected As String
     myExpected = "HelloHelloHelloHelloHelloHelloHelloHello"
    
-    Dim myresult As String
+    Dim myResult As String
     'Act:
-    myresult = Strs.Repeat("Hello", 8)
+    myResult = Strs.Repeat("Hello", 8)
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -858,7 +858,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test09a_Replacer()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -872,11 +872,11 @@ Private Sub Test09a_Replacer()
     Dim myExpected As String
     myExpected = "HelloWorld"
    
-    Dim myresult As String
+    Dim myResult As String
     'Act:
-    myresult = Strs.Replacer("    He llo   Worl   d ")
+    myResult = Strs.Replacer("    He llo   Worl   d ")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -892,7 +892,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test09b_Replacer_SpecifiedPair()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -906,11 +906,11 @@ Private Sub Test09b_Replacer_SpecifiedPair()
     Dim myExpected As String
     myExpected = "aaaaaHealloaaaWorlaaada"
    
-    Dim myresult As String
+    Dim myResult As String
     'Act:
-    myresult = Strs.Replacer("     He llo   Worl   d ", Chars.twSpace, "a")
+    myResult = Strs.Replacer("     He llo   Worl   d ", Chars.twSpace, "a")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -926,7 +926,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test09c_Replacer_NestedPairs()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -940,11 +940,11 @@ Private Sub Test09c_Replacer_NestedPairs()
     Dim myExpected As String
     myExpected = "HelloWorld"
    
-    Dim myresult As String
+    Dim myResult As String
     'Act:
-    myresult = Strs.Replacer("HelloaaaaapppppWorld", "ap", Chars.twNullStr)
+    myResult = Strs.Replacer("HelloaaaaapppppWorld", "ap", Chars.twNullStr)
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -960,7 +960,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test10a_MultiReplacer()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -974,11 +974,11 @@ Private Sub Test10a_MultiReplacer()
     Dim myExpected As String
     myExpected = "HelloWorld"
    
-    Dim myresult As String
+    Dim myResult As String
     'Act:
-    myresult = Strs.MultiReplacer("    He llo   Worl   d ")
+    myResult = Strs.MultiReplacer("    He llo   Worl   d ")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -994,7 +994,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test10b_MultiReplacer_SpecifiedPair()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1008,11 +1008,11 @@ Private Sub Test10b_MultiReplacer_SpecifiedPair()
     Dim myExpected As String
     myExpected = "aaaaaHealloaaaWorlaaada"
    
-    Dim myresult As String
+    Dim myResult As String
     'Act:
-    myresult = Strs.MultiReplacer("     He llo   Worl   d ", Array(Array(Chars.twSpace, "a")))
+    myResult = Strs.MultiReplacer("     He llo   Worl   d ", Array(Array(Chars.twSpace, "a")))
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1028,7 +1028,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test10c_MultiReplacer_NestedPairs()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1042,11 +1042,11 @@ Private Sub Test10c_MultiReplacer_NestedPairs()
     Dim myExpected As String
     myExpected = "HeLLoWorLd"
    
-    Dim myresult As String
+    Dim myResult As String
     'Act:
-    myresult = Strs.MultiReplacer("HelloaaaaapppppWorld", Array(Array("ap", Chars.twNullStr), Array("l", "L")))
+    myResult = Strs.MultiReplacer("HelloaaaaapppppWorld", Array(Array("ap", Chars.twNullStr), Array("l", "L")))
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1062,7 +1062,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test11a_ToAscB()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1076,12 +1076,12 @@ Private Sub Test11a_ToAscB()
     Dim myExpected As Variant
     myExpected = Array(AscB("H"), AscB("e"), AscB("l"), AscB("l"), AscB("o"))
     ReDim Preserve myExpected(1 To 5)
-    Dim myresult As Variant
+    Dim myResult As Variant
     'Act:
-    myresult = Strs.ToAscB("Hello")
-    ReDim Preserve myresult(1 To 5)
+    myResult = Strs.ToAscB("Hello")
+    ReDim Preserve myResult(1 To 5)
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1097,7 +1097,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test11b_ToUnicodeBytes()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1117,12 +1117,12 @@ Private Sub Test11b_ToUnicodeBytes()
         myExpected(myIndex + 1) = myTmp(myIndex)
     Next
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     'Act:
-    myresult = Strs.ToUnicodeBytes("Hello")
-    ReDim Preserve myresult(1 To 10)
+    myResult = Strs.ToUnicodeBytes("Hello")
+    ReDim Preserve myResult(1 To 10)
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1138,7 +1138,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test11c_ToUnicodeIntegers()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1154,12 +1154,12 @@ Private Sub Test11c_ToUnicodeIntegers()
     ReDim Preserve myExpected(1 To 5)
     
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     'Act:
-    myresult = Strs.ToUnicodeIntegers("Hello")
-    ReDim Preserve myresult(1 To 5)
+    myResult = Strs.ToUnicodeIntegers("Hello")
+    ReDim Preserve myResult(1 To 5)
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1175,7 +1175,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test12a_Sort()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1189,11 +1189,11 @@ Private Sub Test12a_Sort()
     Dim myExpected As String
     myExpected = "Hello"
         
-    Dim myresult As String
+    Dim myResult As String
     'Act:
-    myresult = Strs.Sort("oleHl")
+    myResult = Strs.Sort("oleHl")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1209,7 +1209,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test13a_Inc_NoCarryInc()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1226,13 +1226,13 @@ Private Sub Test13a_Inc_NoCarryInc()
     Dim myString As String
     myString = "Hellz"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:
-    myresult = Strs.Inc(myString)
+    myResult = Strs.Inc(myString)
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1248,7 +1248,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test13b_Inc_LastCharNotIncrementable()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1265,13 +1265,13 @@ Private Sub Test13b_Inc_LastCharNotIncrementable()
     Dim myString As String
     myString = "Hello/"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:
-    myresult = Strs.Inc(myString)
+    myResult = Strs.Inc(myString)
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1287,7 +1287,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test13c_Inc_FullROllover()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1305,12 +1305,12 @@ Private Sub Test13c_Inc_FullROllover()
     Dim myString As String
     myString = "zzzzz"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:
-    myresult = Strs.Inc(myString)
+    myResult = Strs.Inc(myString)
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1326,7 +1326,7 @@ End Sub
 '@TestMethod("Strs")
 Private Sub Test13d_Inc_NonIncMidString()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1343,13 +1343,13 @@ Private Sub Test13d_Inc_NonIncMidString()
     Dim myString As String
     myString = "Hel/zz"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:
-    myresult = Strs.Inc(myString)
+    myResult = Strs.Inc(myString)
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

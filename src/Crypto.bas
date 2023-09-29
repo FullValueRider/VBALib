@@ -3,8 +3,8 @@ Option Explicit
 
 'DefObj A-Z
 
-#Const HasPtrSafe = (VBA7 <> 0) Or (TWINBASIC <> 0)
-#Const HasOperators = (TWINBASIC <> 0)
+#Const HasPtrSafe = (VBA7 <> 0) Or (twinbasic <> 0)
+#Const HasOperators = (twinbasic <> 0)
 
 #If HasPtrSafe Then
 Private Declare PtrSafe Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal Length As LongPtr)

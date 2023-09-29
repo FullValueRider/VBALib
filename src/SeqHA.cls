@@ -4,27 +4,26 @@ BEGIN
 END
 Attribute VB_Name = "SeqHA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Attribute VB_Description = "SeqHA is a multipurpose Collection/ArrayList replacement.  It uses cHashD to store Items using the keys of cHashd.  Items are access using a single 1 based index. For a Keyed collection, use one of the Kvp classes"
-'@IgnoreModule
-'@PredeclaredId
-'@Exposed
-'@Folder("Seq)
-'@ModuleDescription("SeqHA is a multipurpose Collection/ArrayList replacement.  It uses cHashD to store Items using the keys of cHashd.  Items are access using a single 1 based index. For a Keyed collection, use one of the Kvp classes")
-'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
-' Based on cHashD from https://www.vbforums.com/showthread.php?834515-Simple-and-fast-lightweight-HashList-Class-(no-APIs)&s=f049d882b4fc4d27f4bc2f9bc383a53e
-' cHashD, Olaf Schmidt in August 2016 (enhanced about mixed, variable KeyTypes and Remove-functions in 2020)
-' Reformatted and Rubberducked by Steven Laycock July 2023
-'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
-' Code line limit should be 120 characters.
-' Comment line limit should be 80 characters
-'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
-' SeqHA is a list class and consequently will store items with the same value.
-' SeqHA is a bodge as it uses the keys of chashD to store Items.
-' SeqHA doe not use the Items field of cHashD
-
+'''@IgnoreModule
+''@PredeclaredId
+''@Exposed
+''@Folder("Seq)
+''@ModuleDescription("SeqHA is a multipurpose Collection/ArrayList replacement.  It uses cHashD to store Items using the keys of cHashd.  Items are access using a single 1 based index. For a Keyed collection, use one of the Kvp classes")
+''========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
+'' Based on cHashD from https://www.vbforums.com/showthread.php?834515-Simple-and-fast-lightweight-HashList-Class-(no-APIs)&s=f049d882b4fc4d27f4bc2f9bc383a53e
+'' cHashD, Olaf Schmidt in August 2016 (enhanced about mixed, variable KeyTypes and Remove-functions in 2020)
+'' Reformatted and Rubberducked by Steven Laycock July 2023
+''========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
+'' Code line limit should be 120 characters.
+'' Comment line limit should be 80 characters
+''========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
+'' SeqHA is a list class and consequently will store items with the same value.
+'' SeqHA is a bodge as it uses the keys of chashD to store Items.
+'' SeqHA doe not use the Items field of cHashD
+'
 'Private Const MY_TYPENAME                       As String = "SeqHA"
 'Private Const FIRST_INDEX                       As Long = 1
 'Private Const LACKS_ITEMS                       As Long = -1
@@ -154,7 +153,7 @@ Attribute VB_Description = "SeqHA is a multipurpose Collection/ArrayList replace
 '
 ''@Description("Returns a subset of the SeqHA")
 'Public Function Slice _
-'( _
+'() '( _
 'Optional ByRef ipStart As Long = FIRST_INDEX, _
 'Optional ByRef ipRun As Long = WHOLE_SEQ, _
 'Optional ByRef ipStep As Long = DEFAULT_STEP _
@@ -287,8 +286,11 @@ Attribute VB_Description = "SeqHA is a multipurpose Collection/ArrayList replace
 '        Exit Property
 '    End If
 '
-'    Dim myItem As Variant: myItem = Array(s.Host.KeyByIndex(0))
-'    s.Host.KeyByIndex =
+'    If VBA.IsObject(ipItem) Then
+'        Set Me.Item(FIRST_INDEX) = ipItem
+'    Else
+'        Me.Item(FIRST_INDEX) = ipItem
+'    End If
 '
 'End Property
 '
@@ -453,7 +455,7 @@ Attribute VB_Description = "SeqHA is a multipurpose Collection/ArrayList replace
 '
 '
 'Public Function IndexOf _
-'( _
+'() '( _
 '    ByVal ipItem As Variant, _
 '    Optional ByVal ipStart As Long = 1, _
 '    Optional ByVal ipRun As Long = 0 _
@@ -515,7 +517,7 @@ Attribute VB_Description = "SeqHA is a multipurpose Collection/ArrayList replace
 'End Function
 '
 'Public Function LastIndexOf _
-'( _
+'() '( _
 'ByVal ipItem As Variant, _
 'Optional ByVal ipStart As Long = 1, _
 'Optional ByVal ipRun As Long = 0 _

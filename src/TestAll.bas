@@ -6,7 +6,7 @@ Option Explicit
 Public myProcedureName As String
 Public myComponentName As String
 Public VBATesting   As Boolean
-#If TWINBASIC Then
+#If twinbasic Then
     ' Do Nothing
 #Else
     Public Assert As Object
@@ -23,7 +23,7 @@ Public VBATesting   As Boolean
     Debug.Print
 
     TestArrayOp.ArrayOpTests
-    TestFmt.FmtTests
+    TestFormat.FormatTests
     TestIterItems.IterItemsTests
     TestStrs.StrsTests
     TestStringifier.StringifierTests
@@ -36,13 +36,17 @@ Public VBATesting   As Boolean
     TestSeqL.SeqLTests
     TestSeqHC.SeqHCTests
     TestSeqHL.SeqHLTests
-
+    'TestSeqT.SeqTTests
     TestKvpA.KvpATests
     TestKvpC.KvpCTests
     TestKvpHA.KvpHATests
     tESTkVPhl.KvpHLTests
     TestKvpL.KvpLTests
     TestKvpLP.KvpLPTests
+    
+    'AoC CLasses
+    TestPointXY.PointXYTests
+    'TestTrackedXY.TrackedXYTests
     
     VBATesting = False
     
@@ -52,7 +56,7 @@ Public VBATesting   As Boolean
 End Sub
 
 Public Sub GlobalAssert()
-    #If TWINBASIC Then
+    #If twinbasic Then
         ' do nothing
     #Else
         If Not ErrEx.IsEnabled Then

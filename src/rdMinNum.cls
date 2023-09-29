@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "rdMinNum"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -14,7 +14,7 @@ Option Explicit
 
 Implements IReducer
 
-Const MY_TYPENAME                   As String = "rdMinNum"
+Const MY_TYPENAME                               As String = "rdMinNum"
 
 
 Private Property Get IReducer_TypeName() As String
@@ -24,19 +24,16 @@ End Property
 
 Public Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
     
-    Dim myMin As Variant
-    myMin = Globals.maxDecimal
+    Dim myMin As Variant: myMin = Globals.maxDecimal
     
     Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
     Do
-    
         If myMin > myItems.CurItem(0) Then
             myMin = myItems.CurItem(0)
         End If
-                
     Loop While myItems.MoveNext
 
-    IReducer_ExecReduction = myMin
+    IReducer_ExecReduction = Array(myMin)
     
 End Function
 

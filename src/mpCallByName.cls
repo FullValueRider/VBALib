@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "mpCallByName"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Implements call by name on the object provided by ipHostItem"
@@ -30,9 +30,9 @@ Attribute VB_Description = "Implements call by name on the object provided by ip
  
 Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
     
-    Dim myresult() As Variant
-    If TryCallByName(ipHostItem, s.MethodName, s.CallType, myresult) Then
-        IMapper_ExecMapper = myresult
+    Dim myResult() As Variant
+    If TryCallByName(ipHostItem, s.MethodName, s.CallType, myResult) Then
+        IMapper_ExecMapper = myResult
     Else
         IMapper_ExecMapper = Array("Call by name failed")
     End If

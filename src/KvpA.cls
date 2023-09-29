@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Dictionary using a SeqA for Keys and Items"
@@ -44,7 +44,7 @@ Private Type Properties
     FirstIndex                                  As Long
 End Type
 
-Private p                                       As Properties
+Private p
 
 '@Defaultmember
 Public Function Deb(Optional ByVal ipInitialSize As Long = DEFAULT_SIZE) As KvpA
@@ -351,7 +351,7 @@ Public Function RemoveAt(ByRef ipIndex As Long) As KvpA
 
     Set RemoveAt = Me
 
-    If ipIndex < s.Keys.FirstIndex Or ipIndex > s.Keys.Lastindex Then
+    If ipIndex < s.Keys.FirstIndex Or ipIndex > s.Keys.LastIndex Then
         Exit Function
     End If
     
@@ -556,7 +556,7 @@ Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long
     
     Dim myCount As Long
     For myCount = 1 To ipRun
-        If myRemoveIndex >= s.Keys.Lastindex Then
+        If myRemoveIndex >= s.Keys.LastIndex Then
             Exit For
         End If
         s.Keys.RemoveAt myRemoveIndex
@@ -834,7 +834,7 @@ Attribute FilterIt.VB_Description = "Returns a KvpA.Deb where the ICOmparer has 
     End If
 
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
         If ipComparer.ExecCmp(s.Items.Item(myIndex)) Then
             myK.Add s.Keys.Item(myIndex), s.Items.Item(myIndex)
         End If
@@ -852,13 +852,12 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
 
-    Dim myItem As Variant
-    myItem = Array(ipReducer.ExecReduction(s.Items.ToArray))
+    Dim myA() As Variant: myA = ipReducer.ExecReduction(s.Items)
     
-    If VBA.IsObject(myItem(0)) Then
-        Set ReduceIt = myItem(0)
+    If VBA.IsObject(myA(0)) Then
+        Set ReduceIt = myA(0)
     Else
-        ReduceIt = myItem(0)
+        ReduceIt = myA(0)
     End If
     
 End Function
@@ -878,7 +877,7 @@ Public Function Count(Optional ByRef ipItem As Variant) As Long
     
     Dim myCount As Long: myCount = 0
     Dim myIndex As Long
-    For myIndex = s.Items.FirstIndex To s.Items.Lastindex
+    For myIndex = s.Items.FirstIndex To s.Items.LastIndex
         If Comparers.EQ(ipItem, s.Items(myIndex)) Then
             myCount = myCount + 1
         End If
@@ -898,7 +897,7 @@ Public Function CountIt(ByVal ipComparer As IComparer) As Long
 
     Dim myCount As Long: myCount = 0
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
 
         If ipComparer.ExecCmp(s.Items.Item(myIndex)) Then
             myCount = myCount + 1
@@ -1012,7 +1011,7 @@ End Function
 Public Function KeysAsSeq() As SeqA
     
     If s.Keys.LacksItems Then
-        Set Keys = SeqA.Deb
+        Set KeysAsSeq = SeqA.Deb
         Exit Function
     End If
     
@@ -1028,10 +1027,10 @@ Public Function Pairs() As Variant
         Exit Function
     End If
     
-    Dim myA As Variant: ReDim myA(s.Keys.FirstIndex To s.Keys.Lastindex)
+    Dim myA As Variant: ReDim myA(s.Keys.FirstIndex To s.Keys.LastIndex)
     
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
         myA(myIndex) = Array(s.Keys.Item(myIndex), s.Items.Item(myIndex))
     Next
 
@@ -1051,7 +1050,7 @@ Public Function PairsAsSeq() As SeqA
     Dim myS As SeqA: Set myS = SeqA.Deb
     
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
         myS.Add Array(s.Keys.Item(myIndex), s.Items.Item(myIndex))
     Next
 
@@ -1065,8 +1064,8 @@ Public Property Get FirstIndex() As Long
 End Property
 
 
-Public Property Get Lastindex() As Long
-    Lastindex = s.Keys.Lastindex
+Public Property Get LastIndex() As Long
+    LastIndex = s.Keys.LastIndex
 End Property
 
 
@@ -1194,7 +1193,7 @@ End Property
 '@Description( returns a Kvp with values as keys.  Each Value is linked to a Kvp of Key vs Index for the host value
 Public Function Mirror(Optional ByVal ipMirrorType As e_MirrorType = e_MirrorType.m_ByAllValues) As KvpA
 
-    If Me.LacksItems = 0 Then
+    If Me.LacksItems Then
         Set Mirror = KvpA.Deb
         Exit Function
     End If
@@ -1216,22 +1215,22 @@ End Function
 '@Description("Returns an KvpA of two KvpA.  Item(1) is an KvpA of the first found Host value vs Host Key. .Item(2) is a copy of the original KvpA with the  first Key/Value pairs removed
 Private Function MirrorByAllValues() As KvpA
 
-    If Me.LacksItems = 0 Then
-        Set MirrorByAllValues = KvpA.Deb
-        Exit Function
-    End If
+'    If Me.LacksItems Then
+'        Set MirrorByAllValues = KvpA.Deb
+'        Exit Function
+'    End If
 
     Dim myK As KvpA
     Set myK = KvpA.Deb
 
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
 
-        If myK.LacksKey(s.Keys.Item(myIndex)) Then
+        If myK.LacksKey(s.Items.Item(myIndex)) Then
             myK.Add s.Items.Item(myIndex), KvpA.Deb
         End If
 
-        myK.Item(s.Keys.Item(myIndex)).Add s.Keys.Item(myIndex), myIndex
+        myK.Item(s.Items.Item(myIndex)).Add s.Keys.Item(myIndex), myIndex
 
     Next
 
@@ -1249,7 +1248,7 @@ Private Function MirrorByFirstValue() As KvpA
     Set myOther = KvpA.Deb
 
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
 
         If myFirst.LacksKey(s.Items.Item(myIndex)) Then
             myFirst.Add s.Items.Item(myIndex), s.Keys.Item(myIndex)

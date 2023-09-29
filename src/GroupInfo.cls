@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "GroupInfo"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -136,6 +136,14 @@ End Function
 
 Public Function IsNotList(ByRef ipItem As Variant) As Boolean
     IsNotList = Not IsList(ipItem)
+End Function
+
+Public Function CanMap(ByRef ipItem As Variant) As Boolean
+    CanMap = VBA.InStr("seq,kvp", GroupInfo.Name(ipItem)) > 0
+End Function
+
+Public Function CannotMap(ByRef ipItem As Variant) As Boolean
+    CannotMap = Not CanMap(ipItem)
 End Function
 
 
@@ -288,20 +296,6 @@ Private Function InvalidRangeItemUsingCount(ByRef ipRangeItem As Variant) As Boo
 End Function
 
 
-Public Function IsNothing(ByRef ipItem As Variant) As Boolean
-
-    If VBA.IsObject(ipItem) Then
-        IsNothing = ipItem Is Nothing
-    Else
-        IsNothing = False
-    End If
-    
-End Function
-
-
-Public Function IsNotNothing(ByRef ipItem As Variant) As Boolean
-    IsNotNothing = Not IsNothing(ipItem)
-End Function
 
 
 

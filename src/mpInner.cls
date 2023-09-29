@@ -4,30 +4,24 @@ BEGIN
 END
 Attribute VB_Name = "mpInner"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Option Explicit
 '@Exposed
 '@PredeclaredId
 '@Folder("Mappers")
+Option Explicit
 
 Implements IMapper
 
-Const MY_TYPENAME           As String = "mpInner"
+Const MY_TYPENAME                           As String = "mpInner"
 
 Private Type State
-    Mapper                  As IMapper
+    Mapper                                  As IMapper
 End Type
 
 
-Private s                   As State
-
-
-
-'Private Function IMapper_ExecMapper(ByRefipHostItem As Variant) As Collection
-'    IMapper_ExecMapper = ExecMapper(ipHostItem)
-'End Function
+Private s                                   As State
 
 
 Private Property Get IMapper_TypeName() As String

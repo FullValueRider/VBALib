@@ -50,6 +50,7 @@ Public Const Upper                  As String = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 Public Const AlphaNumeric           As String = Number & Upper & Lower
 Public Const WhiteSpace             As String = twSpace & twTab & twLf & twCr & twCrLf & twNBsp & twComma & twSemiColon & twColon
     
+Public Const twDoubleSpace          As String = "  "
 
 
 

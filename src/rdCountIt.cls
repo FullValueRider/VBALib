@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "rdCountIt"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -14,24 +14,20 @@ Option Explicit
 
 Implements IReducer
 
-Const MY_TYPENAME                   As String = "rdCountIt"
+Const MY_TYPENAME                                   As String = "rdCountIt"
 
 Private Type State
-    Comparer                        As IComparer
+    Comparer                                        As IComparer
 End Type
 
+Private s                                           As State
 
-Private s                           As State
-
-
+'@DefaultMember
 Public Function Deb(ByRef ipComparer As IComparer) As rdCountIt
-        
+Attribute Deb.VB_UserMemId = 0
     With New rdCountIt
-        
         Set Deb = .ConstructInstance(ipComparer)
-            
     End With
-        
 End Function
 
 
@@ -43,31 +39,30 @@ Friend Function ConstructInstance(ByRef ipComparer As IComparer) As rdCountIt
 End Function
 
 
-'@Description("Adds the value in ipArgsArray(0) to each item in the SeqC.  If the host item is not a number the string NAN is returned")
-Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
-Attribute IReducer_ExecReduction.VB_Description = "Adds the value in ipArgsArray(0) to each item in the SeqC.  If the host item is not a number the string NAN is returned"
-    IReducer_ExecReduction = ExecReduction(ipHostItems)
-End Function
+'Private Function ExecReduction(ByRef ipHostItems As Variant) As Variant
+'    IReducer_ExecReduction = ExecReduction(ipHostItems)
+'End Function
 
 
 Private Property Get IReducer_TypeName() As String
     IReducer_TypeName = MY_TYPENAME
 End Property
 
-
-Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant
+'@Description("Count the occasions where the comparer is true")
+Public Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
+Attribute IReducer_ExecReduction.VB_Description = "Count the occasions where the comparer is true"
         
     Dim myCounter As Long: myCounter = 0
     
     Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
     Do
-   
-        If s.Comparer.ExecCmp(myItems.CurItem(0)) Then
+        Dim myA() As Variant: myA = Array(myItems.CurItem(0))
+        Dim myB As Boolean: myB = s.Comparer.ExecCmp(myA(0))
+        If myB Then
             myCounter = myCounter + 1
         End If
-   
     Loop While myItems.MoveNext
    
-    ExecReduction = myCounter
+    IReducer_ExecReduction = Array(VBA.CVar(myCounter))
         
 End Function

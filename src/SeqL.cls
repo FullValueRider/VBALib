@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqL is a Collection/ArrayList replacement. Items are stored in an Double Linked List.  Order of addition is preserved. Indexing is 1 based. Keys are not supported (See Kvp classes)"
@@ -92,7 +92,7 @@ Attribute Deb.VB_UserMemId = 0
 End Function
 
 
-Friend Function ConstructInstance(ByRef ipFpa As Variant) As SeqL
+Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqL
      
     p.Count = 0
     p.FirstIndex = FIRST_INDEX
@@ -100,7 +100,7 @@ Friend Function ConstructInstance(ByRef ipFpa As Variant) As SeqL
     Set s.Last = s.Root
     
     ' Check to see if we return a default 'empty' seq
-    If ArrayOp.LacksItems(ipFpa) Then
+    If ArrayOp.LacksItems(ipFPA) Then
         Set ConstructInstance = Me
         Exit Function
     End If
@@ -110,14 +110,14 @@ Friend Function ConstructInstance(ByRef ipFpa As Variant) As SeqL
     ' else we want to treat the forwrded paramarray as a single array item
     
     Dim myItem As Variant
-    If ArrayOp.HoldsOneItem(ipFpa) Then
-        If VBA.IsObject(ipFpa(0)) Then
-            Set myItem = ipFpa(0)
+    If ArrayOp.HoldsOneItem(ipFPA) Then
+        If VBA.IsObject(ipFPA(0)) Then
+            Set myItem = ipFPA(0)
         Else
-            myItem = ipFpa(0)
+            myItem = ipFPA(0)
         End If
     Else
-        myItem = ipFpa
+        myItem = ipFPA
     End If
     
     If GroupInfo.IsNumber(myItem) Then
@@ -265,11 +265,11 @@ Attribute Remove.VB_Description = "Removes the first encountered item from the S
     
     Dim myNodeInfo As KVPair: Set myNodeInfo = GetNodeInfo(ipItem)
 
-    If NotFound(myNodeInfo.Item) Then
+    If NotFound(myNodeInfo.Item(1)) Then
         Exit Function
     End If
 
-    RemoveNode myNodeInfo.Item
+    RemoveNode myNodeInfo.Item(1)
         
     Remove = myNodeInfo.Key
     
@@ -355,11 +355,11 @@ Attribute Slice.VB_Description = "Returns a subset of the SeqL"
 
     Dim myEnd As Long
     If ipRun < Me.FirstIndex Then
-        myEnd = Me.Lastindex
+        myEnd = Me.LastIndex
     Else
         myEnd = ipStart + ipRun - 1
-        If myEnd > Me.Lastindex Then
-            myEnd = Me.Lastindex
+        If myEnd > Me.LastIndex Then
+            myEnd = Me.LastIndex
         End If
     End If
 
@@ -394,7 +394,7 @@ Attribute ToArray.VB_Description = "Returns a shallow copy of the SeqL as an Arr
         Exit Function
     End If
 
-    Dim myS As SeqA: Set myS = SeqA(Me.Lastindex)
+    Dim myS As SeqA: Set myS = SeqA(Me.LastIndex)
 
     Dim myNode As SeqLNode: Set myNode = s.Root
     
@@ -440,13 +440,13 @@ End Function
 
 
 '@Description("Returns the LastIndex of the Seq or -1 if the Seq is empty.  Equivalent to Count.")
-Public Function Lastindex() As Long
-Attribute Lastindex.VB_Description = "Returns the LastIndex of the Seq or -1 if the Seq is empty.  Equivalent to Count."
+Public Function LastIndex() As Long
+Attribute LastIndex.VB_Description = "Returns the LastIndex of the Seq or -1 if the Seq is empty.  Equivalent to Count."
 
     If Me.Count < Me.FirstIndex Then
-        Lastindex = LACKS_ITEMS
+        LastIndex = LACKS_ITEMS
     Else
-        Lastindex = Me.Count
+        LastIndex = Me.Count
     End If
 
 End Function
@@ -462,10 +462,10 @@ End Function
 'Description("Returns the index of the second to last item in the SeqL, or -1 if the SeqL has lees than 2 items")
 Public Function LBOIndex() As Long
 
-    If Me.Lastindex < Me.FBOIndex Then
+    If Me.LastIndex < Me.FBOIndex Then
         LBOIndex = LACKS_ITEMS
     Else
-        LBOIndex = Me.Lastindex - 1
+        LBOIndex = Me.LastIndex - 1
     End If
    
 End Function
@@ -670,11 +670,11 @@ Public Function IndexOf _
     ' ensure that ipstart+iprun only goes to the end of the seq
     Dim myEnd As Long
     If ipRun = TO_LAST_INDEX Then
-        myEnd = Me.Lastindex
+        myEnd = Me.LastIndex
     ElseIf ipRun > 0 Then
         myEnd = ipStart + ipRun - 1
-        If myEnd > Me.Lastindex Then
-            myEnd = Me.Lastindex
+        If myEnd > Me.LastIndex Then
+            myEnd = Me.LastIndex
         End If
     Else
         Exit Function
@@ -721,11 +721,11 @@ Attribute LastIndexOf.VB_Description = "Returns the index of the first Item foun
     ' ensure that ipstart+iprun only goes to the end of the seq
     Dim myEnd As Long
     If ipRun = TO_LAST_INDEX Then
-        myEnd = Me.Lastindex
+        myEnd = Me.LastIndex
     ElseIf ipRun > 0 Then
         myEnd = ipStart + ipRun - 1
-        If myEnd > Me.Lastindex Then
-            myEnd = Me.Lastindex
+        If myEnd > Me.LastIndex Then
+            myEnd = Me.LastIndex
         End If
     Else
         Exit Function
@@ -871,7 +871,7 @@ Attribute RemoveRange.VB_Description = "Remove items in the specified range of I
     End If
     
     Do
-        Dim myNode As SeqLNode: Set myNode = GetNodeInfo(myItems.CurItem(0)).Item
+        Dim myNode As SeqLNode: Set myNode = GetNodeInfo(myItems.CurItem(0)).Item(1)
         If Not myNode Is Nothing Then
             RemoveNode myNode
         End If
@@ -1019,7 +1019,7 @@ Attribute Head.VB_Description = "Returns the first N items of the SeqL, Default 
         Exit Function
     End If
 
-    If ipSplitAfter >= Me.Lastindex Then
+    If ipSplitAfter >= Me.LastIndex Then
         Set Head = Me.Clone
         Exit Function
     End If
@@ -1039,7 +1039,7 @@ Attribute Tail.VB_Description = "Returns the Items after SplitAfter, Default is 
         Exit Function
     End If
 
-    If ipSplitAfter >= Me.Lastindex Then
+    If ipSplitAfter >= Me.LastIndex Then
         Exit Function
     End If
     
@@ -1053,6 +1053,47 @@ Attribute Tail.VB_Description = "Returns the Items after SplitAfter, Default is 
 End Function
 
 
+Public Function RotLeft(Optional ByVal ipCount As Long = 1) As SeqL
+    
+    Set RotLeft = Me
+    If Me.LacksItems Then
+        Exit Function
+    End If
+    
+    If ipCount = 0 Then
+        Exit Function
+    End If
+    
+    If ipCount < 0 Then
+        Set RotLeft = RotRight(VBA.Abs(ipCount))
+        Exit Function
+    End If
+    
+    Me.AddRange Me.DequeueRange(ipCount)
+    
+End Function
+
+
+Public Function RotRight(Optional ByVal ipCount As Long = 1) As SeqL
+    
+    Set RotRight = Me
+    If Me.LacksItems Then
+        Exit Function
+    End If
+    
+    If ipCount = 0 Then
+        Exit Function
+    End If
+    
+    If ipCount < 0 Then
+        Set RotRight = RotLeft(VBA.Abs(ipCount))
+        Exit Function
+    End If
+    
+    Me.InsertAtRange 1, Me.PopRange(ipCount).Reverse
+    
+End Function
+
 Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
 
     HoldsItem = False
@@ -1062,7 +1103,7 @@ Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
     End If
 
     
-    Dim myNode As SeqLNode: Set myNode = GetNodeInfo(ipItem).Item
+    Dim myNode As SeqLNode: Set myNode = GetNodeInfo(ipItem).Item(1)
    
     Do Until myNode Is Nothing
     
@@ -1223,12 +1264,12 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
     
-    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me.ToArray))
+    Dim myA() As Variant: myA = ipReducer.ExecReduction(Me)
 
-    If VBA.IsObject(myItem(0)) Then
-        Set ReduceIt = myItem(0)
+    If VBA.IsObject(myA(0)) Then
+        Set ReduceIt = myA(0)
     Else
-        ReduceIt = myItem(0)
+        ReduceIt = myA(0)
     End If
 
 End Function
@@ -1285,7 +1326,7 @@ Public Function PopRange(Optional ByVal ipCount As Long = 1) As SeqA
         Exit Function
     End If
     
-    If ipCount > Me.Lastindex Then
+    If ipCount > Me.LastIndex Then
         'Bug: SeqA(Me).reverse instantiates a seqc
         Set PopRange = SeqA(Me.Reverse)
         Me.RemoveAll
@@ -1351,8 +1392,8 @@ Public Function DequeueRange(Optional ByRef ipCount As Long = 1) As SeqA
         Exit Function
     End If
 
-    If ipCount > Me.Lastindex Then
-        ipCount = Me.Lastindex
+    If ipCount > Me.LastIndex Then
+        ipCount = Me.LastIndex
     End If
     
     Dim myS As SeqA: Set myS = SeqA.Deb

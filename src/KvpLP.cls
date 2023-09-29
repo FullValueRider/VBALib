@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpLP"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Dictionary using two SeqL for Keys and Items"
@@ -448,14 +448,14 @@ Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long
     End If
     
     Dim myRemoveIndex As Long: myRemoveIndex = s.Keys.IndexOf(ipKey) + 1
-    If myRemoveIndex >= Me.Lastindex Then
+    If myRemoveIndex >= Me.LastIndex Then
         Set RemoveAfter = Me
         Exit Function
     End If
     
     Dim myCount As Long
     For myCount = 1 To ipRun
-        If myRemoveIndex > Me.Lastindex Then
+        If myRemoveIndex > Me.LastIndex Then
             Exit For
         End If
         s.Keys.RemoveAt myRemoveIndex
@@ -776,12 +776,12 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
     
-    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me.Items))
+    Dim myA() As Variant: myA = ipReducer.ExecReduction(Me.Items)
     
-    If VBA.IsObject(myItem(0)) Then
-        Set ReduceIt = myItem(0)
+    If VBA.IsObject(myA(0)) Then
+        Set ReduceIt = myA(0)
     Else
-        ReduceIt = myItem(0)
+        ReduceIt = myA(0)
     End If
     
 End Function
@@ -801,7 +801,7 @@ Public Function Count(Optional ByRef ipItem As Variant) As Long
     
     Dim myCount As Long: myCount = 0
     Dim myIndex As Long
-    For myIndex = s.Items.FirstIndex To s.Items.Lastindex
+    For myIndex = s.Items.FirstIndex To s.Items.LastIndex
         If Comparers.EQ(ipItem, s.Items(myIndex)) Then
             myCount = myCount + 1
         End If
@@ -822,7 +822,7 @@ Public Function CountIt(ByVal ipComparer As IComparer) As Long
     Dim myCount As Long
     myCount = 0
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
 
         If ipComparer.ExecCmp(s.Items.Item(myIndex)) Then
             myCount = myCount + 1
@@ -948,10 +948,10 @@ Public Function Pairs() As Variant
         Exit Function
     End If
     
-    Dim myA As Variant: ReDim myA(s.Keys.FirstIndex To s.Keys.Lastindex)
+    Dim myA As Variant: ReDim myA(s.Keys.FirstIndex To s.Keys.LastIndex)
     
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
         myA(myIndex) = Array(s.Keys.Item(myIndex), s.Items.Item(myIndex))
     Next
 
@@ -989,7 +989,7 @@ Public Function PairsAsSeq() As SeqL
     Set myS = SeqL.Deb
     
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
         myS.Add Array(s.Keys.Item(myIndex), s.Items.Item(myIndex))
     Next
 
@@ -1009,12 +1009,12 @@ Public Property Get FirstIndex() As Long
 End Property
 
 
-Public Property Get Lastindex() As Long
+Public Property Get LastIndex() As Long
 
     If Me.LacksItems Then
-        Lastindex = -1
+        LastIndex = -1
     Else
-        Lastindex = s.Keys.Count
+        LastIndex = s.Keys.Count
     End If
 
 End Property

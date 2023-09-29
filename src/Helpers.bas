@@ -44,4 +44,7 @@ End Function
 
 
 
+Public Function Fmt() As Format
+    Set Fmt = Format.Deb
+End Function
 

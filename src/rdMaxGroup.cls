@@ -4,92 +4,91 @@ BEGIN
 END
 Attribute VB_Name = "rdMaxGroup"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
 '@PredeclaredId
 '@Exposed
 '@Folder("Reducers")
-'@IgnoreModule
+''@IgnoreModule
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
+
 Option Explicit
 
-'Implements IReducer
+Implements IReducer
 
-'Private Type State
-'    Comparer                        As IComparer
-'End Type
-'
-'Private s                           As State
-'
-'    Const MY_TYPENAME                  As String = "rdMaxGroup"
-'
-'    Private Type State
-'        Index                           As Variant
-'        Max                             As Variant
-'        IndexOfMax                      As Variant
-'    End Type
-'
-'    Private s                           As State
-'
-'    '@DefaultMember
-'    Public Function Deb(ByVal ipIndex As Variant = Empty) As rdMaxGroup
-'        With New rdMaxGroup
-'            Return .ConstructInstance(ipIndex)
-'        End With
-'    End Function
-'
-'    Public Function ConstructInstance(ByRef ipIndex As Variant) As rdMaxGroup
-'        s.Max = Empty
-'        s.Index = ipIndex
-'        Return Me
-'    End Function
-'
-'    Public Function ExecReduction(ByRef ipHostItems As Variant) As Variant Implements IReducer.ExecReduction
-'
-'
-'        ' hostitems will be some sort of grouped values
-'        Dim myI As IterItems = IterItems(ipHostItems)
-'        Do
-'                DoEvents
-'            Dim myItem As Variant = myI.GetItem
-'
-'            If VBA.IsEmpty(s.Max) Then
-'                'Sys.Assign s.Max, myItem
-'
-'                If VBA.IsObject(myItem) Then
-'                    Set s.Max = myItem
-'
-'                Else
-'                        s.Max = myItem
-'
-'                End If
-'                Set s.IndexOfMax = 1
-'                Continue Do
-'            End If
-'
-'            If Var.IsString(myItem) Then
-'
-'                s.Max = IIf(VBA.Mid(myItem, s.Index, 1) > VBA.Mid(s.Max, s.Index, 1), s.Max, myItem)
-'                s.IndexOfMax = IIf(VBA.Mid(myItem, s.Index, 1) > VBA.Mid(s.Max, s.Index, 1), s.IndexOfMax, myI.Key(0))
-'            Else
-'                If VBA.IsObject(myItem) Then
-'                    Set s.Max = IIf(s.Max(s.Index) > myItem(s.Index), s.Max, myItem)
-'
-'                Else
-'                        s.Max = IIf(s.Max(s.Index) > myItem(s.Index), s.Max, myItem)
-'                End If
-'                 s.IndexOfMax = IIf(s.Max(s.Index) > myItem(s.Index), s.IndexOfMax, myI.Key(0))
-'            End If
-'
-'        Loop While myI.MoveNext
-'
-'        Return Array(s.IndexOfMax, s.Max)
-'
-'    End Function
-'
-'
-'    Public Property Get TypeName() As String Implements IReducer.TypeName
-'        Return MY_TYPENAME
-'    End Property
+Const MY_TYPENAME                  As String = "rdMaxGroup"
+
+Private Type State
+    'Comparer                        As IComparer
+
+    Index                           As Variant
+    Max                             As Variant
+    'IndexOfMax                      As Variant
+End Type
+
+Private s                           As State
+
+'@DefaultMember
+Public Function Deb(Optional ByRef ipIndex As Variant = Empty) As rdMaxGroup
+Attribute Deb.VB_UserMemId = 0
+    With New rdMaxGroup
+        Set Deb = .ConstructInstance(ipIndex)
+    End With
+End Function
+
+Public Function ConstructInstance(ByRef ipIndex As Variant) As rdMaxGroup
+    s.Max = Empty
+    s.Index = ipIndex
+    Set ConstructInstance = Me
+End Function
+
+Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 
 
+    ' hostitems will be some sort of grouped values
+    Dim myI As IterItems: Set myI = IterItems(ipHostItems)
+    Do
+        DoEvents
+        Dim myItem As Variant: myItem = myI.CurItem(0)
+
+        If VBA.IsEmpty(s.Max) Then
+            'Sys.Assign s.Max, myItem
+
+            If VBA.IsObject(myItem) Then
+                Set s.Max = myItem
+
+            Else
+                    s.Max = myItem
+
+            End If
+            'Set s.IndexOfMax = 1
+            GoTo ContinueDo
+        End If
+
+        If GroupInfo.IsString(myItem) Then
+
+            '@Ignore UntypedFunctionUsage
+            '@Ignore UntypedFunctionUsage
+            s.Max = IIf(VBA.Mid(myItem, s.Index, 1) > VBA.Mid(s.Max, s.Index, 1), s.Max, myItem)
+            's.IndexOfMax = IIf(VBA.Mid(myItem, s.Index, 1) > VBA.Mid(s.Max, s.Index, 1), s.IndexOfMax, myI.Key(0))
+        Else
+            If VBA.IsObject(myItem) Then
+                Set s.Max = IIf(s.Max(s.Index) > myItem(s.Index), s.Max, myItem)
+
+            Else
+                    s.Max = IIf(s.Max(s.Index) > myItem(s.Index), s.Max, myItem)
+            End If
+             's.IndexOfMax = IIf(s.Max(s.Index) > myItem(s.Index), s.IndexOfMax, myI.Key(0))
+        End If
+ContinueDo:
+    Loop While myI.MoveNext
+
+    IReducer_ExecReduction = Array(s.Max)
+
+End Function
+
+
+Private Property Get IReducer_TypeName() As String
+    IReducer_TypeName = MY_TYPENAME
+End Property

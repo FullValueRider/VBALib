@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpHL"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Dictionary using an array of hashed keys and a linked list to preserve order of addition."
@@ -1075,12 +1075,12 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
     
-    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me.Items))
+    Dim myA() As Variant: myA = ipReducer.ExecReduction(Me.Items)
     
-    If VBA.IsObject(myItem(0)) Then
-        Set ReduceIt = myItem(0)
+    If VBA.IsObject(myA(0)) Then
+        Set ReduceIt = myA(0)
     Else
-        ReduceIt = myItem(0)
+        ReduceIt = myA(0)
     End If
     
 End Function
@@ -1271,7 +1271,7 @@ Public Function Keys() As Variant
         Exit Function
     End If
 
-    Dim myA As Variant: ReDim myA(Me.FirstIndex To Me.Lastindex)
+    Dim myA As Variant: ReDim myA(Me.FirstIndex To Me.LastIndex)
 
     Dim myNode As KvpHNode: Set myNode = s.OrderRoot
     Do
@@ -1344,7 +1344,7 @@ Public Function Pairs() As Variant
         Exit Function
     End If
     
-    Dim myA As Variant: ReDim myA(Me.FirstIndex To Me.Lastindex)
+    Dim myA As Variant: ReDim myA(Me.FirstIndex To Me.LastIndex)
     
     Dim myNode As KvpHNode: Set myNode = s.OrderRoot
     Do
@@ -1416,12 +1416,12 @@ Public Property Get FirstIndex() As Long
 End Property
 
 
-Public Property Get Lastindex() As Long
+Public Property Get LastIndex() As Long
 
     If Me.LacksItems Then
-        Lastindex = -1
+        LastIndex = -1
     Else
-        Lastindex = s.OrderLast.Order
+        LastIndex = s.OrderLast.Order
     End If
 End Property
 

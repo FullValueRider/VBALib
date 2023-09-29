@@ -8,7 +8,7 @@ Option Private Module
 'Private Assert As Object
 'Private Fakes As Object
 
-#If TWINBASIC Then
+#If twinbasic Then
     'Do nothing
 #Else
 
@@ -47,7 +47,7 @@ End Sub
 
 Public Sub StringifierTests()
  
-    #If TWINBASIC Then
+    #If twinbasic Then
         Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab,
     #Else
         GlobalAssert
@@ -72,7 +72,7 @@ End Sub
 '@TestMethod("Stringifier")
 Private Sub Test01_StringifyItem_String()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -85,12 +85,12 @@ Private Sub Test01_StringifyItem_String()
     Dim myExpected As String
     myExpected = "Hello World!"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Stringifier.StringifyItem("Hello World!")
+    myResult = Stringifier.StringifyItem("Hello World!")
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -106,7 +106,7 @@ End Sub
 '@TestMethod("Stringifier")
 Private Sub Test02_StringifyItem_Long()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -121,12 +121,12 @@ Private Sub Test02_StringifyItem_Long()
     Dim myExpected As String
     myExpected = "42"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Stringifier.StringifyItem(42)
+    myResult = Stringifier.ResetMarkup.StringifyItem(42)
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -169,7 +169,7 @@ End Sub
 '@TestMethod("Stringifier")
 Private Sub Test03_StringifyItem_Array()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -184,12 +184,12 @@ Private Sub Test03_StringifyItem_Array()
     Dim myExpected As String
     myExpected = "[1,2,3,4,5,6]"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:  Again we need to sort The result SeqC to get the matching array
-    myresult = Stringifier.StringifyItem(Array(1, 2, 3, 4, 5, 6))
+    myResult = Stringifier.ResetMarkup.StringifyItem(Array(1, 2, 3, 4, 5, 6))
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -205,7 +205,7 @@ End Sub
 '@TestMethod("Stringifier")
 Private Sub Test04_StringifyItem_SeqC()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -220,14 +220,14 @@ Private Sub Test04_StringifyItem_SeqC()
     Dim myExpected As String
     myExpected = "{1,2,3,4,5,6}"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:  Again we need to sort The result SeqC to get the matching array
     Stringifier.ResetMarkup
     Dim myC As SeqC: Set myC = SeqC(1, 2, 3, 4, 5, 6)
-    myresult = Stringifier.StringifyItem(myC)
+    myResult = Stringifier.ResetMarkup.StringifyItem(myC)
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -243,7 +243,7 @@ End Sub
 '@TestMethod("Stringifier")
 Private Sub Test05_StringifyItem_Collection()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -258,7 +258,7 @@ Private Sub Test05_StringifyItem_Collection()
     Dim myExpected As String
     myExpected = "{1,2,3,4,5,6}"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As Collection
     Set myC = New Collection
     myC.Add 1
@@ -268,10 +268,10 @@ Private Sub Test05_StringifyItem_Collection()
     myC.Add 5
     myC.Add 6
     'Act:  Again we need to sort The result SeqC to get the matching array
-    Stringifier.ResetMarkup
-    myresult = Stringifier.StringifyItem(myC)
+
+    myResult = Stringifier.ResetMarkup.StringifyItem(myC)
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -287,7 +287,7 @@ End Sub
 '@TestMethod("Stringifier")
 Private Sub Test06_StringifyItem_Dictionary()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -300,9 +300,9 @@ Private Sub Test06_StringifyItem_Dictionary()
     
     'Arrange:
     Dim myExpected As String
-    myExpected = "{ 'One': 1, 'Two': 2, 'Three': 3, 'Four': 4, 'Five': 5, 'Six': 6}"
+    myExpected = "{ ""One"" 1, ""Two"" 2, ""Three"" 3, ""Four"" 4, ""Five"" 5, ""Six"" 6}"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myK As KvpC
     Set myK = KvpC.Deb
     myK.Add "One", 1
@@ -313,11 +313,11 @@ Private Sub Test06_StringifyItem_Dictionary()
     myK.Add "Six", 6
     'Act:  Again we need to sort The result SeqC to get the matching array
     'Stringifier.ResetMarkup
-    myresult = Stringifier.StringifyItem(myK)
+    myResult = Stringifier.ResetMarkup.StringifyItem(myK)
     'Assert:
     'Debug.Print myExpected
     'Debug.Print myResult
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -333,7 +333,7 @@ End Sub
 '@TestMethod("Stringifier")
 Private Sub Test07_StringifyItem_CustomDictionaryMarkup()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -348,7 +348,7 @@ Private Sub Test07_StringifyItem_CustomDictionaryMarkup()
     Dim myExpected As String
     myExpected = "{|One|_1?|Two|_2?|Three|_3?|Four|_4?|Five|_5?|Six|_6}"
     
-    Dim myresult As String
+    Dim myResult As String
     Dim myC As KvpC
     Set myC = KvpC.Deb
     myC.Add "One", 1
@@ -358,13 +358,12 @@ Private Sub Test07_StringifyItem_CustomDictionaryMarkup()
     myC.Add "Five", 5
     myC.Add "Six", 6
     'Act:  Again we need to sort The result SeqC to get the matching array
-    Dim myToString As Stringifier
-    Set myToString = Stringifier.Deb.SetObjectMarkup(ipSeparator:="?").SetDictionaryItemMarkup("|", "_", "|")
-    myresult = myToString.StringifyItem(myC)
+    
+    myResult = Stringifier.ObjectMarkup(ipSeparator:="?").DictionaryItemMarkup("|", "_", "|").StringifyItembyKey(myC)
     'Assert:
     'Debug.Print myExpected
     'Debug.Print myResult
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

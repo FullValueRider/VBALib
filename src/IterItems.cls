@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "IterItems"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A class to iterate any single dimension containers, strings and single items"
@@ -30,7 +30,7 @@ Private Type State
     Items                               As Variant ' Items if ipItems is a ToArray object
     
     FirstIndex                          As Long
-    Lastindex                           As Long
+    LastIndex                           As Long
     GlobalOffset                        As Long
     Size                                As Long
     StartIndex                          As Long
@@ -72,33 +72,33 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
     
             Set s.Host = ipItems
             s.FirstIndex = LBound(s.Keys)
-            s.Lastindex = UBound(s.Keys)
+            s.LastIndex = UBound(s.Keys)
             
         Case GroupInfo.IsItemByToArray(ipItems)
         
             s.Items = ipItems.ToArray
             Set s.Host = ipItems
             s.FirstIndex = LBound(s.Items)
-            s.Lastindex = UBound(s.Items)
+            s.LastIndex = UBound(s.Items)
             
         Case GroupInfo.IsString(ipItems)
         
             s.Host = ipItems
             s.FirstIndex = 1
-            s.Lastindex = VBA.Len(ipItems)
+            s.LastIndex = VBA.Len(ipItems)
             
         Case GroupInfo.IsIndexFrom1(ipItems)
         
             Set s.Host = ipItems
             ' cannot use firstindex lastindex as not supported by collection
             s.FirstIndex = 1
-            s.Lastindex = ipItems.Count
+            s.LastIndex = ipItems.Count
             
         Case GroupInfo.IsIndexFrom0(ipItems)
         
             Set s.Host = ipItems
             s.FirstIndex = 0
-            s.Lastindex = ipItems.Count - 1
+            s.LastIndex = ipItems.Count - 1
             
         Case GroupInfo.IsArray(ipItems)
             If ArrayOp.Ranks(ipItems) > 1 Then
@@ -108,7 +108,7 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
             End If
             s.Host = ipItems
             s.FirstIndex = LBound(ipItems)
-            s.Lastindex = UBound(ipItems)
+            s.LastIndex = UBound(ipItems)
             
         
         Case Else
@@ -119,15 +119,15 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
                 s.Host = ipItems
             End If
             s.FirstIndex = 1
-            s.Lastindex = 1
+            s.LastIndex = 1
             
     End Select
     
     s.StartIndex = s.FirstIndex
-    s.EndIndex = s.Lastindex
+    s.EndIndex = s.LastIndex
     s.Step = 1
     s.GlobalOffset = 0
-    s.Size = s.Lastindex - s.FirstIndex + 1
+    s.Size = s.LastIndex - s.FirstIndex + 1
     
 '    If s.Size = 0 Then
 '        AlertNoItems
@@ -233,7 +233,7 @@ Public Function MoveToFirst() As IterItems
 Attribute MoveToFirst.VB_Description = "Moves to firstindex, resets StartIndex stop EndIndex"
     s.GlobalOffset = 0
     s.StartIndex = s.FirstIndex
-    s.EndIndex = s.Lastindex
+    s.EndIndex = s.LastIndex
     s.Step = 1
     Set MoveToFirst = Me
 End Function
@@ -244,7 +244,7 @@ Public Function MoveToLast() As IterItems
 Attribute MoveToLast.VB_Description = "Moves to firstindex, resets StartIndex stop EndIndex"
     s.GlobalOffset = s.Size - 1
     s.StartIndex = s.FirstIndex
-    s.EndIndex = s.Lastindex
+    s.EndIndex = s.LastIndex
     s.Step = 1
     Set MoveToLast = Me
 End Function
@@ -327,38 +327,38 @@ End Function
 Public Property Get CurItem(ByVal ipLocalOffset As Long) As Variant
 Attribute CurItem.VB_Description = "Get the items at the global + local offset.  Default local offset = 0. offset = number of steps"
 
-    Dim myLoc As Long: myLoc = s.GlobalOffset + ipLocalOffset * s.Step + s.FirstIndex
-    If myLoc < s.StartIndex Or myLoc > s.EndIndex Then
+    Dim myLoc As Long: myLoc = s.GlobalOffset + ipLocalOffset + s.FirstIndex
+    If myLoc < s.FirstIndex Or myLoc > s.LastIndex Then
         CurItem = Null
         Exit Property
     End If
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     Select Case True
     
         Case GroupInfo.IsArray(s.Host):
-            myresult = Array(s.Host(myLoc))
+            myResult = Array(s.Host(myLoc))
         Case GroupInfo.IsString(s.Host):
-            myresult = Array(VBA.Mid$(s.Host, myLoc, 1))
+            myResult = Array(VBA.Mid$(s.Host, myLoc, 1))
         Case GroupInfo.IsItemByToArray(s.Host):
-            myresult = Array(s.Items(myLoc))
+            myResult = Array(s.Items(myLoc))
         Case GroupInfo.IsDictionary(s.Host):
             Dim myKey As Variant: myKey = Array(s.Keys(myLoc))
-            myresult = Array(s.Host.Item(myKey(0)))
+            myResult = Array(s.Host.Item(myKey(0)))
         Case GroupInfo.IsIndexFrom1(s.Host):
-            myresult = Array(s.Host.Item(myLoc))
+            myResult = Array(s.Host.Item(myLoc))
         Case GroupInfo.IsIndexFrom0(s.Host):
-            myresult = Array(s.Host.Item(myLoc))
+            myResult = Array(s.Host.Item(myLoc))
         Case Else:
-            myresult = Array(s.Host)
+            myResult = Array(s.Host)
         
     End Select
     
     
-    If VBA.IsObject(myresult(0)) Then
-        Set CurItem = myresult(0)
+    If VBA.IsObject(myResult(0)) Then
+        Set CurItem = myResult(0)
     Else
-        CurItem = myresult(0)
+        CurItem = myResult(0)
     End If
      
 End Property
@@ -367,7 +367,7 @@ End Property
 ''@Description("Assigns a value to the curretn non object Item")
 Public Property Let CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant)
 
-    Dim myLoc As Long: myLoc = s.GlobalOffset + ipLocalOffset * s.Step + s.FirstIndex
+    Dim myLoc As Long: myLoc = s.GlobalOffset + ipLocalOffset + s.FirstIndex
     If myLoc < s.StartIndex Or myLoc > s.EndIndex Then
         ' is it preferable to error here
         Exit Property
@@ -375,12 +375,18 @@ Public Property Let CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant
     
     Select Case True
     
-        Case GroupInfo.IsArray(s.Host):             VariantCopyInd s.Host(s.FirstIndex + myLoc), ipItem
+        Case GroupInfo.IsArray(s.Host):             VariantCopyInd s.Host(myLoc), ipItem
         Case GroupInfo.IsString(s.Host):            Mid$(s.Host, myLoc, 1) = ipItem
         Case GroupInfo.IsItemByToArray(s.Host):     s.Items(myLoc) = ipItem
         Case GroupInfo.IsDictionary(s.Host):        s.Host.Item(myLoc) = ipItem
         Case GroupInfo.IsIndexFrom0(s.Host):        s.Host.Item(myLoc) = ipItem
-        Case GroupInfo.IsIndexFrom1(s.Host):        s.Host.Item(myLoc) = ipItem
+        Case GroupInfo.IsIndexFrom1(s.Host):
+            If VBA.TypeName(s.Host) = "Collection" Then
+                s.Host.Add ipItem, after:=myLoc
+                s.Host.Remove myLoc
+            Else
+                s.Host.Item(myLoc) = ipItem
+            End If
         Case Else:                                  s.Host = ipItem
     End Select
     
@@ -390,7 +396,7 @@ End Property
 '@("Sets the value of the current object Item")
 Public Property Set CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant)
 
-    Dim myLoc As Long: myLoc = s.GlobalOffset + ipLocalOffset * s.Step + s.FirstIndex
+    Dim myLoc As Long: myLoc = s.GlobalOffset + ipLocalOffset + s.FirstIndex
     If myLoc < s.StartIndex Or myLoc > s.EndIndex Then
         ' is it preferable to error here
         Exit Property
@@ -413,29 +419,29 @@ End Property
 '@("Returns the host index of the current item")
 Public Property Get CurKey(ByVal ipLocalOffset As Long) As Variant
 
-    Dim myLoc As Long: myLoc = s.GlobalOffset + ipLocalOffset * s.Step + s.FirstIndex
+    Dim myLoc As Long: myLoc = s.GlobalOffset + ipLocalOffset + s.FirstIndex
     If myLoc < s.StartIndex Or myLoc > s.EndIndex Then
         CurKey = Null
         Exit Property
     End If
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     Select Case True
     
-        Case GroupInfo.IsArray(s.Host):                 myresult = Array(myLoc)
-        Case GroupInfo.IsString(s.Host):                myresult = Array(myLoc)
-        Case GroupInfo.IsItemByToArray(s.Host):         myresult = Array(myLoc)
-        Case GroupInfo.IsDictionary(s.Host):            myresult = Array(s.Keys(myLoc))
-        Case GroupInfo.IsIndexFrom0(s.Host):            myresult = Array(myLoc)
-        Case GroupInfo.IsIndexFrom1(s.Host):            myresult = Array(myLoc)
-        Case Else:                                      myresult = Array(1)
+        Case GroupInfo.IsArray(s.Host):                 myResult = Array(myLoc)
+        Case GroupInfo.IsString(s.Host):                myResult = Array(myLoc)
+        Case GroupInfo.IsItemByToArray(s.Host):         myResult = Array(myLoc)
+        Case GroupInfo.IsDictionary(s.Host):            myResult = Array(s.Keys(myLoc))
+        Case GroupInfo.IsIndexFrom0(s.Host):            myResult = Array(myLoc)
+        Case GroupInfo.IsIndexFrom1(s.Host):            myResult = Array(myLoc)
+        Case Else:                                      myResult = Array(1)
             
     End Select
     
-    If VBA.IsObject(myresult(0)) Then
-        Set CurKey = myresult(0)
+    If VBA.IsObject(myResult(0)) Then
+        Set CurKey = myResult(0)
     Else
-        CurKey = myresult(0)
+        CurKey = myResult(0)
     End If
 
 End Property
@@ -445,7 +451,7 @@ End Property
 Public Property Get CurOffset(ByVal ipLocalOffset As Long) As Variant
 Attribute CurOffset.VB_Description = "Returns the 1 based index of the current item"
 
-    Dim myOffset As Long: myOffset = s.GlobalOffset + ipLocalOffset * s.Step
+    Dim myOffset As Long: myOffset = s.GlobalOffset + ipLocalOffset
     If myOffset < 0 Or myOffset > s.Size - 1 Then
         CurOffset = Null
     Else
@@ -467,8 +473,8 @@ Public Property Get StartIndex() As Long
     StartIndex = s.StartIndex
 End Property
 
-Public Property Get Lastindex() As Long
-    Lastindex = s.Lastindex
+Public Property Get LastIndex() As Long
+    LastIndex = s.LastIndex
 End Property
 
 Public Property Get EndIndex() As Long
@@ -478,7 +484,7 @@ End Property
 Private Sub AlertInvalidFTs(ByRef ipType As String, ByRef ipValue As Long)
 
     Err.Raise 17 + vbObjectError, _
-    Fmt.Text("VBALib: Invalid FTS Paramater: {0}", ipType), _
+    Fmt.Text("VBALib: Invalid FTS Parameter: {0}", ipType), _
     Fmt.Text("Expecting {0} to be in the normalised range {1} to {2}. Got {3}", ipType, s.GlobalOffset, s.Size, ipValue)
         
 End Sub

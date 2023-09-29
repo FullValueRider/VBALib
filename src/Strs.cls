@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "Strs"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule FunctionReturnValueDiscarded, IndexedDefaultMemberAccess
@@ -116,15 +116,15 @@ Public Function ToChars(ByRef ipString As String) As Variant
         Exit Function
     End If
     
-    Dim myresult As Variant
-    ReDim myresult(1 To myLen)
+    Dim myResult As Variant
+    ReDim myResult(1 To myLen)
     
     Dim myIndex As Long
     For myIndex = 1 To myLen
-        myresult(myIndex) = VBA.Mid$(ipString, myIndex, 1)
+        myResult(myIndex) = VBA.Mid$(ipString, myIndex, 1)
     Next
     
-    ToChars = myresult
+    ToChars = myResult
     
 End Function
 

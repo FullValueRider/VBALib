@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "rdMaxNum"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -14,7 +14,7 @@ Option Explicit
 
 Implements IReducer
 
-Const MY_TYPENAME                   As String = "rdMaxNum"
+Const MY_TYPENAME                               As String = "rdMaxNum"
 
 
 Private Property Get IReducer_TypeName() As String
@@ -24,19 +24,16 @@ End Property
 
 Public Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
     
-    '@Ignore ObsoleteTypeHint
-    Dim myMax As Variant
-    myMax = Globals.MinDecimal
+    Dim myMax As Variant: myMax = Globals.MinDecimal
     
     Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
     Do
-   
         If myMax < myItems.CurItem(0) Then
             myMax = myItems.CurItem(0)
         End If
     Loop While myItems.MoveNext
 
-    IReducer_ExecReduction = myMax
+    IReducer_ExecReduction = Array(myMax)
     
 End Function
 
@@ -51,6 +48,5 @@ End Function
 
 
 Friend Function ConstructInstance() As rdMaxNum
-    
     Set ConstructInstance = Me
 End Function

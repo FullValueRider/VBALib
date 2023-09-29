@@ -1,6 +1,21 @@
 Attribute VB_Name = "Pootle"
 Option Explicit
 '@IgnoreModule
+
+Private Type Properties
+    Bounds As Variant
+End Type
+
+
+Private Type myPoint
+    X1 As Long
+    Y1 As Long
+    X2 As Long
+    Y2 As Long
+End Type
+
+Private p As Properties
+
 Sub testingnulls()
     Debug.Print TypeName(vbNullString) ' string
     Debug.Print TypeName(Null)         ' Null
@@ -28,7 +43,7 @@ Sub TestTreap()
     Debug.Print
     Debug.Print
     myT.PrintByOrder
-    myT.RemoveAt myT.Lastindex
+    myT.RemoveAt myT.LastIndex
     Debug.Print
     Debug.Print
     myT.PrintByOrder
@@ -109,7 +124,7 @@ Sub TestmyKvpC()
     
         Dim myKeys As Variant: Set myKeys = myK.KeysAsSeq
         Dim myIndex As Long
-        For myIndex = myKeys.FirstIndex To myKeys.Lastindex
+        For myIndex = myKeys.FirstIndex To myKeys.LastIndex
             Debug.Print myK.Item(myKeys.Item(myIndex))
         Next
     
@@ -124,7 +139,7 @@ End Sub
 
 
 
-Sub TestSeqT()
+Sub TestmySeqT()
     Dim myT As SeqT: Set myT = SeqT.Deb
     
     Dim myValue As Long
@@ -173,7 +188,7 @@ Sub TestSeqT()
     'myT.PrintByColl
 End Sub
 
-Sub TestSeqTAt()
+Sub TestmySeqTAt()
     Dim myT As SeqT: Set myT = SeqT.Deb
     
     Dim myA As Variant: myA = Array(90, 20, 150, 30, 120, 40, 70, 90, 100, 110, 50, 130, 140, 60, 160, 80, 170, 190, 200, 90, 10, 90, 90, 90)
@@ -221,3 +236,13 @@ Sub TestSeqTAt()
     Debug.Print "Order collection"
     myT.PrintByColl
 End Sub
+
+Public Sub testrot()
+
+    Dim myS As SeqA: Set myS = SeqA(1, 2, 3, 4, 5, 6, 7, 8, 9).RotLeft(3)
+    Fmt.Dbg "{0}", myS
+    myS.RotLeft -3
+    Fmt.Dbg "{0}", myS
+End Sub
+
+

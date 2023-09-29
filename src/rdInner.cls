@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "rdInner"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -13,18 +13,16 @@ Attribute VB_Exposed = True
 Option Explicit
  
 Implements IReducer
-
-'Private s                               As State
     
 Private Const MY_TYPENAME               As String = "rdInner"
 
 
 Private Type State
-    Reducer                 As IReducer
+    Reducer                             As IReducer
 End Type
 
 
-Private s                   As State
+Private s                               As State
 
 
 Private Property Get IReducer_TypeName() As String
@@ -36,29 +34,22 @@ End Property
 Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 Attribute IReducer_ExecReduction.VB_Description = "Calls Mapit on the lowest level item supporting mapit on The hostItem"
 
+    ' If the Items of ipHostItems support Mapping then forward to rdInner
+    ' else send to reducer
     Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
     Do
-        Dim myItem As Variant: myItem = Array(myItems.CurItem(0))
-        Dim myName As String: myName = Shortname(myItem(0))
-        
-        Select Case myName
-        
-            Case "seq"
-            
-                IReducer_ExecReduction = myItem(0).ReduceIt(Me)
-                
-            Case "kvp"
-            
-                IReducer_ExecReduction = myItem(0).ReduceIt(Me)
-                
-            Case Else
-            
-                IReducer_ExecReduction = s.Reducer.ExecReduction(ipHostItems)
-                Exit Do
-        End Select
-        
+        Dim myA() As Variant: myA = Array(myItems.CurItem(0))
+        If GroupInfo.CannotMap(myA(0)) Then
+            IReducer_ExecReduction = s.Reducer.ExecReduction(ipHostItems)
+            Exit Function
+        Else
+            ' ipHostItem is an object that supports mapping
+            myItems.CurItem(0) = myItems.CurItem(0).ReduceIt(Me)
+        End If
     Loop While myItems.MoveNext
         
+    IReducer_ExecReduction = Array(ipHostItems)
+    
 End Function
 
 

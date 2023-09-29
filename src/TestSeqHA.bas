@@ -1,7 +1,7 @@
 Attribute VB_Name = "TestSeqHA"
-'@IgnoreModule
-'@TestModule
-'@Folder("Tests")
+''@IgnoreModule
+''@TestModule
+''@Folder("Tests")
 'Option Explicit
 'Option Private Module
 '
@@ -184,8 +184,8 @@ Attribute VB_Name = "TestSeqHA"
 '    On Error GoTo TestFail
 '
 '    'Arrange:
-'    Dim mySeq As oldSeqHA
-'    Set mySeq = oldSeqHA.Deb
+'    Dim mySeq As SeqHA
+'    Set mySeq = SeqHA.Deb
 '    Dim myExpected As Variant
 '    myExpected = Array(True, "SeqHA", "SeqHA")
 '

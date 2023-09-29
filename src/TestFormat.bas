@@ -1,4 +1,4 @@
-Attribute VB_Name = "TestFmt"
+Attribute VB_Name = "TestFormat"
 '@TestModule
 '@Folder("Tests")
 '@IgnoreModule
@@ -45,15 +45,15 @@ End Sub
 
 #End If
 
-Public Sub FmtTests()
+Public Sub FormatTests()
 
     
     #If twinbasic Then
-        Debug.Print CurrentProcedureName; vbTab, vbTab,
+        Debug.Print CurrentProcedureName, vbTab,
     #Else
         GlobalAssert
         VBATesting = True
-        Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab, vbTab,
+        Debug.Print ErrEx.LiveCallstack.ProcedureName, vbTab, vbTab,
     #End If
 
     Test01a_Fmt_Text_Nothing

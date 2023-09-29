@@ -1,20 +1,20 @@
 Attribute VB_Name = "Asserts"
-'@IgnoreModule
+''@IgnoreModule
 '@Folder("Tests")
 Option Explicit
 
         
-Public Sub AssertExactAreEqual(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
+Public Sub AssertExactAreEqual(ByRef ipExpected As Variant, ByRef ipResult As Variant, ByRef ipWhere As String)
     
-#If TWINBASIC Then
+#If twinbasic Then
     Assert.Strict.AreEqual ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
         Dim myExpected As String: myExpected = Fmt.Text("{0}: {1}", VBA.TypeName(ipExpected), ipExpected)
-        Dim myresult As String: myresult = Fmt.Text("{0}: {1}", VBA.TypeName(ipResult), ipResult)
+        Dim myResult As String: myResult = Fmt.Text("{0}: {1}", VBA.TypeName(ipResult), ipResult)
         
-        If myExpected <> myresult Then
-            Fmt.Dbg "{0}: Exact AreEqual assertion failed: {nl}{1}{nl}{2}", ipWhere, myExpected, myresult
+        If myExpected <> myResult Then
+            Fmt.Dbg "{0}: Exact AreEqual assertion failed: {nl}{1}{nl}{2}", ipWhere, myExpected, myResult
         End If
     Else
         Assert.AreEqual ipExpected, ipResult, ipWhere
@@ -24,19 +24,19 @@ Public Sub AssertExactAreEqual(ByRef ipExpected As Variant, ipResult As Variant,
 End Sub
 
 
-Public Sub AssertExactAreNotEqual(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
+Public Sub AssertExactAreNotEqual(ByRef ipExpected As Variant, ByRef ipResult As Variant, ByRef ipWhere As String)
     
-#If TWINBASIC Then
+#If twinbasic Then
     Assert.Strict.AreNotEqual ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
         Dim myExpected As String: myExpected = Fmt.Text("{0}: {1}", VBA.TypeName(ipExpected), ipExpected)
-        Dim myresult As String: myresult = Fmt.Text("{0}: {1}", VBA.TypeName(ipResult), ipResult)
+        Dim myResult As String: myResult = Fmt.Text("{0}: {1}", VBA.TypeName(ipResult), ipResult)
         
         
-        If myExpected = myresult Then
+        If myExpected = myResult Then
             'Debug.Print
-            Fmt.Dbg "{0}: Exact AreEqual assertion failed: {nt}{1}{nt}{2}", ipWhere, myExpected, myresult
+            Fmt.Dbg "{0}: Exact AreEqual assertion failed: {nt}{1}{nt}{2}", ipWhere, myExpected, myResult
         End If
     Else
         Assert.AreNotEqual ipExpected, ipResult, ipWhere
@@ -45,20 +45,37 @@ Public Sub AssertExactAreNotEqual(ByRef ipExpected As Variant, ipResult As Varia
 
 End Sub
 
-
-
-Public Sub AssertStrictSequenceEquals(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
+Public Sub AssertStrictAreEqual(ByRef ipExpected As Variant, ByRef ipResult As Variant, ByRef ipWhere As String)
     
-#If TWINBASIC Then
+#If twinbasic Then
+    Assert.Strict.AreEqual ipExpected, ipResult, ipWhere
+#Else
+    If VBATesting Then
+        Dim myExpected As String: myExpected = Fmt.Text("{0}", ipExpected)
+        Dim myResult As String: myResult = Fmt.Text("{0}", ipResult)
+        
+        If myExpected <> myResult Then
+            Fmt.Dbg "{0}: Exact AreEqual assertion failed: {nl}{1}{nl}{2}", ipWhere, myExpected, myResult
+        End If
+    Else
+        Assert.AreEqual ipExpected, ipResult, ipWhere
+    End If
+#End If
+
+End Sub
+
+Public Sub AssertStrictSequenceEquals(ByRef ipExpected As Variant, ByRef ipResult As Variant, ByRef ipWhere As String)
+    
+#If twinbasic Then
     Assert.Strict.SequenceEquals ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
         Dim myExpected As String: myExpected = Fmt.Text("{0}", Array(ipExpected))
-        Dim myresult As String: myresult = Fmt.Text("{0}", Array(ipResult))
+        Dim myResult As String: myResult = Fmt.Text("{0}", Array(ipResult))
         
-        If myExpected <> myresult Then
+        If myExpected <> myResult Then
             'Debug.Print
-            Fmt.Dbg "{0}: Strict SequenceEquals assertion failed: {nt}{1}{nt}{2}", ipWhere, myExpected, myresult
+            Fmt.Dbg "{0}: Strict SequenceEquals assertion failed: {nt}{1}{nt}{2}", ipWhere, myExpected, myResult
         End If
     Else
         Assert.SequenceEquals ipExpected, ipResult, ipWhere
@@ -67,18 +84,18 @@ Public Sub AssertStrictSequenceEquals(ByRef ipExpected As Variant, ipResult As V
 
 End Sub
 
-Public Sub AssertStrictNotSequenceEquals(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
+Public Sub AssertStrictNotSequenceEquals(ByRef ipExpected As Variant, ByRef ipResult As Variant, ByRef ipWhere As String)
     
-#If TWINBASIC Then
+#If twinbasic Then
     Assert.Strict.NotSequenceEquals ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
         Dim myExpected As String: myExpected = Fmt.Text("{0}", ipExpected)
-        Dim myresult As String: myresult = Fmt.Text("{0}", ipResult)
+        Dim myResult As String: myResult = Fmt.Text("{0}", ipResult)
         
-        If myExpected = myresult Then
+        If myExpected = myResult Then
             'Debug.Print
-            Fmt.Dbg "SequenceEquals assertion failed: {0}{nt}{1}{nt}{2}", ipWhere, myExpected, myresult
+            Fmt.Dbg "SequenceEquals assertion failed: {0}{nt}{1}{nt}{2}", ipWhere, myExpected, myResult
         End If
     Else
         Assert.SequenceEquals ipExpected, ipResult, ipWhere
@@ -87,9 +104,9 @@ Public Sub AssertStrictNotSequenceEquals(ByRef ipExpected As Variant, ipResult A
 
 End Sub
 
-Public Sub AssertExactSequenceEquals(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
+Public Sub AssertExactSequenceEquals(ByRef ipExpected As Variant, ByRef ipResult As Variant, ByRef ipWhere As String)
     
-#If TWINBASIC Then
+#If twinbasic Then
     Assert.exact.SequenceEquals ipExpected, ipResult, ipWhere
 #Else
     If VBATesting Then
@@ -103,7 +120,7 @@ Public Sub AssertExactSequenceEquals(ByRef ipExpected As Variant, ipResult As Va
         End If
         
         If myEItems.Size <> myRItems.Size Then
-            Fmt.Deb "{0}: SequenceExactequals assertion failed - unequal sizes. Found {0} and {1}{nl}{2}{nl{3}", myEItems.Size, myRItems.Size, ipExpected, ipResult
+            Fmt.Dbg "{0}: SequenceExactequals assertion failed - unequal sizes. Found {0} and {1}{nl}{2}{nl{3}", myEItems.Size, myRItems.Size, ipExpected, ipResult
             Exit Sub
         End If
         
@@ -127,11 +144,11 @@ Public Sub AssertExactSequenceEquals(ByRef ipExpected As Variant, ipResult As Va
         
                 
         Dim myExpected As String: myExpected = VBA.Join(myE, ",")
-        Dim myresult As String: myresult = VBA.Join(myR, ",")
+        Dim myResult As String: myResult = VBA.Join(myR, ",")
         
-        If myExpected <> myresult Then
+        If myExpected <> myResult Then
             'Debug.Print
-            Fmt.Dbg "{0}: SequenceEquals assertion failed: {0}{nt}{1}{nt}{2}", ipWhere, myExpected, myresult
+            Fmt.Dbg "{0}: SequenceEquals assertion failed: {0}{nt}{1}{nt}{2}", ipWhere, myExpected, myResult
         End If
     Else
         Assert.SequenceEquals ipExpected, ipResult, ipWhere
@@ -141,7 +158,7 @@ Public Sub AssertExactSequenceEquals(ByRef ipExpected As Variant, ipResult As Va
 End Sub
 
 
-'Public Sub AssertPermissiveSequenceEquals(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
+'Public Sub AssertPermissiveSequenceEquals(ByRef ipExpected As Variant, byref ipResult As Variant, byref ipWhere As String)
 '
 '    #If twinbasic Then
 '        Assert.Permissive.SequenceEquals ipExpected, ipResult, ipWhere
@@ -152,7 +169,7 @@ End Sub
 'End Sub
 '
 '
-'Public Sub AssertPermissiveAreEqual(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
+'Public Sub AssertPermissiveAreEqual(ByRef ipExpected As Variant, byref ipResult As Variant, byref ipWhere As String)
 '
 '    #If twinbasic Then
 '        Assert.Permissive.AreEqual ipExpected, ipResult, ipWhere
@@ -163,7 +180,7 @@ End Sub
 'End Sub
 
 
-'Public Sub AssertExactAreEqual(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
+'Public Sub AssertExactAreEqual(ByRef ipExpected As Variant, byref ipResult As Variant, byref ipWhere As String)
 '
 '    #If twinbasic Then
 '        Assert.Exact.AreEqual ipExpected, ipResult, ipWhere
@@ -174,9 +191,9 @@ End Sub
 'End Sub
 
 
-Public Sub AssertExactAreSame(ByRef ipExpected As Variant, ipResult As Variant, ipWhere As String)
+Public Sub AssertExactAreSame(ByRef ipExpected As Variant, ByRef ipResult As Variant, ByRef ipWhere As String)
     
-    #If TWINBASIC Then
+    #If twinbasic Then
         Assert.Strict.AreSame ipExpected, ipResult, ipWhere
     #Else
         Assert.AreSame ipExpected, ipResult, ipWhere
@@ -184,6 +201,6 @@ Public Sub AssertExactAreSame(ByRef ipExpected As Variant, ipResult As Variant, 
     
 End Sub
 
-Public Sub AssertFail(ByRef ipComponent As String, ipProcedure As String, ByRef ipMessage As String)
+Public Sub AssertFail(ByRef ipComponent As String, ByRef ipProcedure As String, ByRef ipMessage As String)
     Fmt.Dbg "{0}{nl}{1}{nl}{2}", ipComponent, ipProcedure, ipMessage
 End Sub

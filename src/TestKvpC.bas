@@ -8,7 +8,7 @@ Option Private Module
 'Private Assert As Object
 'Private Fakes As Object
 
-#If TWINBASIC Then
+#If twinbasic Then
     'Do nothing
 #Else
 
@@ -46,7 +46,7 @@ End Sub
 
 Public Sub KvpCTests()
  
-    #If TWINBASIC Then
+    #If twinbasic Then
         Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab,
     #Else
         GlobalAssert
@@ -91,7 +91,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test01_ObjAndName()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -106,14 +106,14 @@ Private Sub Test01_ObjAndName()
     Dim myExpected As Variant
     myExpected = Array(True, "KvpC", "KvpC")
     
-    Dim myresult(0 To 2) As Variant
+    Dim myResult(0 To 2) As Variant
     
     'Act:
-    myresult(0) = VBA.IsObject(myK)
-    myresult(1) = VBA.TypeName(myK)
-    myresult(2) = myK.TypeName
+    myResult(0) = VBA.IsObject(myK)
+    myResult(1) = VBA.TypeName(myK)
+    myResult(2) = myK.TypeName
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -128,7 +128,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test02_Add_ThreeItems()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -177,7 +177,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test03_Add_Pairs()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -224,7 +224,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test04a_GetItem()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -240,13 +240,13 @@ Private Sub Test04a_GetItem()
     Dim myExpected As String
     myExpected = "Hello"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:
-    myresult = myK.Item(2&)
+    myResult = myK.Item(2&)
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -261,7 +261,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test04b_LetItem()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -277,14 +277,14 @@ Private Sub Test04b_LetItem()
     Dim myExpected As String
     myExpected = "World"
     
-    Dim myresult As String
+    Dim myResult As String
     
     'Act:
     myK.Item(2) = "World"
-    myresult = myK.Item(2&)
+    myResult = myK.Item(2&)
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -299,7 +299,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test04c_SetItem()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -316,14 +316,14 @@ Private Sub Test04c_SetItem()
     myExpected = Array(1&, 2&, 3&)
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     Set myK.Item(2) = SeqC(1&, 2&, 3&)
-    myresult = myK.Item(2&).ToArray
+    myResult = myK.Item(2&).ToArray
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -338,7 +338,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test05a_Remove()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -355,14 +355,14 @@ Private Sub Test05a_Remove()
     myExpected = Array(3&, True, 1&, 2&, 3&, 4&)
     ReDim Preserve myExpected(1 To 6)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     myK.Remove 2&
-    myresult = myK.Items
+    myResult = myK.Items
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -377,7 +377,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test05b_Remove()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -394,14 +394,14 @@ Private Sub Test05b_Remove()
     myExpected = Array(3&, True, 2&, 4&)
     ReDim Preserve myExpected(1 To 4)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     myK.Remove 2&, 4&, 6&
-    myresult = myK.Items
+    myResult = myK.Items
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -416,7 +416,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test06_RemoveAfter()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -433,13 +433,13 @@ Private Sub Test06_RemoveAfter()
     myExpected = Array(3&, "Hello", 3&, 4&)
     ReDim Preserve myExpected(1 To 4)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.RemoveAfter(2&, 3).Items
+    myResult = myK.RemoveAfter(2&, 3).Items
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -454,7 +454,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test07_RemoveBefore()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -471,13 +471,13 @@ Private Sub Test07_RemoveBefore()
     myExpected = Array(3&, "Hello", 3&, 4&)
     ReDim Preserve myExpected(1 To 4)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.RemoveBefore(6&, 3).Items
+    myResult = myK.RemoveBefore(6&, 3).Items
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -492,7 +492,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test08a_RemoveAll()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -508,13 +508,13 @@ Private Sub Test08a_RemoveAll()
     Dim myExpected As Long
     myExpected = -1
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.RemoveAll.Count
+    myResult = myK.RemoveAll.Count
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -529,7 +529,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test08b_Clear()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -545,13 +545,13 @@ Private Sub Test08b_Clear()
     Dim myExpected As Long
     myExpected = -1
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.Clear.Count
+    myResult = myK.Clear.Count
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -566,7 +566,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test08c_Reset()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -582,13 +582,13 @@ Private Sub Test08c_Reset()
     Dim myExpected As Long
     myExpected = -1
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.Clear.Count
+    myResult = myK.Clear.Count
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
@@ -603,7 +603,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test09_Clone()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -651,7 +651,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test10_Hold_Lacks_FilledSeq()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -668,34 +668,34 @@ Private Sub Test10_Hold_Lacks_FilledSeq()
     myExpected = Array(True, False, True, True, False, False, False, False, True, True, True, True, False, False, False, False, True, True)
     ReDim Preserve myExpected(1 To 18)
     
-    Dim myresult As Variant
-    ReDim myresult(1 To 18)
+    Dim myResult As Variant
+    ReDim myResult(1 To 18)
     'Act:
-    myresult(1) = myK.HoldsItems
-    myresult(2) = myK.LacksItems
+    myResult(1) = myK.HoldsItems
+    myResult(2) = myK.LacksItems
     
-    myresult(3) = myK.HoldsItem("Hello")
-    myresult(4) = myK.HoldsItem(4&)
-    myresult(5) = myK.HoldsItem(42&)
-    myresult(6) = myK.HoldsItem("World")
+    myResult(3) = myK.HoldsItem("Hello")
+    myResult(4) = myK.HoldsItem(4&)
+    myResult(5) = myK.HoldsItem(42&)
+    myResult(6) = myK.HoldsItem("World")
     
-    myresult(7) = myK.LacksItem("Hello")
-    myresult(8) = myK.LacksItem(4&)
-    myresult(9) = myK.LacksItem(42&)
-    myresult(10) = myK.LacksItem("World")
+    myResult(7) = myK.LacksItem("Hello")
+    myResult(8) = myK.LacksItem(4&)
+    myResult(9) = myK.LacksItem(42&)
+    myResult(10) = myK.LacksItem("World")
     
-    myresult(11) = myK.HoldsKey(2&)
-    myresult(12) = myK.HoldsKey(6&)
-    myresult(13) = myK.HoldsKey(42&)
-    myresult(14) = myK.HoldsKey("Hello")
+    myResult(11) = myK.HoldsKey(2&)
+    myResult(12) = myK.HoldsKey(6&)
+    myResult(13) = myK.HoldsKey(42&)
+    myResult(14) = myK.HoldsKey("Hello")
     
-    myresult(15) = myK.LacksKey(2&)
-    myresult(16) = myK.LacksKey(6&)
-    myresult(17) = myK.LacksKey(42&)
-    myresult(18) = myK.LacksKey("Hello")
+    myResult(15) = myK.LacksKey(2&)
+    myResult(16) = myK.LacksKey(6&)
+    myResult(17) = myK.LacksKey(42&)
+    myResult(18) = myK.LacksKey("Hello")
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
     
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -711,7 +711,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test11_MappedIt()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -728,13 +728,13 @@ Private Sub Test11_MappedIt()
     myExpected = Array(4&, "Hellp", True, 2&, 3&, 4&, 5&)
     ReDim Preserve myExpected(1 To 7)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.MappedIt(mpInc.Deb).Items
+    myResult = myK.MappedIt(mpInc.Deb).Items
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
    
     
 TestExit:
@@ -751,7 +751,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test12_MapIt()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -797,7 +797,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test13_FilterIt()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -814,13 +814,13 @@ Private Sub Test13_FilterIt()
     myExpected = Array(3&, 3&, 4&)
     ReDim Preserve myExpected(1 To 3)
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.FilterIt(cmpMT(2)).Items
+    myResult = myK.FilterIt(cmpMT(2)).Items
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myresult, myProcedureName
+    AssertExactSequenceEquals myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -836,7 +836,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test14_ReduceIt()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -852,13 +852,13 @@ Private Sub Test14_ReduceIt()
     Dim myExpected As LongLong
     myExpected = VBA.CLngLng(1 + 2 + 3 + 4 + 3)
     
-    Dim myresult As LongLong
+    Dim myResult As LongLong
     
     'Act:
-    myresult = myK.ReduceIt(rdSum)
+    myResult = myK.ReduceIt(rdSum)
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -874,7 +874,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test15a_KeyByIndex()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -890,13 +890,13 @@ Private Sub Test15a_KeyByIndex()
     Dim myExpected As Variant
     myExpected = 30&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.KeyByIndex(3)
+    myResult = myK.KeyByIndex(3)
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -912,7 +912,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test15b_KeyOf()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -928,13 +928,13 @@ Private Sub Test15b_KeyOf()
     Dim myExpected As Variant
     myExpected = 20&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.KeyOf("Hello")
+    myResult = myK.KeyOf("Hello")
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -950,7 +950,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test16a_GetFirst()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -966,13 +966,13 @@ Private Sub Test16a_GetFirst()
     Dim myExpected As Variant
     myExpected = 3&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.First
+    myResult = myK.First
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -988,7 +988,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test16b_LetFirst()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1004,14 +1004,14 @@ Private Sub Test16b_LetFirst()
     Dim myExpected As Variant
     myExpected = 42&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     myK.First = 42&
-    myresult = myK.First
+    myResult = myK.First
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1027,7 +1027,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test16c_GetLast()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1043,13 +1043,13 @@ Private Sub Test16c_GetLast()
     Dim myExpected As Variant
     myExpected = 4&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.Last
+    myResult = myK.Last
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1065,7 +1065,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test16d_LetLast()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1081,14 +1081,14 @@ Private Sub Test16d_LetLast()
     Dim myExpected As Variant
     myExpected = 42&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
     myK.Last = 42&
-    myresult = myK.Last
+    myResult = myK.Last
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1104,7 +1104,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test16e_GetFirstKey()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1120,13 +1120,13 @@ Private Sub Test16e_GetFirstKey()
     Dim myExpected As Variant
     myExpected = 10&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.FirstKey
+    myResult = myK.FirstKey
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
@@ -1142,7 +1142,7 @@ End Sub
 '@TestMethod("VBALib.KvpC")
 Private Sub Test16f_LastKey()
 
-    #If TWINBASIC Then
+    #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
         myComponentName = CurrentComponentName
     #Else
@@ -1158,13 +1158,13 @@ Private Sub Test16f_LastKey()
     Dim myExpected As Variant
     myExpected = 70&
     
-    Dim myresult As Variant
+    Dim myResult As Variant
     
     'Act:
-    myresult = myK.LastKey
+    myResult = myK.LastKey
     
     'Assert:
-    AssertExactAreEqual myExpected, myresult, myProcedureName
+    AssertExactAreEqual myExpected, myResult, myProcedureName
    
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "SeqA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqA is a Collection/ArrayList replacement. Items are stored in an Array.  Indexing is 1 based. Order of addition is preserved. Keys are not supported (See Kvp classes)"
@@ -85,7 +85,7 @@ Attribute Deb.VB_UserMemId = 0
     End With
 End Function
 
-Friend Function ConstructInstance(ByRef ipFpa As Variant) As SeqA
+Friend Function ConstructInstance(ByRef ipFPA As Variant) As SeqA
     
     p.Count = 0
     p.FirstIndex = FIRST_INDEX
@@ -93,7 +93,7 @@ Friend Function ConstructInstance(ByRef ipFpa As Variant) As SeqA
     ReSize
         
     ' Check to see if we return a default 'empty' seq
-    If ArrayOp.LacksItems(ipFpa) Then
+    If ArrayOp.LacksItems(ipFPA) Then
         Set ConstructInstance = Me
         Exit Function
     End If
@@ -103,14 +103,14 @@ Friend Function ConstructInstance(ByRef ipFpa As Variant) As SeqA
     ' else we want to treat the forwrded paramarray as a single array item
     
     Dim myItem As Variant
-    If ArrayOp.HoldsOneItem(ipFpa) Then
-        If VBA.IsObject(ipFpa(0)) Then
-            Set myItem = ipFpa(0)
+    If ArrayOp.HoldsOneItem(ipFPA) Then
+        If VBA.IsObject(ipFPA(0)) Then
+            Set myItem = ipFPA(0)
         Else
-            myItem = ipFpa(0)
+            myItem = ipFPA(0)
         End If
     Else
-        myItem = ipFpa
+        myItem = ipFPA
     End If
     
     If GroupInfo.IsNumber(myItem) Then
@@ -198,7 +198,7 @@ Attribute Count.VB_Description = "Counts number of host items equal to ipItem.  
     Dim myCount As Long: myCount = 0
     
     Dim myIndex As Long
-    For myIndex = Me.FirstIndex To Me.Lastindex
+    For myIndex = Me.FirstIndex To Me.LastIndex
         If Comparers.EQ(s.Host(myIndex), ipItem) Then
             myCount = myCount + 1
         End If
@@ -393,11 +393,11 @@ Attribute Slice.VB_Description = "Returns a subset of the SeqA"
     
     Dim myEnd As Long
     If ipRun < Me.FirstIndex Then
-        myEnd = Me.Lastindex
+        myEnd = Me.LastIndex
     Else
         myEnd = ipStart + ipRun - 1
-        If myEnd > Me.Lastindex Then
-            myEnd = Me.Lastindex
+        If myEnd > Me.LastIndex Then
+            myEnd = Me.LastIndex
         End If
     End If
 
@@ -425,7 +425,7 @@ Attribute ToArray.VB_Description = "Returns a shallow copy of the SeqA as an Arr
         Exit Function
     End If
 
-    ReDim Preserve s.Host(Me.FirstIndex To Me.Lastindex)
+    ReDim Preserve s.Host(Me.FirstIndex To Me.LastIndex)
     
     ToArray = s.Host
     
@@ -445,7 +445,7 @@ Attribute ToCollection.VB_Description = "Returns a shallow copy of the SeqA as a
     
     Dim myIndex As Long
     ' Don't use foreach because the host array is larger than lastindex
-    For myIndex = Me.FirstIndex To Me.Lastindex
+    For myIndex = Me.FirstIndex To Me.LastIndex
         myC.Add s.Host(myIndex)
     Next
     
@@ -462,13 +462,13 @@ End Function
 
 
 '@Description("Returns the LastIndex of the Seq or -1 if the Seq is empty.  Equivalent to Count.")
-Public Function Lastindex() As Long
-Attribute Lastindex.VB_Description = "Returns the LastIndex of the Seq or -1 if the Seq is empty.  Equivalent to Count."
+Public Function LastIndex() As Long
+Attribute LastIndex.VB_Description = "Returns the LastIndex of the Seq or -1 if the Seq is empty.  Equivalent to Count."
 
     If Me.Count < Me.FirstIndex Then
-        Lastindex = LACKS_ITEMS
+        LastIndex = LACKS_ITEMS
     Else
-        Lastindex = Me.Count
+        LastIndex = Me.Count
     End If
    
 End Function
@@ -485,10 +485,10 @@ End Function
 Public Function LBOIndex() As Long
 Attribute LBOIndex.VB_Description = "Returns the last but One index or error 9"
 
-    If Me.Lastindex < Me.FBOIndex Then
+    If Me.LastIndex < Me.FBOIndex Then
         LBOIndex = LACKS_ITEMS
     Else
-        LBOIndex = Me.Lastindex - 1
+        LBOIndex = Me.LastIndex - 1
     End If
     
 End Function
@@ -696,11 +696,11 @@ Attribute IndexOf.VB_Description = "Returns the index of the first Item found or
     ' ensure that ipstart+iprun only goes to the end of the seq
     Dim myEnd As Long
     If ipRun = TO_LAST_INDEX Then
-        myEnd = Me.Lastindex
+        myEnd = Me.LastIndex
     ElseIf ipRun > 0 Then
         myEnd = ipStart + ipRun - 1
-        If myEnd > Me.Lastindex Then
-            myEnd = Me.Lastindex
+        If myEnd > Me.LastIndex Then
+            myEnd = Me.LastIndex
         End If
     Else
         Exit Function
@@ -741,11 +741,11 @@ Optional ByVal ipRun As Long = TO_LAST_INDEX _
     
     Dim myEnd As Long
     If ipRun = TO_LAST_INDEX Then
-        myEnd = Me.Lastindex
+        myEnd = Me.LastIndex
     ElseIf ipRun > 0 Then
         myEnd = ipStart + ipRun - 1
-        If myEnd > Me.Lastindex Then
-            myEnd = Me.Lastindex
+        If myEnd > Me.LastIndex Then
+            myEnd = Me.LastIndex
         End If
     Else
         Exit Function
@@ -1012,7 +1012,7 @@ Attribute Head.VB_Description = "Returns the first N items of the SeqA, Default 
         Exit Function
     End If
     
-    If ipSplitAfter >= Me.Lastindex Then
+    If ipSplitAfter >= Me.LastIndex Then
         Set Head = Me.Clone
         Exit Function
     End If
@@ -1032,7 +1032,7 @@ Attribute Tail.VB_Description = "Returns the Items after SplitAfter, Default is 
         Exit Function
     End If
     
-    If ipSplitAfter >= Me.Lastindex Then
+    If ipSplitAfter >= Me.LastIndex Then
         Exit Function
     End If
     
@@ -1046,6 +1046,46 @@ Attribute Tail.VB_Description = "Returns the Items after SplitAfter, Default is 
 End Function
 
 
+Public Function RotLeft(Optional ByVal ipCount As Long = 1) As SeqA
+    
+    Set RotLeft = Me
+    If Me.LacksItems Then
+        Exit Function
+    End If
+    
+    If ipCount = 0 Then
+        Exit Function
+    End If
+    
+    If ipCount < 0 Then
+        Set RotLeft = RotRight(VBA.Abs(ipCount))
+        Exit Function
+    End If
+    
+    Me.AddRange Me.DequeueRange(ipCount)
+    
+End Function
+
+
+Public Function RotRight(Optional ByVal ipCount As Long = 1) As SeqA
+    
+    Set RotRight = Me
+    If Me.LacksItems Then
+        Exit Function
+    End If
+    
+    If ipCount = 0 Then
+        Exit Function
+    End If
+    
+    If ipCount < 0 Then
+        Set RotRight = RotLeft(VBA.Abs(ipCount))
+        Exit Function
+    End If
+    
+    Me.InsertAtRange 1, Me.PopRange(ipCount).Reverse
+    
+End Function
 Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
 
     HoldsItem = False
@@ -1055,7 +1095,7 @@ Public Function HoldsItem(ByRef ipItem As Variant) As Boolean
     End If
     
     Dim myIndex As Long
-    For myIndex = Me.FirstIndex To Me.Lastindex ' remember Lastindex < Size
+    For myIndex = Me.FirstIndex To Me.LastIndex ' remember Lastindex < Size
         If Comparers.EQ(s.Host(myIndex), ipItem) Then
             HoldsItem = True
             Exit Function
@@ -1103,7 +1143,7 @@ Attribute MappedIt.VB_Description = "Mutates the Seq in place by applying the fu
     End If
     
     Dim myIndex As Long
-    For myIndex = Me.FirstIndex To Me.Lastindex
+    For myIndex = Me.FirstIndex To Me.LastIndex
         ' execmapper returns a single value array
         Dim myA() As Variant: myA = ipMapper.ExecMapper(s.Host(myIndex))
         
@@ -1125,14 +1165,15 @@ Attribute MapIt.VB_Description = "Returns a new Seq where each item in the Host 
     Dim myS As SeqA: Set myS = SeqA.Deb
     Set MapIt = myS
     
-    If p.Count < FirstIndex Then
+    If Me.LacksItems Then
         Exit Function
     End If
 
-    Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipEndIndex:=Me.Lastindex)
-    Do
-        myS.Add ipMapper.ExecMapper(myItems.CurItem(0))(0)
-    Loop While myItems.MoveNext
+    Dim myIndex As Long
+    For myIndex = Me.FirstIndex To Me.LastIndex
+        ' Execmapper returns a single item array
+        myS.Add ipMapper.ExecMapper(s.Host(myIndex))(0)
+    Next
     
     Set MapIt = myS
 
@@ -1150,14 +1191,13 @@ Attribute FilterIt.VB_Description = "Returns a new Seq where each item returns t
         Exit Function
     End If
 
-    Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipEndIndex:=Me.Lastindex)
-    Do
-    
-        If ipComparer.ExecCmp(myItems.CurItem(0)) Then
-            myS.Add myItems.CurItem(0)
+    Dim myIndex As Long
+    For myIndex = Me.FirstIndex To Me.LastIndex
+        If ipComparer.ExecCmp(s.Host(myIndex)) Then
+            myS.Add s.Host(myIndex)
         End If
         
-    Loop While myItems.MoveNext
+    Next
 
     Set FilterIt = myS
 
@@ -1176,14 +1216,13 @@ Attribute CountIt.VB_Description = "Returns the count the number of items where 
     
     Dim myCount As Long: myCount = 0
     
-    Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipEndIndex:=Me.Lastindex)
-    Do
-    
-        If ipComparer.ExecCmp(myItems.CurItem(0)) Then
+    Dim myIndex As Long
+    For myIndex = Me.FirstIndex To Me.LastIndex
+        If ipComparer.ExecCmp(s.Host(myIndex)) Then
             myCount = myCount + 1
         End If
         
-    Loop While myItems.MoveNext
+    Next
 
     CountIt = myCount
 
@@ -1199,12 +1238,12 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
     'ToDo: Update reducers to use iteritems rather than an array
-    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me.ToArray))
-    
-    If VBA.IsObject(myItem(0)) Then
-        Set ReduceIt = myItem(0)
+    Dim myA() As Variant: myA = ipReducer.ExecReduction(Me)
+    'VariantCopy ReduceIt, myItem(0)
+    If VBA.IsObject(myA(0)) Then
+        Set ReduceIt = VBA.CVar(myA(0))
     Else
-        ReduceIt = myItem(0)
+        ReduceIt = VBA.CVar(myA(0))
     End If
     
 End Function
@@ -1268,7 +1307,7 @@ Public Function PopRange(Optional ByVal ipCount As Long = 1) As SeqA
         Exit Function
     End If
     
-    If ipCount > Me.Lastindex Then
+    If ipCount > Me.LastIndex Then
         Set PopRange = Me.Reverse
         Me.RemoveAll
         Exit Function
@@ -1334,7 +1373,7 @@ Public Function DequeueRange(Optional ByVal ipCount As Long = 1) As SeqA
         Exit Function
     End If
     
-    If ipCount > Me.Lastindex Then
+    If ipCount > Me.LastIndex Then
         Set DequeueRange = SeqA(Me.Clone)
         Me.RemoveAll
         Exit Function
@@ -1426,7 +1465,7 @@ Attribute Reverse.VB_Description = "Returns a new seq with Items in reverse orde
     End If
 
     Dim myIndex As Long
-    For myIndex = Me.Lastindex To Me.FirstIndex Step -1
+    For myIndex = Me.LastIndex To Me.FirstIndex Step -1
         myS.Add s.Host(myIndex)
     Next
      
@@ -1444,7 +1483,7 @@ Attribute Reversed.VB_Description = "Reverses the order of items in place"
     End If
      
     Dim myFirstIndex As Long: myFirstIndex = Me.FirstIndex
-    Dim myLastIndex As Long: myLastIndex = Me.Lastindex
+    Dim myLastIndex As Long: myLastIndex = Me.LastIndex
     
     Do
     
@@ -1501,7 +1540,7 @@ Attribute Dedup.VB_Description = "Returns the a new seq with the unique subset o
     End If
 
     Dim myIndex As Long
-    For myIndex = Me.FirstIndex To Me.Lastindex
+    For myIndex = Me.FirstIndex To Me.LastIndex
         If myS.LacksItem(s.Host(myIndex)) Then
             myS.Add s.Host(myIndex)
         End If
@@ -1525,7 +1564,7 @@ Attribute Deduped.VB_Description = "Removes duplicate items from the seq"
     Dim myS As SeqA: Set myS = SeqA.Deb
     
     Dim myIndex As Long
-    For myIndex = Me.FirstIndex To Me.Lastindex
+    For myIndex = Me.FirstIndex To Me.LastIndex
     
         If myS.HoldsItem(s.Host(myIndex)) Then
             MoveDown myIndex, 1
@@ -1550,7 +1589,7 @@ Public Function Freq() As KvpA
     End If
     
     Dim myIndex As Long
-    For myIndex = Me.FirstIndex To Me.Lastindex
+    For myIndex = Me.FirstIndex To Me.LastIndex
     
         If myK.LacksKey(s.Host(myIndex)) Then
             myK.Add s.Host(myIndex), 1
@@ -1657,7 +1696,7 @@ Private Function SetOfParamOnly(ByRef ipSeq As SeqA) As SeqA
         Exit Function
     End If
     
-    Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipEndIndex:=Me.Lastindex)
+    Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipEndIndex:=Me.LastIndex)
     Do
     
         If myS.HoldsItem(myItems.CurItem(0)) Then
@@ -1680,7 +1719,7 @@ Private Function SetOfNotCommon(ByRef ipSeq As SeqA) As SeqA
         Exit Function
     End If
     
-    Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipEndIndex:=Me.Lastindex)
+    Dim myItems As IterItems: Set myItems = IterItems(s.Host).FTS(ipEndIndex:=Me.LastIndex)
     Do
     
         If ipSeq.LacksItem(myItems.CurItem(0)) Then

@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "cmpLT"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
@@ -14,14 +14,14 @@ Option Explicit
     
 Implements IComparer
 
-Const MY_TYPENAME               As String = "cmpLT"
+Const MY_TYPENAME                                   As String = "cmpLT"
 
 Private Type State
-    Reference                   As Variant
+    Reference()                                     As Variant
 End Type
 
 
-Private s                       As State
+Private s                                           As State
 
 
 Private Property Get IComparer_TypeName() As String

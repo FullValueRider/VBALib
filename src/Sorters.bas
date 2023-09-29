@@ -213,7 +213,7 @@ Public Sub ShakerSortByItem(ByVal iopS As Object)
     Dim blnSwapped As Boolean
     
     iMin = iopS.FirstIndex
-    iMax = iopS.Lastindex
+    iMax = iopS.LastIndex
     i = (iMax - iMin) \ 2 + iMin
     Do While i > iMin
         j = i
@@ -319,7 +319,7 @@ Public Sub ShakerSortByItemOfItem(ByVal iopS As Object)
     Dim blnSwapped As Boolean
     
     iMin = iopS.FirstIndex
-    iMax = iopS.Lastindex
+    iMax = iopS.LastIndex
     i = (iMax - iMin) \ 2 + iMin
     Do While i > iMin
         j = i

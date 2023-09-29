@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KVPair"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A simple single item dictionary"
@@ -72,6 +72,10 @@ Private Function ConstructInstanceUsingKeyAndItem(ByRef ipKey As Variant, ByRef 
     
 End Function
 
+Public Function Count() As Long
+    Count = 1
+End Function
+
 
 Public Property Get Key() As Variant
     Key = p.Keys.Item(1)
@@ -89,8 +93,10 @@ Public Property Set Key(ByVal ipKey As Variant)
     p.Keys.Remove 1
 End Property
 
-
-Public Property Get Item() As Variant
+' To be consistent with other Kvp classes the Item method requires the index parameter.
+' In practise this paramter is ignored as the index is always 1.
+'@Ignore ParameterNotUsed
+Public Property Get Item(ByVal ipIndex As Long) As Variant
 
     If VBA.IsObject(p.Items.Item(1)) Then
         Set Item = p.Items.Item(1)
@@ -101,15 +107,21 @@ Public Property Get Item() As Variant
 End Property
 
 
-Public Property Let Item(ByVal ipItem As Variant)
+'@Ignore ParameterNotUsed
+Public Property Let Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
+    If p.Items.Count > 0 Then
+        p.Items.Remove 1
+    End If
     p.Items.Add ipItem
-    p.Items.Remove 1
 End Property
 
 
-Public Property Set Item(ByVal ipItem As Variant)
+'@Ignore ParameterNotUsed
+Public Property Set Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
+    If p.Items.Count > 0 Then
+        p.Items.Remove 1
+    End If
     p.Items.Add ipItem
-    p.Items.Remove 1
 End Property
 
 
@@ -134,10 +146,10 @@ End Function
 
 
 Public Function Keys() As Variant
-    Set Keys = Array(p.Keys.Item(1))
+    Keys = Array(p.Keys.Item(1))
 End Function
 
 
 Public Function Items() As Variant
-    Set Items = Array(p.Items.Item(1))
+    Items = Array(p.Items.Item(1))
 End Function

@@ -31,29 +31,29 @@ End Property
 
 Public Function IndexNotFound(ByVal ipIndex As Long, ByVal ipIndexed As Object, ByRef ipMethod As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
 
-    Dim myresult As Boolean: myresult = ipIndexed.LacksItems
+    Dim myResult As Boolean: myResult = ipIndexed.LacksItems
     
-    If Not myresult Then
-        If ipIndex < ipIndexed.FirstIndex Or ipIndex > ipIndexed.Lastindex Then
-            myresult = False
+    If Not myResult Then
+        If ipIndex < ipIndexed.FirstIndex Or ipIndex > ipIndexed.LastIndex Then
+            myResult = False
         End If
     End If
     
-    If Not myresult Then
-        IndexNotFound = myresult
+    If Not myResult Then
+        IndexNotFound = myResult
         Exit Function
     End If
     
     If p.ReportBackAction = m_ReportBackContinue Then
         If ipReportBack Then
-            IndexNotFound = myresult
+            IndexNotFound = myResult
             Exit Function
         End If
     End If
     
     Err.Raise 17 + vbObjectError, _
         Fmt.Text("{0}.{1}.{2}", MY_LIB, ipIndexed.TypeName, ipMethod), _
-        Fmt.Text("Expecting a value between {0} and {1}. Got {2}.", ipIndexed.FirstIndex, ipIndexed.Lastindex, ipIndex)
+        Fmt.Text("Expecting a value between {0} and {1}. Got {2}.", ipIndexed.FirstIndex, ipIndexed.LastIndex, ipIndex)
     
 End Function
 
@@ -62,11 +62,11 @@ End Function
 ' In such cases ipREPORT_BACK should be set to true
 Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByRef ipKvp As Object, ByRef ipMethod As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
 
-    Dim myresult As Long: myresult = ((ipIndex < ipKvp.FirstIndex) Or (ipIndex > ipKvp.Lastindex))
+    Dim myResult As Long: myResult = ((ipIndex < ipKvp.FirstIndex) Or (ipIndex > ipKvp.LastIndex))
     
-    IndexOutOfBounds = myresult
+    IndexOutOfBounds = myResult
     
-    If Not myresult Then
+    If Not myResult Then
         Exit Function
     End If
     
@@ -78,24 +78,24 @@ Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByRef ipKvp As Object, B
 
     Err.Raise 17 + vbObjectError, _
         Fmt.Text("{0}.{1}.{2}", MY_LIB, ipKvp.TypeName, ipMethod), _
-        Fmt.Text("Expecting a value between {0} and {1}. Got {2}.", ipKvp.FirstIndex, ipKvp.Lastindex, ipIndex)
+        Fmt.Text("Expecting a value between {0} and {1}. Got {2}.", ipKvp.FirstIndex, ipKvp.LastIndex, ipIndex)
     
 End Function
 
 
 Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipModule As String, ByRef ipMethod As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
 
-    Dim myresult As Boolean
+    Dim myResult As Boolean
     Select Case GroupInfo.Id(ipRange)
     
-        Case e_Group.m_string, e_Group.m_array, e_Group.m_List, e_Group.m_Dictionary:       myresult = False
-        Case Else:                                                                          myresult = True
+        Case e_Group.m_string, e_Group.m_array, e_Group.m_List, e_Group.m_Dictionary:       myResult = False
+        Case Else:                                                                          myResult = True
             
     End Select
     
-    InvalidRangeItem = myresult
+    InvalidRangeItem = myResult
     
-    If Not myresult Then
+    If Not myResult Then
         Exit Function
     End If
     
@@ -156,10 +156,10 @@ End Function
 
 Public Function KeyIsAdmin(ByRef ipAdmin As Variant, ByRef ipModule As String, ByRef ipMethod As String, Optional ByVal ipREPORT_BACK As Boolean = False) As Boolean
 
-    Dim myresult As Boolean: myresult = GroupInfo.IsNotAdmin(ipAdmin)
+    Dim myResult As Boolean: myResult = GroupInfo.IsNotAdmin(ipAdmin)
     
-    If myresult Then
-        KeyIsAdmin = Not myresult
+    If myResult Then
+        KeyIsAdmin = Not myResult
         Exit Function
     End If
     
@@ -184,10 +184,10 @@ Public Function EnsureUniqueKeys(ByRef ipKey As Variant, ByVal ipKvp As Object, 
         Exit Function
     End If
     
-    Dim myresult As Boolean: myresult = ipKvp.LacksKey(ipKey)
+    Dim myResult As Boolean: myResult = ipKvp.LacksKey(ipKey)
     
-    If myresult Then
-        EnsureUniqueKeys = myresult
+    If myResult Then
+        EnsureUniqueKeys = myResult
         Exit Function
     End If
     

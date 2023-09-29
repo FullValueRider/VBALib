@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpC"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Dictionary using a SeqC for Keys and Items"
@@ -497,7 +497,7 @@ Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long
 
     Dim myCount As Long
     For myCount = 1 To ipRun
-        If myRemoveIndex >= s.Keys.Lastindex Then
+        If myRemoveIndex >= s.Keys.LastIndex Then
             Exit For
         End If
         s.Keys.RemoveAt myRemoveIndex
@@ -775,7 +775,7 @@ Attribute FilterIt.VB_Description = "Returns a Kvpc.Deb where the ICOmparer has 
     End If
 
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
         If ipComparer.ExecCmp(s.Items.Item(myIndex)) Then
             myK.Add s.Keys.Item(myIndex), s.Items.Item(myIndex)
         End If
@@ -793,13 +793,12 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
     
-    Dim myItem As Variant
-    myItem = Array(ipReducer.ExecReduction(s.Items))
+    Dim myA As Variant: myA = ipReducer.ExecReduction(s.Items)
     
-    If VBA.IsObject(myItem(0)) Then
-        Set ReduceIt = myItem(0)
+    If VBA.IsObject(myA(0)) Then
+        Set ReduceIt = myA(0)
     Else
-        ReduceIt = myItem(0)
+        ReduceIt = myA(0)
     End If
     
 End Function
@@ -841,7 +840,7 @@ Public Function CountIt(ByVal ipComparer As IComparer) As Long
     Dim myCount As Long
     myCount = 0
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
 
         If ipComparer.ExecCmp(s.Items.Item(myIndex)) Then
             myCount = myCount + 1
@@ -971,10 +970,10 @@ Public Function Pairs() As Variant
         Exit Function
     End If
     
-    Dim myA As Variant: ReDim myA(s.Keys.FirstIndex To s.Keys.Lastindex)
+    Dim myA As Variant: ReDim myA(s.Keys.FirstIndex To s.Keys.LastIndex)
     
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
         myA(myIndex) = Array(s.Keys.Item(myIndex), s.Items.Item(myIndex))
     Next
 
@@ -991,10 +990,10 @@ Public Function SPairs() As Variant
         Exit Function
     End If
     
-    Dim myA As Variant: ReDim myA(myKeys.FirstIndex To myKeys.Lastindex)
+    Dim myA As Variant: ReDim myA(myKeys.FirstIndex To myKeys.LastIndex)
     
     Dim myIndex As Long
-    For myIndex = myKeys.FirstIndex To myKeys.Lastindex
+    For myIndex = myKeys.FirstIndex To myKeys.LastIndex
         myA(myIndex) = Array(myKeys.Item(myIndex), Me.Item(myKeys.Item(myIndex)))
     Next
 
@@ -1013,7 +1012,7 @@ Public Function PairsAsSeq() As SeqC
     Dim myS As SeqC: Set myS = SeqC.Deb
     
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
         myS.Add Array(s.Keys.Item(myIndex), s.Items.Item(myIndex))
     Next
 
@@ -1027,8 +1026,8 @@ Public Property Get FirstIndex() As Long
 End Property
 
 
-Public Property Get Lastindex() As Long
-    Lastindex = s.Keys.Lastindex
+Public Property Get LastIndex() As Long
+    LastIndex = s.Keys.LastIndex
 End Property
 
 
@@ -1186,7 +1185,7 @@ Private Function MirrorByAllValues() As KvpC
     End If
 
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
 
         If myK.LacksKey(s.Keys.Item(myIndex)) Then
             myK.Add s.Items.Item(myIndex), KvpC.Deb
@@ -1210,7 +1209,7 @@ Private Function MirrorByFirstValue() As KvpC
     Set myOther = KvpC.Deb
 
     Dim myIndex As Long
-    For myIndex = s.Keys.FirstIndex To s.Keys.Lastindex
+    For myIndex = s.Keys.FirstIndex To s.Keys.LastIndex
 
         If myFirst.LacksKey(s.Items.Item(myIndex)) Then
             myFirst.Add s.Items.Item(myIndex), s.Keys.Item(myIndex)

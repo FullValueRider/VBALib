@@ -2,9 +2,9 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "Fmt"
+Attribute VB_Name = "Format"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Class Fmt enables substitution of variables and control characters in strings using fields delineated by {} markers."
@@ -47,27 +47,27 @@ Attribute VB_Description = "Class Fmt enables substitution of variables and cont
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
 Option Explicit
 
+
+Private Const MY_TYPENAME                       As String = "Format"
 Private Type State
     
-    ArrayMarkupIsSet                            As Boolean
-    ObjectMarkupIsSet                           As Boolean
-    DictionaryItemMarkupIsSet                   As Boolean
-    ItemSeparatorIsSet                          As Boolean
-    
-    ' The next object hold the characters used to delineate different types of objects/Arrays
-    ArrayMarkup                                 As ItemMarkup
-    ObjectMarkup                                As ItemMarkup
-    DictionaryItemMarkup                        As ItemMarkup
-    ItemSeparator                               As String
-     
-    ' Cannot be a collection bcause we need the keys collection
+'    ArrayMarkupIsSet                            As Boolean
+'    ObjectMarkupIsSet                           As Boolean
+'    DictionaryItemMarkupIsSet                   As Boolean
+'    ItemSeparatorIsSet                          As Boolean
+'
+    ' Cannot be a collection because we need the keys array
     FormatFields                                As KvpC
     ToString                                    As Stringifier
     
 End Type
 
-
 Private s                                       As State
+
+'Private Type Properties
+'        ' The next object hold the characters used to delineate different types of objects/Arrays
+'    ToString                                     As Stringifier
+'End Type
 
 
 'Field openers - definitions
@@ -87,17 +87,24 @@ Private Const FIELD_COUNT_IS_ZERO               As String = "0}"
 Private Const FIELD_COUNT_IS_ONE                As String = "1}"
 
 
-Public Sub Class_Initialize()
- 
-    s.ArrayMarkupIsSet = False
-    s.ObjectMarkupIsSet = False
-    s.DictionaryItemMarkupIsSet = False
-    s.ItemSeparatorIsSet = False
+'@DefaultMember
+Public Function Deb() As Format
+Attribute Deb.VB_UserMemId = 0
+    With New Format
+        Set Deb = .ConstructInstance
+    End With
+End Function
 
-    If Not s.FormatFields Is Nothing Then
-        Exit Sub
-    End If
-     
+
+Friend Function ConstructInstance() As Format
+    Set s.ToString = Stringifier.Deb  ' we don't appear to be calling this method.
+    s.ToString.ResetMarkup
+    Set ConstructInstance = Me
+    
+End Function
+
+Private Sub SetFormatFields()
+
     Set s.FormatFields = KvpC.Deb
          
     With s.FormatFields
@@ -113,22 +120,8 @@ Public Sub Class_Initialize()
         .Add ipKey:=SMART_DQUOTE_CLOSE, ipItem:=Chars.twRSmartDQuote ' {dc
              
     End With
-     
+    
 End Sub
-
-
-Public Function Deb() As Fmt
-    With New Fmt
-        Set Deb = ConstructInstance
-    End With
-End Function
-
-
-Friend Function ConstructInstance() As Fmt
-    Set ConstructInstance = Me
-End Function
-
-
 '@Description("Sends the formatted output to Debug.Print")
 Public Function Dbg(ByRef ipFormatTemplate As String, ParamArray ipParamarray() As Variant) As String
 Attribute Dbg.VB_Description = "Sends the formatted output to Debug.Print"
@@ -164,24 +157,26 @@ End Function
 
 Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray As Variant) As String
     
-    Set s.ToString = Stringifier.Deb
+'    If Not s.ToString.Initialised Then  ' when predeclaredId
+'        Set s.ToString = Stringifier.Deb
+'    End If
 
-    If Not s.ArrayMarkupIsSet Then
-        s.ToString.SetArrayMarkup
-    End If
-    
-    If Not s.DictionaryItemMarkupIsSet Then
-        s.ToString.SetDictionaryItemMarkup
-    End If
-    
-    
-    If Not s.ObjectMarkupIsSet Then
-        s.ToString.SetObjectMarkup
-    End If
-    
-    If Not s.ItemSeparatorIsSet Then
-        s.ToString.SetItemSeparator
-    End If
+'    If Not s.ArrayMarkupIsSet Then
+'        s.ToString.SetArrayMarkup
+'    End If
+'
+'    If Not s.DictionaryItemMarkupIsSet Then
+'        s.ToString.SetDictionaryItemMarkup
+'    End If
+'
+'
+'    If Not s.ObjectMarkupIsSet Then
+'        s.ToString.SetObjectMarkup
+'    End If
+'
+'    If Not s.ItemSeparatorIsSet Then
+'        s.ToString.SetItemSeparator
+'    End If
     
     If VBA.LenB(ipFormatTemplate) = 0 Then
         TextByVar = ipFormatTemplate
@@ -217,11 +212,11 @@ Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray 
     myReturn = ReplaceFormatFieldWithCountByControlCharacters(myReturn)
     myReturn = ReplaceVariableFieldByVariableString(myReturn, myS)
     
-    s.ArrayMarkupIsSet = False
-    s.ObjectMarkupIsSet = False
-    s.DictionaryItemMarkupIsSet = False
-    s.ItemSeparatorIsSet = False
-   
+'    s.ArrayMarkupIsSet = False
+'    s.ObjectMarkupIsSet = False
+'    s.DictionaryItemMarkupIsSet = False
+'    s.ItemSeparatorIsSet = False
+'
     TextByVar = myReturn
     
 End Function
@@ -253,6 +248,9 @@ Attribute ReplaceFormatFieldWithZeroCountByvbNullString.VB_Description = "Replac
 
     myLayoutTemplate = ipLayoutTemplate
     Dim myKeys As Variant
+    If s.FormatFields Is Nothing Then
+        SetFormatFields
+    End If
     myKeys = s.FormatFields.Keys
     For Each myItem In myKeys
         
@@ -368,7 +366,7 @@ Attribute ReplaceVariableFieldByVariableString.VB_Description = "Replace each oc
     myReturn = ipFormatTemplate
     
     Dim myIndex As Long
-    For myIndex = ipSeq.FirstIndex To ipSeq.Lastindex
+    For myIndex = ipSeq.FirstIndex To ipSeq.LastIndex
     
         Dim myReplace As String
         ' Remember that {} fields start at 0
@@ -382,66 +380,83 @@ Attribute ReplaceVariableFieldByVariableString.VB_Description = "Replace each oc
 End Function
 
 
-Public Function ResetMarkup() As Fmt
-    SetArrayMarkup
-    SetObjectMarkup
-    SetDictionaryItemMarkup
-    SetItemSeparator
-    
+Public Function ResetMarkup() As Format
+    s.ToString.ArrayMarkup
+    s.ToString.ObjectMarkup
+    s.ToString.DictionaryItemMarkup
+    s.ToString.ItemSeparator
     Set ResetMarkup = Me
     
 End Function
 
 
-Public Function SetDictionaryItemMarkup _
+Public Function DictionaryItemMarkup _
 ( _
-Optional ByVal ipLeft As Variant = Chars.twSpace & Chars.twPlainSQuote, _
-Optional ByVal ipSeparator As Variant = Chars.twColon & Chars.twSpace, _
-Optional ByVal ipRight As Variant = Chars.twPlainSQuote _
-) As Fmt
-    Set s.DictionaryItemMarkup = ItemMarkup.Deb(ipLeft, ipSeparator, ipRight)
-    Set SetDictionaryItemMarkup = Me
+    Optional ByVal ipLeft As String = Chars.twSpace & Chars.twPlainSQuote, _
+    Optional ByVal ipSeparator As String = Chars.twColon & Chars.twSpace, _
+    Optional ByVal ipRight As String = Chars.twPlainSQuote _
+) As Format
+    s.ToString.DictionaryItemMarkup ipLeft, ipSeparator, ipRight
+    Set DictionaryItemMarkup = Me
 End Function
 
 
-Public Function SetArrayMarkup _
+Public Function ArrayMarkup _
 ( _
-Optional ByVal ipLeft As Variant = Chars.twLSQB, _
-Optional ByVal ipSeparator As Variant = Chars.twComma, _
-Optional ByVal ipRight As Variant = Chars.twRSQB _
-) As Fmt
-    Set s.ArrayMarkup = ItemMarkup.Deb(ipLeft, ipSeparator, ipRight)
-    s.ArrayMarkupIsSet = True
-    Set SetArrayMarkup = Me
+    Optional ByVal ipLeft As String = Chars.twLSQB, _
+    Optional ByVal ipSeparator As String = Chars.twComma, _
+    Optional ByVal ipRight As String = Chars.twRSQB _
+) As Format
+    s.ToString.ArrayMarkup ipLeft, ipSeparator, ipRight
+    Set ArrayMarkup = Me
 End Function
 
-
-Public Function SetObjectMarkup _
+Public Function ObjectMarkup _
 ( _
-Optional ByVal ipLeft As Variant = Chars.twLCUB, _
-Optional ByVal ipSeparator As Variant = Chars.twComma, _
-Optional ByVal ipRight As Variant = Chars.twRCUB _
-) As Fmt
-    Set s.ObjectMarkup = ItemMarkup.Deb(ipLeft, ipSeparator, ipRight)
-    s.ObjectMarkupIsSet = True
-    Set SetObjectMarkup = Me
+    Optional ByVal ipLeft As String = Chars.twLCUB, _
+    Optional ByVal ipSeparator As String = Chars.twComma, _
+    Optional ByVal ipRight As String = Chars.twRCUB _
+) As Format
+    s.ToString.ObjectMarkup ipLeft, ipSeparator, ipRight
+    Set ObjectMarkup = Me
 End Function
 
 
-Public Function SetItemSeparator(Optional ByVal ipSeparator As Variant = Chars.twComma) As Fmt
-    s.ItemSeparator = ipSeparator
-    s.ItemSeparatorIsSet = True
-    Set SetItemSeparator = Me
+Public Function ItemSeparator(Optional ByVal ipSeparator As String = Chars.twComma) As Format
+    s.ToString.ItemSeparator ipSeparator
+    Set ItemSeparator = Me
 End Function
 
 
-Public Function NoMarkup() As Fmt
+Public Function ArrayMarkupSeparatorOnly() As Format
+    s.ToString.ArrayMarkup ipLeft:=vbNullString, ipRight:=vbNullString
+    Set ArrayMarkupSeparatorOnly = Me
+End Function
+Public Function ObjectMarkupSeparatorOnly() As Format
+    s.ToString.ObjectMarkup ipLeft:=vbNullString, ipRight:=vbNullString
+    Set ObjectMarkupSeparatorOnly = Me
+End Function
 
-    SetArrayMarkup vbNullString, vbNullString, vbNullString
-    SetDictionaryItemMarkup vbNullString, vbNullString, vbNullString
-    SetObjectMarkup vbNullString, vbNullString, vbNullString
-    SetItemSeparator vbNullString
+
+Public Function DictionaryItemMarkupSeparatorOnly() As Format
+    s.ToString.DictionaryItemMarkup vbNullString, Chars.twComma, vbNullString
+    Set DictionaryItemMarkupSeparatorOnly = Me
+End Function
+Public Function UseItemSeparatorOnly() As Format
+
+    s.ToString.UseItemSeparatorOnly
+    Set UseItemSeparatorOnly = Me
     
+End Function
+
+Public Function NoMarkup() As Format
+
+    s.ToString.NoMarkup
     Set NoMarkup = Me
     
 End Function
+
+Public Property Get TypeName() As String
+    TypeName = MY_TYPENAME
+End Property
+    

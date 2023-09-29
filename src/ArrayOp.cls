@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "ArrayOp"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@PredeclaredId
@@ -240,9 +240,9 @@ Public Function FirstIndex(ByRef ipArray As Variant, Optional ByVal ipRank As Lo
 End Function
 
 
-Public Function Lastindex(ByRef ipArray As Variant, Optional ByVal ipRank As Long = 1) As Variant
+Public Function LastIndex(ByRef ipArray As Variant, Optional ByVal ipRank As Long = 1) As Variant
     
-    Lastindex = Null
+    LastIndex = Null
     
     If LacksItems(ipArray) Then
         Exit Function
@@ -252,7 +252,7 @@ Public Function Lastindex(ByRef ipArray As Variant, Optional ByVal ipRank As Lon
     myRanks = Ranks(ipArray)
     
     If ipRank >= 1 And ipRank <= myRanks Then
-        Lastindex = UBound(ipArray, ipRank)
+        LastIndex = UBound(ipArray, ipRank)
     End If
    
 End Function
@@ -273,9 +273,9 @@ Attribute MapIt.VB_Description = "Returns a new 1 dimension array with 1 based i
     Dim myItem As Variant
     For Each myItem In ipArray
     
-        Dim myresult As Variant
-        myresult = ipMapper.ExecMapper(myItem)
-        VariantCopy myA(mySize), myresult(0)
+        Dim myResult As Variant
+        myResult = ipMapper.ExecMapper(myItem)
+        VariantCopy myA(mySize), myResult(0)
         mySize = mySize + 1
         
     Next
@@ -398,7 +398,7 @@ Public Function Linearise(ByRef ipArray As Variant, Optional ByVal ipBase As Lon
     mySize = ArrayOp.Count(ipArray)
     
     Dim myA As Variant
-    ReDim myA(ipBase To mySize + ipBase)
+    ReDim myA(ipBase To mySize + ipBase - 1)
     
     Dim myIndex As Long: myIndex = ipBase
     Dim myItem As Variant

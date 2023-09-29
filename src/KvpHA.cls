@@ -4,7 +4,7 @@ BEGIN
 END
 Attribute VB_Name = "KvpHA"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
+Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule
@@ -54,16 +54,15 @@ Private Type State
     'both pairing-arrays are of type Variant
      Keys()                                 As Variant
      Values()                               As Variant
-    'three vars, to handle the deletes
-     FIndexes()                             As Long
+    'three varsmyChecksum)                            As Long
      FCount                                 As Long
      FUB                                    As Long
-     
+     FIndexes()                             As Variant
 End Type
 
 Private s                                   As State
 
-' Checking for duplicate keys is a linear time process
+' we can now use
 ' for KvpA, KvpC and KvpHA.  Consequently for **ALL** Kvp classes
 ' EnsureUniqueKeys is set to false by default
 ' Setting EnsureUniqueKeys to true will allow a check for a
@@ -1075,12 +1074,12 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Exit Function
     End If
     
-    Dim myItem As Variant: myItem = Array(ipReducer.ExecReduction(Me.Items))
+    Dim myA() As Variant: myA = ipReducer.ExecReduction(Me.Items)
     
-    If VBA.IsObject(myItem(0)) Then
-        Set ReduceIt = myItem(0)
+    If VBA.IsObject(myA(0)) Then
+        Set ReduceIt = myA(0)
     Else
-        ReduceIt = myItem(0)
+        ReduceIt = myA(0)
     End If
     
 End Function
@@ -1304,12 +1303,12 @@ Public Property Get FirstIndex() As Long
 
 End Property
 
-Public Property Get Lastindex() As Long
+Public Property Get LastIndex() As Long
 
     If p.Count < FIRST_INDEX Then
-        Lastindex = -1
+        LastIndex = -1
     Else
-        Lastindex = p.Count
+        LastIndex = p.Count
     End If
 
 End Property
@@ -1368,7 +1367,7 @@ Public Property Get LastKey() As Variant
         Exit Property
     End If
 
-    Dim myKey As Variant: myKey = Array(KeyByIndex(Me.Lastindex))
+    Dim myKey As Variant: myKey = Array(KeyByIndex(Me.LastIndex))
 
     If VBA.IsObject(myKey(0)) Then
         Set LastKey = myKey(0)
@@ -1425,7 +1424,7 @@ Public Property Get Last() As Variant
         Exit Property
     End If
 
-    Dim myItem As Variant: myItem = Array(ItemByIndex(Me.Lastindex))
+    Dim myItem As Variant: myItem = Array(ItemByIndex(Me.LastIndex))
 
     If VBA.IsObject(myItem(0)) Then
         Set Last = myItem(0)
@@ -1440,7 +1439,7 @@ Public Property Set Last(ByVal ipItem As Variant)
 
     Guard.KeyNotFound Me.LacksItems, FIRST_INDEX, MY_TYPENAME, "Set Last"
 
-    Set ItemByIndex(Me.Lastindex) = ipItem
+    Set ItemByIndex(Me.LastIndex) = ipItem
 
 End Property
 
@@ -1449,7 +1448,7 @@ Public Property Let Last(ByVal ipItem As Variant)
 
     Guard.KeyNotFound Me.LacksItems, FIRST_INDEX, MY_TYPENAME, "Let Last"
 
-    ItemByIndex(Me.Lastindex) = ipItem
+    ItemByIndex(Me.LastIndex) = ipItem
 
 End Property
 
