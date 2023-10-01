@@ -29,7 +29,7 @@ Public Property Let ReportBackAction(ByVal ipReportBackAction As e_GuardReportBa
 End Property
 
 
-Public Function IndexNotFound(ByVal ipIndex As Long, ByVal ipIndexed As Object, ByRef ipMethod As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+Public Function IndexNotFound(ByVal ipIndex As Long, ByVal ipIndexed As Object, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
 
     Dim myResult As Boolean: myResult = ipIndexed.LacksItems
     
@@ -52,7 +52,7 @@ Public Function IndexNotFound(ByVal ipIndex As Long, ByVal ipIndexed As Object, 
     End If
     
     Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}.{2}", MY_LIB, ipIndexed.TypeName, ipMethod), _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
         Fmt.Text("Expecting a value between {0} and {1}. Got {2}.", ipIndexed.FirstIndex, ipIndexed.LastIndex, ipIndex)
     
 End Function
@@ -60,7 +60,7 @@ End Function
 ' There are occasions when we wish to know the result of an alert test
 ' rather than trigger an error message
 ' In such cases ipREPORT_BACK should be set to true
-Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByRef ipKvp As Object, ByRef ipMethod As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
+Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByRef ipKvp As Object, ByRef ipLocation As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
 
     Dim myResult As Long: myResult = ((ipIndex < ipKvp.FirstIndex) Or (ipIndex > ipKvp.LastIndex))
     
@@ -77,13 +77,13 @@ Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByRef ipKvp As Object, B
     End If
 
     Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}.{2}", MY_LIB, ipKvp.TypeName, ipMethod), _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
         Fmt.Text("Expecting a value between {0} and {1}. Got {2}.", ipKvp.FirstIndex, ipKvp.LastIndex, ipIndex)
     
 End Function
 
 
-Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipModule As String, ByRef ipMethod As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
+Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipLocation As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
 
     Dim myResult As Boolean
     Select Case GroupInfo.Id(ipRange)
@@ -106,13 +106,13 @@ Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipModule As Str
     End If
     
     Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}.{2}", MY_LIB, ipModule, ipMethod), _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
         Fmt.Text("Expecting a range item.  Got '{0}'", VBA.TypeName(ipRange))
     
 End Function
 
 
-Public Function ArrayNotFound(ByRef ipArray As Variant, ByRef ipModule As String, ByRef ipMethod As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+Public Function ArrayNotFound(ByRef ipArray As Variant, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
     
     ArrayNotFound = ArrayOp.IsNotArray(ipArray)
     
@@ -123,13 +123,13 @@ Public Function ArrayNotFound(ByRef ipArray As Variant, ByRef ipModule As String
     End If
     
     Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}.{2}", MY_LIB, ipModule, ipMethod), _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
         Fmt.Text("Expecting an array.  Got {0}", VBA.TypeName(ipArray))
         
 End Function
 
 
-Public Function EmptyRangeObject(ByRef ipRange As Variant, ByRef ipModule As String, ByRef ipMethod As String, Optional ByVal ipREPORT_BACK As Boolean = False) As Boolean
+Public Function EmptyRangeObject(ByRef ipRange As Variant, ByRef ipLocation As String, Optional ByVal ipREPORT_BACK As Boolean = False) As Boolean
 
     Dim myLen As Long
     Select Case GroupInfo.Id(ipRange)
@@ -147,14 +147,14 @@ Public Function EmptyRangeObject(ByRef ipRange As Variant, ByRef ipModule As Str
     End If
     
     Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}.{2}", MY_LIB, ipModule, ipMethod), _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
         "Range object is empty"
         
 End Function
 
 
 
-Public Function KeyIsAdmin(ByRef ipAdmin As Variant, ByRef ipModule As String, ByRef ipMethod As String, Optional ByVal ipREPORT_BACK As Boolean = False) As Boolean
+Public Function KeyIsAdmin(ByRef ipAdmin As Variant, ByRef ipLocation As String, Optional ByVal ipREPORT_BACK As Boolean = False) As Boolean
 
     Dim myResult As Boolean: myResult = GroupInfo.IsNotAdmin(ipAdmin)
     
@@ -170,13 +170,13 @@ Public Function KeyIsAdmin(ByRef ipAdmin As Variant, ByRef ipModule As String, B
     End If
     
     Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}.{2}", MY_LIB, ipModule, ipMethod), _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
         Fmt.Text("Admin values cannot be a Key. Got '{0}'", ipAdmin)
         
 End Function
 
 ' todo: update As object to as IKvp when IKvp defined.
-Public Function EnsureUniqueKeys(ByRef ipKey As Variant, ByVal ipKvp As Object, ByRef ipMethod As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+Public Function EnsureUniqueKeys(ByRef ipKey As Variant, ByVal ipKvp As Object, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
 
     EnsureUniqueKeys = ipKvp.EnsureUniqueKeys
     
@@ -198,13 +198,13 @@ Public Function EnsureUniqueKeys(ByRef ipKey As Variant, ByVal ipKvp As Object, 
     End If
     
     Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}.{2}", MY_LIB, ipKvp.TypeName, ipMethod), _
+        Fmt.Text("{0}.{1}.{2}", MY_LIB, ipLocation), _
         Fmt.Text("Duplicate key.  Key '{0}' already exists", ipKey)
     
 End Function
 
 '@description("Guard to use when legitimately searching for a key as opposed to checking for the existance of a key")
-Public Function KeyNotFound(ByVal ipLocOfKey As Variant, ByRef ipKey As Variant, ByRef ipComponent As String, ByRef ipMethod As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
+Public Function KeyNotFound(ByVal ipLocOfKey As Variant, ByRef ipKey As Variant, ByRef ipLocation As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
 Attribute KeyNotFound.VB_Description = "Guard to use when legitimately searching for a key as opposed to checking for the existance of a key"
     
     If VBA.IsObject(ipLocOfKey) Then
@@ -226,12 +226,12 @@ Attribute KeyNotFound.VB_Description = "Guard to use when legitimately searching
     End If
     
     Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}.{2}", MY_LIB, ipComponent, ipMethod), _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
         Fmt.Text("Key not found. Got {0}:{1}", VBA.TypeName(ipKey), ipKey)
 
 End Function
 
-Public Function InvalidRun(ByRef ipRun As Long, ByRef ipComponent As String, ByRef ipMethod As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+Public Function InvalidRun(ByRef ipRun As Long, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
 
     InvalidRun = ipRun < 1
     
@@ -246,7 +246,52 @@ Public Function InvalidRun(ByRef ipRun As Long, ByRef ipComponent As String, ByR
     End If
     
     Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}.{2}", MY_LIB, ipComponent, ipMethod), _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
         Fmt.Text("Runs of less than 1 are invalid.  Got {0}", ipRun)
         
 End Function
+
+
+Public Function MustBeAtLeastOne(ByRef ipValue As Long, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+
+    MustBeAtLeastOne = True
+    
+    If ipValue > 0 Then
+        Exit Function
+    End If
+    
+    If p.ReportBackAction = m_ReportBackContinue Then
+        If ipReportBack Then
+            Exit Function
+        End If
+    End If
+    
+    Err.Raise 17 + vbObjectError, _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
+        Fmt.Text("The value must be 1 or more. Got {0}", ipValue)
+
+    
+End Function
+
+Public Function MustBeAtLeastStartOrMinusOne(ByRef ipValue As Long, ByRef ipStart As Long, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+
+    MustBeAtLeastStartOrMinusOne = True
+    
+    If ipValue >= ipStart Or ipValue = -1 Then
+        Exit Function
+    End If
+    
+    If p.ReportBackAction = m_ReportBackContinue Then
+        If ipReportBack Then
+        
+            Exit Function
+        End If
+    End If
+    
+    Err.Raise 17 + vbObjectError, _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
+        Fmt.Text("The value must be -1 (use available range) or >= the starting value.Got Value:{0} and Start:{1}", ipValue, ipStart)
+
+    
+End Function
+

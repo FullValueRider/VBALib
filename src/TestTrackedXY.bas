@@ -110,7 +110,7 @@ Private Sub Test02_Initialised()
         myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myT As TrackedXY
@@ -147,7 +147,7 @@ Private Sub Test03_Move_South_3()
         myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
         myComponentName = ErrEx.LiveCallstack.ModuleName
     #End If
-    'On Error GoTo TestFail
+    On Error GoTo TestFail
     
     'Arrange:
     Dim myT As TrackedXY

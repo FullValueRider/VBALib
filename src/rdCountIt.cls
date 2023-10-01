@@ -39,11 +39,6 @@ Friend Function ConstructInstance(ByRef ipComparer As IComparer) As rdCountIt
 End Function
 
 
-'Private Function ExecReduction(ByRef ipHostItems As Variant) As Variant
-'    IReducer_ExecReduction = ExecReduction(ipHostItems)
-'End Function
-
-
 Private Property Get IReducer_TypeName() As String
     IReducer_TypeName = MY_TYPENAME
 End Property

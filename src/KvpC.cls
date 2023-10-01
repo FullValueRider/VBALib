@@ -69,7 +69,7 @@ End Function
 
 Public Function Add(ByRef ipKey As Variant, ByRef ipItem As Variant) As KvpC
     
-    Guard.KeyIsAdmin ipKey, MY_TYPENAME, "AddPairs"
+    Guard.KeyIsAdmin ipKey, MY_TYPENAME & ".AddPairs"
     Guard.EnsureUniqueKeys ipKey, Me, "AddPairs"
     
     s.Keys.Add ipKey
@@ -94,7 +94,7 @@ Public Function AddPairs(ByRef ipKeys As Variant, ByRef ipItems As Variant) As K
     
         Dim myKey As Variant: myKey = Array(myKeys.CurItem(0))
         
-        Guard.KeyIsAdmin myKey(0), MY_TYPENAME, "AddPairs"
+        Guard.KeyIsAdmin myKey(0), MY_TYPENAME & ".AddPairs"
         Guard.EnsureUniqueKeys myKey(0), Me, "AddPairs"
         
     
@@ -119,10 +119,10 @@ Attribute Item.VB_Description = "Returns the Item associated with ipKey or Null 
 
     Item = Null
                     
-    Guard.KeyIsAdmin ipKey, MY_TYPENAME, "Get Item"
+    Guard.KeyIsAdmin ipKey, MY_TYPENAME & ".Get Item"
     
     Dim myIndex As Long: myIndex = s.Keys.IndexOf(ipKey)
-    If Guard.KeyNotFound(myIndex, ipKey, MY_TYPENAME, "Get Item", REPORT_BACK) Then
+    If Guard.KeyNotFound(myIndex, ipKey, MY_TYPENAME & ".Get Item", REPORT_BACK) Then
         Exit Property
     End If
     
@@ -138,12 +138,12 @@ End Property
 
 Public Property Let Item(ByRef ipKey As Variant, ByVal ipItem As Variant)
 
-    Guard.KeyIsAdmin ipKey, MY_TYPENAME, "Let Item"
+    Guard.KeyIsAdmin ipKey, MY_TYPENAME & ".Let Item"
     
     ' Kvp classes do not allow adding a key by assignment
     Dim myIndex As Long: myIndex = s.Keys.IndexOf(ipKey)
     
-    Guard.KeyNotFound myIndex, ipKey, MY_TYPENAME, "Let Item"
+    Guard.KeyNotFound myIndex, ipKey, MY_TYPENAME & ".Let Item"
     
     s.Items.Item(myIndex) = ipItem
    
@@ -152,12 +152,12 @@ End Property
 
 Public Property Set Item(ByRef ipKey As Variant, ByVal ipItem As Variant)
 
-    Guard.KeyIsAdmin ipKey, MY_TYPENAME, "Let Item"
+    Guard.KeyIsAdmin ipKey, MY_TYPENAME & ".Let Item"
     
     ' Kvp classes do not allow adding a key by assignment
     Dim myIndex As Long: myIndex = s.Keys.IndexOf(ipKey)
     
-    Guard.KeyNotFound myIndex, ipKey, MY_TYPENAME, "Set Item"
+    Guard.KeyNotFound myIndex, ipKey, MY_TYPENAME & ".Set Item"
     
     Set s.Items.Item(myIndex) = ipItem
    
@@ -244,11 +244,11 @@ End Function
 '@Ignore WriteOnlyProperty
 Public Property Let Key(ByRef ipKey As Variant, ByVal ipNewKey As Variant)
 
-    Guard.KeyIsAdmin ipKey, MY_TYPENAME, "Let Key"
-    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME, "Let Key"
+    Guard.KeyIsAdmin ipKey, MY_TYPENAME & ".Let Key"
+    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME & ".Let Key"
 
     Dim myIndex As Long: myIndex = s.Keys.IndexOf(ipKey)
-    Guard.KeyNotFound myIndex, ipKey, MY_TYPENAME, "Let Key"
+    Guard.KeyNotFound myIndex, ipKey, MY_TYPENAME & ".Let Key"
     
     s.Keys.Item(myIndex) = ipNewKey
    
@@ -257,11 +257,11 @@ End Property
 
 Public Property Set Key(ByRef ipKey As Variant, ByVal ipNewKey As Variant)
 
-    Guard.KeyIsAdmin ipKey, MY_TYPENAME, "Set Key"
-    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME, "Set Key"
+    Guard.KeyIsAdmin ipKey, MY_TYPENAME & ".Set Key"
+    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME & ".Set Key"
 
     Dim myIndex As Long: myIndex = s.Keys.IndexOf(ipKey)
-    Guard.KeyNotFound myIndex, ipKey, MY_TYPENAME, "Set Key"
+    Guard.KeyNotFound myIndex, ipKey, MY_TYPENAME & ".Set Key"
     
     Set s.Keys.Item(myIndex) = ipNewKey
    
@@ -286,7 +286,7 @@ End Property
 
 Public Property Let KeyByIndex(ByRef ipIndex As Long, ByVal ipNewKey As Variant)
 
-    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME, "Let KeyByIndex"
+    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME & ".Let KeyByIndex"
     Guard.IndexOutOfBounds ipIndex, Me, "Let ItemByIndex"
     
     s.Keys.Item(ipIndex) = ipNewKey
@@ -296,7 +296,7 @@ End Property
 
 Public Property Set KeyByIndex(ByRef ipIndex As Long, ByVal ipNewKey As Variant)
     
-    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME, "Set KeyByIndex"
+    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME & ".Set KeyByIndex"
     Guard.IndexOutOfBounds ipIndex, Me, "Set ItemByIndex"
                 
     Set s.Keys.Item(ipIndex) = ipNewKey
@@ -327,7 +327,7 @@ Public Property Let KeyByOffset(ByRef ipoffset As Long, ByVal ipNewKey As Varian
 
     Dim myIndex As Long: myIndex = Me.FirstIndex + ipoffset
     
-    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME, "Let KeyByOffset"
+    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME & ".Let KeyByOffset"
     Guard.IndexOutOfBounds myIndex, Me, "Let KeyByOffset"
                 
     s.Keys.Item(myIndex) = ipNewKey
@@ -338,7 +338,7 @@ End Property
 Public Property Set KeyByOffset(ByRef ipoffset As Long, ByVal ipNewKey As Variant)
 
     Dim myIndex As Long: myIndex = Me.FirstIndex + ipoffset
-    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME, "Set KeyByOffset"
+    Guard.KeyIsAdmin ipNewKey, MY_TYPENAME & ".Set KeyByOffset"
     Guard.IndexOutOfBounds myIndex, Me, "Set KeyByOffset"
                 
     Set s.Keys.Item(myIndex) = ipNewKey
@@ -354,7 +354,7 @@ End Property
 '        Exit Function
 '    End If
 '
-'    If Guard.KeyIsAdmin(ipKey, MY_TYPENAME, "Remove", REPORT_BACK) Then
+'    If Guard.KeyIsAdmin(ipKey,MY_TYPENAME & ".Remove", REPORT_BACK) Then
 '        Exit Function
 '    End If
 '
@@ -390,12 +390,12 @@ Attribute Remove.VB_Description = "Removes Key/Value pairs that exist in the Kvp
     Dim myKeys As IterItems: Set myKeys = IterItems(myParamarray)
     Do
 
-        If Guard.KeyIsAdmin(myKeys.CurItem(0), MY_TYPENAME, "Remove", REPORT_BACK) Then
+        If Guard.KeyIsAdmin(myKeys.CurItem(0), MY_TYPENAME & ".Remove", REPORT_BACK) Then
             GoTo ContinueLoop:
         End If
             
         Dim myIndex As Long: myIndex = s.Keys.IndexOf(myKeys.CurItem(0))
-        If Guard.KeyNotFound(myIndex, myKeys.CurItem(0), MY_TYPENAME, "RemoveKeys", REPORT_BACK) Then
+        If Guard.KeyNotFound(myIndex, myKeys.CurItem(0), MY_TYPENAME & ".RemoveKeys", REPORT_BACK) Then
             GoTo ContinueLoop
         End If
         
@@ -475,7 +475,7 @@ Public Function RemoveAfter(ByRef ipKey As Variant, Optional ByVal ipRun As Long
         Exit Function
     End If
     
-    If Guard.KeyIsAdmin(ipKey, MY_TYPENAME, "RemoveAfter", REPORT_BACK) Then
+    If Guard.KeyIsAdmin(ipKey, MY_TYPENAME & ".RemoveAfter", REPORT_BACK) Then
         Exit Function
     End If
     
@@ -799,6 +799,146 @@ Public Function ReduceIt(ByRef ipReducer As IReducer) As Variant
         Set ReduceIt = myA(0)
     Else
         ReduceIt = myA(0)
+    End If
+    
+End Function
+
+Public Function Foldl _
+( _
+    ByRef ipFolder As IFold, _
+    Optional ByRef ipAccumulator As Variant = 0, _
+    Optional ByRef ipAccCmp As IComparer = Nothing, _
+    Optional ByRef ipItemCmp As IComparer = Nothing, _
+    Optional ByVal ipFrom As Long = 1, _
+    Optional ByVal ipTo As Long = -1, _
+    Optional ByVal ipStep As Long = 1 _
+) As Variant
+
+    Dim myFrom As Long
+    Guard.MustBeAtLeastStartOrMinusOne ipFrom, Me.FirstIndex, "KvpC.Foldl"
+    If ipFrom = -1 Then
+        myFrom = Me.FirstIndex
+    Else
+        myFrom = ipFrom
+    End If
+    
+    Guard.IndexOutOfBounds myFrom, Me, "KvpC.Foldl"
+    
+    Dim myTo As Long
+    Guard.MustBeAtLeastStartOrMinusOne ipTo, myFrom, "KvpC.Foldl"
+    If ipTo = -1 Then
+        myTo = Me.LastIndex
+    End If
+    
+    Guard.IndexOutOfBounds myTo, Me, "KvpC.Foldl"
+    
+    Dim myStep As Long
+    Guard.MustBeAtLeastOne ipStep, "KvpC.Foldr"
+    myStep = ipStep
+
+    
+    Dim myAccumulator() As Variant: myAccumulator = Array(ipAccumulator)
+    
+    Dim myItems As IterItems: Set myItems = IterItems(Me).FTS(myFrom, myTo, myStep)
+    Do
+        Dim myA() As Variant: myA = Array(myItems.CurItem(0))
+        
+        If IsNotNothing(ipItemCmp) Then
+            If ipItemCmp.ExecCmp(myA(0)) Then
+                GoTo ContinueDo
+            End If
+        End If
+        
+        ' exec fold returns a single item array
+        myAccumulator = ipFolder.ExecFold(myAccumulator(0), myA(0))
+        If IsNotNothing(ipAccCmp) Then
+            If ipAccCmp.ExecCmp(myAccumulator(0)) Then
+                If VBA.IsObject(myAccumulator(0)) Then
+                    Set Foldl = myAccumulator(0)
+                Else
+                    Foldl = myAccumulator(0)
+                End If
+                Exit Function
+            End If
+        End If
+        
+ContinueDo:
+    Loop While myItems.MoveNext
+
+    If VBA.IsObject(myAccumulator(0)) Then
+        Set Foldl = myAccumulator(0)
+    Else
+        Foldl = myAccumulator(0)
+    End If
+    
+End Function
+
+Public Function Foldr _
+( _
+    ByRef ipFolder As IFold, _
+    Optional ByRef ipAccumulator As Variant = 0, _
+    Optional ByRef ipAccCmp As IComparer = Nothing, _
+    Optional ByRef ipItemCmp As IComparer = Nothing, _
+    Optional ByVal ipFrom As Long = -1, _
+    Optional ByVal ipTo As Long = -1, _
+    Optional ByVal ipStep As Long = 1 _
+) As Variant
+
+    Dim myFrom As Long
+    Guard.MustBeAtLeastStartOrMinusOne ipFrom, Me.FirstIndex, "KvpC.Foldr"
+    If ipFrom = -1 Then
+        myFrom = Me.FirstIndex
+    Else
+        myFrom = ipFrom
+    End If
+    
+    Guard.IndexOutOfBounds myFrom, Me, "KvpC.Foldr"
+    
+    Dim myTo As Long
+    Guard.MustBeAtLeastStartOrMinusOne ipTo, myFrom, "KvpC.Foldr"
+    If ipTo = -1 Then
+        myTo = Me.LastIndex
+    End If
+    
+    Guard.IndexOutOfBounds myTo, Me, "KvpC.Foldr"
+    
+    Dim myStep As Long
+    Guard.MustBeAtLeastOne ipStep, "KvpC. Foldr"
+    myStep = ipStep
+    
+    
+    Dim myAccumulator() As Variant: myAccumulator = Array(ipAccumulator)
+    
+    Dim myItems As IterItems: Set myItems = IterItems(Me).FTS(myFrom, myTo, myStep).MoveToEndIndex
+    Do
+        Dim myA() As Variant: myA = Array(myItems.CurItem(0))
+        
+        If IsNotNothing(ipItemCmp) Then
+            If ipItemCmp.ExecCmp(myA(0)) Then
+                GoTo ContinueDo
+            End If
+        End If
+        
+        ' exec fold returns a single item array
+        myAccumulator = ipFolder.ExecFold(myAccumulator(0), myA(0))
+        If IsNotNothing(ipAccCmp) Then
+            If ipAccCmp.ExecCmp(myAccumulator(0)) Then
+                If VBA.IsObject(myAccumulator(0)) Then
+                    Set Foldr = myAccumulator(0)
+                Else
+                    Foldr = myAccumulator(0)
+                End If
+                Exit Function
+            End If
+        End If
+        
+ContinueDo:
+    Loop While myItems.MovePrev
+
+    If VBA.IsObject(myAccumulator(0)) Then
+        Set Foldr = myAccumulator(0)
+    Else
+        Foldr = myAccumulator(0)
     End If
     
 End Function

@@ -22,7 +22,7 @@ Private Property Get IReducer_TypeName() As String
 End Property
 
 
-Public Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
+Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
     
     Dim myMax As Variant: myMax = Globals.MinDecimal
     

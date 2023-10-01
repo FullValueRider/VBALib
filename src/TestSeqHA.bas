@@ -1,5 +1,5 @@
 Attribute VB_Name = "TestSeqHA"
-''@IgnoreModule
+'@IgnoreModule
 ''@TestModule
 ''@Folder("Tests")
 'Option Explicit

@@ -42,7 +42,7 @@ End Function
 Friend Function ConstructInstance(ByRef ipKey As Variant, ByRef ipItem As Variant, ByRef ipPred As KvpLNode, ByRef ipSucc As KvpLNode) As KvpLNode
 
 
-    Guard.KeyIsAdmin ipKey, MY_TYPENAME, "Deb"
+    Guard.KeyIsAdmin ipKey, MY_TYPENAME & ".Deb"
     
     VariantCopy p.Key, ipKey
     VariantCopy p.Item, ipItem

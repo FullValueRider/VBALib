@@ -87,6 +87,6 @@ ContinueDo:
 End Function
 
 
-Public Property Get IReducer_TypeName() As String
+Private Property Get IReducer_TypeName() As String
     IReducer_TypeName = MY_TYPENAME
 End Property
