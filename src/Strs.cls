@@ -375,7 +375,7 @@ Attribute Replacer.VB_Description = "Repeats the replace action until the string
 End Function
 
 
-'@Description("Applies replacer using  a SeqC of  string pairs of the form Array(Find,Repace)"
+'@Description("Applies multiple, repeat find and replace actions using  string pairs either of the form Array(Array(Find,Repace),Array(Find,Replace)...) or Dictionary of Find vs Replace")
 Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindReplacePairs As Variant = Empty) As String
 
     If VBA.Len(ipString) = 0 Then
@@ -383,13 +383,31 @@ Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindRep
         Exit Function
     End If
     
-    Dim myFRPairs As Variant
+    Dim myFRPairs() As Variant
     
-    If ArrayOp.LacksItems(ipFindReplacePairs) Then
-        myFRPairs = Array(Array(Chars.twSpace, Chars.twNullStr))
-    Else
-        myFRPairs = ipFindReplacePairs
-    End If
+    Select Case GroupInfo.Id(ipFindReplacePairs)
+    
+        Case m_Array
+            If ArrayOp.LacksItems(ipFindReplacePairs) Then
+                myFRPairs = Array(Array(Chars.twSpace, Chars.twNullStr))
+            Else
+                myFRPairs = ipFindReplacePairs
+            End If
+            
+        Case m_ItemByKey
+            If ipFindReplacePairs.LacksItems Then
+                myFRPairs = Array(Array(Chars.twSpace, Chars.twNullStr))
+            Else
+                myFRPairs = ipFindReplacePairs.Pairs
+            End If
+            
+        Case Else
+        
+            Err.Raise 17 + vbObjectError, _
+                "VBALib.Strs.MultiReplace", _
+                Fmt.Text("Expecting Array or arrays or ItemByKey.  Got {0}", VBA.TypeName(ipFindReplacePairs))
+
+    End Select
     
     Dim myReturn As String
     myReturn = ipString
@@ -568,7 +586,7 @@ Attribute Inc.VB_Description = "increments characters using the SeqCuence in the
 End Function
 
 '@description("Removes the specified number of characters from the LHS and RHS of ipString")
-Public Function Inner(ByRef ipString As String, Optional ByRef ipLHS As Long = 1, Optional ByRef ipRhs As Long = 1)
+Public Function Inner(ByRef ipString As String, Optional ByRef ipLHS As Long = 1, Optional ByRef ipRhs As Long = 1) As String
 
     Inner = vbNullString
     
