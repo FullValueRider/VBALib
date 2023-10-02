@@ -28,13 +28,13 @@ Attribute VB_Description = "Implements call by name on the object provided by ip
  Private s                               As State
 
  
-Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
     
     Dim myResult() As Variant
     If TryCallByName(ipHostItem, s.MethodName, s.CallType, myResult) Then
-        IMapper_ExecMapper = myResult
+        Imapper_ExecMapper = myResult
     Else
-        IMapper_ExecMapper = Array("Call by name failed")
+        Imapper_ExecMapper = Array("Call by name failed")
     End If
 
 End Function

@@ -40,23 +40,23 @@ Private Property Get IMapper_TypeName() As String
 End Property
 
 
-Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
 
     Dim myGroupName As String
     myGroupName = GroupInfo.Name(ipHostItem)
     Select Case myGroupName
 
-        Case "string":                                                                  IMapper_ExecMapper = ExecMapperByString(VBA.CStr(ipHostItem))
-        Case "seq":                                                                     IMapper_ExecMapper = ExecMapperByIndex1(ipHostItem)
-        Case "arraylist":                                                               IMapper_ExecMapper = ExecMapperByIndex0(ipHostItem)
-        Case "kvp", "dictionary", "chashd", "kvpair":                                   IMapper_ExecMapper = ExecMapperByDictionary(ipHostItem)
+        Case "string":                                                                  Imapper_ExecMapper = ExecMapperByString(VBA.CStr(ipHostItem))
+        Case "seq":                                                                     Imapper_ExecMapper = ExecMapperByIndex1(ipHostItem)
+        Case "arraylist":                                                               Imapper_ExecMapper = ExecMapperByIndex0(ipHostItem)
+        Case "kvp", "dictionary", "chashd", "kvpair":                                   Imapper_ExecMapper = ExecMapperByDictionary(ipHostItem)
             ' a separate case is needed for collection due to the add/remove nature of assigning to an item
-        Case "collection":                                                              IMapper_ExecMapper = ExecMapperByCollection(ipHostItem)
-        Case "array":                                                                   IMapper_ExecMapper = ExecMapperByArray(ipHostItem)
+        Case "collection":                                                              Imapper_ExecMapper = ExecMapperByCollection(ipHostItem)
+        Case "array":                                                                   Imapper_ExecMapper = ExecMapperByArray(ipHostItem)
 
         Case Else
 
-            IMapper_ExecMapper = Array(ipHostItem)
+            Imapper_ExecMapper = Array(ipHostItem)
 
     End Select
 

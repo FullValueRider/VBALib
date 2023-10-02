@@ -780,7 +780,7 @@ Attribute AddRange.VB_Description = "Add an array, list type, dictionary type, o
     End If
     
     Do
-        If GroupInfo.IsDictionary(ipRange) Then
+        If GroupInfo.IsItemByKey(ipRange) Then
             Me.Add Array(myItems.CurKey(0), myItems.CurItem(0))
         Else
             Me.Add myItems.CurItem(0)
@@ -822,7 +822,7 @@ Attribute InsertAtRange.VB_Description = "Inserts items in a cotainer starting a
     End If
     
     Do
-        If GroupInfo.IsDictionary(ipRange) Then
+        If GroupInfo.IsItemByKey(ipRange) Then
             InsertAt ipIndex, Array(myItems.CurKey(0), myItems.CurItem(0))
         Else
             InsertAt ipIndex, myItems.CurItem(0)
@@ -947,7 +947,7 @@ Attribute RemoveIndexesRange.VB_Description = "Remove items in the specified ran
     ' SeqA will combine keys and items to a an array
     ' if ipRange is a dictionary
     ' so we choose to select the Items as the indexes
-    If GroupInfo.IsDictionary(ipRange) Then
+    If GroupInfo.IsItemByKey(ipRange) Then
         Set myS = SeqA(ipRange.Items)
     Else
         Set myS = SeqA(ipRange)

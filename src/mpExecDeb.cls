@@ -41,8 +41,8 @@ Friend Function ConstructInstance(ByVal ipPredeclaredId As Object) As mpExecDeb
 End Function
 
 
-Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
-    IMapper_ExecMapper = Array(s.PredeclaredId.Deb(ipHostItem))
+Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+    Imapper_ExecMapper = Array(s.PredeclaredId.Deb(ipHostItem))
 End Function
 
 

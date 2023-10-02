@@ -16,13 +16,13 @@ Option Explicit
 Public Enum e_Group
     m_First = 0
     m_Empty = m_First
-    m_boolean
-    m_number
-    m_array
-    m_string
+    m_Boolean
+    m_Number
+    m_Array
+    m_String
     m_Admin
-    m_List
-    m_Dictionary
+    m_ItemByIndex 'ToDo: should this be split to Index0 and Index1
+    m_ItemByKey
     m_ItemObject
     m_Container
     m_Other
@@ -78,12 +78,12 @@ Public Function Id(ByVal ipItem As Variant) As e_Group
     Select Case myGroupName
         
         Case "empty":                                                                           Id = e_Group.m_Empty
-        Case "array":                                                                           Id = e_Group.m_array
-        Case "boolean":                                                                         Id = e_Group.m_boolean
-        Case "byte", "date", "decimal", "double", "integer", "long", "longlong", "single":      Id = e_Group.m_number
-        Case "string":                                                                          Id = e_Group.m_string
-        Case "seq", "collection", "arraylist", "stack", "queue":                                Id = e_Group.m_List
-        Case "chashd", "dictionary", "kvp", "kvpair":                                           Id = e_Group.m_Dictionary
+        Case "array":                                                                           Id = e_Group.m_Array
+        Case "boolean":                                                                         Id = e_Group.m_Boolean
+        Case "byte", "date", "decimal", "double", "integer", "long", "longlong", "single":      Id = e_Group.m_Number
+        Case "string":                                                                          Id = e_Group.m_String
+        Case "seq", "collection", "arraylist", "stack", "queue":                                Id = e_Group.m_ItemByIndex
+        Case "chashd", "dictionary", "kvp", "kvpair":                                           Id = e_Group.m_ItemByKey
         Case "itemobject":                                                                      Id = e_Group.m_ItemObject
             ' Tempted to group Empty, null, errors and nothing under an unbralla of m_Admin
             ' so that there is a clear group for items/values that are not part of the
@@ -100,7 +100,7 @@ End Function
 
 
 Public Function IsBoolean(ByRef ipItem As Variant) As Boolean
-    IsBoolean = Me.Id(ipItem) = e_Group.m_boolean
+    IsBoolean = Me.Id(ipItem) = e_Group.m_Boolean
 End Function
 
 
@@ -110,7 +110,7 @@ End Function
 
 
 Public Function IsNumber(ByRef ipItem As Variant) As Boolean
-    IsNumber = Me.Id(ipItem) = e_Group.m_number
+    IsNumber = Me.Id(ipItem) = e_Group.m_Number
 End Function
 
 
@@ -120,7 +120,7 @@ End Function
 
 
 Public Function IsString(ByRef ipItem As Variant) As Boolean
-    IsString = Me.Id(ipItem) = e_Group.m_string
+    IsString = Me.Id(ipItem) = e_Group.m_String
 End Function
 
 
@@ -130,7 +130,7 @@ End Function
 
 
 Public Function IsList(ByRef ipItem As Variant) As Boolean
-    IsList = Me.Id(ipItem) = e_Group.m_List
+    IsList = Me.Id(ipItem) = e_Group.m_ItemByIndex
 End Function
 
 
@@ -147,13 +147,13 @@ Public Function CannotMap(ByRef ipItem As Variant) As Boolean
 End Function
 
 
-Public Function IsDictionary(ByRef ipItem As Variant) As Boolean
-    IsDictionary = Me.Id(ipItem) = e_Group.m_Dictionary
+Public Function IsItemByKey(ByRef ipItem As Variant) As Boolean
+    IsItemByKey = Me.Id(ipItem) = e_Group.m_ItemByKey
 End Function
 
 
-Public Function IsNotDictionary(ByRef ipItem As Variant) As Boolean
-    IsNotDictionary = Not IsDictionary(ipItem)
+Public Function IsNotItemByKey(ByRef ipItem As Variant) As Boolean
+    IsNotItemByKey = Not IsItemByKey(ipItem)
 End Function
 
 
@@ -182,7 +182,7 @@ End Function
 Public Function IsContainer(ByRef ipItem As Variant) As Boolean
     
     Select Case Id(ipItem)
-        Case m_array, m_List, m_Dictionary
+        Case m_Array, m_ItemByIndex, m_ItemByKey
             IsContainer = True
         Case Else
             IsContainer = False
@@ -227,7 +227,7 @@ End Function
 
 
 Public Function IsArray(ByRef ipItem As Variant) As Boolean
-    IsArray = Id(ipItem) = e_Group.m_array
+    IsArray = Id(ipItem) = e_Group.m_Array
 End Function
 
 
@@ -294,8 +294,5 @@ End Function
 Private Function InvalidRangeItemUsingCount(ByRef ipRangeItem As Variant) As Boolean
     InvalidRangeItemUsingCount = ipRangeItem.Count = 0
 End Function
-
-
-
 
 

@@ -221,11 +221,11 @@ Public Function StringifyItem(ByRef ipItem As Variant) As String
        
     Select Case myGroupId
     
-        Case e_Group.m_string:                          StringifyItem = ipItem
-        Case e_Group.m_boolean, e_Group.m_number:       StringifyItem = VBA.CStr(ipItem)
-        Case e_Group.m_array:                           StringifyItem = StringifyArray(ipItem)
-        Case e_Group.m_List:                            StringifyItem = StringifyItemByIndex(ipItem)
-        Case e_Group.m_Dictionary:                      StringifyItem = StringifyItembyKey(ipItem)
+        Case e_Group.m_String:                          StringifyItem = ipItem
+        Case e_Group.m_Boolean, e_Group.m_Number:       StringifyItem = VBA.CStr(ipItem)
+        Case e_Group.m_Array:                           StringifyItem = StringifyArray(ipItem)
+        Case e_Group.m_ItemByIndex:                            StringifyItem = StringifyItemByIndex(ipItem)
+        Case e_Group.m_ItemByKey:                      StringifyItem = StringifyItembyKey(ipItem)
         Case e_Group.m_ItemObject:                      StringifyItem = StringifyItemObject(ipItem)
         Case e_Group.m_Admin:                           StringifyItem = StringifyAdmin(ipItem)
         Case Else

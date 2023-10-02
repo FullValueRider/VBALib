@@ -22,12 +22,12 @@ Private Property Get IMapper_TypeName() As String
 End Property
 
 
-Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         
     If VBA.VarType(ipHostItem) <> vbString Then
-        IMapper_ExecMapper = Array(ipHostItem)
+        Imapper_ExecMapper = Array(ipHostItem)
     Else
-        IMapper_ExecMapper = Array(VBA.LCase$(ipHostItem))
+        Imapper_ExecMapper = Array(VBA.LCase$(ipHostItem))
     End If
         
 End Function

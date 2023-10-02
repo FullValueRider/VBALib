@@ -87,27 +87,27 @@ End Function
 'End Function
 
 
-Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Public Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
      
     Select Case s.Function
     
-        Case vbAbs: IMapper_ExecMapper = Array(VBA.Abs(ipHostItem))
-        Case Atn: IMapper_ExecMapper = Array(VBA.Atn(ipHostItem))
-        Case Cos: IMapper_ExecMapper = Array(VBA.Cos(ipHostItem))
-        Case Exp: IMapper_ExecMapper = Array(VBA.Exp(ipHostItem))
-        Case Round: IMapper_ExecMapper = Array(VBA.Round(ipHostItem, s.OptionalParam))
-        Case Power: IMapper_ExecMapper = Array(ipHostItem ^ s.OptionalParam)
-        Case vbSgn: IMapper_ExecMapper = Array(VBA.Sgn(ipHostItem))
-        Case Sin: IMapper_ExecMapper = Array(VBA.Sin(ipHostItem))
-        Case Tan: IMapper_ExecMapper = Array(VBA.Tan(ipHostItem))
+        Case vbAbs: Imapper_ExecMapper = Array(VBA.Abs(ipHostItem))
+        Case Atn: Imapper_ExecMapper = Array(VBA.Atn(ipHostItem))
+        Case Cos: Imapper_ExecMapper = Array(VBA.Cos(ipHostItem))
+        Case Exp: Imapper_ExecMapper = Array(VBA.Exp(ipHostItem))
+        Case Round: Imapper_ExecMapper = Array(VBA.Round(ipHostItem, s.OptionalParam))
+        Case Power: Imapper_ExecMapper = Array(ipHostItem ^ s.OptionalParam)
+        Case vbSgn: Imapper_ExecMapper = Array(VBA.Sgn(ipHostItem))
+        Case Sin: Imapper_ExecMapper = Array(VBA.Sin(ipHostItem))
+        Case Tan: Imapper_ExecMapper = Array(VBA.Tan(ipHostItem))
     
             ' Function defined, or redefined, in Class Maths
-        Case Root: IMapper_ExecMapper = Array(ipHostItem ^ (1 / s.OptionalParam))
-        Case IsPrime: IMapper_ExecMapper = Array(Maths.IsPrime(ipHostItem))
-        Case Factorial: IMapper_ExecMapper = Array(Maths.Factorial(ipHostItem))
-        Case lN: IMapper_ExecMapper = Array(Maths.lN(ipHostItem))
-        Case Log: IMapper_ExecMapper = Array(Maths.Log(ipHostItem))
-        Case TriangularNumber: IMapper_ExecMapper = Array(Maths.TriangularNumber(ipHostItem))
+        Case Root: Imapper_ExecMapper = Array(ipHostItem ^ (1 / s.OptionalParam))
+        Case IsPrime: Imapper_ExecMapper = Array(Maths.IsPrime(ipHostItem))
+        Case Factorial: Imapper_ExecMapper = Array(Maths.Factorial(ipHostItem))
+        Case lN: Imapper_ExecMapper = Array(Maths.lN(ipHostItem))
+        Case Log: Imapper_ExecMapper = Array(Maths.Log(ipHostItem))
+        Case TriangularNumber: Imapper_ExecMapper = Array(Maths.TriangularNumber(ipHostItem))
     
     
     End Select

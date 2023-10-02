@@ -180,7 +180,7 @@ End Function
 
 Public Function ByKey(ByRef ipDicType As Variant) As SeqC
 
-    If GroupInfo.IsNotDictionary(ipDicType) Then
+    If GroupInfo.IsNotItemByKey(ipDicType) Then
         Err.Raise 17 + vbObjectError, _
             "VBALib.Permutations.ByItem", _
             Fmt.Text("Expecting an Dictionary Type.  Got {0}", VBA.TypeName(ipDicType))
@@ -208,3 +208,4 @@ Public Function ByKey(ByRef ipDicType As Variant) As SeqC
     Set ByKey = myS
     
 End Function
+

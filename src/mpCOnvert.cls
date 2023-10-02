@@ -31,8 +31,8 @@ End Property
 
 
 '@Description("Converts the Items in the to the specifiied Type")
-Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
-Attribute IMapper_ExecMapper.VB_Description = "Converts the Items in the to the specifiied Type"
+Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Attribute Imapper_ExecMapper.VB_Description = "Converts the Items in the to the specifiied Type"
    
     On Error Resume Next
     Dim myResult As Variant
@@ -42,7 +42,7 @@ Attribute IMapper_ExecMapper.VB_Description = "Converts the Items in the to the 
         Case e_ConvertTo.m_OctStr:          myResult = Oct$(ipHostItem)
         Case e_ConvertTo.m_GroupName:       myResult = GroupInfo.Name(ipHostItem)
         Case e_ConvertTo.m_GroupId:         myResult = GroupInfo.Id(ipHostItem)
-        Case e_ConvertTo.m_boolean:         myResult = VBA.CBool(ipHostItem)
+        Case e_ConvertTo.m_Boolean:         myResult = VBA.CBool(ipHostItem)
         Case e_ConvertTo.m_Byte:            myResult = VBA.CByte(ipHostItem)
         Case e_ConvertTo.m_Currency:        myResult = VBA.CCur(ipHostItem)
         Case e_ConvertTo.m_Date::           myResult = VBA.CDate(ipHostItem)
@@ -53,7 +53,7 @@ Attribute IMapper_ExecMapper.VB_Description = "Converts the Items in the to the 
         Case e_ConvertTo.m_LongLong:        myResult = VBA.CLngLng(ipHostItem)
         Case e_ConvertTo.m_LongPtr:         myResult = VBA.CLngPtr(ipHostItem)
         Case e_ConvertTo.m_Single:          myResult = VBA.CSng(ipHostItem)
-        Case e_ConvertTo.m_string::         myResult = VBA.CStr(ipHostItem)
+        Case e_ConvertTo.m_String::         myResult = VBA.CStr(ipHostItem)
         
         Case Else
         
@@ -65,9 +65,9 @@ Attribute IMapper_ExecMapper.VB_Description = "Converts the Items in the to the 
     End Select
     
     If Err.Number = 0 Then
-        IMapper_ExecMapper = Array(myResult)
+        Imapper_ExecMapper = Array(myResult)
     Else
-        IMapper_ExecMapper = Array(ipHostItem)
+        Imapper_ExecMapper = Array(ipHostItem)
     End If
     
     On Error GoTo 0

@@ -36,15 +36,15 @@ Private Property Get IMapper_TypeName() As String
 End Property
 
 
-Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
 
     If GroupInfo.IsString(ipHostItem) Then
         
-        Set IMapper_ExecMapper = Array(SeqC.Deb.AddRange(VBA.Split(ipHostItem, s.Separator)))
+        Set Imapper_ExecMapper = Array(SeqC.Deb.AddRange(VBA.Split(ipHostItem, s.Separator)))
             
     Else
             
-        IMapper_ExecMapper = Array(ipHostItem)
+        Imapper_ExecMapper = Array(ipHostItem)
         
     End If
         

@@ -66,7 +66,7 @@ Friend Function ConstructInstance(ByRef ipItems As Variant) As IterItems
     
     Select Case True
         
-        Case GroupInfo.IsDictionary(ipItems)
+        Case GroupInfo.IsItemByKey(ipItems)
            
             s.Keys = ipItems.Keys
     
@@ -342,7 +342,7 @@ Attribute CurItem.VB_Description = "Get the items at the global + local offset. 
             myResult = Array(VBA.Mid$(s.Host, myLoc, 1))
         Case GroupInfo.IsItemByToArray(s.Host):
             myResult = Array(s.Items(myLoc))
-        Case GroupInfo.IsDictionary(s.Host):
+        Case GroupInfo.IsItemByKey(s.Host):
             Dim myKey As Variant: myKey = Array(s.Keys(myLoc))
             myResult = Array(s.Host.Item(myKey(0)))
         Case GroupInfo.IsIndexFrom1(s.Host):
@@ -378,7 +378,7 @@ Public Property Let CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant
         Case GroupInfo.IsArray(s.Host):             VariantCopyInd s.Host(myLoc), ipItem
         Case GroupInfo.IsString(s.Host):            Mid$(s.Host, myLoc, 1) = ipItem
         Case GroupInfo.IsItemByToArray(s.Host):     s.Items(myLoc) = ipItem
-        Case GroupInfo.IsDictionary(s.Host):        s.Host.Item(myLoc) = ipItem
+        Case GroupInfo.IsItemByKey(s.Host):        s.Host.Item(myLoc) = ipItem
         Case GroupInfo.IsIndexFrom0(s.Host):        s.Host.Item(myLoc) = ipItem
         Case GroupInfo.IsIndexFrom1(s.Host):
             If VBA.TypeName(s.Host) = "Collection" Then
@@ -407,7 +407,7 @@ Public Property Set CurItem(ByVal ipLocalOffset As Long, ByVal ipItem As Variant
         Case GroupInfo.IsArray(s.Host):             VariantCopy s.Host(s.FirstIndex + myLoc), ipItem
             'Case GroupInfo.IsString(s.Host):            Mid$(s.Host, myLoc, 1) = ipItem
         Case GroupInfo.IsItemByToArray(s.Host):     Set s.Items(myLoc) = ipItem
-        Case GroupInfo.IsDictionary(s.Host):        Set s.Host.Item(myLoc) = ipItem
+        Case GroupInfo.IsItemByKey(s.Host):        Set s.Host.Item(myLoc) = ipItem
         Case GroupInfo.IsIndexFrom0(s.Host):        Set s.Host.Item(myLoc) = ipItem
         Case GroupInfo.IsIndexFrom1(s.Host):        Set s.Host.Item(myLoc) = ipItem
         Case Else:                                  Set s.Host = ipItem
@@ -431,7 +431,7 @@ Public Property Get CurKey(ByVal ipLocalOffset As Long) As Variant
         Case GroupInfo.IsArray(s.Host):                 myResult = Array(myLoc)
         Case GroupInfo.IsString(s.Host):                myResult = Array(myLoc)
         Case GroupInfo.IsItemByToArray(s.Host):         myResult = Array(myLoc)
-        Case GroupInfo.IsDictionary(s.Host):            myResult = Array(s.Keys(myLoc))
+        Case GroupInfo.IsItemByKey(s.Host):            myResult = Array(s.Keys(myLoc))
         Case GroupInfo.IsIndexFrom0(s.Host):            myResult = Array(myLoc)
         Case GroupInfo.IsIndexFrom1(s.Host):            myResult = Array(myLoc)
         Case Else:                                      myResult = Array(1)

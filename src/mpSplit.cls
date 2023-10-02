@@ -41,17 +41,17 @@ Private Sub Class_Initialize()
 End Sub
 
 
-Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         
     If GroupInfo.IsNotString(ipHostItem) Then
             
-        IMapper_ExecMapper = Array(ipHostItem)
+        Imapper_ExecMapper = Array(ipHostItem)
         Exit Function
             
             
     End If
         
-    IMapper_ExecMapper = Array(SeqC(VBA.Split(ipHostItem, s.Separator, s.Count, s.Compare)))
+    Imapper_ExecMapper = Array(SeqC(VBA.Split(ipHostItem, s.Separator, s.Count, s.Compare)))
 
 End Function
 

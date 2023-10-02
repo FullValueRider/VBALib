@@ -52,13 +52,13 @@ End Property
 'End Function
 
 '@Description("Replaces null with a default value. The optional default value returned for null is 'Null'")
-Public Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
-Attribute IMapper_ExecMapper.VB_Description = "Replaces null with a default value. The optional default value returned for null is 'Null'"
+Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Attribute Imapper_ExecMapper.VB_Description = "Replaces null with a default value. The optional default value returned for null is 'Null'"
         
     If VBA.IsNull(ipHostItem) Then
-        IMapper_ExecMapper = Array(s.Default)
+        Imapper_ExecMapper = Array(s.Default)
     Else
-        IMapper_ExecMapper = Array(ipHostItem)
+        Imapper_ExecMapper = Array(ipHostItem)
     End If
         
 End Function

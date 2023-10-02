@@ -87,7 +87,7 @@ Private Function ContainersEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, By
         ContainersEQ = False
         
         
-    ElseIf GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
+    ElseIf GroupInfo.IsItemByKey(ipLHS) And GroupInfo.IsItemByKey(ipRHS) Then
     
        If myLItems.Size <> myRItems.Size Then
             ContainersEQ = False
@@ -194,7 +194,7 @@ Private Function ContainersMT(ByRef ipLHS As Variant, ByRef ipRHS As Variant, By
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
         
-    If GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
+    If GroupInfo.IsItemByKey(ipLHS) And GroupInfo.IsItemByKey(ipRHS) Then
     
         If myLItems.Size > myRItems.Size Then
             ContainersMT = True
@@ -307,7 +307,7 @@ Private Function ContainersMTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, 
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
 
-    If GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
+    If GroupInfo.IsItemByKey(ipLHS) And GroupInfo.IsItemByKey(ipRHS) Then
 
         If myLItems.Size < myRItems.Size Then
             ContainersMTEQ = False
@@ -419,7 +419,7 @@ Private Function ContainersLT(ByRef ipLHS As Variant, ByRef ipRHS As Variant, By
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
         
-    If GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
+    If GroupInfo.IsItemByKey(ipLHS) And GroupInfo.IsItemByKey(ipRHS) Then
     
         If myLItems.Size < myRItems.Size Then
             ContainersLT = True
@@ -535,7 +535,7 @@ Private Function ContainersLTEQ(ByRef ipLHS As Variant, ByRef ipRHS As Variant, 
     Dim myLItems As IterItems: Set myLItems = IterItems(ipLHS)
     Dim myRItems As IterItems: Set myRItems = IterItems(ipRHS)
 
-    If GroupInfo.IsDictionary(ipLHS) And GroupInfo.IsDictionary(ipRHS) Then
+    If GroupInfo.IsItemByKey(ipLHS) And GroupInfo.IsItemByKey(ipRHS) Then
 
         If myLItems.Size < myRItems.Size Then
             ContainersLTEQ = True
@@ -640,3 +640,4 @@ Private Function MismatchOrderer(ByRef ipItem As Variant) As Long
             MismatchOrderer = 6
     End Select
 End Function
+

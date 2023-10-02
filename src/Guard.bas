@@ -88,8 +88,8 @@ Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipLocation As S
     Dim myResult As Boolean
     Select Case GroupInfo.Id(ipRange)
     
-        Case e_Group.m_string, e_Group.m_array, e_Group.m_List, e_Group.m_Dictionary:       myResult = False
-        Case Else:                                                                          myResult = True
+        Case e_Group.m_String, e_Group.m_Array, e_Group.m_ItemByIndex, e_Group.m_ItemByKey:         myResult = False
+        Case Else:                                                                                  myResult = True
             
     End Select
     
@@ -133,9 +133,9 @@ Public Function EmptyRangeObject(ByRef ipRange As Variant, ByRef ipLocation As S
 
     Dim myLen As Long
     Select Case GroupInfo.Id(ipRange)
-        Case e_Group.m_string:                  myLen = VBA.Len(ipRange)
-        Case e_Group.m_array:                   myLen = ArrayOp.Count(ipRange)
-        Case e_Group.m_List, m_Dictionary:      myLen = ipRange.Count
+        Case e_Group.m_String:                                      myLen = VBA.Len(ipRange)
+        Case e_Group.m_Array:                                       myLen = ArrayOp.Count(ipRange)
+        Case e_Group.m_ItemByIndex, e_Group.m_ItemByKey:            myLen = ipRange.Count
     End Select
     
     EmptyRangeObject = myLen < 1
@@ -294,4 +294,3 @@ Public Function MustBeAtLeastStartOrMinusOne(ByRef ipValue As Long, ByRef ipStar
 
     
 End Function
-

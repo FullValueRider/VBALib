@@ -12,7 +12,7 @@ Public Enum e_ConvertTo
     m_GroupName
     m_GroupId
     m_LongPtr
-    m_boolean
+    m_Boolean
     m_Byte
     m_Currency
     m_Date
@@ -22,8 +22,8 @@ Public Enum e_ConvertTo
     m_long
     m_LongLong
     m_Single
-    m_string
-    m_Last = m_string
+    m_String
+    m_Last = m_String
 End Enum
 
 
