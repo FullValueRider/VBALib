@@ -246,10 +246,10 @@ Public Sub testrot()
 End Sub
 
 
-Public Function TestFoldLeft()
+Public Sub TestFoldLeft()
 
     Dim myS As SeqA: Set myS = SeqA(1, 2, 3, 4, 5)
     Dim myResult As Variant
-    myResult = myS.Foldr(fnAdd.Deb, 0)
+    myResult = myS.ReduceIt(rdFoldl(fnAdd, 0))
     Debug.Print 1 + 2 + 3 + 4 + 5, myResult
-End Function
+End Sub
