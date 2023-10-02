@@ -193,8 +193,8 @@ Private Sub Test04_Offsets_All_N_Clockwise()
     'Arrange:
     Dim myP As PointXY
     Set myP = PointXY(5, 5)
-    Dim myExpected As Variant
-    myExpected = Array("{{0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1}}")
+    Dim myExpected As String
+    myExpected = "{{0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1}}"
     
     Dim myResult As String
     
@@ -228,8 +228,8 @@ Private Sub Test05_Offsets_NSEW_N_Clockwise()
     'Arrange:
     Dim myP As PointXY
     Set myP = PointXY(5, 5)
-    Dim myExpected As Variant
-    myExpected = Array("{{0,1},{1,0},{0,-1},{-1,0}}")
+    Dim myExpected As String
+    myExpected = "{{0,1},{1,0},{0,-1},{-1,0}}"
     
     Dim myResult As String
     
@@ -263,8 +263,8 @@ Private Sub Test06_Offsets_Diagonals_N_Clockwise()
     'Arrange:
     Dim myP As PointXY
     Set myP = PointXY(5, 5)
-    Dim myExpected As Variant
-    myExpected = Array("{{1,1},{1,-1},{-1,-1},{-1,1}}")
+    Dim myExpected As String
+    myExpected = "{{1,1},{1,-1},{-1,-1},{-1,1}}"
     
     Dim myResult As String
     
@@ -299,8 +299,8 @@ Private Sub Test07_Offsets_All_N_Anticlockwise()
     'Arrange:
     Dim myP As PointXY
     Set myP = PointXY(5, 5)
-    Dim myExpected As Variant
-    myExpected = Array("{{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1},{1,0},{1,1}}")
+    Dim myExpected As String
+    myExpected = "{{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1},{1,0},{1,1}}"
     
     Dim myResult As String
     
@@ -334,8 +334,8 @@ Private Sub Test08_Offsets_All_SE_Clockwise()
     'Arrange:
     Dim myP As PointXY
     Set myP = PointXY(5, 5)
-    Dim myExpected As Variant
-    myExpected = Array("{{-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1}}")
+    Dim myExpected As String
+    myExpected = "{{-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1}}"
     
     Dim myResult As String
     
@@ -370,8 +370,8 @@ Private Sub Test08_AdjacentCoords_All_N_Clockwise()
     'Arrange:
     Dim myP As PointXY
     Set myP = PointXY(5, 5)
-    Dim myExpected As Variant
-    myExpected = Array("{{5,6},{6,6},{6,5},{6,4},{5,4},{4,4},{4,5},{4,6}}")
+    Dim myExpected As String
+    myExpected = "{{5,6},{6,6},{6,5},{6,4},{5,4},{4,4},{4,5},{4,6}}"
     
     Dim myResult As String
     
@@ -405,8 +405,8 @@ Private Sub Test09_AdjacentCoords_All_SE_Clockwise()
     'Arrange:
     Dim myP As PointXY
     Set myP = PointXY(5, 5)
-    Dim myExpected As Variant
-    myExpected = Array("{{6,4},{5,4},{4,4},{4,5},{4,6},{5,6},{6,6},{6,5}}")
+    Dim myExpected As String
+    myExpected = "{{6,4},{5,4},{4,4},{4,5},{4,6},{5,6},{6,6},{6,5}}"
     
     Dim myResult As String
     

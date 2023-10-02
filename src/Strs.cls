@@ -387,6 +387,9 @@ Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindRep
     
     Select Case GroupInfo.Id(ipFindReplacePairs)
     
+        Case m_Admin
+            myFRPairs = Array(Array(Chars.twSpace, vbNullString))
+    
         Case m_Array
             If ArrayOp.LacksItems(ipFindReplacePairs) Then
                 myFRPairs = Array(Array(Chars.twSpace, Chars.twNullStr))

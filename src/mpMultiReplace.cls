@@ -55,7 +55,12 @@ End Function
 
 Friend Function ConstructInstance(ByRef ipFindReplaceItems As Variant) As mpMultiReplace
         
-    s.FindReplaceItems = ipFindReplaceItems
+    If VBA.IsObject(ipFindReplaceItems) Then
+        Set s.FindReplaceItems = ipFindReplaceItems
+    Else
+        s.FindReplaceItems = ipFindReplaceItems
+    End If
+        
     Set ConstructInstance = Me
         
 End Function
