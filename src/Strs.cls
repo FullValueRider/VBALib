@@ -171,7 +171,7 @@ End Function
 
 
 '@Description("Removes ipTrimchars from the ends of a string")
-Public Function Trimmer(ByRef ipString As String, Optional ByRef ipTrimChars As String = Chars.WhiteSpace, Optional ByVal ipLHS As Boolean = True, Optional ByVal ipRHS As Boolean = True) As String
+Public Function Trimmer(ByRef ipString As String, Optional ByRef ipTrimChars As String = Chars.WhiteSpace, Optional ByVal ipLHS As Boolean = True, Optional ByVal ipRhs As Boolean = True) As String
 Attribute Trimmer.VB_Description = "Removes ipTrimchars from the ends of a string"
       
     If VBA.Len(ipString) = 0 Then
@@ -191,7 +191,7 @@ Attribute Trimmer.VB_Description = "Removes ipTrimchars from the ends of a strin
     '    End If
      
     'Trim the RHS of string
-    If ipRHS Then
+    If ipRhs Then
         Do While VBA.Len(myString) > 1
             'Debug.Print Asc(VBA.Right$(myString, 1))
             If InStr(myTrimchars, VBA.Right$(myString, 1)) = 0 Then
@@ -565,4 +565,34 @@ Attribute Inc.VB_Description = "increments characters using the SeqCuence in the
         
     Loop
   
+End Function
+
+'@description("Removes the specified number of characters from the LHS and RHS of ipString")
+Public Function Inner(ByRef ipString As String, Optional ByRef ipLHS As Long = 1, Optional ByRef ipRhs As Long = 1)
+
+    Inner = vbNullString
+    
+    Dim myCount As Long: myCount = VBA.Len(ipString)
+    If myCount = 0 Then
+        Exit Function
+    End If
+    
+    If ipLHS > 0 Then
+        If ipLHS + 1 > myCount Then
+            Exit Function
+        End If
+    End If
+    
+    Dim myStr As String: myStr = VBA.Mid$(ipString, ipLHS + 1)
+    myCount = VBA.Len(myStr)
+    
+    If ipRhs > 0 Then
+        If ipRhs + 1 > myCount Then
+            Inner = myStr
+            Exit Function
+        End If
+    End If
+    
+    Inner = VBA.Mid$(myStr, 1, myCount - ipRhs)
+            
 End Function

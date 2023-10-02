@@ -459,6 +459,10 @@ Attribute Items.VB_Description = "Returns the Items in the seq as an Array() of 
 
 End Function
 
+'@Description
+Public Function Join(Optional ByRef ipSeparator As String = Chars.twComma) As String
+    Join = Strs.Inner(Fmt.ItemSeparator(ipSeparator).Text("{0}", Me))
+End Function
 
 '@Description("Returns a subset of the SeqHc")
 Public Function Slice _

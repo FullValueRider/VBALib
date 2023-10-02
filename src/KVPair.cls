@@ -149,6 +149,10 @@ Public Function Keys() As Variant
     Keys = Array(p.Keys.Item(1))
 End Function
 
+'@Description("Returns a string representation of the Items")
+Public Function Join(Optional ByRef ipSeparator As String = Chars.twComma) As String
+    Join = Strs.Inner(Fmt.ItemSeparator(ipSeparator).Text("{0}", Me.Items))
+End Function
 
 Public Function Items() As Variant
     Items = Array(p.Items.Item(1))

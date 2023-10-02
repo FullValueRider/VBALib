@@ -253,3 +253,9 @@ Public Sub TestFoldLeft()
     myResult = myS.ReduceIt(rdFoldl(fnAdd, 0))
     Debug.Print 1 + 2 + 3 + 4 + 5, myResult
 End Sub
+
+
+Sub TestInner()
+
+    Debug.Print Strs.Inner("HelloThere", 0, 3)
+End Sub

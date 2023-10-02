@@ -929,6 +929,11 @@ Public Function KeyByItem(ByVal ipItem As Variant) As Variant
     
 End Function
 
+'@Description("Returns a string representation of the Items")
+Public Function Join(Optional ByRef ipSeparator As String = Chars.twComma) As String
+    Join = Strs.Inner(Fmt.ItemSeparator(ipSeparator).Text("{0}", Me.Items))
+End Function
+
 Public Function Items() As Variant
 
     Items = Array()

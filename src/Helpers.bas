@@ -3,7 +3,7 @@ Attribute VB_Name = "Helpers"
 Option Explicit
 
 
-Public Sub Swap(ByRef ipLHS As Variant, ByRef ipRHS As Variant)
+Public Sub Swap(ByRef ipLHS As Variant, ByRef ipRhs As Variant)
 
     Dim myTemp As Variant
     
@@ -13,16 +13,16 @@ Public Sub Swap(ByRef ipLHS As Variant, ByRef ipRHS As Variant)
         myTemp = ipLHS
     End If
     
-    If VBA.IsObject(ipRHS) Then
-        Set ipLHS = ipRHS
+    If VBA.IsObject(ipRhs) Then
+        Set ipLHS = ipRhs
     Else
-        ipLHS = ipRHS
+        ipLHS = ipRhs
     End If
     
     If VBA.IsObject(myTemp) Then
-        Set ipRHS = myTemp
+        Set ipRhs = myTemp
     Else
-        ipRHS = myTemp
+        ipRhs = myTemp
     End If
     
 End Sub
