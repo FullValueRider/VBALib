@@ -259,3 +259,35 @@ Sub TestInner()
 
     Debug.Print Strs.Inner("HelloThere", 0, 3)
 End Sub
+
+
+Sub testTranspose()
+    ' create a SeqA containing 3 SeqA of different lengths
+    Dim myS As SeqA: Set myS = SeqA(SeqA(1, 2, 3, 4), SeqA(5, 6), SeqA(7, 8, 9, 10, 11))
+    
+    
+    Dim myI As ISeq: Set myI = myS
+    Fmt.Dbg "Expecting SeqA, SeqA got {0},{1}", VBA.TypeName(myS), VBA.TypeName(myI)
+    
+    
+    Fmt.Dbg "Expecting {1,2,3,4} got {0}", myI.Item(1)
+    Fmt.Dbg "Expecting {5,6} got {0}", myI.Item(2)
+    Fmt.Dbg "Expecting {{7,8,9,10,11} got {0}", myI.Item(3)
+    Debug.Print
+    Debug.Print "Whole sequences"
+    Fmt.Dbg "{0}{nl}{1}", myS, myI
+    
+    'do transpose using variant in method signature
+    Set myS = myS.Transpose
+    Debug.Print
+    Debug.Print "Transposed:Whole sequences"
+    Fmt.Dbg "{0}i{nl}{1}", myS, myI
+    
+End Sub
+
+Sub TestTransposed()
+    Dim myS As SeqA: Set myS = SeqA(SeqA(1, 2, 3, 4), SeqA(5, 6), SeqA(7, 8, 9, 10, 11))
+    Fmt.Dbg "{0}", myS
+    myS.Transposed
+    Fmt.Dbg "{0}", myS
+End Sub

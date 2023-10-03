@@ -377,6 +377,7 @@ End Function
 
 '@Description("Applies multiple, repeat find and replace actions using  string pairs either of the form Array(Array(Find,Repace),Array(Find,Replace)...) or Dictionary of Find vs Replace")
 Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindReplacePairs As Variant = Empty) As String
+Attribute MultiReplacer.VB_Description = "Applies multiple, repeat find and replace actions using  string pairs either of the form Array(Array(Find,Repace),Array(Find,Replace)...) or Dictionary of Find vs Replace"
 
     If VBA.Len(ipString) = 0 Then
         MultiReplacer = ipString
@@ -390,7 +391,7 @@ Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindRep
         Case m_Admin
             myFRPairs = Array(Array(Chars.twSpace, vbNullString))
     
-        Case m_Array
+        Case m_array
             If ArrayOp.LacksItems(ipFindReplacePairs) Then
                 myFRPairs = Array(Array(Chars.twSpace, Chars.twNullStr))
             Else
@@ -590,6 +591,7 @@ End Function
 
 '@description("Removes the specified number of characters from the LHS and RHS of ipString")
 Public Function Inner(ByRef ipString As String, Optional ByRef ipLHS As Long = 1, Optional ByRef ipRhs As Long = 1) As String
+Attribute Inner.VB_Description = "Removes the specified number of characters from the LHS and RHS of ipString"
 
     Inner = vbNullString
     
@@ -605,6 +607,7 @@ Public Function Inner(ByRef ipString As String, Optional ByRef ipLHS As Long = 1
     End If
     
     Dim myStr As String: myStr = VBA.Mid$(ipString, ipLHS + 1)
+    '@Ignore AssignmentNotUsed
     myCount = VBA.Len(myStr)
     
     If ipRhs > 0 Then

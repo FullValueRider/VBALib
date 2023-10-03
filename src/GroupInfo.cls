@@ -18,7 +18,7 @@ Public Enum e_Group
     m_Empty = m_First
     m_Boolean
     m_Number
-    m_Array
+    m_array
     m_String
     m_Admin
     m_ItemByIndex 'ToDo: should this be split to Index0 and Index1
@@ -78,7 +78,7 @@ Public Function Id(ByVal ipItem As Variant) As e_Group
     Select Case myGroupName
         
         Case "empty":                                                                           Id = e_Group.m_Empty
-        Case "array":                                                                           Id = e_Group.m_Array
+        Case "array":                                                                           Id = e_Group.m_array
         Case "boolean":                                                                         Id = e_Group.m_Boolean
         Case "byte", "date", "decimal", "double", "integer", "long", "longlong", "single":      Id = e_Group.m_Number
         Case "string":                                                                          Id = e_Group.m_String
@@ -182,7 +182,7 @@ End Function
 Public Function IsContainer(ByRef ipItem As Variant) As Boolean
     
     Select Case Id(ipItem)
-        Case m_Array, m_ItemByIndex, m_ItemByKey
+        Case m_array, m_ItemByIndex, m_ItemByKey
             IsContainer = True
         Case Else
             IsContainer = False
@@ -227,7 +227,7 @@ End Function
 
 
 Public Function IsArray(ByRef ipItem As Variant) As Boolean
-    IsArray = Id(ipItem) = e_Group.m_Array
+    IsArray = Id(ipItem) = e_Group.m_array
 End Function
 
 

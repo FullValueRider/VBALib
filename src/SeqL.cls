@@ -30,6 +30,9 @@ Attribute VB_Description = "SeqL is a Collection/ArrayList replacement. Items ar
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
 Option Explicit
 ' constants common to all seq classes
+
+Implements ISeq
+
 Private Const MY_TYPENAME                       As String = "SeqL"
 Private Const FIRST_INDEX                       As Long = 1
 Private Const WHOLE_SEQ                         As Long = -1
@@ -334,8 +337,9 @@ Attribute Items.VB_Description = "Returns the Items in the seq as an Array() of 
     
 End Function
 
-'@Description
+'@Description("Returns a string representation of the Items")
 Public Function Join(Optional ByRef ipSeparator As String = Chars.twComma) As String
+Attribute Join.VB_Description = "Returns a string representation of the Items"
     Join = Strs.Inner(Fmt.ItemSeparator(ipSeparator).Text("{0}", Me))
 End Function
 
@@ -1620,6 +1624,102 @@ Attribute Deduped.VB_Description = "Removes duplicate items from the seq"
     
 End Function
 
+''@Description("Transposes a seq of seq. Non existent items are replaced by Empty. Muutates seq")
+'Public Function Transposed() As SeqA
+'
+'    'find the maximum size of the inner sequences
+'    Dim myMaxRowIndex As Variant: myMaxRowIndex = Me.Clone.ReduceIt(rdInner(rdCountIt)).ReduceIt(rdFoldl(fnMaxNum, Globals.minLong))
+'
+'    ' The Transpose function cannot assume that the inner sequences are of equal length
+'    ' make the inner sequences equal in length.
+'    Dim myIndex As Long
+'    For myIndex = Me.FirstIndex To Me.LastIndex
+'        Dim myCount As Long: myCount = Me.Item(myIndex).LastIndex
+'        If myCount < myMaxRowIndex Then
+'            Me.Item(myIndex).Fill Empty, myMaxRowIndex - myCount
+'        End If
+'    Next
+'
+'    ' create the recipient seq
+'    Dim myTrans() As Variant: ReDim myTrans(1 To myMaxRowIndex)
+'    For myIndex = 1 To myMaxRowIndex
+'        ' we don't know what type of seq is in seqA so call Deb on the instance
+'        Set myTrans(myIndex) = Me.First.Deb.Fill(Empty, Me.LastIndex)
+'    Next
+'
+'    ' now do the transposition
+'    Dim myRowIndex As Long
+'    For myRowIndex = Me.FirstIndex To Me.LastIndex
+'
+'        Dim myRow As Variant: Set myRow = Me.Item(myRowIndex)
+'
+'        Dim myColIndex As Long
+'        For myColIndex = myRow.FirstIndex To myMaxRowIndex
+'
+'            If VBA.IsObject(Me.Item(myRowIndex).Item(myColIndex)) Then
+'                Set myTrans(myColIndex).Item(myRowIndex) = Me.Item(myRowIndex).Item(myColIndex)
+'            Else
+'                 myTrans(myColIndex).Item(myRowIndex) = Me.Item(myRowIndex).Item(myColIndex)
+'            End If
+'
+'        Next
+'
+'    Next
+'    'Fmt.Dbg "{0}", myTrans
+'    s.Host = myTrans
+'    p.Count = myMaxRowIndex
+'    p.Size = myMaxRowIndex
+'    Set Transposed = Me
+'
+'End Function
+
+'@Description("Transposes a seq of seq. Non existent items are replaced by Empty")
+Public Function Transpose() As SeqL
+Attribute Transpose.VB_Description = "Transposes a seq of seq. Non existent items are replaced by Empty"
+    
+    'find the maximum size of the inner sequences
+    Dim myMaxRowIndex As Variant: myMaxRowIndex = Me.Clone.ReduceIt(rdInner(rdCountIt)).ReduceIt(rdFoldl(fnMaxNum, Globals.minLong))
+    
+    ' The Transpose function cannot assume that the inner sequences are of equal length
+    ' make the inner sequences equal in length.
+    Dim myIndex As Long
+    For myIndex = Me.FirstIndex To Me.LastIndex
+        Dim myCount As Long: myCount = Me.Item(myIndex).LastIndex
+        If myCount < myMaxRowIndex Then
+            Me.Item(myIndex).Fill Empty, myMaxRowIndex - myCount
+        End If
+    Next
+    
+    ' create the recipient seq
+    Dim myTrans As Variant: Set myTrans = Me.Deb
+    For myIndex = 1 To myMaxRowIndex
+        ' we don't know what type of seq is in seqA so call Deb on the instance
+        myTrans.Add Me.First.Deb.Fill(Empty, Me.LastIndex)
+    Next
+    
+    ' now do the transposition
+    Dim myRowIndex As Long
+    For myRowIndex = Me.FirstIndex To Me.LastIndex
+    
+        Dim myRow As Variant: Set myRow = Me.Item(myRowIndex)
+        
+        Dim myColIndex As Long
+        For myColIndex = myRow.FirstIndex To myMaxRowIndex
+            
+            If VBA.IsObject(Me.Item(myRowIndex).Item(myColIndex)) Then
+                Set myTrans.Item(myColIndex).Item(myRowIndex) = Me.Item(myRowIndex).Item(myColIndex)
+            Else
+                 myTrans.Item(myColIndex).Item(myRowIndex) = Me.Item(myRowIndex).Item(myColIndex)
+            End If
+ 
+        Next
+        
+    Next
+    'Fmt.Dbg "{0}", myTrans
+    'Set ipSeq = myTrans
+    Set Transpose = myTrans
+
+End Function
 
 Public Function Freq() As KvpA
 
@@ -2013,4 +2113,328 @@ Private Function NotFound(ByRef ipItem As Variant) As Boolean
         NotFound -VBA.IsEmpty(ipItem)
     End If
         
+End Function
+
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
+'Interface Members
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
+Private Function ISeq_Deb(ParamArray ipParamarray() As Variant) As Variant
+    With New SeqL
+        Set ISeq_Deb = .ConstructInstance(VBA.CVar(ipParamarray))
+    End With
+End Function
+Private Function ISeq_Add(ByRef ipItem As Variant) As Long
+    ISeq_Add = Add(ipItem)
+End Function
+
+Private Function ISeq_Count(Optional ByRef ipItem As Variant) As Long
+    ISeq_Count = Count(ipItem)
+End Function
+
+Private Function ISeq_InsertAt(ByVal ipIndex As Long, ByVal ipItem As Variant) As Long
+    ISeq_InsertAt = InsertAt(ipIndex, ipItem)
+End Function
+
+Private Property Get ISeq_Item(ByVal ipIndex As Long) As Variant
+    ISeq_Item = Item(ipIndex)
+End Property
+
+Private Property Let ISeq_Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
+    Item(ipIndex) = ipItem
+End Property
+
+Private Property Set ISeq_Item(ByVal ipIndex As Long, ByVal ipItem As Variant)
+    Set Item(ipIndex) = ipItem
+End Property
+
+Private Function ISeq_Remove(ByRef ipItem As Variant) As Long
+    ISeq_Remove = Remove(ipItem)
+End Function
+
+Private Function ISeq_RemoveAt(ByRef ipIndex As Long) As Long
+    ISeq_RemoveAt = RemoveAt(ipIndex)
+End Function
+
+'Private Function ISeq_Bind(ByRef ipArray As Variant) As Variant
+'    Set ISeq_Bind = Bind(ipArray)
+'End Function
+
+Private Function ISeq_Clone() As Variant
+    Set ISeq_Clone = Clone()
+End Function
+
+Private Function ISeq_Items() As Variant
+    ISeq_Items = Items()
+End Function
+
+Private Function ISeq_Join(Optional ByRef ipSeparator As String = Chars.twComma) As String
+    ISeq_Join = Join(ipSeparator)
+End Function
+
+Private Function ISeq_Slice(Optional ByRef ipStart As Long = FIRST_INDEX, Optional ByRef ipRun As Long = WHOLE_SEQ, Optional ByRef ipStep As Long = DEFAULT_STEP) As Variant
+    Set ISeq_Slice = Slice(ipStart, ipRun, ipStep)
+End Function
+
+Private Function ISeq_ToArray() As Variant
+    ISeq_ToArray = ToArray()
+End Function
+
+Private Function ISeq_ToCollection() As Collection
+    Set ISeq_ToCollection = ToCollection()
+End Function
+
+Private Function ISeq_FirstIndex() As Long
+    ISeq_FirstIndex = FirstIndex()
+End Function
+
+Private Function ISeq_LastIndex() As Long
+    ISeq_LastIndex = LastIndex()
+End Function
+
+Private Function ISeq_FBOIndex() As Long
+    ISeq_FBOIndex = FBOIndex()
+End Function
+
+Private Function ISeq_LBOIndex() As Long
+    ISeq_LBOIndex = LBOIndex()
+End Function
+
+Private Property Get ISeq_First() As Variant
+    ISeq_First = First
+End Property
+
+Private Property Let ISeq_First(ByVal ipItem As Variant)
+    First = ipItem
+End Property
+
+Private Property Set ISeq_First(ByVal ipItem As Variant)
+    Set First = ipItem
+End Property
+
+Private Property Get ISeq_Last() As Variant
+    ISeq_Last = Last
+End Property
+
+Private Property Let ISeq_Last(ByVal ipItem As Variant)
+    Last = ipItem
+End Property
+
+Private Property Set ISeq_Last(ByVal ipItem As Variant)
+    Set Last = ipItem
+End Property
+
+Private Property Get ISeq_FBO() As Variant
+    ISeq_FBO = FBO
+End Property
+
+Private Property Let ISeq_FBO(ByVal ipItem As Variant)
+    FBO = ipItem
+End Property
+
+Private Property Set ISeq_FBO(ByVal ipItem As Variant)
+    Set FBO = ipItem
+End Property
+
+Private Property Get ISeq_LBO() As Variant
+    ISeq_LBO = LBO
+End Property
+
+Private Property Let ISeq_LBO(ByVal ipItem As Variant)
+    LBO = ipItem
+End Property
+
+Private Property Set ISeq_LBO(ByVal ipItem As Variant)
+    Set LBO = ipItem
+End Property
+
+Private Function ISeq_IndexOf(ByVal ipItem As Variant, Optional ByVal ipStart As Long = FIRST_INDEX, Optional ByVal ipRun As Long = TO_LAST_INDEX) As Long
+    ISeq_IndexOf = IndexOf(ipItem, ipStart, ipRun)
+End Function
+
+Private Function ISeq_LastIndexOf(ByVal ipItem As Variant, Optional ByVal ipStart As Long = FIRST_INDEX, Optional ByVal ipRun As Long = TO_LAST_INDEX) As Long
+    ISeq_LastIndexOf = LastIndexOf(ipItem, ipStart, ipRun)
+End Function
+
+Private Function ISeq_AddItems(ParamArray ipParamarray() As Variant) As Variant
+    Set ISeq_AddItems = AddItems(ipParamarray)
+End Function
+
+Private Function ISeq_AddRange(ByVal ipRange As Variant) As Variant
+    Set ISeq_AddRange = AddRange(ipRange)
+End Function
+
+Private Function ISeq_InsertAtItems(ByVal ipIndex As Long, ParamArray ipParamarray() As Variant) As Variant
+    Set ISeq_InsertAtItems = InsertAtItems(ipIndex, ipParamarray)
+End Function
+
+Private Function ISeq_InsertAtRange(ByVal ipIndex As Long, ByRef ipRange As Variant) As Variant
+    Set ISeq_InsertAtRange = InsertAtRange(ipIndex, ipRange)
+End Function
+
+Private Function ISeq_RemoveItems(ParamArray ipParamarray() As Variant) As Variant
+    Set ISeq_RemoveItems = RemoveItems(ipParamarray)
+End Function
+
+Private Function ISeq_RemoveRange(ByRef ipRange As Variant) As Variant
+    Set ISeq_RemoveRange = RemoveRange(ipRange)
+End Function
+
+Private Function ISeq_RemoveAll(ParamArray ipParamarray() As Variant) As Variant
+    Set ISeq_RemoveAll = RemoveAll(ipParamarray)
+End Function
+
+Private Function ISeq_Clear() As Variant
+    Set ISeq_Clear = Clear()
+End Function
+
+Private Function ISeq_Reset() As Variant
+    Set ISeq_Reset = Reset()
+End Function
+
+Private Function ISeq_RemoveIndexes(ParamArray ipParamarray() As Variant) As Variant
+    Set ISeq_RemoveIndexes = RemoveIndexes(ipParamarray)
+End Function
+
+Private Function ISeq_RemoveIndexesRange(ByRef ipRange As Variant) As Variant
+    Set ISeq_RemoveIndexesRange = RemoveIndexesRange(ipRange)
+End Function
+
+Private Function ISeq_Fill(ByRef ipItem As Variant, Optional ByVal ipCount As Long = 1) As Variant
+    Set ISeq_Fill = Fill(ipItem, ipCount)
+End Function
+
+Private Function ISeq_Head(Optional ByVal ipSplitAfter As Long = FIRST_INDEX) As Variant
+    Set ISeq_Head = Head(ipSplitAfter)
+End Function
+
+Private Function ISeq_Tail(Optional ByVal ipSplitAfter As Long = FIRST_INDEX) As Variant
+    Set ISeq_Tail = Tail(ipSplitAfter)
+End Function
+
+Private Function ISeq_RotLeft(Optional ByVal ipCount As Long = 1) As Variant
+    Set ISeq_RotLeft = RotLeft(ipCount)
+End Function
+
+Private Function ISeq_RotRight(Optional ByVal ipCount As Long = 1) As Variant
+    Set ISeq_RotRight = RotRight(ipCount)
+End Function
+
+Private Function ISeq_HoldsItem(ByRef ipItem As Variant) As Boolean
+    ISeq_HoldsItem = HoldsItem(ipItem)
+End Function
+
+Private Function ISeq_Contains(ByRef ipItem As Variant) As Boolean
+    ISeq_Contains = Contains(ipItem)
+End Function
+
+Private Function ISeq_LacksItem(ByRef ipItem As Variant) As Boolean
+    ISeq_LacksItem = LacksItem(ipItem)
+End Function
+
+Private Function ISeq_HoldsItems() As Boolean
+    ISeq_HoldsItems = HoldsItems()
+End Function
+
+Private Function ISeq_LacksItems() As Boolean
+    ISeq_LacksItems = LacksItems()
+End Function
+
+Private Property Get ISeq_TypeName() As String
+    ISeq_TypeName = TypeName
+End Property
+
+Private Function ISeq_MappedIt(ByRef ipMapper As IMapper) As Variant
+    Set ISeq_MappedIt = MappedIt(ipMapper)
+End Function
+
+Private Function ISeq_MapIt(ByVal ipMapper As IMapper) As Variant
+    Set ISeq_MapIt = MapIt(ipMapper)
+End Function
+
+Private Function ISeq_FilterIt(ByVal ipComparer As IComparer) As Variant
+    Set ISeq_FilterIt = FilterIt(ipComparer)
+End Function
+
+Private Function ISeq_CountIt(ByVal ipComparer As IComparer) As Long
+    ISeq_CountIt = CountIt(ipComparer)
+End Function
+
+Private Function ISeq_ReduceIt(ByRef ipReducer As IReducer) As Variant
+    ISeq_ReduceIt = ReduceIt(ipReducer)
+End Function
+
+Private Function ISeq_Push(ParamArray ipParamarray() As Variant) As Variant
+    Set ISeq_Push = Push(ipParamarray)
+End Function
+
+Private Function ISeq_PushRange(ByRef ipRange As Variant) As Variant
+    Set ISeq_PushRange = PushRange(ipRange)
+End Function
+
+Private Function ISeq_Pop() As Variant
+    ISeq_Pop = Pop()
+End Function
+
+Private Function ISeq_PopRange(Optional ByVal ipCount As Long = 1) As Variant
+    Set ISeq_PopRange = PopRange(ipCount)
+End Function
+
+Private Function ISeq_enQueue(ParamArray ipParamarray() As Variant) As Variant
+    Set ISeq_enQueue = enQueue(ipParamarray)
+End Function
+
+Private Function ISeq_EnqueueRange(ByRef ipRange As Variant) As Variant
+    Set ISeq_EnqueueRange = EnqueueRange(ipRange)
+End Function
+
+Private Function ISeq_Dequeue() As Variant
+    ISeq_Dequeue = Dequeue()
+End Function
+
+Private Function ISeq_DequeueRange(Optional ByVal ipCount As Long = 1) As Variant
+    Set ISeq_DequeueRange = DequeueRange(ipCount)
+End Function
+
+Private Function ISeq_Sort() As Variant
+    Set ISeq_Sort = Sort()
+End Function
+
+Private Function ISeq_Sorted() As Variant
+    Set ISeq_Sorted = Sorted()
+End Function
+
+Private Sub ISeq_Swap(ByRef ipLHSIndex As Long, ByRef ipRHSIndex As Long)
+   Swap ipLHSIndex, ipRHSIndex
+End Sub
+
+Private Function ISeq_Reverse() As Variant
+    Set ISeq_Reverse = Reverse()
+End Function
+
+Private Function ISeq_Reversed() As Variant
+    Set ISeq_Reversed = Reversed()
+End Function
+
+Private Function ISeq_IsUnique() As Boolean
+    ISeq_IsUnique = IsUnique()
+End Function
+
+Private Function ISeq_IsNotUnique() As Boolean
+    ISeq_IsNotUnique = IsNotUnique()
+End Function
+
+Private Function ISeq_Dedup() As Variant
+    Set ISeq_Dedup = Dedup()
+End Function
+
+Private Function ISeq_Deduped() As Variant
+    Set ISeq_Deduped = Deduped()
+End Function
+
+Private Function ISeq_Freq() As KvpA
+    Set ISeq_Freq = Freq()
+End Function
+
+Private Function ISeq_SetOf(ByRef ipSet As e_SetoF, ByRef ipRangeItem As Variant) As Variant
+    Set ISeq_SetOf = SetOf(ipSet, ipRangeItem)
 End Function

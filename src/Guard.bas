@@ -88,7 +88,7 @@ Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipLocation As S
     Dim myResult As Boolean
     Select Case GroupInfo.Id(ipRange)
     
-        Case e_Group.m_String, e_Group.m_Array, e_Group.m_ItemByIndex, e_Group.m_ItemByKey:         myResult = False
+        Case e_Group.m_String, e_Group.m_array, e_Group.m_ItemByIndex, e_Group.m_ItemByKey:         myResult = False
         Case Else:                                                                                  myResult = True
             
     End Select
@@ -134,7 +134,7 @@ Public Function EmptyRangeObject(ByRef ipRange As Variant, ByRef ipLocation As S
     Dim myLen As Long
     Select Case GroupInfo.Id(ipRange)
         Case e_Group.m_String:                                      myLen = VBA.Len(ipRange)
-        Case e_Group.m_Array:                                       myLen = ArrayOp.Count(ipRange)
+        Case e_Group.m_array:                                       myLen = ArrayOp.Count(ipRange)
         Case e_Group.m_ItemByIndex, e_Group.m_ItemByKey:            myLen = ipRange.Count
     End Select
     

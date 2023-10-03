@@ -973,6 +973,7 @@ End Function
 
 '@Description("Returns a string representation of the Items")
 Public Function Join(Optional ByRef ipSeparator As String = Chars.twComma) As String
+Attribute Join.VB_Description = "Returns a string representation of the Items"
     Join = Strs.Inner(Fmt.ItemSeparator(ipSeparator).Text("{0}", Me.Items))
 End Function
 

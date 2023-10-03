@@ -30,8 +30,8 @@ Attribute Deb.VB_UserMemId = 0
     End With
 End Function
 
-
-Friend Function ConstructInstance(ByRef ipComparer As IComparer) As rdCountIt
+'@
+Friend Function ConstructInstance(Optional ByRef ipComparer As IComparer = Nothing) As rdCountIt
         
     Set s.Comparer = ipComparer
     Set ConstructInstance = Me
@@ -43,12 +43,24 @@ Private Property Get IReducer_TypeName() As String
     IReducer_TypeName = MY_TYPENAME
 End Property
 
-'@Description("Count the occasions where the comparer is true")
+'@Description("Count the occasions where the comparer is true. if no comparer is provided returns the number of items")
 Public Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
-Attribute IReducer_ExecReduction.VB_Description = "Count the occasions where the comparer is true"
+Attribute IReducer_ExecReduction.VB_Description = "Count the occasions where the comparer is true. if no comparer is provided returns the number of items"
         
-    Dim myCounter As Long: myCounter = 0
+    Dim myId As e_Group: myId = GroupInfo.Id(ipHostItems)
     
+    If IsNothing(s.Comparer) Then
+        Select Case myId
+            Case m_array
+                IReducer_ExecReduction = Array(ArrayOp.Count(ipHostItems))
+                Exit Function
+            Case m_ItemByIndex
+                IReducer_ExecReduction = Array(ipHostItems.LastIndex)
+                Exit Function
+        End Select
+    End If
+    
+    Dim myCounter As Long: myCounter = 0
     Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
     Do
         Dim myA() As Variant: myA = Array(myItems.CurItem(0))
