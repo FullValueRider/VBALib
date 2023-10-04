@@ -59,7 +59,10 @@ Private Type State
     ' Cannot be a collection because we need the keys array
     FormatFields                                As KvpC
     ToString                                    As Stringifier
-    
+    ToSize                                      As Long
+    PadStr                                      As String
+    PadRight                                    As Boolean
+    PadLeft                                     As Boolean
 End Type
 
 Private s                                       As State
@@ -87,6 +90,8 @@ Private Const FIELD_COUNT_IS_ZERO               As String = "0}"
 Private Const FIELD_COUNT_IS_ONE                As String = "1}"
 
 
+Private Const NO_PADDING                        As Boolean = False
+
 '@DefaultMember
 Public Function Deb() As Format
 Attribute Deb.VB_UserMemId = 0
@@ -99,6 +104,8 @@ End Function
 Friend Function ConstructInstance() As Format
     Set s.ToString = Stringifier.Deb  ' we don't appear to be calling this method.
     s.ToString.ResetMarkup
+    s.PadLeft = NO_PADDING
+    s.PadRight = NO_PADDING
     Set ConstructInstance = Me
     
 End Function
@@ -217,7 +224,16 @@ Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray 
 '    s.DictionaryItemMarkupIsSet = False
 '    s.ItemSeparatorIsSet = False
 '
-    TextByVar = myReturn
+    If s.PadLeft Then
+        TextByVar = Strs.PadLeft(myReturn, s.ToSize, s.PadStr)
+    ElseIf s.PadRight Then
+        TextByVar = Strs.PadRight(myReturn, s.ToSize, s.PadStr)
+    Else
+        TextByVar = myReturn
+    End If
+    
+    s.PadLeft = NO_PADDING
+    s.PadRight = NO_PADDING
     
 End Function
 
@@ -454,6 +470,27 @@ Public Function NoMarkup() As Format
     s.ToString.NoMarkup
     Set NoMarkup = Me
     
+End Function
+
+
+Public Function PadRight(ByRef ipToSize As Long, Optional ByRef ipPadStr As String = Chars.twSpace) As Format
+    Set PadRight = Me
+    If s.PadLeft Then
+        Exit Function
+    End If
+    s.ToSize = ipToSize
+    s.PadStr = ipPadStr
+    s.PadRight = True
+End Function
+
+Public Function PadLeft(ByRef ipToSize As Long, Optional ByRef ipPadStr As String = Chars.twSpace) As Format
+    Set PadLeft = Me
+    If s.PadRight Then
+        Exit Function
+    End If
+    s.ToSize = ipToSize
+    s.PadStr = ipPadStr
+    s.PadLeft = True
 End Function
 
 Public Property Get TypeName() As String

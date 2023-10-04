@@ -24,7 +24,7 @@ End Property
 
 Public Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
     
-    Dim myMin As Variant: myMin = Globals.maxDecimal
+    Dim myMin As Variant: myMin = HelpVBA.maxDecimal
     
     Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
     Do

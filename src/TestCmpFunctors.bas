@@ -48,11 +48,11 @@ End Sub
 Public Sub CmpFunctorTests()
 
     #If twinbasic Then
-        Debug.Print CurrentProcedureName;
+        Debug.Print CurrentProcedureName,
     #Else
         GlobalAssert
         VBATesting = True
-        Debug.Print ErrEx.LiveCallstack.ProcedureName;
+        Debug.Print ErrEx.LiveCallstack.ProcedureName,
     #End If
 
     Test01a_CmpEq_Numbers
@@ -98,7 +98,7 @@ Public Sub CmpFunctorTests()
     Test06e_CmpLTEQ_Seq
     Test06f_CmpLTEQ_Kvp
 
-    Debug.Print vbTab, vbTab, "Testing completed"
+    Debug.Print vbTab, "Testing completed"
 
 End Sub
 

@@ -48,11 +48,11 @@ End Sub
 Public Sub StringifierTests()
  
     #If twinbasic Then
-        Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab,
+        Debug.Print CurrentProcedureName, vbTab,
     #Else
         GlobalAssert
         VBATesting = True
-        Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab,
+        Debug.Print ErrEx.LiveCallstack.ProcedureName, vbTab,
     #End If
 
     Test01_StringifyItem_String

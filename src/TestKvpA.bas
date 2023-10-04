@@ -48,11 +48,11 @@ End Sub
 Public Sub KvpATests()
  
     #If twinbasic Then
-        Debug.Print CurrentProcedureName;
+        Debug.Print CurrentProcedureName,
     #Else
         GlobalAssert
         VBATesting = True
-        Debug.Print ErrEx.LiveCallstack.ProcedureName;
+        Debug.Print ErrEx.LiveCallstack.ProcedureName,
     #End If
 
     Test01_ObjAndName
@@ -83,7 +83,7 @@ Public Sub KvpATests()
     Test16e_GetFirstKey
     Test16f_LastKey
     
-    Debug.Print vbTab, vbTab, vbTab, "Testing completed"
+    Debug.Print vbTab, vbTab, "Testing completed"
 
 End Sub
 

@@ -48,7 +48,7 @@ End Sub
 Public Sub MapperTests()
  
     #If twinbasic Then
-        Debug.Print CurrentProcedureName;
+        Debug.Print CurrentProcedureName,
     #Else
         GlobalAssert
         VBATesting = True

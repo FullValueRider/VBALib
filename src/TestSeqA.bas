@@ -47,11 +47,11 @@ End Sub
 Public Sub SeqATests()
  
     #If twinbasic Then
-        Debug.Print CurrentProcedureName;
+        Debug.Print CurrentProcedureName,
     #Else
         GlobalAssert
         VBATesting = True
-        Debug.Print ErrEx.LiveCallstack.ProcedureName;
+        Debug.Print ErrEx.LiveCallstack.ProcedureName,
     #End If
 
     Test01_SeqObj
@@ -166,7 +166,7 @@ Public Sub SeqATests()
     
     Test30a_Swap
     
-    Debug.Print vbTab, vbTab, vbTab, "Testing completed"
+    Debug.Print vbTab, vbTab, "Testing completed"
 
 End Sub
 

@@ -15,7 +15,9 @@ Private Type myPoint
 End Type
 
 Private p As Properties
-
+Sub TestPadleft()
+    Debug.Print Strs.PadRight("Hi", 50, ".")
+End Sub
 Sub testingnulls()
     Debug.Print TypeName(vbNullString) ' string
     Debug.Print TypeName(Null)         ' Null

@@ -21,7 +21,7 @@ Attribute Transpose.VB_Description = "Transposes a seq of seq. Non existent item
     Dim myS As Variant: Set myS = ipSeq.Clone
     'Fmt.Dbg "{0}", myS
     'find the maximum size of the inner sequences
-    Dim myMaxRowIndex As Variant: myMaxRowIndex = myS.ReduceIt(rdInner(rdCountIt)).ReduceIt(rdFoldl(fnMaxNum, Globals.minLong))
+    Dim myMaxRowIndex As Variant: myMaxRowIndex = myS.ReduceIt(rdInner(rdCountIt)).ReduceIt(rdFoldl(fnMaxNum, HelpVBA.minLong))
     
     ' The Transpose function cannot assume that the inner sequences are of equal length
     ' make the inner sequences equal in length.

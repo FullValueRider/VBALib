@@ -369,7 +369,7 @@ End Function
 '@Description("Returns a string representation of the Items")
 Public Function Join(Optional ByRef ipSeparator As String = Chars.twComma) As String
 Attribute Join.VB_Description = "Returns a string representation of the Items"
-    Join = Strs.Inner(Fmt.ItemSeparator(ipSeparator).Text("{0}", Me))
+    Join = VBA.Join(Me.ToArray, ipSeparator) 'Strs.Inner(Fmt.ItemSeparator(ipSeparator).Text("{0}", Me))
 End Function
 
 '@Description("Returns a subset of the SeqA")
@@ -1630,7 +1630,7 @@ Public Function Transpose() As SeqA
 Attribute Transpose.VB_Description = "Transposes a seq of seq. Non existent items are replaced by Empty"
     
     'find the maximum size of the inner sequences
-    Dim myMaxRowIndex As Variant: myMaxRowIndex = Me.Clone.ReduceIt(rdInner(rdCountIt)).ReduceIt(rdFoldl(fnMaxNum, Globals.minLong))
+    Dim myMaxRowIndex As Variant: myMaxRowIndex = Me.Clone.ReduceIt(rdInner(rdCountIt)).ReduceIt(rdFoldl(fnMaxNum, HelpVBA.minLong))
     
     ' The Transpose function cannot assume that the inner sequences are of equal length
     ' make the inner sequences equal in length.

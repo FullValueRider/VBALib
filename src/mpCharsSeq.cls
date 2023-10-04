@@ -25,7 +25,7 @@ End Property
 Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
 
     If GroupInfo.IsString(ipHostItem) Then
-        Set Imapper_ExecMapper = Array(SeqC(ipHostItem))
+        Imapper_ExecMapper = Array(SeqC(ipHostItem))
     Else
         Imapper_ExecMapper = Array(ipHostItem)
     End If

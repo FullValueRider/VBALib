@@ -1467,7 +1467,7 @@ Public Function Transpose() As SeqC
 Attribute Transpose.VB_Description = "Transposes a seq of seq. Non existent items are replaced by Empty"
     
     'find the maximum size of the inner sequences
-    Dim myMaxRowIndex As Variant: myMaxRowIndex = Me.Clone.ReduceIt(rdInner(rdCountIt)).ReduceIt(rdFoldl(fnMaxNum, Globals.minLong))
+    Dim myMaxRowIndex As Variant: myMaxRowIndex = Me.Clone.ReduceIt(rdInner(rdCountIt)).ReduceIt(rdFoldl(fnMaxNum, HelpVBA.minLong))
     
     ' The Transpose function cannot assume that the inner sequences are of equal length
     ' make the inner sequences equal in length.

@@ -49,7 +49,7 @@ Public Sub FormatTests()
 
     
     #If twinbasic Then
-        Debug.Print CurrentProcedureName, vbTab,
+        Debug.Print CurrentProcedureName, vbTab, vbTab,
     #Else
         GlobalAssert
         VBATesting = True

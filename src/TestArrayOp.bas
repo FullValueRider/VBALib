@@ -44,7 +44,7 @@ End Sub
 Public Sub ArrayOpTests()
 
     #If twinbasic Then
-        Debug.Print CurrentProcedureName; vbTab, vbTab,
+        Debug.Print CurrentProcedureName, vbTab,
     #Else
         GlobalAssert
         VBATesting = True

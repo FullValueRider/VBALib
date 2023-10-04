@@ -19,7 +19,7 @@ Public Enum e_ConvertTo
     m_Double
     m_Decimal
     M_Integer
-    m_long
+    m_Long
     m_LongLong
     m_Single
     m_String

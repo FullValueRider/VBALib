@@ -43,11 +43,11 @@ End Sub
 Public Sub StrsTests()
  
     #If twinbasic Then
-        Debug.Print CurrentProcedureName; vbTab, vbTab, vbTab, vbTab,
+        Debug.Print CurrentProcedureName, vbTab, vbTab,
     #Else
         GlobalAssert
         VBATesting = True
-        Debug.Print ErrEx.LiveCallstack.ProcedureName; vbTab, vbTab, vbTab,
+        Debug.Print ErrEx.LiveCallstack.ProcedureName, vbTab, vbTab,
     #End If
 
     Test01a_strs_BinToNum_Byte
