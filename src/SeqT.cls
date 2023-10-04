@@ -126,7 +126,7 @@ End Function
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
 ' Core methods - essential for making the class work and status of the object
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
-Public Function Add(ByRef ipItem As Variant) As Long
+Public Function Add(ByVal ipItem As Variant) As Long
     'Debug.Print
     'Debug.Print "Adding ", ipItem
     Dim myNode As SeqTNode: Set myNode = SeqTNode(ipItem, GetPriority)
@@ -2337,7 +2337,7 @@ Private Function ISeq_Deb(ParamArray ipParamarray() As Variant) As Variant
         Set ISeq_Deb = .ConstructInstance(VBA.CVar(ipParamarray))
     End With
 End Function
-Private Function ISeq_Add(ByRef ipItem As Variant) As Long
+Private Function ISeq_Add(ByVal ipItem As Variant) As Long
     ISeq_Add = Add(ipItem)
 End Function
 
@@ -2649,6 +2649,6 @@ Private Function ISeq_Freq() As KvpA
     Set ISeq_Freq = Freq()
 End Function
 
-Private Function ISeq_SetOf(ByRef ipSet As e_SetoF, ByRef ipRangeItem As Variant) As Variant
+Private Function ISeq_SetOf(ByRef ipSet As e_SetoF, ByRef ipRangeItem As ISeq) As ISeq
     Set ISeq_SetOf = SetOf(ipSet, ipRangeItem)
 End Function

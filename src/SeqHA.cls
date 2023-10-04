@@ -566,7 +566,7 @@ Attribute VB_Exposed = False
 'End Function
 '
 ''@Description("Add a single item.  Returns the index at which the item was added for compatibility with the mscorlib ArrayList.")
-'Public Function Add(ByRef ipItem As Variant) As Long
+'Public Function Add(ByVal ipItem As Variant) As Long
 '
 '    ' The Add actions depends on the root and the hash slot status
 '    ' If s.HashRoot is nothing: add the first node to the list

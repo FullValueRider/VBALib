@@ -30,7 +30,7 @@ Option Explicit
 Public Function Deb(ParamArray ipParamarray() As Variant) As Variant
 End Function
 
-Public Function Add(ByRef ipItem As Variant) As Long
+Public Function Add(ByVal ipItem As Variant) As Long
 End Function
 
 Public Function Count(Optional ByRef ipItem As Variant) As Long
@@ -264,5 +264,5 @@ End Function
 Public Function Freq() As KvpA
 End Function
 
-Public Function SetOf(ByRef ipSet As e_SetoF, ByRef ipRangeItem As Variant) As Variant
+Public Function SetOf(ByRef ipSet As e_SetoF, ByRef ipRangeItem As ISeq) As ISeq
 End Function

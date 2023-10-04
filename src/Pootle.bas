@@ -287,9 +287,9 @@ Sub testTranspose()
     
 End Sub
 
-Sub TestTransposed()
-    Dim myS As SeqA: Set myS = SeqA(SeqA(1, 2, 3, 4), SeqA(5, 6), SeqA(7, 8, 9, 10, 11))
-    Fmt.Dbg "{0}", myS
-    myS.Transposed
-    Fmt.Dbg "{0}", myS
-End Sub
+'Sub TestTransposed()
+'    Dim myS As SeqA: Set myS = SeqA(SeqA(1, 2, 3, 4), SeqA(5, 6), SeqA(7, 8, 9, 10, 11))
+'    Fmt.Dbg "{0}", myS
+'    myS.Transposed
+'    Fmt.Dbg "{0}", myS
+'End Sub

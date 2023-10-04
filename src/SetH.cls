@@ -348,7 +348,7 @@ Option Explicit
 'End Property
 '
 ''@Description("Add a single item.  Returns the index at which added.  For compatibility with ArrayList")
-'Public Function Add(ByRef ipItem As Variant) As Long
+'Public Function Add(ByVal ipItem As Variant) As Long
 '
 '    s.Host.Add ipItem
 '    Add = s.Host.Count
