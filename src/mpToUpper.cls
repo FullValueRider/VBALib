@@ -26,13 +26,13 @@ Private Property Get IMapper_TypeName() As String
 End Property
 
 
-Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         
     If GroupInfo.IsString(ipHostItem) Then
         '@Ignore UntypedFunctionUsage
-        Imapper_ExecMapper = Array(VBA.UCase(ipHostItem))
+        IMapper_ExecMapper = Array(VBA.UCase(ipHostItem))
     Else
-        Imapper_ExecMapper = Array(ipHostItem)
+        IMapper_ExecMapper = Array(ipHostItem)
     End If
 End Function
 

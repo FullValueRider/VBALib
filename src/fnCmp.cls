@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "fnAdd"
+Attribute VB_Name = "fnCmp"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
@@ -14,24 +14,28 @@ Option Explicit
 
 Implements IFold
 
-Private Const MY_TYPENAME                               As String = "fnAdd"
+Private Const MY_TYPENAME                               As String = "fnCmp"
 
 '@DefaultMember
-Public Function Deb() As fnAdd
+Public Function Deb() As fnCmp
 Attribute Deb.VB_UserMemId = 0
-    With New fnAdd
+    With New fnCmp
         Set Deb = .ConstructInstance
     End With
 End Function
 
-Friend Function ConstructInstance() As fnAdd
+Friend Function ConstructInstance() As fnCmp
     Set ConstructInstance = Me
 End Function
 
 Private Function IFold_ExecFold(ByVal ipAccumulator As Variant, ByRef ipHostItem As Variant) As Variant
-' Its likely we can expand this function so that + can be applied to non numeeric types
-' but this maynot be a good idea compared to a specific function
-    IFold_ExecFold = Array(ipAccumulator + ipHostItem)
+
+    If ipAccumulator.ExecCmp(ipHostItem) Then
+        ipAccumulator = ipHostItem
+    End If
+    
+    IFold_ExecFold = Array(ipAccumulator)
+    
 End Function
 
 

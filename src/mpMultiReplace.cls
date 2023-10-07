@@ -31,36 +31,39 @@ Private Property Get IMapper_TypeName() As String
 End Property
 
 
-Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
 
     If GroupInfo.IsNotString(ipHostItem) Then
-        Imapper_ExecMapper = Array(ipHostItem)
+        IMapper_ExecMapper = Array(ipHostItem)
     Else
-        Imapper_ExecMapper = Array(Strs.MultiReplacer(VBA.CStr(ipHostItem), s.FindReplaceItems))
+        IMapper_ExecMapper = Array(Strs.MultiReplacer(VBA.CStr(ipHostItem), s.FindReplaceItems))
     End If
         
 End Function
 
 
-'@Description("Takes a jagged array of find/replacepairs")
+
 '@DefaultMember
-Public Function Deb(ByRef ipFindReplaceItems As Variant) As mpMultiReplace
-Attribute Deb.VB_Description = "Takes a jagged array of find/replacepairs"
+Public Function Deb(ParamArray ipFindReplaceItems() As Variant) As mpMultiReplace
 Attribute Deb.VB_UserMemId = 0
     With New mpMultiReplace
-        Set Deb = .ConstructInstance(ipFindReplaceItems)
+        Set Deb = .ConstructInstance(VBA.CVar(ipFindReplaceItems))
     End With
 End Function
 
 
 Friend Function ConstructInstance(ByRef ipFindReplaceItems As Variant) As mpMultiReplace
         
-    If VBA.IsObject(ipFindReplaceItems) Then
-        Set s.FindReplaceItems = ipFindReplaceItems
+    If ArrayOp.HoldsOneItem(ipFindReplaceItems) Then
+        If GroupInfo.IsItemByKey(ipFindReplaceItems(0)) Then
+            Set s.FindReplaceItems = ipFindReplaceItems(0)
+        Else
+            s.FindReplaceItems = ipFindReplaceItems(0)
+        End If
     Else
-        s.FindReplaceItems = ipFindReplaceItems
+        Set s.FindReplaceItems = ArrayOp.Splat(ipFindReplaceItems)
     End If
-        
+      
     Set ConstructInstance = Me
         
 End Function

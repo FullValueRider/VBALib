@@ -23,9 +23,9 @@ End Type
 Private s                                                   As State
 
 '@Description("return the item in the lookup dictionary")
-Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
-Attribute Imapper_ExecMapper.VB_Description = "return the item in the lookup dictionary"
-    Imapper_ExecMapper = Array(s.Lookup.Item(ipHostItem))
+Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Attribute IMapper_ExecMapper.VB_Description = "return the item in the lookup dictionary"
+    IMapper_ExecMapper = Array(s.Lookup.Item(ipHostItem))
 End Function
 
 '@DefaultMember

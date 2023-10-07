@@ -30,8 +30,8 @@ End Property
 
 
 '@Description("if the Hostitem is a SeqC or kvp then we reapply mapit with the mpInner instance")
-Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
-Attribute Imapper_ExecMapper.VB_Description = "if the Hostitem is a SeqC or kvp then we reapply mapit with the mpInner instance"
+Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Attribute IMapper_ExecMapper.VB_Description = "if the Hostitem is a SeqC or kvp then we reapply mapit with the mpInner instance"
     ' myItem allows easier debugging inspection
     Dim myItem As Variant
     Select Case GroupInfo.Id(ipHostItem)
@@ -44,12 +44,12 @@ Attribute Imapper_ExecMapper.VB_Description = "if the Hostitem is a SeqC or kvp 
             ' e.g. using .Mapit(mpInner(s.mapper))
             ' we can just use the Me instance
             Set myItem = ipHostItem.MapIt(Me)
-            Imapper_ExecMapper = Array(myItem)
+            IMapper_ExecMapper = Array(myItem)
             
         Case Else
             ' Execmapper returns a single item array
             myItem = s.Mapper.ExecMapper(ipHostItem)
-            Imapper_ExecMapper = Array(myItem(0))
+            IMapper_ExecMapper = Array(myItem(0))
         
     End Select
     

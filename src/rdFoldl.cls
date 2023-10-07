@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+Attribute VB_Description = "Returns the value of the Accumulator, plus the index at which the Accumulator value changed as a result of the application of the fold function"
 '@PredeclaredId
 '@Exposed
 '@Folder("Filters")
@@ -24,7 +25,7 @@ Option Explicit
 ' an optional limit for the acc
 ' and an optional filter for the individual items
 ' optionally to specify the subset of the list on which to operate (from To Step)
-
+'@ModuleDescription("Returns the value of the Accumulator, plus the index at which the Accumulator value changed as a result of the application of the fold function")
 Implements IReducer
 
 Const MY_TYPENAME                                   As String = "rdFoldl"
@@ -37,8 +38,9 @@ Private Type State
     SetupFrom                                       As Long
     SetUpTo                                         As Long
     SetUpStep                                       As Long
+    Index                                           As Long
     
-    Accumulator                                     As Long
+    Accumulator                                     As Variant
     From                                            As Long
     To                                              As Long
     Step                                            As Long
@@ -51,7 +53,7 @@ Private s                                           As State
 Public Function Deb _
 ( _
     ByRef ipFold As IFold, _
-    Optional ByRef ipAccumulator As Variant = 0, _
+    Optional ByRef ipAccumulator As Variant = Empty, _
     Optional ByRef ipAccCmp As IComparer = Nothing, _
     Optional ByRef ipItemCmp As IComparer = Nothing, _
     Optional ByRef ipFrom As Long = -1, _
@@ -78,7 +80,9 @@ Friend Function ConstructInstance _
         
     Set s.FoldFn = ipFold
     
-    If VBA.IsObject(s.Accumulator) Then
+    's.SetupAccumulator does not need to be an array as WeakReference are
+    'just preserving the value that will be used in Item 0 of the accumulator array
+    If VBA.IsObject(ipAccumulator) Then
         Set s.SetupAccumulator = ipAccumulator
     Else
         s.SetupAccumulator = ipAccumulator
@@ -110,7 +114,6 @@ Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
     Dim myItems As IterItems: Set myItems = IterItems(ipHostItems)
     
     'Todo, improvide validation of from, to ,step
-    s.Accumulator = s.SetupAccumulator
     If s.SetupFrom = -1 Then
         s.From = myItems.FirstIndex
     Else
@@ -129,22 +132,33 @@ Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
         s.Step = s.SetUpStep
     End If
     
-    'Debug.Print myFrom, myTo, myStep
     myItems.FTS s.From, s.To, s.Step
+    
+    's.Index = s.From
+    s.Accumulator = Array(s.SetupAccumulator)
+    
     Do
         Dim myA() As Variant: myA = Array(myItems.CurItem(0))
         
+        
         If IsNotNothing(s.ItemComparer) Then
+            ' Ignore the item if the item comparer is false
             If Not s.ItemComparer.ExecCmp(myA(0)) Then
                 GoTo ContinueDo
             End If
         End If
         
         ' exec fold returns a single item array
-        s.Accumulator = s.FoldFn.ExecFold(s.Accumulator, myA(0))(0)
+        Dim myAccum As Variant: myAccum = s.Accumulator
+        s.Accumulator = s.FoldFn.ExecFold(myAccum(0), myA(0))
+        Fmt.Dbg "{0},{1}", myAccum(0), s.Accumulator(0)
+        If Comparers.NEQ(s.Accumulator(0), myAccum(0)) Then
+            s.Index = myItems.CurKey(0)
+        End If
+        
         If IsNotNothing(s.AccComparer) Then
-            If s.AccComparer.ExecCmp(s.Accumulator) Then
-                IReducer_ExecReduction = Array(s.Accumulator)
+            If s.AccComparer.ExecCmp(s.Accumulator(0)) Then
+                IReducer_ExecReduction = Array(Array(s.Accumulator(0), s.Index))
                 Exit Function
             End If
         End If
@@ -152,6 +166,6 @@ Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 ContinueDo:
     Loop While myItems.MoveNext
     
-    IReducer_ExecReduction = Array(s.Accumulator)
+    IReducer_ExecReduction = Array(Array(s.Accumulator(0), s.Index))
     
 End Function

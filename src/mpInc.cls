@@ -50,7 +50,7 @@ End Property
 '    Set IMapper_ExecMapper = ExecMapper(ipHostItem)
 'End Function
 
-Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
         
     '@Ignore VariableNotAssigned
     
@@ -64,17 +64,17 @@ Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
             For myIndex = 1 To s.Increment
                 myString = Strs.Inc(myString)
             Next
-            Imapper_ExecMapper = Array(myString)
+            IMapper_ExecMapper = Array(myString)
             
             
         Case GroupInfo.IsNumber(ipHostItem)
            
-            Imapper_ExecMapper = Array(ipHostItem + s.Increment)
+            IMapper_ExecMapper = Array(ipHostItem + s.Increment)
             
             
         Case Else
             
-            Imapper_ExecMapper = Array(ipHostItem)
+            IMapper_ExecMapper = Array(ipHostItem)
             
     End Select
     

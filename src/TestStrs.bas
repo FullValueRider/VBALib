@@ -1010,7 +1010,7 @@ Private Sub Test10b_MultiReplacer_SpecifiedPair()
    
     Dim myResult As String
     'Act:
-    myResult = Strs.MultiReplacer("     He llo   Worl   d ", Array(Array(Chars.twSpace, "a")))
+    myResult = Strs.MultiReplacer("     He llo   Worl   d ", Array(Chars.twSpace, "a"))
     'Assert:
     AssertExactAreEqual myExpected, myResult, myProcedureName
     
@@ -1044,7 +1044,7 @@ Private Sub Test10c_MultiReplacer_NestedPairs()
    
     Dim myResult As String
     'Act:
-    myResult = Strs.MultiReplacer("HelloaaaaapppppWorld", Array(Array("ap", Chars.twNullStr), Array("l", "L")))
+    myResult = Strs.MultiReplacer("HelloaaaaapppppWorld", Array("ap", Chars.twNullStr), Array("l", "L"))
     'Assert:
     AssertExactAreEqual myExpected, myResult, myProcedureName
     

@@ -376,7 +376,7 @@ End Function
 
 
 '@Description("Applies multiple, repeat find and replace actions using  string pairs either of the form Array(Array(Find,Repace),Array(Find,Replace)...) or Dictionary of Find vs Replace")
-Public Function MultiReplacer(ByRef ipString As String, Optional ByRef ipFindReplacePairs As Variant = Empty) As String
+Public Function MultiReplacer(ByRef ipString As String, ParamArray ipFindReplacePairs() As Variant) As String
 Attribute MultiReplacer.VB_Description = "Applies multiple, repeat find and replace actions using  string pairs either of the form Array(Array(Find,Repace),Array(Find,Replace)...) or Dictionary of Find vs Replace"
 
     If VBA.Len(ipString) = 0 Then
@@ -384,32 +384,46 @@ Attribute MultiReplacer.VB_Description = "Applies multiple, repeat find and repl
         Exit Function
     End If
     
+    Dim myFindReplacePairs As Variant: myFindReplacePairs = ArrayOp.Splat(VBA.CVar(ipFindReplacePairs))
+    
+    If ArrayOp.HoldsOneItem(myFindReplacePairs) Then
+        If GroupInfo.IsItemByKey(myFindReplacePairs(0)) Then
+            Set myFindReplacePairs = myFindReplacePairs(0)
+        End If
+    End If
+    
     Dim myFRPairs() As Variant
     
-    Select Case GroupInfo.Id(ipFindReplacePairs)
+    Select Case GroupInfo.Id(VBA.CVar(myFindReplacePairs))
     
         Case m_Admin
             myFRPairs = Array(Array(Chars.twSpace, vbNullString))
     
         Case m_array
-            If ArrayOp.LacksItems(ipFindReplacePairs) Then
+            If ArrayOp.LacksItems(myFindReplacePairs) Then
                 myFRPairs = Array(Array(Chars.twSpace, Chars.twNullStr))
             Else
-                myFRPairs = ipFindReplacePairs
+'                Fmt.Dbg "{0}", Array(myFindReplacePairs)
+'                Debug.Print ArrayOp.IsNotArray(myFindReplacePairs(0))
+                If ArrayOp.Count(myFindReplacePairs) = 2 And ArrayOp.IsNotArray(myFindReplacePairs(0)) Then
+                    myFRPairs = Array(myFindReplacePairs)
+                Else
+                    myFRPairs = myFindReplacePairs
+                End If
             End If
             
         Case m_ItemByKey
-            If ipFindReplacePairs.LacksItems Then
+            If myFindReplacePairs.LacksItems Then
                 myFRPairs = Array(Array(Chars.twSpace, Chars.twNullStr))
             Else
-                myFRPairs = ipFindReplacePairs.Pairs
+                myFRPairs = myFindReplacePairs.Pairs
             End If
             
         Case Else
         
             Err.Raise 17 + vbObjectError, _
                 "VBALib.Strs.MultiReplace", _
-                Fmt.Text("Expecting Array or arrays or ItemByKey.  Got {0}", VBA.TypeName(ipFindReplacePairs))
+                Fmt.Text("Expecting Array of arrays or ItemByKey.  Got {0}", VBA.TypeName(ipFindReplacePairs))
 
     End Select
     

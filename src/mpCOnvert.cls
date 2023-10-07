@@ -31,8 +31,8 @@ End Property
 
 
 '@Description("Converts the Items in the to the specifiied Type")
-Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
-Attribute Imapper_ExecMapper.VB_Description = "Converts the Items in the to the specifiied Type"
+Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Attribute IMapper_ExecMapper.VB_Description = "Converts the Items in the to the specifiied Type"
    
     On Error Resume Next
     Dim myResult As Variant
@@ -65,9 +65,9 @@ Attribute Imapper_ExecMapper.VB_Description = "Converts the Items in the to the 
     End Select
     
     If Err.Number = 0 Then
-        Imapper_ExecMapper = Array(myResult)
+        IMapper_ExecMapper = Array(myResult)
     Else
-        Imapper_ExecMapper = Array(ipHostItem)
+        IMapper_ExecMapper = Array(ipHostItem)
     End If
     
     On Error GoTo 0

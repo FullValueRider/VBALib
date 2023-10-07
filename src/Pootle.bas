@@ -6,6 +6,10 @@ Private Type Properties
     Bounds As Variant
 End Type
 
+Public Type FoldResult
+    Value  As Variant
+    Index  As Variant
+End Type
 
 Private Type myPoint
     X1 As Long
@@ -250,10 +254,10 @@ End Sub
 
 Public Sub TestFoldLeft()
 
-    Dim myS As SeqA: Set myS = SeqA(1, 2, 3, 4, 5)
+    Dim myS As SeqA: Set myS = SeqA(1, 6, 5, 4, 3)
     Dim myResult As Variant
-    myResult = myS.ReduceIt(rdFoldl(fnAdd, 0))
-    Debug.Print 1 + 2 + 3 + 4 + 5, myResult
+    myResult = myS.ReduceIt(rdFoldr(fnMaxNum, 0))
+    Fmt.Dbg "expecting 15,[5,3]. Got {0},{1}", 1 + 2 + 3 + 4 + 5, myResult
 End Sub
 
 
@@ -293,3 +297,20 @@ End Sub
 '    myS.Transposed
 '    Fmt.Dbg "{0}", myS
 'End Sub
+Sub TestFoldResult()
+    Dim myFoldRes As FoldResult
+    myFoldRes.Index = 2
+    myFoldRes.Value = 5
+    
+    Dim myF2 As FoldResult
+    myF2 = TestPassFoldresult(myFoldRes)
+    
+End Sub
+
+Function TestPassFoldresult(ByVal ipFR As FoldResult) As FoldResult
+    ipFR.Index = 1
+    ipFR.Value = 100
+    TestPassFoldresult = ipFR
+End Function
+
+

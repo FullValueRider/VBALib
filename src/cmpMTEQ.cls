@@ -34,17 +34,20 @@ Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
     IComparer_ExecCmp = Comparers.MTEQ(ipHostItem, s.Reference(0))
 End Function
 
+Private Sub IComparer_Reference(ParamArray ipReference() As Variant)
+    VariantCopy s.Reference, ipReference(0)
+End Sub
 
 '@DefaultMember
-Public Function Deb(ByVal ipReference As Variant) As cmpMTEQ
+Public Function Deb(ParamArray ipReference() As Variant) As cmpMTEQ
 Attribute Deb.VB_UserMemId = 0
     With New cmpMTEQ
-        Set Deb = .ConstructInstance(ipReference)
+        Set Deb = .ConstructInstance(VBA.CVar(ipReference))
     End With
 End Function
 
 
-Friend Function ConstructInstance(ByVal ipReference As Variant) As cmpMTEQ
-    s.Reference = Array(ipReference)
+Friend Function ConstructInstance(ByRef ipReference As Variant) As cmpMTEQ
+    s.Reference = Array(ipReference(0))
     Set ConstructInstance = Me
 End Function

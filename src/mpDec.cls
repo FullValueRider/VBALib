@@ -45,12 +45,12 @@ Private Property Get IMapper_TypeName() As String
 End Property
 
 
-Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
     
     If GroupInfo.IsNumber(ipHostItem) Then
-        Imapper_ExecMapper = Array(ipHostItem - s.Decrement)
+        IMapper_ExecMapper = Array(ipHostItem - s.Decrement)
     Else
-        Imapper_ExecMapper = Array("Nan")
+        IMapper_ExecMapper = Array("Nan")
     End If
             
 End Function

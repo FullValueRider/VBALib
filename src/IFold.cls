@@ -12,7 +12,7 @@ Attribute VB_Exposed = True
 '@Folder("Reducers")
 Option Explicit
 
-Public Function ExecFold(ByRef ipAccumulator As Variant, ByRef ipHostItem As Variant) As Variant
+Public Function ExecFold(ByVal ipAccumulator As Variant, ByRef ipHostItem As Variant) As Variant
 End Function
 
 Public Property Get TypeName() As String

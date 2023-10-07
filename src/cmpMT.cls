@@ -18,7 +18,7 @@ Implements IComparer
 Const MY_TYPENAME                               As String = "cmpMT"
 
 Private Type State
-    Reference()                                 As Variant
+    Reference                                   As Variant
 End Type
 
 
@@ -34,17 +34,20 @@ Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
         IComparer_ExecCmp = Comparers.MT(ipHostItem, s.Reference(0))
 End Function
 
+Private Sub IComparer_Reference(ParamArray ipReference() As Variant)
+    VariantCopy s.Reference, ipReference(0)
+End Sub
 
 '@DefaultMember
-Public Function Deb(ByVal ipReference As Variant) As cmpMT
+Public Function Deb(ParamArray ipReference() As Variant) As cmpMT
 Attribute Deb.VB_UserMemId = 0
     With New cmpMT
-        Set Deb = .ConstructInstance(ipReference)
+        Set Deb = .ConstructInstance(VBA.CVar(ipReference))
     End With
 End Function
 
 
 Friend Function ConstructInstance(ByVal ipReference As Variant) As cmpMT
-    s.Reference = Array(ipReference)
+    s.Reference = Array(ipReference(0))
     Set ConstructInstance = Me
 End Function

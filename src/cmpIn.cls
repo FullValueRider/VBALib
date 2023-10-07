@@ -44,17 +44,22 @@ Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
     
 End Function
 
+Private Sub IComparer_Reference(ParamArray ipLowHighRefsArray() As Variant)
+    s.Low.Value = ipLowHighRefsArray(0)
+    s.High.Value = ipLowHighRefsArray(1)
+End Sub
+
 '@DefaultMember
-Public Function Deb(ByRef ipLowValue As Variant, ByRef ipHighValue As Variant) As cmpIn
+Public Function Deb(ParamArray ipLowHighRefsArray() As Variant) As cmpIn
 Attribute Deb.VB_UserMemId = 0
     With New cmpIn
-        Set Deb = .ConstructInstance(ipLowValue, ipHighValue)
+        Set Deb = .ConstructInstance(VBA.CVar(ipLowHighRefsArray))
     End With
 End Function
 
 
-Friend Function ConstructInstance(ByRef ipLowValue As Variant, ByRef ipHighValue As Variant) As cmpIn
-    Set s.Low = cmpLT(ipLowValue)
-    Set s.High = cmpMT(ipHighValue)
+Friend Function ConstructInstance(ByRef ipLowHighRefsArray As Variant) As cmpIn
+    Set s.Low = cmpLT(ipLowHighRefsArray(0))
+    Set s.High = cmpMT(ipLowHighRefsArray(1))
     Set ConstructInstance = Me
 End Function

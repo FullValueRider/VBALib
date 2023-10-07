@@ -75,8 +75,8 @@ End Property
 'End Function
 
 '@Description("Converts tthe items in the SeqC to Long Integers.  If the input item cannot be converted the string "NaN" is returned")
-Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
-    Imapper_ExecMapper = Array(IIf(s.Comparer.ExecCmp(ipHostItem), s.Item, ipHostItem))
+Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+    IMapper_ExecMapper = Array(IIf(s.Comparer.ExecCmp(ipHostItem), s.Item, ipHostItem))
 End Function
 
 

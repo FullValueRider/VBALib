@@ -28,7 +28,7 @@ Friend Function ConstructInstance() As fnMaxNum
     Set ConstructInstance = Me
 End Function
 
-Private Function IFold_ExecFold(ByRef ipAccumulator As Variant, ByRef ipHostItem As Variant) As Variant
+Private Function IFold_ExecFold(ByVal ipAccumulator As Variant, ByRef ipHostItem As Variant) As Variant
 
     If GroupInfo.IsNumber(ipHostItem) Then
         If ipHostItem > ipAccumulator Then

@@ -37,11 +37,12 @@ Private Type State
     SetupFrom                                       As Long
     SetUpTo                                         As Long
     SetUpStep                                       As Long
+    Index                                           As Long
     
-    Accumulator                                     As Long
+    Accumulator                                     As Variant
     From                                            As Long
     To                                              As Long
-    Step                                              As Long
+    Step                                            As Long
 End Type
 
 Private s                                           As State
@@ -50,7 +51,7 @@ Private s                                           As State
 Public Function Deb _
 ( _
     ByRef ipFold As IFold, _
-    Optional ByRef ipAccumulator As Variant = 0, _
+    Optional ByRef ipAccumulator As Variant = Empty, _
     Optional ByRef ipAccCmp As IComparer = Nothing, _
     Optional ByRef ipItemCmp As IComparer = Nothing, _
     Optional ByRef ipFrom As Long = -1, _
@@ -129,8 +130,10 @@ Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
         s.Step = s.SetUpStep
     End If
     
-    'Debug.Print myFrom, myTo, myStep
     myItems.FTS(s.From, s.To, s.Step).MoveToEndIndex
+    's.Index = myItems.EndIndex
+    'Debug.Print myFrom, myTo, myStep
+    s.Accumulator = Array(s.SetupAccumulator)
     Do
         Dim myA() As Variant: myA = Array(myItems.CurItem(0))
         
@@ -140,11 +143,15 @@ Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
             End If
         End If
         
-        ' exec fold returns a single item array
-        s.Accumulator = s.FoldFn.ExecFold(s.Accumulator, myA(0))(0)
+        Dim myAccum As Variant:  myAccum = s.Accumulator
+        s.Accumulator = s.FoldFn.ExecFold(s.Accumulator(0), myA(0))
+        If Comparers.NEQ(s.Accumulator(0), myAccum(0)) Then
+            s.Index = myItems.CurKey(0)
+        End If
+    
         If IsNotNothing(s.AccComparer) Then
-            If s.AccComparer.ExecCmp(s.Accumulator) Then
-                IReducer_ExecReduction = Array(s.Accumulator)
+            If s.AccComparer.ExecCmp(s.Accumulator(0)) Then
+                IReducer_ExecReduction = Array(Array(s.Accumulator(0), s.Index))
                 Exit Function
             End If
         End If
@@ -152,6 +159,6 @@ Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
 ContinueDo:
     Loop While myItems.MovePrev
     
-    IReducer_ExecReduction = Array(s.Accumulator)
+    IReducer_ExecReduction = Array(Array(s.Accumulator(0), s.Index))
     
 End Function

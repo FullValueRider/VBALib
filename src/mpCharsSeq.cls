@@ -22,12 +22,12 @@ Private Property Get IMapper_TypeName() As String
 End Property
 
 
-Private Function Imapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
+Private Function IMapper_ExecMapper(ByRef ipHostItem As Variant) As Variant
 
     If GroupInfo.IsString(ipHostItem) Then
-        Imapper_ExecMapper = Array(SeqC(ipHostItem))
+        IMapper_ExecMapper = Array(SeqC(ipHostItem))
     Else
-        Imapper_ExecMapper = Array(ipHostItem)
+        IMapper_ExecMapper = Array(ipHostItem)
     End If
         
 End Function

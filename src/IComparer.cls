@@ -17,6 +17,8 @@ Option Explicit
 Public Function ExecCmp(ByRef ipHostItem As Variant) As Boolean
 End Function
 
+Public Sub Reference(ParamArray ipReference() As Variant)
+End Sub
 
 Public Property Get TypeName() As String
 End Property
