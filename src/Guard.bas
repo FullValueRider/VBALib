@@ -60,7 +60,7 @@ End Function
 ' There are occasions when we wish to know the result of an alert test
 ' rather than trigger an error message
 ' In such cases ipREPORT_BACK should be set to true
-Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByRef ipKvp As Object, ByRef ipLocation As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
+Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByVal ipKvp As Object, ByRef ipLocation As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
 
     Dim myResult As Long: myResult = ((ipIndex < ipKvp.FirstIndex) Or (ipIndex > ipKvp.LastIndex))
     

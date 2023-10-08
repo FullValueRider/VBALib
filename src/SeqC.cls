@@ -8,6 +8,7 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqC is a Collection/ArrayList replacement.  Items are stored in a Collection.  Indexing is 1 based. Order of addition is preserved. Keys are not supported (see Kvp classes)"
+'@IgnoreModule DefaultMemberRequired, DefaultMemberRequired
 '@PredeclaredId
 '@Exposed
 '@Folder("Seq")

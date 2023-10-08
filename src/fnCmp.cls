@@ -28,6 +28,7 @@ Friend Function ConstructInstance() As fnCmp
     Set ConstructInstance = Me
 End Function
 
+'@Ignore AssignedByValParameter
 Private Function IFold_ExecFold(ByVal ipAccumulator As Variant, ByRef ipHostItem As Variant) As Variant
 
     If ipAccumulator.ExecCmp(ipHostItem) Then

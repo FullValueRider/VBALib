@@ -18,7 +18,6 @@ Implements IMapper
 
 Private Const MY_TYPENAME                       As String = "mpSelect"
 
-
 Private Type State
     Index                                       As Long
 End Type
