@@ -254,13 +254,16 @@ End Sub
 
 Public Sub TestFoldLeft()
 
-    Dim myS As SeqA: Set myS = SeqA(1, 6, 5, 4, 3)
+    Dim myS As SeqA: Set myS = SeqA(SeqA(1, 6, 5, 4, 3), SeqA(1, 6, 5, 4, 3), SeqA(1, 6, 5, 4, 3))
     Dim myResult As Variant
     myResult = myS.ReduceIt(rdFoldr(fnMaxNum, 0))
-    Fmt.Dbg "expecting 15,[5,3]. Got {0},{1}", 1 + 2 + 3 + 4 + 5, myResult
+    Fmt.Dbg "expecting 15,[6,2]. Got {0},{1}", 1 + 2 + 3 + 4 + 5, myResult
 End Sub
 
-
+Public Sub testgfKey()
+    Dim myS As SeqA: Set myS = SeqA(SeqA(SeqA(1, 6, 5, 4, 3), SeqA(1, 6, 5, 4, 3), SeqA(1, 6, 5, 4, 3)), SeqA(SeqA(1, 6, 5, 4, 3), SeqA(1, 6, 5, 4, 3), SeqA(1, 6, 5, 4, 3)), SeqA(SeqA(1, 6, 5, 4, 3), SeqA(1, 6, 5, 4, 3), SeqA(1, 6, 5, 4, 3)))
+    Fmt.Dbg "{0}", myS.MapIt(mpInner(gfKey(3)))
+End Sub
 Sub TestInner()
 
     Debug.Print Strs.Inner("HelloThere", 0, 3)
@@ -307,10 +310,15 @@ Sub TestFoldResult()
     
 End Sub
 
-Function TestPassFoldresult(ByVal ipFR As FoldResult) As FoldResult
-    ipFR.Index = 1
-    ipFR.Value = 100
-    TestPassFoldresult = ipFR
-End Function
 
+Sub TestNumber()
 
+    Dim myNum As Number: Set myNum = Num(42)
+    
+    Dim myNum2 As Number: Set myNum2 = Num(800)
+    Debug.Print myNum, myNum2
+    
+    myNum = myNum2
+    
+    Debug.Print myNum, myNum2
+End Sub

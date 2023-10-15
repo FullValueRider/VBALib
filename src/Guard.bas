@@ -29,7 +29,7 @@ Public Property Let ReportBackAction(ByVal ipReportBackAction As e_GuardReportBa
 End Property
 
 
-Public Function IndexNotFound(ByVal ipIndex As Long, ByVal ipIndexed As Object, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+Public Function IndexNotFound(ByVal ipIndex As Long, ByVal ipIndexed As Object, ByRef ipLocation As String, Optional ByVal ipreportback As Boolean = False) As Boolean
 
     Dim myResult As Boolean: myResult = ipIndexed.LacksItems
     
@@ -45,7 +45,7 @@ Public Function IndexNotFound(ByVal ipIndex As Long, ByVal ipIndexed As Object, 
     End If
     
     If p.ReportBackAction = m_ReportBackContinue Then
-        If ipReportBack Then
+        If ipreportback Then
             IndexNotFound = myResult
             Exit Function
         End If
@@ -60,7 +60,7 @@ End Function
 ' There are occasions when we wish to know the result of an alert test
 ' rather than trigger an error message
 ' In such cases ipREPORT_BACK should be set to true
-Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByVal ipKvp As Object, ByRef ipLocation As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
+Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByVal ipKvp As Object, ByRef ipLocation As String, Optional ByRef ipreportback As Boolean = False) As Boolean
 
     Dim myResult As Long: myResult = ((ipIndex < ipKvp.FirstIndex) Or (ipIndex > ipKvp.LastIndex))
     
@@ -71,7 +71,7 @@ Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByVal ipKvp As Object, B
     End If
     
     If p.ReportBackAction = m_ReportBackContinue Then
-        If ipReportBack Then
+        If ipreportback Then
             Exit Function
         End If
     End If
@@ -83,7 +83,7 @@ Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByVal ipKvp As Object, B
 End Function
 
 
-Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipLocation As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
+Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipLocation As String, Optional ByRef ipreportback As Boolean = False) As Boolean
 
     Dim myResult As Boolean
     Select Case GroupInfo.Id(ipRange)
@@ -100,7 +100,7 @@ Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipLocation As S
     End If
     
     If p.ReportBackAction = m_ReportBackContinue Then
-        If ipReportBack Then
+        If ipreportback Then
             Exit Function
         End If
     End If
@@ -112,12 +112,12 @@ Public Function InvalidRangeItem(ByRef ipRange As Variant, ByRef ipLocation As S
 End Function
 
 
-Public Function ArrayNotFound(ByRef ipArray As Variant, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+Public Function ArrayNotFound(ByRef ipArray As Variant, ByRef ipLocation As String, Optional ByVal ipreportback As Boolean = False) As Boolean
     
     ArrayNotFound = ArrayOp.IsNotArray(ipArray)
     
     If p.ReportBackAction = m_ReportBackContinue Then
-        If ipReportBack Then
+        If ipreportback Then
             Exit Function
         End If
     End If
@@ -176,7 +176,7 @@ Public Function KeyIsAdmin(ByRef ipAdmin As Variant, ByRef ipLocation As String,
 End Function
 
 ' todo: update As object to as IKvp when IKvp defined.
-Public Function EnsureUniqueKeys(ByRef ipKey As Variant, ByVal ipKvp As Object, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+Public Function EnsureUniqueKeys(ByRef ipKey As Variant, ByVal ipKvp As Object, ByRef ipLocation As String, Optional ByVal ipreportback As Boolean = False) As Boolean
 
     EnsureUniqueKeys = ipKvp.EnsureUniqueKeys
     
@@ -192,7 +192,7 @@ Public Function EnsureUniqueKeys(ByRef ipKey As Variant, ByVal ipKvp As Object, 
     End If
     
     If p.ReportBackAction = m_ReportBackContinue Then
-        If ipReportBack Then
+        If ipreportback Then
             Exit Function
         End If
     End If
@@ -204,7 +204,7 @@ Public Function EnsureUniqueKeys(ByRef ipKey As Variant, ByVal ipKvp As Object, 
 End Function
 
 '@description("Guard to use when legitimately searching for a key as opposed to checking for the existance of a key")
-Public Function KeyNotFound(ByVal ipLocOfKey As Variant, ByRef ipKey As Variant, ByRef ipLocation As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
+Public Function KeyNotFound(ByVal ipLocOfKey As Variant, ByRef ipKey As Variant, ByRef ipLocation As String, Optional ByRef ipreportback As Boolean = False) As Boolean
 Attribute KeyNotFound.VB_Description = "Guard to use when legitimately searching for a key as opposed to checking for the existance of a key"
     
     If VBA.IsObject(ipLocOfKey) Then
@@ -220,7 +220,7 @@ Attribute KeyNotFound.VB_Description = "Guard to use when legitimately searching
     End If
     
     If p.ReportBackAction = m_ReportBackContinue Then
-        If ipReportBack Then
+        If ipreportback Then
             Exit Function
         End If
     End If
@@ -231,7 +231,7 @@ Attribute KeyNotFound.VB_Description = "Guard to use when legitimately searching
 
 End Function
 
-Public Function InvalidRun(ByRef ipRun As Long, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+Public Function InvalidRun(ByRef ipRun As Long, ByRef ipLocation As String, Optional ByVal ipreportback As Boolean = False) As Boolean
 
     InvalidRun = ipRun < 1
     
@@ -240,7 +240,7 @@ Public Function InvalidRun(ByRef ipRun As Long, ByRef ipLocation As String, Opti
     End If
     
     If p.ReportBackAction = m_ReportBackContinue Then
-        If ipReportBack Then
+        If ipreportback Then
             Exit Function
         End If
     End If
@@ -252,7 +252,7 @@ Public Function InvalidRun(ByRef ipRun As Long, ByRef ipLocation As String, Opti
 End Function
 
 
-Public Function MustBeAtLeastOne(ByRef ipValue As Long, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+Public Function MustBeAtLeastOne(ByRef ipValue As Long, ByRef ipLocation As String, Optional ByVal ipreportback As Boolean = False) As Boolean
 
     MustBeAtLeastOne = True
     
@@ -261,7 +261,7 @@ Public Function MustBeAtLeastOne(ByRef ipValue As Long, ByRef ipLocation As Stri
     End If
     
     If p.ReportBackAction = m_ReportBackContinue Then
-        If ipReportBack Then
+        If ipreportback Then
             Exit Function
         End If
     End If
@@ -273,7 +273,7 @@ Public Function MustBeAtLeastOne(ByRef ipValue As Long, ByRef ipLocation As Stri
     
 End Function
 
-Public Function MustBeAtLeastStartOrMinusOne(ByRef ipValue As Long, ByRef ipStart As Long, ByRef ipLocation As String, Optional ByVal ipReportBack As Boolean = False) As Boolean
+Public Function MustBeAtLeastStartOrMinusOne(ByRef ipValue As Long, ByRef ipStart As Long, ByRef ipLocation As String, Optional ByVal ipreportback As Boolean = False) As Boolean
 
     MustBeAtLeastStartOrMinusOne = True
     
@@ -282,7 +282,7 @@ Public Function MustBeAtLeastStartOrMinusOne(ByRef ipValue As Long, ByRef ipStar
     End If
     
     If p.ReportBackAction = m_ReportBackContinue Then
-        If ipReportBack Then
+        If ipreportback Then
         
             Exit Function
         End If

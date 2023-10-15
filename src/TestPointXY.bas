@@ -124,8 +124,8 @@ Private Sub Test02_InitialisedOK()
     Dim myResult(0 To 1) As Variant
     
     'Act:
-    myResult(0) = myP.x
-    myResult(1) = myP.y
+    myResult(0) = myP.X
+    myResult(1) = myP.Y
 '    myresult(2) = myP.BoundsInUse
 '    myresult(3) = myP.Forbidden Is Nothing
     'Assert:
@@ -234,7 +234,7 @@ Private Sub Test05_Offsets_NSEW_N_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(m_NESW))
+    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(m_4WaysNESW))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -269,7 +269,7 @@ Private Sub Test06_Offsets_Diagonals_N_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(m_Diagonals))
+    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(e_AdjacentSet.m_4WaysDiagonal))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -305,7 +305,7 @@ Private Sub Test07_Offsets_All_N_Anticlockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(ipDirection:=m_Anticlockwise))
+    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(ipRotation:=m_Anticlockwise))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -340,7 +340,7 @@ Private Sub Test08_Offsets_All_SE_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(ipStartCoord:=e_AdjacentCoord.m_SE))
+    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(ipStartCoord:=e_AdjacentDirection.m_SE))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -411,7 +411,7 @@ Private Sub Test09_AdjacentCoords_All_SE_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentCoords(ipStartCoord:=e_AdjacentCoord.m_SE))
+    myResult = Fmt.Text("{0}", myP.AdjacentCoords(ipStartCoord:=e_AdjacentDirection.m_SE))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName

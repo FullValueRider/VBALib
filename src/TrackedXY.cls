@@ -18,6 +18,7 @@ Private Const MY_TYPENAME                   As String = "TrackedXY"
 Private Const MOVE_FORWARD                  As String = "f"
 Private Const MOVE_BACKWARD                 As String = "b"
 
+
 Public Enum e_Heading
     
     m_North = 0
@@ -30,6 +31,7 @@ Public Enum e_Heading
     m_NW
     
 End Enum
+
 
 Public Enum e_Bounds
     m_First = 1
@@ -191,12 +193,12 @@ Public Function ConstructInstance _
         Set p.Location = ipPoint
     End If
     
-    Set p.Origin = PointXY(p.Location.x, p.Location.y)
+    Set p.Origin = PointXY(p.Location.X, p.Location.Y)
     
     'If bounds are set check that ipPoint is withing the bounded area
     If p.BoundsInUse Then
         With ipPoint
-            If .x < p.BoundsArray1To4(m_Minx) Or .x > p.BoundsArray1To4(m_Maxx) Or .y < p.BoundsArray1To4(m_MinY) Or .y > p.BoundsArray1To4(m_MaxY) Then
+            If .X < p.BoundsArray1To4(m_Minx) Or .X > p.BoundsArray1To4(m_Maxx) Or .Y < p.BoundsArray1To4(m_MinY) Or .Y > p.BoundsArray1To4(m_MaxY) Then
                 Err.Raise 17 + vbObjectError, _
                     "VBALib.TrackedPoint", _
                     "ipPoint is not within the bounded area"
@@ -378,7 +380,7 @@ Public Function Turn(ByRef ipTurn As String) As TrackedXY
     
     If VBA.InStr("l,left", myTurn) > 0 Then
         p.Heading = p.TurnLeft.Item(p.Heading)
-        If p.Movement = m_NESW Then
+        If p.Movement = e_AdjacentSet.m_4WayNESW Then
             p.Heading = p.TurnLeft.Item(p.Heading)
         End If
         
@@ -388,7 +390,7 @@ Public Function Turn(ByRef ipTurn As String) As TrackedXY
     End If
     
     p.Heading = p.TurnRight.Item(p.Heading)
-    If p.Movement = m_NESW Then
+    If p.Movement = PointXY.m_4WayNESW Then
         p.Heading = p.TurnRight.Item(p.Heading)
     End If
     
@@ -434,16 +436,16 @@ Public Function Move(ByRef ipDirection As String, Optional ByVal ipSteps As Long
         Set myMover = p.Moves.Item(MOVE_BACKWARD)
     End If
     
-    Dim myX As Long: myX = p.Location.x
-    Dim myY As Long: myY = p.Location.y
+    Dim myX As Long: myX = p.Location.X
+    Dim myY As Long: myY = p.Location.Y
     
     Dim myStep As Long
     For myStep = 1 To VBA.Abs(ipSteps)
         
         p.Moved = False
     
-        myX = myX + myMover.x
-        myY = myY + myMover.y
+        myX = myX + myMover.X
+        myY = myY + myMover.Y
         
         Dim myCoord As String: myCoord = VBA.CStr(myX) & Chars.twComma & VBA.CStr(myY)
         
@@ -472,8 +474,8 @@ Public Function Move(ByRef ipDirection As String, Optional ByVal ipSteps As Long
         
         ' hurrah we can update location
         p.Moved = True
-        p.Location.x = myX
-        p.Location.y = myY
+        p.Location.X = myX
+        p.Location.Y = myY
         
         p.Intersection = False
         
@@ -517,11 +519,11 @@ End Function
 
 
 Public Function AtOrigin() As Boolean
-    AtOrigin = (Me.Location.x = Me.Origin.x) And (Me.Location.y = Me.Origin.y)
+    AtOrigin = (Me.Location.X = Me.Origin.X) And (Me.Location.Y = Me.Origin.Y)
 End Function
 
 Public Function Manhatten() As Long
-    Manhatten = Abs(p.Location.x - p.Origin.x) + Abs(p.Location.y - p.Origin.y)
+    Manhatten = Abs(p.Location.X - p.Origin.X) + Abs(p.Location.Y - p.Origin.Y)
 End Function
 
 
@@ -545,10 +547,10 @@ Public Property Let Bounds(ByRef ipBoundsArray1To4() As Long)
         Exit Property
     End If
     
-    If p.Location.x < p.BoundsArray1To4(m_Minx) Or p.Location.x > p.BoundsArray1To4(m_Maxx) Or p.Location.y < p.BoundsArray1To4(m_MinY) Or p.Location.y > p.BoundsArray1To4(m_MaxY) Then
+    If p.Location.X < p.BoundsArray1To4(m_Minx) Or p.Location.X > p.BoundsArray1To4(m_Maxx) Or p.Location.Y < p.BoundsArray1To4(m_MinY) Or p.Location.Y > p.BoundsArray1To4(m_MaxY) Then
         Err.Raise 17 + vbObjectError, _
             "VBALib.PointXT.Let Bounds", _
-            Fmt.Text("The new Bounds of {0} do not include the current coordinates ({1},{2})", ipBoundsArray1To4, p.Location.x, p.Location.y)
+            Fmt.Text("The new Bounds of {0} do not include the current coordinates ({1},{2})", ipBoundsArray1To4, p.Location.X, p.Location.Y)
     End If
 
 End Property
@@ -576,10 +578,10 @@ Public Property Set ForbiddenCoords(ByVal ipForbiddenCoords As SeqT)
         Exit Property
     End If
     
-    If p.ForbiddenCoords.HoldsItem(VBA.CStr(p.Location.x) & Chars.twComma & VBA.CStr(p.Location.y)) Then
+    If p.ForbiddenCoords.HoldsItem(VBA.CStr(p.Location.X) & Chars.twComma & VBA.CStr(p.Location.Y)) Then
         Err.Raise 17 + vbObjectError, _
              "VBALib.PointXY.Set Forbidden", _
-            Fmt.Text("The new list of forbidden coordinates includes the current coordinate({0},{1})", p.Location.x, p.Location.y)
+            Fmt.Text("The new list of forbidden coordinates includes the current coordinate({0},{1})", p.Location.X, p.Location.Y)
     End If
     
     Set p.ForbiddenCoords = ipForbiddenCoords

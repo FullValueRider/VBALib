@@ -8,21 +8,19 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@Exposed
+'@Interface
 '@Folder("Interfaces")
 Option Explicit
-
-'@Interface
-
 
 Public Function ExecCmp(ByRef ipHostItem As Variant) As Boolean
 End Function
 
-Public Sub Reference(ParamArray ipReference() As Variant)
-End Sub
+' The reference method was added to support the foldl and foldr reducers
+' which require a method and an accumulator
+' To userstand what to provide as a reference consult  Deb method
+' of the individual Comparer
+Public Function Reference(ParamArray ipReference() As Variant) As IComparer
+End Function
 
 Public Property Get TypeName() As String
 End Property
-
-
-'Public Function ExecCount(ByRef ipHostItems As SeqC) As Long
-'End Function

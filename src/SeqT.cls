@@ -2170,37 +2170,37 @@ Private Function DeleteNodeAt(ByVal ipRoot As SeqTNode, ByRef ipItem As Variant,
 End Function
 
 
-Private Function RotateRootToRightChild(ByVal y As SeqTNode) As SeqTNode
+Private Function RotateRootToRightChild(ByVal Y As SeqTNode) As SeqTNode
     'Debug.Print "Rotating Right: root is", y.Item, " left child is ", y.Left.Item
     ' Formerly RightRotate
-    Dim x As SeqTNode: Set x = y.Left
-    Dim myTmp As SeqTNode: Set myTmp = x.Right
+    Dim X As SeqTNode: Set X = Y.Left
+    Dim myTmp As SeqTNode: Set myTmp = X.Right
      
     ' Perform rotation
-    Set x.Right = y
-    Set y.Left = myTmp
+    Set X.Right = Y
+    Set Y.Left = myTmp
      
     ' Return new root
    ' Dim myRight As Long: If IsNothing(x.Right) Then myRight = 0 Else myRight = x.Right.Item
     'Debug.Print "After rotation: root is ", x.Item, " right child is"; myRight
-    Set RotateRootToRightChild = x
+    Set RotateRootToRightChild = X
 End Function
 
-Private Function RotateRootToLeftChild(ByVal x As SeqTNode) As SeqTNode
+Private Function RotateRootToLeftChild(ByVal X As SeqTNode) As SeqTNode
 ' Formerly leftrotate
 'Debug.Print "Rotating Left: root  is", x.Item, " right child is ", x.Right.Item
     
-    Dim y As SeqTNode: Set y = x.Right
-    Dim myTmp As SeqTNode: Set myTmp = y.Left
+    Dim Y As SeqTNode: Set Y = X.Right
+    Dim myTmp As SeqTNode: Set myTmp = Y.Left
      
     ' Perform rotation
-    Set y.Left = x
-    Set x.Right = myTmp
+    Set Y.Left = X
+    Set X.Right = myTmp
      
     ' Return new root
     'Dim myLeft As variant: If IsNothing(y.Left) Then myLeft = 0 Else myLeft = y.Left.Item
     'Debug.Print "After rotation: root is ", y.Item, " left child is "; myLeft
-    Set RotateRootToLeftChild = y
+    Set RotateRootToLeftChild = Y
     
 End Function
 

@@ -30,9 +30,9 @@ Private Property Get IReducer_TypeName() As String
 End Property
 
 
-'@Description "Calls Mapit on the lowest level item supporting mapit on The hostItem"
+'@Description "Calls Mapit on the lowest level item supporting mapit on The hostItem, except if the reducer is gfKey"
 Private Function IReducer_ExecReduction(ByRef ipHostItems As Variant) As Variant
-Attribute IReducer_ExecReduction.VB_Description = "Calls Mapit on the lowest level item supporting mapit on The hostItem"
+Attribute IReducer_ExecReduction.VB_Description = "Calls Mapit on the lowest level item supporting mapit on The hostItem, except if the reducer is gfKey"
 
     ' If the Items of ipHostItems support Mapping then forward to rdInner
     ' else send to reducer
@@ -40,9 +40,16 @@ Attribute IReducer_ExecReduction.VB_Description = "Calls Mapit on the lowest lev
     Do
         Dim myA() As Variant: myA = Array(myItems.CurItem(0))
         If GroupInfo.CannotMap(myA(0)) Then
-            IReducer_ExecReduction = s.Reducer.ExecReduction(ipHostItems)
-            Exit Function
+        
+            If VBA.TypeName(s.Reducer) = "gfKey" Then
+                IReducer_ExecReduction = s.Reducer.ExecReduction(ipHostItems)
+                Exit Function
+            Else
+                IReducer_ExecReduction = s.Reducer.ExecReduction(myA(0))
+                Exit Function
+            End If
         Else
+            
             ' ipHostItem is an object that supports mapping
             myItems.CurItem(0) = myItems.CurItem(0).ReduceIt(Me)
         End If

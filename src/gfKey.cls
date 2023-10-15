@@ -98,7 +98,7 @@ Public Function Item(ByRef ipHostItem As Variant) As Variant
                     
             End If
             
-            Guard.IndexOutOfBounds s.Key, ipHostItem, "gfKey.Item", ipReportBack:=Guard.REPORT_BACK
+            Guard.IndexOutOfBounds s.Key, ipHostItem, "gfKey.Item", ipreportback:=Guard.REPORT_BACK
             
             Item = Array(ipHostItem.Item(s.Key))
              
@@ -131,7 +131,7 @@ Public Function Item(ByRef ipHostItem As Variant) As Variant
                 Item = myNullResult
             End If
         
-            Item = Array(VBA.Mid(ipHostItem, s.Key, 1))
+            Item = Array(VBA.Mid$(ipHostItem, s.Key, 1))
             
         Case Else
             Item = myNullResult

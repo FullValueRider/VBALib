@@ -3,27 +3,17 @@ Attribute VB_Name = "HelpClasses"
 '@ModuleDescription("A module for helpers for classes
 Option Explicit
 
-
-
-
-'Public Function IsNothing(ByRef ipItem As Variant) As Boolean
-'
-'    If Not VBA.IsObject(ipItem) Then
-'        IsNothing = False
-'        Exit Function
-'    End If
-'
-'    IsNothing = ipItem Is Nothing
-'
-'End Function
-'
-'Public Function IsNotNothing(ByRef ipItem As Object) As Boolean
-'    IsNotNothing = Not (ipItem Is Nothing)
-'End Function
-
-
-
+'A factory method for TextFormatter class
 Public Function Fmt() As Format
     Set Fmt = Format.Deb
 End Function
 
+'Public Function Num(ByRef ipNumber As Variant) As Number
+'    Dim myNum As Number
+'    Set myNum = New Number
+'    myNum = ipNumber
+'
+'
+'    Set Num = myNum
+'
+'End Function

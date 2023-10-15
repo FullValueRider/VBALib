@@ -7,17 +7,18 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Option Explicit
 '@PredeclaredId
 '@Exposed
 '@Folder("Comparers")
+'@ModuleDescription("True if the ipHostitem is equal to the reference")Option Explicit
+Option Explicit
 
 Implements IComparer
 
 Const MY_TYPENAME                               As String = "cmpEQ"
 
 Private Type State
-    Reference                                   As Variant
+    Reference()                                 As Variant
 End Type
 
 
@@ -33,11 +34,19 @@ Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
     IComparer_ExecCmp = Comparers.EQ(ipHostItem, s.Reference(0))
 End Function
 
-Private Sub IComparer_Reference(ParamArray ipReference() As Variant)
-    VariantCopy s.Reference, ipReference(0)
-End Sub
+'@Description("Takes a single value which is used to reset the reference value used for Comparison")
+Private Function IComparer_Reference(ParamArray ipReference() As Variant) As IComparer
+Attribute IComparer_Reference.VB_Description = "Takes a single value which is used to reset the reference value used for Comparison"
+    s.Reference = ipReference
+    Set IComparer_Reference = Me
+End Function
 
 '@DefaultMember
+' The paramarray allows mutiple parameters to be provided if required
+' The IComparer interface allows the name of the parameter to be
+' anything so where more than one value is required this should be
+' captured by the name used for Paramarray.
+' e.g. cmpIn uses ipLowHighBounds
 Public Function Deb(ParamArray ipReference() As Variant) As cmpEQ
 Attribute Deb.VB_UserMemId = 0
     With New cmpEQ
@@ -46,7 +55,8 @@ Attribute Deb.VB_UserMemId = 0
 End Function
 
 
-Friend Function ConstructInstance(ByVal ipReference As Variant) As cmpEQ
-    s.Reference = Array(ipReference(0))
+Friend Function ConstructInstance(ByRef ipReference As Variant) As cmpEQ
+    s.Reference = ipReference
     Set ConstructInstance = Me
 End Function
+'

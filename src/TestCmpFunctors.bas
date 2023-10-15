@@ -97,6 +97,8 @@ Public Sub CmpFunctorTests()
     Test06d_CmpLTEQ_Array
     Test06e_CmpLTEQ_Seq
     Test06f_CmpLTEQ_Kvp
+    
+    
 
     Debug.Print vbTab, "Testing completed"
 

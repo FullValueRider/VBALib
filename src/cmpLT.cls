@@ -7,11 +7,11 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Option Explicit
 '@PredeclaredId
 '@Exposed
 '@Folder("Comparers")
-    
+Option Explicit
+
 Implements IComparer
 
 Const MY_TYPENAME                                   As String = "cmpLT"
@@ -33,11 +33,13 @@ Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
     IComparer_ExecCmp = Comparers.LT(ipHostItem, s.Reference(0))
 End Function
 
-Private Sub IComparer_Reference(ParamArray ipReference() As Variant)
-    VariantCopy s.Reference, ipReference(0)
-End Sub
+Private Function IComparer_Reference(ParamArray ipReference() As Variant) As IComparer
+    s.Reference = ipReference
+    Set IComparer_Reference = Me
+End Function
 
 '@DefaultMember
+' see Comments for cmpEQ
 Public Function Deb(ParamArray ipReference() As Variant) As cmpLT
 Attribute Deb.VB_UserMemId = 0
     With New cmpLT
@@ -48,7 +50,7 @@ End Function
 
 Friend Function ConstructInstance(ByRef ipReference As Variant) As cmpLT
 
-    s.Reference = Array(ipReference(0))
+    s.Reference = ipReference
     Set ConstructInstance = Me
     
 End Function

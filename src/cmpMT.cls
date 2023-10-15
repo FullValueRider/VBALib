@@ -7,11 +7,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Option Explicit
+Attribute VB_Description = "True if the ipHostitem is more than the reference"
 '@PredeclaredId
 '@Exposed
-'@Folder("Comparers")
-    
+'@Folder("Comparers")Option Explicit
+'@ModuleDescription("True if the ipHostitem is more than the reference")
+Option Explicit
+
 Implements IComparer
 
 
@@ -34,9 +36,10 @@ Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
         IComparer_ExecCmp = Comparers.MT(ipHostItem, s.Reference(0))
 End Function
 
-Private Sub IComparer_Reference(ParamArray ipReference() As Variant)
-    VariantCopy s.Reference, ipReference(0)
-End Sub
+Private Function IComparer_Reference(ParamArray ipReference() As Variant) As IComparer
+   s.Reference = ipReference
+   Set IComparer_Reference = Me
+End Function
 
 '@DefaultMember
 Public Function Deb(ParamArray ipReference() As Variant) As cmpMT
@@ -48,6 +51,6 @@ End Function
 
 
 Friend Function ConstructInstance(ByVal ipReference As Variant) As cmpMT
-    s.Reference = Array(ipReference(0))
+    s.Reference = ipReference
     Set ConstructInstance = Me
 End Function

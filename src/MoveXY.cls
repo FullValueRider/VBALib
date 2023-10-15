@@ -14,8 +14,8 @@ Option Explicit
 
 Private Const MY_TYPENAME                  As String = "MoveXY"
 Private Type Properties
-    x                                       As Long
-    y                                       As Long
+    X                                       As Long
+    Y                                       As Long
 End Type
 
 Private p                                   As Properties
@@ -42,21 +42,21 @@ Friend Function ConstructInstance(ByVal ipX As Long, ByVal ipY As Long) As MoveX
             Fmt.Text(" Value for MoveXY.Y should be -1, 0 or 1, Got {0}", ipY)
     End If
     
-    p.x = ipX
-    p.y = ipY
+    p.X = ipX
+    p.Y = ipY
     
     Set ConstructInstance = Me
     
 End Function
 
-Public Property Get x() As Long
-    x = p.x
+Public Property Get X() As Long
+    X = p.X
 End Property
 
 
 
-Public Property Get y() As Long
-    y = p.y
+Public Property Get Y() As Long
+    Y = p.Y
 End Property
 
 

@@ -7,18 +7,25 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+Attribute VB_Description = "True if the ipHostitem is not within the low/high bounds"
 '@PredeclaredId
 '@Exposed
 '@Folder("Comparers")
+'@ModuleDescription("True if the ipHostitem is not within the low/high bounds")
+'========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========
 Option Explicit
 
 Implements IComparer
 
 Const MY_TYPENAME                               As String = "cmpIn"
 
+Private Enum e_RangeBounds
+    m_Low = 0
+    m_High
+End Enum
+
 Private Type State
-    Low                                         As IComparer
-    High                                        As IComparer
+    Reference()                                 As Variant
 End Type
 
 
@@ -31,7 +38,9 @@ End Property
 
 
 Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
+
     IComparer_ExecCmp = True
+    
     If s.Low.ExecCmp(ipHostItem) Then
         Exit Function
     End If
@@ -44,22 +53,26 @@ Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
     
 End Function
 
-Private Sub IComparer_Reference(ParamArray ipLowHighRefs() As Variant)
-    s.Low.Value = ipLowHighRefs(0)
-    s.High.Value = ipLowHighRefs(1)
-End Sub
+Private Function IComparer_Reference(ParamArray ipLowHighBounds() As Variant) As IComparer
+    'At initialisation cmpIntake two values which are encapsulated
+    ' into the Low and High comparers, hence we need to acces the reference method
+    ' for the IComparers stored in s.Reference
+    s.Reference(m_Low).Reference = ipLowHighBounds(m_Low)
+    s.Reference(m_High).Reference = ipLowHighBounds(m_High)
+    Set IComparer_Reference = Me
+End Function
 
 '@DefaultMember
-Public Function Deb(ParamArray ipLowHighRefs() As Variant) As cmpIn
+'See comments for cmpEQ
+Public Function Deb(ParamArray ipLowHighBounds() As Variant) As cmpNotIn
 Attribute Deb.VB_UserMemId = 0
-    With New cmpIn
-        Set Deb = .ConstructInstance(VBA.CVar(ipLowHighRefs))
+    With New cmpNotIn
+        Set Deb = .ConstructInstance(VBA.CVar(ipLowHighBounds))
     End With
 End Function
 
 
-Friend Function ConstructInstance(ByRef ipLowHighRefsArray As Variant) As cmpNotIn
-    Set s.Low = cmpLT(ipLowHighRefsArray(0))
-    Set s.High = cmpMT(ipLowHighRefsArray(1))
+Friend Function ConstructInstance(ByRef ipLowHighBounds As Variant) As cmpNotIn
+    s.Reference = Array(cmpLT(ipLowHighBounds(m_Low)), cmpMT(ipLowHighBounds(m_High)))
     Set ConstructInstance = Me
 End Function
