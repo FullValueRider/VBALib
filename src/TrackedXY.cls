@@ -39,7 +39,7 @@ Public Enum e_Bounds
     m_MinY
     m_Maxx
     m_MaxY
-    m_Last = m_MaxY
+    m_last = m_MaxY
 End Enum
 
 ' The TrackedXY class represents an X,Y location which can be moved
@@ -380,7 +380,7 @@ Public Function Turn(ByRef ipTurn As String) As TrackedXY
     
     If VBA.InStr("l,left", myTurn) > 0 Then
         p.Heading = p.TurnLeft.Item(p.Heading)
-        If p.Movement = e_AdjacentSet.m_4WayNESW Then
+        If p.Movement = e_AdjacentSet.m_4WaysNESW Then
             p.Heading = p.TurnLeft.Item(p.Heading)
         End If
         
@@ -390,7 +390,7 @@ Public Function Turn(ByRef ipTurn As String) As TrackedXY
     End If
     
     p.Heading = p.TurnRight.Item(p.Heading)
-    If p.Movement = PointXY.m_4WayNESW Then
+    If p.Movement = e_AdjacentSet.m_4WaysNESW Then
         p.Heading = p.TurnRight.Item(p.Heading)
     End If
     

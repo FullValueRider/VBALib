@@ -199,7 +199,7 @@ Private Sub Test04_Offsets_All_N_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentOffsets)
+    myResult = Fmt.Text("{0}", myP.AdjacentCoords(ipAdjacentType:=m_Relative))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -234,7 +234,7 @@ Private Sub Test05_Offsets_NSEW_N_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(m_4WaysNESW))
+    myResult = Fmt.Text("{0}", myP.AdjacentCoords(m_4WaysNESW, ipAdjacentType:=m_Relative))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -269,7 +269,7 @@ Private Sub Test06_Offsets_Diagonals_N_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(e_AdjacentSet.m_4WaysDiagonal))
+    myResult = Fmt.Text("{0}", myP.AdjacentCoords(e_AdjacentSet.m_4WaysDiagonal, ipAdjacentType:=m_Relative))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -305,7 +305,7 @@ Private Sub Test07_Offsets_All_N_Anticlockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentOffsets(ipRotation:=m_Anticlockwise))
+    myResult = Fmt.Text("{0}", myP.AdjacentCoords(ipRotation:=m_Anticlockwise, ipAdjacentType:=m_Relative))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -411,7 +411,7 @@ Private Sub Test09_AdjacentCoords_All_SE_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentCoords(ipStartCoord:=e_AdjacentDirection.m_SE))
+    myResult = Fmt.Text("{0}", myP.AdjacentCoords(ipStartDirection:=e_AdjacentDirection.m_SE))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName

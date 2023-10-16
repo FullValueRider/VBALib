@@ -22,7 +22,7 @@ Public Enum e_HashSize
     m_Min
     m_Max
     m_Default
-    m_Last = m_Default
+    m_last = m_Default
 End Enum
 
 

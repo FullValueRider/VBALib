@@ -6,7 +6,7 @@ Public Enum e_GuardReportBackAction
     m_First = 0
     m_ReportBackContinue = e_GuardReportBackAction.m_First
     m_RaiseError
-    m_Last = m_RaiseError
+    m_last = m_RaiseError
 End Enum
 
 
@@ -24,8 +24,8 @@ Public Property Get ReportBackAction() As e_GuardReportBackAction
     ReportBackAction = p.ReportBackAction
 End Property
 
-Public Property Let ReportBackAction(ByVal ipReportBackAction As e_GuardReportBackAction)
-    p.ReportBackAction = ipReportBackAction
+Public Property Let ReportBackAction(ByVal ipReportBackaction As e_GuardReportBackAction)
+    p.ReportBackAction = ipReportBackaction
 End Property
 
 

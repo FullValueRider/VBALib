@@ -322,3 +322,16 @@ Sub TestNumber()
     
     Debug.Print myNum, myNum2
 End Sub
+ 
+Sub TestRemovePointXY()
+
+    Dim myS As SeqA: Set myS = SeqA()
+    myS.Add PointXY(5, 5)
+    myS.Add PointXY(10, 10)
+    myS.Add PointXY(20, 20)
+    
+    Fmt.Dbg "{0}", myS
+    myS.Remove PointXY(10, 10)
+    Fmt.Dbg "{0}", myS
+ 
+End Sub

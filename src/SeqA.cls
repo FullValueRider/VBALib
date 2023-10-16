@@ -1712,7 +1712,7 @@ Public Function SetOf(ByRef ipSet As e_SetoF, ByRef ipRangeItem As SeqA) As SeqA
         Case Else
             Err.Raise 17 + vbObjectError, _
             "vbaLib.SeA.Seq.SetOf", _
-            Fmt.Text("Invalid e_set member. Expecting {0} to {1}. Got {2}", e_SetoF.m_First, e_SetoF.m_Last, ipSet)
+            Fmt.Text("Invalid e_set member. Expecting {0} to {1}. Got {2}", e_SetoF.m_First, e_SetoF.m_last, ipSet)
                 
     End Select
 

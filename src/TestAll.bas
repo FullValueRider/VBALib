@@ -14,7 +14,7 @@ Public VBATesting   As Boolean
 #End If
 
 
- Public Sub Main()
+  Public Sub Main()
   
     VBATesting = True
     Dim myTime As Variant: myTime = Timer

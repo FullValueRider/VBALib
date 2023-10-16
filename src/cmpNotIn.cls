@@ -41,11 +41,11 @@ Private Function IComparer_ExecCmp(ByRef ipHostItem As Variant) As Boolean
 
     IComparer_ExecCmp = True
     
-    If s.Low.ExecCmp(ipHostItem) Then
+    If s.Reference(m_Low).ExecCmp(ipHostItem) Then
         Exit Function
     End If
     
-    If s.High.ExecCmp(ipHostItem) Then
+    If s.Reference(m_High).ExecCmp(ipHostItem) Then
         Exit Function
     End If
     

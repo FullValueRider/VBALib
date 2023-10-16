@@ -11,7 +11,7 @@ Public Enum e_AllowReportBackAction
     m_First = 0
     m_Continue = e_GuardReportBackAction.m_First
     m_RaiseError
-    m_Last = m_RaiseError
+    m_last = m_RaiseError
 End Enum
 
 Public Const MY_LIB                                     As String = "VBALib"
@@ -32,14 +32,14 @@ Public Const MY_LIB                                     As String = "VBALib"
 '    p.ReportBackAction = ipReportBackAction
 'End Property
 
-Public Function IsNumber(ByVal ipNumber As Variant, ByRef ipLocation As String, Optional ByVal ipReportBackAction As e_AllowReportBackAction = m_RaiseError) As Boolean
+Public Function IsNumber(ByVal ipNumber As Variant, ByRef ipLocation As String, Optional ByVal ipReportBackaction As e_AllowReportBackAction = m_RaiseError) As Boolean
     IsNumber = GroupInfo.IsNumber(ipNumber)
     
     If IsNumber Then
         Exit Function
     End If
     
-    If ipReportBackAction = e_AllowReportBackAction.m_Continue Then
+    If ipReportBackaction = e_AllowReportBackAction.m_Continue Then
         Exit Function
     End If
     
@@ -49,7 +49,34 @@ Public Function IsNumber(ByVal ipNumber As Variant, ByRef ipLocation As String, 
     
 End Function
 
-Public Function IndexExists(ByVal ipIndex As Long, ByVal ipIndexed As Object, ByRef ipLocation As String, Optional ByVal ipReportBackAction As e_AllowReportBackAction = m_RaiseError) As Boolean
+Public Function InRange(ByVal ipTest As Variant, ByVal ipLow As Variant, ByVal ipHigh As Variant, ByRef ipLocation As String, Optional ByVal ipReportBackaction As e_AllowReportBackAction = m_RaiseError) As Boolean
+
+    Dim myResult As Boolean: myResult = True
+    If Comparers.LT(ipTest, ipLow) Then
+        myResult = False
+    End If
+    
+    If Comparers.MT(ipTest, ipHigh) Then
+        myResult = False
+    End If
+    
+    InRange = myResult
+    
+    If myResult Then
+        Exit Function
+    End If
+    
+    If ipReportBackaction = m_Continue Then
+        Exit Function
+    End If
+    
+    Err.Raise 17 + vbObjectError, _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
+        Fmt.Text("Not in range {0} to {1}.  Got {2}.", ipLow, ipHigh, ipTest)
+        
+End Function
+
+Public Function IndexExists(ByVal ipIndex As Long, ByVal ipIndexed As Object, ByRef ipLocation As String, Optional ByVal ipReportBackaction As e_AllowReportBackAction = m_RaiseError) As Boolean
 
     IndexExists = (ipIndex < ipIndexed.FirstIndex) Or (ipIndex > ipIndexed.LastIndex)
     
@@ -57,7 +84,7 @@ Public Function IndexExists(ByVal ipIndex As Long, ByVal ipIndexed As Object, By
         Exit Function
     End If
     
-    If ipReportBackAction = m_ReportBackContinue Then
+    If ipReportBackaction = m_ReportBackContinue Then
             Exit Function
     End If
     

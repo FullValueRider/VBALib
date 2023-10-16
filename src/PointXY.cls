@@ -27,8 +27,7 @@ Public Enum e_AdjacentDirection ' Defined clockwise
     m_SW
     m_West
     m_NW
-    m_Last = m_NW
-    
+    m_last = m_NW
 End Enum
 
 
@@ -37,14 +36,21 @@ Public Enum e_AdjacentSet
     m_4WaysNESW = m_First
     m_4WaysDiagonal
     m_8Ways
-    m_Last = m_8Ways
+    m_last = m_8Ways
 End Enum
 
 Public Enum e_AdjacentRotation
     m_First
     m_Clockwise = m_First
     m_Anticlockwise
-    m_Last = m_Anticlockwise
+    m_last = m_Anticlockwise
+End Enum
+
+Public Enum e_AdjacentType
+    m_First
+    m_Absolute = m_First
+    m_Relative
+    m_last = m_Relative
 End Enum
 
 Private Type Properties
@@ -119,106 +125,97 @@ Public Function ToKVPair() As KVPair
     Set ToKVPair = KVPair(p.X, p.Y)
 End Function
 
+' The adjacent set may be, (N,NE,E,SE,S,SW,W,NW), (N,S,E,W) or (NE,SE,SW,NW)
+' The start direction may be any of the eight possible directions
+' The set of adjacent coordinated may be ordered clockwise or anticlockwise
+' The set of adjacent coordinates my be Absolute or Relative to the current X,Y location
 
-'@Description("Returns a SeqA of the adjacent cooridinates starting.  The starting point, subset and rotation direction can be selected. Defaults North, Eightways, Clockwise")
+'@Description("Returns a SeqA of the adjacent coordinates.  The starting direction, subset, Type and rotation direction can be selected. Defaults to  Eightways, North, Clockwise, Absolute")
 Public Function AdjacentCoords _
 ( _
     Optional ByVal ipAdjacentSet As e_AdjacentSet = e_AdjacentSet.m_8Ways, _
-    Optional ByVal ipStartCoord As e_AdjacentDirection = e_AdjacentDirection.m_North, _
-    Optional ByVal ipRotation As e_AdjacentRotation = m_Clockwise _
+    Optional ByVal ipStartDirection As e_AdjacentDirection = e_AdjacentDirection.m_North, _
+    Optional ByVal ipRotation As e_AdjacentRotation = m_Clockwise, _
+    Optional ByVal ipAdjacentType As e_AdjacentType = m_Absolute _
 ) As SeqA
-Attribute AdjacentCoords.VB_Description = "Returns a SeqA of the adjacent cooridinates starting.  The starting point, subset and rotation direction can be selected. Defaults North, Eightways, Clockwise"
+Attribute AdjacentCoords.VB_Description = "Returns a SeqA of the adjacent coordinates.  The starting direction, subset, Type and rotation direction can be selected. Defaults to  Eightways, North, Clockwise, Absolute"
 
-    Dim myS As SeqA: Set myS = SeqA.Deb
+    Dim myLoc As String: myLoc = MY_TYPENAME & ".AdjacentCoords"
+    Allow.InRange ipAdjacentSet, e_AdjacentSet.m_First, e_AdjacentSet.m_last, myLoc
+    Allow.InRange ipStartDirection, e_AdjacentDirection.m_First, e_AdjacentDirection.m_last, myLoc
+    Allow.InRange ipRotation, e_AdjacentRotation.m_First, e_AdjacentDirection.m_last, myLoc
+    Allow.InRange ipAdjacentType, e_AdjacentType.m_First, e_AdjacentType.m_last, myLoc
+
+    Dim myS As SeqA: Set myS = SeqA()
     
-    If ipAdjacentSet = m_4WaysNESW Or ipAdjacentSet = m_8Ways Then myS.Add Me.North
-    If ipAdjacentSet = m_4WaysDiagonal Or ipAdjacentSet = m_8Ways Then myS.Add Me.NorthEast
-    If ipAdjacentSet = m_4WaysNESW Or ipAdjacentSet = m_8Ways Then myS.Add Me.East
-    If ipAdjacentSet = m_4WaysDiagonal Or ipAdjacentSet = m_8Ways Then myS.Add Me.SouthEast
-    If ipAdjacentSet = m_4WaysNESW Or ipAdjacentSet = m_8Ways Then myS.Add Me.South
-    If ipAdjacentSet = m_4WaysDiagonal Or ipAdjacentSet = m_8Ways Then myS.Add Me.SouthWest
-    If ipAdjacentSet = m_4WaysNESW Or ipAdjacentSet = m_8Ways Then myS.Add Me.West
-    If ipAdjacentSet = m_4WaysDiagonal Or ipAdjacentSet = m_8Ways Then myS.Add Me.NorthWest
-    
-    If ipStartCoord <> m_North Then
-        myS.RotLeft ipStartCoord
+    Dim myDirection As e_AdjacentDirection:
+    For myDirection = e_AdjacentDirection.m_First To e_AdjacentDirection.m_last
+        myS.Add AdjacentCoord(myDirection, ipAdjacentType)
+    Next
+        
+    ' there is no need to adjust for ipAdjacentSet due to start location
+    ' as the first point will always be the correct next available
+    ' point in the direction of rotation based on the code below
+    If ipStartDirection <> m_North Then
+        myS.RotLeft ipStartDirection
     End If
     
     If ipRotation = m_Anticlockwise Then
         myS.Reversed.RotRight
     End If
-
+    
+    ' Class instances of the Group type ItemObject (See GroupInfo class)
+    ' will be compared based their string output if available.
+    ' Hence the removes below are valid because it will be done
+    ' based on comparison of the string output of the content, not the address of the object
+    If ipAdjacentSet = m_4WaysNESW Then
+        myS.Remove AdjacentCoord(m_NE, ipAdjacentType)
+        myS.Remove AdjacentCoord(m_SE, ipAdjacentType)
+        myS.Remove AdjacentCoord(m_SW, ipAdjacentType)
+        myS.Remove AdjacentCoord(m_NW, ipAdjacentType)
+    End If
+    
+    If ipAdjacentSet = m_4WaysDiagonal Then
+        myS.Remove AdjacentCoord(m_North, ipAdjacentType)
+        myS.Remove AdjacentCoord(m_East, ipAdjacentType)
+        myS.Remove AdjacentCoord(m_South, ipAdjacentType)
+        myS.Remove AdjacentCoord(m_West, ipAdjacentType)
+    End If
+    
     Set AdjacentCoords = myS
     
 End Function
 
 
-'@Description("Returns a SeqA of offset cooridinates.The starting point, subset and rotation direction can be selected. Defaults North, Eightways, Clockwise")
-Public Function AdjacentOffsets _
-( _
-    Optional ByVal ipAdjacentSet As e_AdjacentSet = e_AdjacentSet.m_8Ways, _
-    Optional ByVal ipStartCoord As e_AdjacentDirection = e_AdjacentDirection.m_North, _
-    Optional ByVal ipRotation As e_AdjacentRotation = m_Clockwise _
-) As SeqA
-Attribute AdjacentOffsets.VB_Description = "Returns a SeqA of offset cooridinates.The starting point, subset and rotation direction can be selected. Defaults North, Eightways, Clockwise"
+Public Function AdjacentCoord(ByRef ipDirection As e_AdjacentDirection, Optional ByVal ipAdjacentType As e_AdjacentType = m_Absolute) As PointXY
+
+    Dim myLoc As String: myLoc = MY_TYPENAME & ".AdjacentCoord"
+    Allow.InRange ipDirection, e_AdjacentDirection.m_First, e_AdjacentDirection.m_last, myLoc
+    Allow.InRange ipAdjacentType, e_AdjacentType.m_First, e_AdjacentType.m_last, myLoc
     
-    Dim my00 As PointXY: Set my00 = PointXY()
+    Dim myPoint As PointXY
     
-    Dim myS As SeqA: Set myS = SeqA.Deb
-    
-    If ipAdjacentSet = m_4WaysNESW Or ipAdjacentSet = m_8Ways Then myS.Add my00.North
-    If ipAdjacentSet = m_4WaysDiagonal Or ipAdjacentSet = m_8Ways Then myS.Add my00.NorthEast
-    If ipAdjacentSet = m_4WaysNESW Or ipAdjacentSet = m_8Ways Then myS.Add my00.East
-    If ipAdjacentSet = m_4WaysDiagonal Or ipAdjacentSet = m_8Ways Then myS.Add my00.SouthEast
-    If ipAdjacentSet = m_4WaysNESW Or ipAdjacentSet = m_8Ways Then myS.Add my00.South
-    If ipAdjacentSet = m_4WaysDiagonal Or ipAdjacentSet = m_8Ways Then myS.Add my00.SouthWest
-    If ipAdjacentSet = m_4WaysNESW Or ipAdjacentSet = m_8Ways Then myS.Add my00.West
-    If ipAdjacentSet = m_4WaysDiagonal Or ipAdjacentSet = m_8Ways Then myS.Add my00.NorthWest
-    
-    If ipStartCoord <> m_North Then
-        myS.RotLeft ipStartCoord
+    If ipAdjacentType = m_Absolute Then
+        Set myPoint = Me
+    Else
+        Set myPoint = PointXY(0, 0)
     End If
     
-    If ipRotation = m_Anticlockwise Then
-        myS.Reversed.RotRight
-    End If
-
-    Set AdjacentOffsets = myS
-
+    Select Case ipDirection
+    
+        Case m_North:   Set AdjacentCoord = PointXY(myPoint.X, myPoint.Y + 1)
+        Case m_NE:      Set AdjacentCoord = PointXY(myPoint.X + 1, myPoint.Y + 1)
+        Case m_East:    Set AdjacentCoord = PointXY(myPoint.X + 1, myPoint.Y)
+        Case m_SE:      Set AdjacentCoord = PointXY(myPoint.X + 1, myPoint.Y - 1)
+        Case m_South:   Set AdjacentCoord = PointXY(myPoint.X, myPoint.Y - 1)
+        Case m_SW:      Set AdjacentCoord = PointXY(myPoint.X - 1, myPoint.Y - 1)
+        Case m_West:    Set AdjacentCoord = PointXY(myPoint.X - 1, myPoint.Y)
+        Case m_NW:      Set AdjacentCoord = PointXY(myPoint.X - 1, myPoint.Y + 1)
+            
+    End Select
+    
 End Function
 
-
-Public Property Get North() As PointXY
-    Set North = PointXY(p.X, p.Y + 1)
-End Property
-
-Public Property Get NorthEast() As PointXY
-    Set NorthEast = PointXY(p.X + 1, p.Y + 1)
-End Property
-
-Public Property Get East() As PointXY
-    Set East = PointXY(p.X + 1, p.Y)
-End Property
-
-Public Property Get SouthEast() As PointXY
-        Set SouthEast = PointXY(p.X + 1, p.Y - 1)
-End Property
-
-Public Property Get South() As PointXY
-    Set South = PointXY(p.X, p.Y - 1)
-End Property
-
-Public Property Get SouthWest() As PointXY
-    Set SouthWest = PointXY(p.X - 1, p.Y - 1)
-End Property
-
-Public Property Get West() As PointXY
-    Set West = PointXY(p.X - 1, p.Y)
-End Property
-
-Public Property Get NorthWest() As PointXY
-    Set NorthWest = PointXY(p.X - 1, p.Y + 1)
-End Property
 
 Public Property Get TypeName() As String
     TypeName = MY_TYPENAME
