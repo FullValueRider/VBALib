@@ -60,6 +60,7 @@ Public Sub PointXYTests()
     Test07_Offsets_All_N_Anticlockwise
     Test08_AdjacentCoords_All_N_Clockwise
     Test09_AdjacentCoords_All_SE_Clockwise
+    Test10_IndividualPoints
     
     VBATesting = False
     Debug.Print "Testing completed"
@@ -199,7 +200,7 @@ Private Sub Test04_Offsets_All_N_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentCoords(ipAdjacentType:=m_Relative))
+    myResult = Fmt.Text("{0}", myP.AdjacentCoords(ipAdjacentType:=m_relative))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -234,7 +235,7 @@ Private Sub Test05_Offsets_NSEW_N_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentCoords(m_4WaysNESW, ipAdjacentType:=m_Relative))
+    myResult = Fmt.Text("{0}", myP.AdjacentCoords(m_4WaysNESW, ipAdjacentType:=m_relative))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -269,7 +270,7 @@ Private Sub Test06_Offsets_Diagonals_N_Clockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentCoords(e_AdjacentSet.m_4WaysDiagonal, ipAdjacentType:=m_Relative))
+    myResult = Fmt.Text("{0}", myP.AdjacentCoords(e_AdjacentSet.m_4WaysDiagonal, ipAdjacentType:=m_relative))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -305,7 +306,7 @@ Private Sub Test07_Offsets_All_N_Anticlockwise()
     Dim myResult As String
     
     'Act:
-    myResult = Fmt.Text("{0}", myP.AdjacentCoords(ipRotation:=m_Anticlockwise, ipAdjacentType:=m_Relative))
+    myResult = Fmt.Text("{0}", myP.AdjacentCoords(ipRotation:=m_Anticlockwise, ipAdjacentType:=m_relative))
     
     'Assert:
     AssertStrictAreEqual myExpected, myResult, myProcedureName
@@ -425,3 +426,45 @@ TestFail:
     Resume TestExit
 End Sub
 
+'@TestMethod("PointXY")
+Private Sub Test10_IndividualPoints()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    'On Error GoTo TestFail
+    
+    'Arrange:
+    Dim myS As SeqA: Set myS = SeqA()
+    Dim myP As PointXY: Set myP = PointXY(5, 5)
+    
+    Dim myDirection As e_AdjacentDirection
+    For myDirection = e_AdjacentDirection.m_First To e_AdjacentDirection.m_last
+        myS.Add myP.AdjacentCoord(myDirection)
+        myS.Add myP.AdjacentCoord(myDirection, ipAdjacentType:=m_relative)
+    Next
+    
+    
+    Dim myExpected As String
+    myExpected = "{{5,6},{0,1},{6,6},{1,1},{6,5},{1,0},{6,4},{1,-1},{5,4},{0,-1},{4,4},{-1,-1},{4,5},{-1,0},{4,6},{-1,1}}"
+    
+    Dim myResult As String
+    
+    'Act:
+    myResult = Fmt.Text("{0}", myS)
+    
+    'Assert:
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
