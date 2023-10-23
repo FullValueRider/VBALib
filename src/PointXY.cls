@@ -27,7 +27,7 @@ Public Enum e_AdjacentDirection ' Defined clockwise
     m_SW
     m_West
     m_NW
-    m_last = m_NW
+    m_Last = m_NW
 End Enum
 
 
@@ -36,21 +36,21 @@ Public Enum e_AdjacentSet
     m_4WaysNESW = m_First
     m_4WaysDiagonal
     m_8Ways
-    m_last = m_8Ways
+    m_Last = m_8Ways
 End Enum
 
 Public Enum e_AdjacentRotation
     m_First
     m_Clockwise = m_First
     m_Anticlockwise
-    m_last = m_Anticlockwise
+    m_Last = m_Anticlockwise
 End Enum
 
 Public Enum e_AdjacentType
     m_First
     m_Absolute = m_First
     m_Relative
-    m_last = m_Relative
+    m_Last = m_Relative
 End Enum
 
 Private Type Properties
@@ -82,6 +82,10 @@ Friend Function ConstructInstance(ByRef ipX As Variant, ByRef ipY As Variant) As
     
 End Function
 
+
+Public Function Clone() As PointXY
+    Set Clone = PointXY(p.X, p.Y)
+End Function
 Public Property Get X() As Long
     X = p.X
 End Property
@@ -141,15 +145,15 @@ Public Function AdjacentCoords _
 Attribute AdjacentCoords.VB_Description = "Returns a SeqA of the adjacent coordinates.  The starting direction, subset, Type and rotation direction can be selected. Defaults to  Eightways, North, Clockwise, Absolute"
 
     Dim myLoc As String: myLoc = MY_TYPENAME & ".AdjacentCoords"
-    Allow.InRange ipAdjacentSet, e_AdjacentSet.m_First, e_AdjacentSet.m_last, myLoc
-    Allow.InRange ipStartDirection, e_AdjacentDirection.m_First, e_AdjacentDirection.m_last, myLoc
-    Allow.InRange ipRotation, e_AdjacentRotation.m_First, e_AdjacentDirection.m_last, myLoc
-    Allow.InRange ipAdjacentType, e_AdjacentType.m_First, e_AdjacentType.m_last, myLoc
+    Allow.InRange ipAdjacentSet, e_AdjacentSet.m_First, e_AdjacentSet.m_Last, myLoc
+    Allow.InRange ipStartDirection, e_AdjacentDirection.m_First, e_AdjacentDirection.m_Last, myLoc
+    Allow.InRange ipRotation, e_AdjacentRotation.m_First, e_AdjacentDirection.m_Last, myLoc
+    Allow.InRange ipAdjacentType, e_AdjacentType.m_First, e_AdjacentType.m_Last, myLoc
 
-    Dim myS As SeqA: Set myS = SeqA()
+    Dim myS As SeqA: Set myS = SeqA.Deb
     
     Dim myDirection As e_AdjacentDirection:
-    For myDirection = e_AdjacentDirection.m_First To e_AdjacentDirection.m_last
+    For myDirection = e_AdjacentDirection.m_First To e_AdjacentDirection.m_Last
         myS.Add AdjacentCoord(myDirection, ipAdjacentType)
     Next
         
@@ -190,8 +194,8 @@ End Function
 Public Function AdjacentCoord(ByRef ipDirection As e_AdjacentDirection, Optional ByVal ipAdjacentType As e_AdjacentType = m_Absolute) As PointXY
 
     Dim myLoc As String: myLoc = MY_TYPENAME & ".AdjacentCoord"
-    Allow.InRange ipDirection, e_AdjacentDirection.m_First, e_AdjacentDirection.m_last, myLoc
-    Allow.InRange ipAdjacentType, e_AdjacentType.m_First, e_AdjacentType.m_last, myLoc
+    Allow.InRange ipDirection, e_AdjacentDirection.m_First, e_AdjacentDirection.m_Last, myLoc
+    Allow.InRange ipAdjacentType, e_AdjacentType.m_First, e_AdjacentType.m_Last, myLoc
     
     Dim myPoint As PointXY
     
@@ -220,3 +224,8 @@ End Function
 Public Property Get TypeName() As String
     TypeName = MY_TYPENAME
 End Property
+
+
+Public Function Manhatten(ByRef ipPoint As PointXY) As Long
+    Manhatten = Abs(ipPoint.X - p.X) + Abs(ipPoint.Y - p.Y)
+End Function

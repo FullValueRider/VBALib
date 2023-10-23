@@ -8,6 +8,7 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "SeqA is a Collection/ArrayList replacement. Items are stored in an Array.  Indexing is 1 based. Order of addition is preserved. Keys are not supported (See Kvp classes)"
+'@IgnoreModule DefaultMemberRequired
 '@PredeclaredId
 '@Exposed
 '@Folder("Seq")
@@ -1712,7 +1713,7 @@ Public Function SetOf(ByRef ipSet As e_SetoF, ByRef ipRangeItem As SeqA) As SeqA
         Case Else
             Err.Raise 17 + vbObjectError, _
             "vbaLib.SeA.Seq.SetOf", _
-            Fmt.Text("Invalid e_set member. Expecting {0} to {1}. Got {2}", e_SetoF.m_First, e_SetoF.m_last, ipSet)
+            Fmt.Text("Invalid e_set member. Expecting {0} to {1}. Got {2}", e_SetoF.m_First, e_SetoF.m_Last, ipSet)
                 
     End Select
 

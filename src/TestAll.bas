@@ -40,7 +40,7 @@ Public VBATesting   As Boolean
     TestKvpA.KvpATests
     TestKvpC.KvpCTests
     TestKvpHA.KvpHATests
-    tESTkVPhl.KvpHLTests
+    TestKvpHL.KvpHLTests
     TestKvpL.KvpLTests
     TestKvpLP.KvpLPTests
     

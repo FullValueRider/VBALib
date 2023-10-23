@@ -19,8 +19,9 @@ Private Type myPoint
 End Type
 
 Private p As Properties
-Sub TestPadleft()
-    Debug.Print Strs.PadRight("Hi", 50, ".")
+
+Public Sub TestStrings()
+ Debug.Print "'Are'<'Is'", "Are" < "Is"
 End Sub
 Sub testingnulls()
     Debug.Print TypeName(vbNullString) ' string
@@ -294,44 +295,13 @@ Sub testTranspose()
     
 End Sub
 
-'Sub TestTransposed()
-'    Dim myS As SeqA: Set myS = SeqA(SeqA(1, 2, 3, 4), SeqA(5, 6), SeqA(7, 8, 9, 10, 11))
-'    Fmt.Dbg "{0}", myS
-'    myS.Transposed
-'    Fmt.Dbg "{0}", myS
-'End Sub
-Sub TestFoldResult()
-    Dim myFoldRes As FoldResult
-    myFoldRes.Index = 2
-    myFoldRes.Value = 5
-    
-    Dim myF2 As FoldResult
-    myF2 = TestPassFoldresult(myFoldRes)
-    
-End Sub
 
+Sub TestClassKvpHL()
+    
+    Dim myK As KvpHL: Set myK = KvpHL()
+    myK.Add PointXY(0, 0), 10
+    myK.Add PointXY(1, 1), 20
+    myK.Add PointXY(2, 2), 30
 
-Sub TestNumber()
-
-    Dim myNum As Number: Set myNum = Num(42)
-    
-    Dim myNum2 As Number: Set myNum2 = Num(800)
-    Debug.Print myNum, myNum2
-    
-    myNum = myNum2
-    
-    Debug.Print myNum, myNum2
-End Sub
- 
-Sub TestRemovePointXY()
-
-    Dim myS As SeqA: Set myS = SeqA()
-    myS.Add PointXY(5, 5)
-    myS.Add PointXY(10, 10)
-    myS.Add PointXY(20, 20)
-    
-    Fmt.Dbg "{0}", myS
-    myS.Remove PointXY(10, 10)
-    Fmt.Dbg "{0}", myS
- 
+    Fmt.Dbg "{0}", myK
 End Sub

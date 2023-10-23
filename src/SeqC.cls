@@ -293,7 +293,7 @@ End Function
 '@Description("Returns a string representation of the Items")
 Public Function Join(Optional ByRef ipSeparator As String = Chars.twComma) As String
 Attribute Join.VB_Description = "Returns a string representation of the Items"
-    Join = Strs.Inner(Fmt.ItemSeparator(ipSeparator).Text("{0}", Me))
+    Join = Strs.Inner(Fmt.SetItemMarkup(ipSeparator:=ipSeparator).Text("{0}", Me))
 End Function
 
 '@Description("Returns a subset of the SeqC")
@@ -1671,7 +1671,7 @@ Public Function SetOf(ByRef ipSet As e_SetoF, ByRef ipRangeItem As Variant) As S
         Case Else
             Err.Raise 17 + vbObjectError, _
             "VBALib.SeqC.SetOf", _
-            Fmt.Text("Invalid e_set member. Expecting {0} to {1}. Got {2}", e_SetoF.m_First, e_SetoF.m_last, ipSet)
+            Fmt.Text("Invalid e_set member. Expecting {0} to {1}. Got {2}", e_SetoF.m_First, e_SetoF.m_Last, ipSet)
                 
     End Select
 

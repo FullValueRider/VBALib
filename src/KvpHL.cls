@@ -929,6 +929,10 @@ Public Function ExistsItem(ByRef ipItem As Variant) As Boolean
 
     ExistsItem = False
     
+    If IsNothing(s.OrderRoot) Then
+        Exit Function
+    End If
+    
     Dim myNode As KvpHNode: Set myNode = s.OrderRoot
     Do
     
@@ -1197,7 +1201,7 @@ End Function
 '@Description("Returns a string representation of the Items")
 Public Function Join(Optional ByRef ipSeparator As String = Chars.twComma) As String
 Attribute Join.VB_Description = "Returns a string representation of the Items"
-    Join = Strs.Inner(Fmt.ItemSeparator(ipSeparator).Text("{0}", Me.Items))
+    Join = Strs.Inner(Fmt.SetItemMarkup(ipSeparator:=ipSeparator).Text("{0}", Me.Items))
 End Function
 
 Public Function Items() As Variant
@@ -1285,6 +1289,7 @@ Public Function Keys() As Variant
     Do
         
         If VBA.IsObject(myNode.Item) Then
+        	Debug.Print VBA.TypeName(myNode.Item)
             Set myA(myNode.Order) = myNode.Key
         Else
             myA(myNode.Order) = myNode.Key

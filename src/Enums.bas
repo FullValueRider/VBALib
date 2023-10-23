@@ -23,7 +23,7 @@ Public Enum e_ConvertTo
     m_LongLong
     m_Single
     m_String
-    m_last = m_String
+    m_Last = m_String
 End Enum
 
 
@@ -31,7 +31,7 @@ Public Enum e_MirrorType
     m_First = 0
     m_ByAllValues = m_First
     m_ByFirstValue
-    m_last = m_ByFirstValue
+    m_Last = m_ByFirstValue
 End Enum
 
 
@@ -42,7 +42,7 @@ Public Enum e_SetoF
     m_ParamOnly
     m_NotCommon
     m_Unique
-    m_last = m_NotCommon
+    m_Last = m_NotCommon
 End Enum
 
 
@@ -50,7 +50,7 @@ Public Enum e_Get
     m_First = 0
     m_Unique = m_First
     m_All
-    m_last = m_All
+    m_Last = m_All
 End Enum
 
 

@@ -11,17 +11,26 @@ Attribute VB_Exposed = True
 '@Exposed
 '@Folder("Lib")
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
-
+' A tracked version of point XY.
+' When Eightway movement is specified, a move along a diagonal counts as a 
+' single step rather than two steps (! step horizontal, 1 step vertical).
+' For this reason, the track only records the location after a step.
+' Thus moving 3 steps NE from location 0,0 gives a track of {{0,0},{1,1},{2,2}{3,3}}
+' Move NE is 1 move and two steps
 Option Explicit
 
 Private Const MY_TYPENAME                   As String = "TrackedXY"
+' Move Forward and Backward are instructions rather than headings
+' They are allowed in lie of headngs but as we just reuse the current heading
+
 Private Const MOVE_FORWARD                  As String = "f"
 Private Const MOVE_BACKWARD                 As String = "b"
 
 
 Public Enum e_Heading
     
-    m_North = 0
+    m_North = 1
+    m_First = m_North
     m_NE
     m_East
     m_SE
@@ -29,7 +38,8 @@ Public Enum e_Heading
     m_SW
     m_West
     m_NW
-    
+    m_Last = m_NW
+   
 End Enum
 
 
@@ -39,11 +49,11 @@ Public Enum e_Bounds
     m_MinY
     m_Maxx
     m_MaxY
-    m_last = m_MaxY
+    m_Last = m_MaxY
 End Enum
 
 ' The TrackedXY class represents an X,Y location which can be moved
-' and which tracks where it has been and when it crossed its own trail.
+' and which tracks where it has been and when it crossed its own Track.
 '
 ' Bounds can be set to limit the area in which the point can move.
 '
@@ -67,50 +77,56 @@ End Enum
 ' The turn command turns left or right by 45 degrees or 90 degrees depending
 ' on the Movement (Fourways or EightWays) (NESW vs N,NE,E,etc)
 
-Public Enum e_MovementType
-    FourWays
-    EightWays
+Public Enum e_AllowedHeadings
+    m_FourwaysNESW = 0
+    m_First = e_AllowedHeadings.m_FourwaysNESW
+    m_FourWaysDiagonals
+    m_Eightways
+    m_Last = e_AllowedHeadings.m_Eightways
 End Enum
 
 Private Type Properties
-    ' the current x,y position
-    Location                                    As PointXY
-    ' the direction we are facing for forward/backwards movements
-    Heading                                     As e_Heading
-    HeadingTextToEnum                           As KvpA
-    ' Dictionary of current heading vs new heading for a left turn
-    TurnLeft                                    As KvpA
-    ' DIctionary of current heading vs new heading for a right turn
-    TurnRight                                   As KvpA             ' Old heading vs new heading for eightway turns
-    Movement                                    As e_MovementType
-    Moves                                       As KvpA             ' heading vs x,y offset for a single step in the direction of the heading
-    ' Trail provides a record of the x,y coordinates in the order in which they were visited
-    Trail                                       As SeqHC    ' x,y point (as string) visited in order of passage
-    'Revisits is a seq of xy coording vs a sequence of when that coordinate was revisited.
-    Revisits                                    As KvpHL    ' String:X,Y location vs SeqA of trail.count when visited
-   ' Intersection            As String
-    ' saves converting the string at Trail.Item(1) back to a point
-    Origin                                      As PointXY
+
+   ' Seq of e_Heading.  Seq used because of rotLeft and rotRight methods (See Turn)
+    Heading                                     As SeqA
+    'Backward                                    As SeqA
     
-    ' Moved is a boolean which is set to true if the movement
-    ' could not be fully realised.  for multi step moves
-    ' indicated that the specified move could not be completed
-    ' i.e the location may have only partially moved.
-    Moved                                       As Boolean
-    ' defines an area outside of which the point may not go
-    ' a seqA of SeqA which defines a rectangular area
-    Area                                        As SeqA
+    AllowedHeadings                             As e_AllowedHeadings
+    HeadingTextToEnum                           As KvpA
+    Compass                                     As SeqA
+    
+    ' A set of PointXY containing the offsets to move for
+    ' p.heading (p.heading is used as the index into Moves)
+    Moves                                       As SeqA
+    
+    ' A record of the x,y coordinates in the order in which they were visited
+    Track                                       As SeqHC
+    
+    ' xy coordinates vs seq of the step count when the coordinate was revisited.
+    Revisits                                    As KvpHL
+  
+    ' Count of steps taken after last move command
+    StepsTaken                                       As Long
+    
+    ' True if the move command results in a change of Heading
+    HasTurned                                      As Boolean
+'
+'    ' rectangular area outside of which the point may not go
+'    ' a seqA of SeqA which defines a rectangular area
+'    Area As SeqA
+
     ' Bounds outside which the point cannot move
-    ' bounds can be set by providing an area or by using the
     ' set bounds method. If an area is set then the setbounds is ignored
+    
     BoundsArray1To4                             As Variant
     ' true if bounds are in force
     BoundsInUse                                 As Boolean
+    
     ' a sequence of x,y strings defining points which cannot be visited.
     ForbiddenCoords                             As SeqT
-    ' a list of values in area which may not be visited
-    ForbiddenValues                             As SeqT
-    Intersection                              As Boolean
+ 
+    'set to true if the current X,y location has been visited previously
+    Intersection                                As Boolean
     
 End Type
 
@@ -120,102 +136,82 @@ Private p As Properties
 Public Function Deb _
 ( _
     Optional ByRef ipPoint As PointXY = Nothing, _
-    Optional ByRef ipArea As SeqA = Nothing, _
     Optional ByRef ipForbiddenCoords As SeqT = Nothing, _
-    Optional ByRef ipForbiddenvalues As SeqT = Nothing, _
-    Optional ByRef ipBoundsArray As Variant = Empty _
-) As TrackedXY
+    Optional ByRef ipBoundsArray As Variant = Empty, _
+    Optional ByRef ipAllowedHeadings As e_AllowedHeadings = m_EightWays _
+) As TrackedXY ' Optional ByRef ipForbiddenvalues As SeqT = Nothing, _ ptional ByRef ipArea As SeqA = Nothing, _
+    With New TrackedXY
 Attribute Deb.VB_UserMemId = 0
     With New TrackedXY
-        Set Deb = .ConstructInstance(ipPoint, ipArea, ipForbiddenCoords, ipForbiddenvalues, ipBoundsArray)
+        Set Deb = .ConstructInstance(ipPoint, ipForbiddenCoords, ipBoundsArray, ipAllowedHeadings)', ipForbiddenvalues
     End With
 End Function
 
 
 Public Function ConstructInstance _
 ( _
-    Optional ByRef ipPoint As PointXY = Nothing, _
-    Optional ByRef ipArea As SeqA = Nothing, _
-    Optional ByRef ipForbiddenCoords As SeqT = Nothing, _
-    Optional ByRef ipForbiddenvalues As SeqT = Nothing, _
-    Optional ByRef ipBounds As Variant = Empty _
-) As TrackedXY
+    ByRef ipPoint As PointXY, _
+    ByRef ipForbiddenCoords As SeqT, _
+    ByRef ipBounds As Variant, _
+    ByRef ipAllowedHeadings As e_AllowedHeadings _
+) As TrackedXY 'Optional ByRef ipForbiddenvalues As SeqT = Nothing, _,  'Optional ByRef ipArea As SeqA = Nothing, _
 
-    ' Initialise internal variables first where possible
-    p.Heading = e_Heading.m_North
-    p.BoundsInUse = False
-    p.Moved = False
-    
-    InitialiseHeadings
-    InitialiseMoves
-    InitialiseTurns
-    
-    Set p.Trail = SeqHC.Deb
-    Set p.Revisits = KvpHL.Deb
-    
-    ' Now process parameters leaving pointXT to the last
-    Set p.Area = ipArea
-    If IsNotNothing(p.Area) Then
-        
-        p.BoundsArray1To4(m_Minx) = p.Area.First.FirstIndex
-        p.BoundsArray1To4(m_MinY) = p.Area.FirstIndex
-        p.BoundsArray1To4(m_Maxx) = p.Area.First.LastIndex
-        p.BoundsArray1To4(m_MaxY) = p.Area.LastIndex
-        p.BoundsInUse = True
-        
-    End If
-    
-    Set p.ForbiddenCoords = ipForbiddenCoords
-    Set p.ForbiddenValues = ipForbiddenvalues
-    
-    If Not p.BoundsInUse Then
-        If Not VBA.IsEmpty(ipBounds) Then
-            If UBound(ipBounds) - LBound(ipBounds) + 1 = 4 Then
-                p.BoundsArray1To4 = ipBounds
-                ReDim p.BoundsArray1To4(1 To 4)
-                p.BoundsInUse = True
-            Else
-                Err.Raise 17 + vbObjectError, _
-                    "VBALib.TrackedPoint", _
-                    Fmt.Text("The ipBounds array should contain 4 elements.  Found {0}", ArrayOp.Count(ipBounds))
-            End If
-        End If
-    End If
-    
-    ' we can finally set the currrent location, checking that it is withing bounds first.
     If IsNothing(ipPoint) Then
-        If p.BoundsInUse Then
-            Set p.Location = PointXY(p.BoundsArray1To4(m_Minx), p.BoundsArray1To4(m_MinY))
-        Else
-            Set p.Location = PointXY(0, 0)
-        End If
+        Set ipPoint = PointXY(0, 0)
+    End If
+    
+    If IsNothing(ipForbiddenCoords) Then
+        Set p.ForbiddenCoords = SeqT.Deb
     Else
-        Set p.Location = ipPoint
+        Set p.ForbiddenCoords = ipForbiddenCoords
     End If
     
-    Set p.Origin = PointXY(p.Location.X, p.Location.Y)
-    
-    'If bounds are set check that ipPoint is withing the bounded area
-    If p.BoundsInUse Then
-        With ipPoint
-            If .X < p.BoundsArray1To4(m_Minx) Or .X > p.BoundsArray1To4(m_Maxx) Or .Y < p.BoundsArray1To4(m_MinY) Or .Y > p.BoundsArray1To4(m_MaxY) Then
-                Err.Raise 17 + vbObjectError, _
-                    "VBALib.TrackedPoint", _
-                    "ipPoint is not within the bounded area"
-            End If
-        End With
+    If p.ForbiddenCoords.HoldsItem(ipPoint) Then
+        Err.Raise 17 + vbObjectError, _
+            "VBALib.TrackedXY", _
+            Fmt.Text("The initial point '{0}' is a forbidden Point", ipPoint)
     End If
     
+    p.BoundsInUse = False
+    If ArrayOp.HoldsItems(ipBounds) Then
+        If ArrayOp.Count(ipBounds) = 4 Then
+            p.BoundsArray1To4 = ipBounds
+            ReDim p.BoundsArray1To4(1 To 4)
+            p.BoundsInUse = True
+        Else
+            Err.Raise 17 + vbObjectError, _
+                "VBALib.TrackedPoint", _
+                Fmt.Text("The ipBounds array should contain 4 elements.  Found {0}", ArrayOp.Count(ipBounds))
+        End If
+    End If
+
+    Allow.InRange ipAllowedHeadings, e_AllowedHeadings.m_First, e_AllowedHeadings.m_Last, "TrackedXY.ConstructInstance"
+    p.AllowedHeadings = ipAllowedHeadings
     
+    p.StepsTaken = 0
+    p.HasTurned = False
     
-    ' now we know the X,Y location we can add it as the first coordinate in p.Trail
-    p.Trail.Add p.Location.ToString
+    InitialiseHeadingTextToEnum
+    
+    ' We generate a set of adjacent coordinates as PointXY instances
+    ' we use the m_Relative argument to get offsets from the current xy position
+    ' These offsets are used to move the current xy position 1 step in the heading direction
+    ' p.location.x = p.location.x + p.moves.Item(m_North).X
+    ' p.location.y = p.location.y + p.moves.Item(m_North).Y
+    Set p.Moves = ipPoint.AdjacentCoords(ipAdjacentType:=m_Relative)
+    
+    ' Seq are used so that we can use the rotleft and rotright methods
+    Set p.Heading = SeqA(m_North, m_NE, m_East, m_SE, m_South, m_SW, m_West, m_NW)
+    'Set p.Backward = SeqA(m_South, m_SW, m_West, m_NW, m_North, m_NE, m_East, m_SE)
+
+    Set p.Track = SeqHC.Deb.AddItems(ipPoint)
+    Set p.Revisits = KvpHL.Deb
     
     Set ConstructInstance = Me
 
 End Function
  
-Private Sub InitialiseHeadings()
+Private Sub InitialiseHeadingTextToEnum()
 
     Set p.HeadingTextToEnum = KvpA.Deb
     With p.HeadingTextToEnum
@@ -258,258 +254,239 @@ Private Sub InitialiseHeadings()
         .Add "southeast", m_SE
         .Add "southwest", m_SW
         .Add "northwest", m_NW
-        
-        ' The directions below will be updated based on any turn instruction
-        .Add "f", m_North
-        .Add "forward", m_North
-        .Add "Forwards", m_North
-        
-        .Add "b", m_South
-        .Add "back", m_South
-        .Add "backwards", m_South
+
+       ' The enums below will be ignored but the keys are needed in the Move Method
+       .Add "f", -1
+       .Add "forward", -1
+       .Add "Forwards", -1
+
+       .Add "b", -2
+       .Add "back", -2
+       .Add "backwards", -2
     End With
 End Sub
 
-Private Sub InitialiseMoves()
-
-    Set p.Moves = KvpA.Deb
-    With p.Moves
-    
-        .Add "^", MoveXY.North
-        .Add ">", MoveXY.East
-        .Add "v", MoveXY.South
-        .Add "<", MoveXY.West
-        
-        .Add "n", MoveXY.North
-        .Add "e", MoveXY.East
-        .Add "s", MoveXY.South
-        .Add "w", MoveXY.West
-        
-        .Add "north", MoveXY.North
-        .Add "east", MoveXY.East
-        .Add "south", MoveXY.South
-        .Add "west", MoveXY.West
-        
-        .Add "u", MoveXY.North
-        .Add "r", MoveXY.East
-        .Add "d", MoveXY.South
-        .Add "l", MoveXY.West
-        
-        .Add "up", MoveXY.North
-        .Add "right", MoveXY.East
-        .Add "down", MoveXY.South
-        .Add "left", MoveXY.West
-        
-        .Add "0", MoveXY.North
-        .Add "1", MoveXY.East
-        .Add "2", MoveXY.South
-        .Add "3", MoveXY.West
-        
-        .Add "ne", MoveXY.NorthEast
-        .Add "se", MoveXY.SouthEast
-        .Add "sw", MoveXY.SouthWest
-        .Add "nw", MoveXY.NorthWest
-        
-        .Add "northeast", MoveXY.NorthEast
-        .Add "southeast", MoveXY.SouthEast
-        .Add "southwest", MoveXY.SouthWest
-        .Add "northwest", MoveXY.NorthWest
-        
-        ' The directions below will be updated based on any turn instruction
-        .Add "f", MoveXY.North
-        .Add "forward", MoveXY.North
-        .Add "Forwards", MoveXY.North
-        
-        .Add "b", MoveXY.South
-        .Add "back", MoveXY.South
-        .Add "backwards", MoveXY.South
-               
-    End With
-    
-End Sub
-
-Private Sub InitialiseTurns()
-
-    Set p.TurnLeft = KvpA.Deb
-    
-    With p.TurnLeft
-        .Add e_Heading.m_North, e_Heading.m_NW
-        .Add e_Heading.m_NW, e_Heading.m_West
-        .Add e_Heading.m_West, e_Heading.m_SW
-        .Add e_Heading.m_SW, e_Heading.m_South
-        .Add e_Heading.m_South, e_Heading.m_SE
-        .Add e_Heading.m_SE, e_Heading.m_East
-        .Add e_Heading.m_East, e_Heading.m_NE
-        .Add e_Heading.m_NE, e_Heading.m_North
-    End With
-    
-    
-    Set p.TurnRight = KvpA.Deb
-    
-    With p.TurnRight
-        .Add e_Heading.m_North, e_Heading.m_NE
-        .Add e_Heading.m_NE, e_Heading.m_East
-        .Add e_Heading.m_East, e_Heading.m_SE
-        .Add e_Heading.m_SE, e_Heading.m_South
-        .Add e_Heading.m_South, e_Heading.m_SW
-        .Add e_Heading.m_SW, e_Heading.m_West
-        .Add e_Heading.m_West, e_Heading.m_NW
-        .Add e_Heading.m_NW, e_Heading.m_North
-    End With
-    
-End Sub
-Public Property Get Movement() As e_MovementType
-    Movement = p.Movement
+'@("Description("Returns the movement enum (m_EightWays, m_FourWaysNESW or m_FourWaysDiagaonals")
+Public Property Get AllowedHeadings() As e_AllowedHeadings
+    AllowedHeadings = p.AllowedHeadings
 End Property
 
-Public Property Let Movement(ByVal ipMovementType As e_MovementType)
-    p.Movement = ipMovementType
+'@Description("Set the allowed directions for movement.  The next clockwise direction is selected when fourways directions do not match the current heading")
+Public Property Let AllowedHeadings(ByVal ipAllowedHeadings As e_AllowedHeadings)
+Attribute AllowedHeadings.VB_Description = "Set the allowed directions for movement.  The next clockwise direction is selected when fourways directions do not match the current heading"
+
+    Allow.InRange ipAllowedHeadings, e_Heading.m_First, e_Heading.m_Last, MY_TYPENAME & ".Let_Move"
+    
+    ' If the alowed headings are fourways and the current heading
+    ' is not one of the fourways set we turn clockwise 1 step
+    Select Case ipAllowedHeadings
+        
+        Case m_FourwaysNESW
+        
+            Select Case p.Heading.First
+                Case m_NE, m_SE, m_SW, m_NW
+                    p.Heading.RotLeft
+                    
+            End Select
+            
+                
+        Case m_FourWaysDiagonals
+        
+            Select Case p.Heading.First
+                Case m_North, m_East, m_South, m_West
+                    p.Heading.RotLeft
+                    
+            End Select
+            
+    End Select
+    
 End Property
 
-Public Property Get Moves() As KvpA
+
+' Private Function BackwardsHeading(ByVal ipHeading As e_Heading) As e_Heading
+
+'     ipHeading = ipHeading + 4
+'     If ipHeading > m_EightWays_Last Then
+'         ipHeading = ipHeading - m_EightWays_Last
+'     End If
+'     BackwardsHeading = ipHeading
+    
+' End Function
+
+Public Property Get Moves() As SeqA
     Set Moves = p.Moves
+End Property
+
+Public Property Set Moves(ByVal ipMoves As SeqA)
+    Set p.Moves = ipMoves
 End Property
 
 Public Function Turn(ByRef ipTurn As String) As TrackedXY
     
     Set Turn = Me
-    Dim myTurn As String: myTurn = VBA.LCase$(ipTurn)
-    If VBA.InStr("l,r,left,right", myTurn) = 0 Then
-        Exit Function
-    End If
+    Dim myTurn As String: myTurn = VBA.Trim$ (VBA.LCase$(ipTurn))
+    Allow.WhenTrue VBA.InStr("l,r,left,right", myTurn) <> 0, MY_TYPENAME & ".Turn", Fmt.Text("Invalid Turn command. Got {0}", ipTurn)
     
-    If VBA.InStr("l,left", myTurn) > 0 Then
-        p.Heading = p.TurnLeft.Item(p.Heading)
-        If p.Movement = e_AdjacentSet.m_4WaysNESW Then
-            p.Heading = p.TurnLeft.Item(p.Heading)
-        End If
-        
-        p.Moves.Item(MOVE_FORWARD) = p.Moves.Item(p.Heading)
-        p.Moves.Item(MOVE_BACKWARD) = p.Moves.Item((p.Heading + 4) Mod 8)
-        Exit Function
-    End If
+    Dim myEightWaysPoints As Long: myEightWaysPoints = IIf(p.AllowedHeadings = m_Eightways, 1, 2)
     
-    p.Heading = p.TurnRight.Item(p.Heading)
-    If p.Movement = e_AdjacentSet.m_4WaysNESW Then
-        p.Heading = p.TurnRight.Item(p.Heading)
-    End If
+    Select Case myTurn
     
-    p.Moves.Item(MOVE_FORWARD) = p.Moves.Item(p.Heading)
-    p.Moves.Item(MOVE_BACKWARD) = p.Moves.Item((p.Heading + 4) Mod 8)
-    p.HeadingTextToEnum.Item(MOVE_FORWARD) = p.Heading
-    p.HeadingTextToEnum.Item(MOVE_BACKWARD) = (p.Heading + 4) Mod 8
+        Case "l", "left":            p.Heading.RotRight myEightWaysPoints
+        Case "r", "right":            p.Heading.RotLeft myEightWaysPoints
+            
+    End Select
     
+    p.HasTurned = True
+          
 End Function
 
-Public Property Set Moves(ByVal ipMoves As KvpA)
-    Set p.Moves = ipMoves
-End Property
 
-Public Function Move(ByRef ipDirection As String, Optional ByVal ipSteps As Long = 1) As TrackedXY
+'@Description("Moves the point the specified number of steps in the Specified direction.  If no heading is specified the point moves forward. ")
+Public Function Move(Optional ByVal ipSteps As Long = 1, Optional ByRef ipHeading As String = MOVE_FORWARD) As TrackedXY
 
     Set Move = Me
+    Dim myBackward As Boolean
+    ' Convert heading text to heading enum
+    ' and set the myBackwards flag
+    Dim myHeadingStr As String: myHeadingStr = VBA.Trim$(VBA.LCase$(ipHeading))
+    Dim myHeadingEnum As e_Heading
+    Select Case myHeadingStr
     
-    If p.Moves.LacksKey(VBA.LCase$(ipDirection)) Then
-        Err.Raise 17 + vbObjectError, _
-            "VBALib.TrackedXY.Move", _
-            Fmt.Text("Unknown direction for Move. Got {0}", ipDirection)
-    Else
-        p.Heading = p.HeadingTextToEnum.Item(ipDirection)
-        p.HeadingTextToEnum.Item(MOVE_FORWARD) = p.Heading
-        p.HeadingTextToEnum.Item(MOVE_BACKWARD) = (p.Heading + 4) Mod 8
+        Case "f", "Forward", "forwards"
+            myHeadingEnum = p.Heading.First
+            myBackward = False
         
-        p.Moves.Item(MOVE_FORWARD) = p.HeadingTextToEnum.Item(MOVE_FORWARD)
-        p.Moves.Item(MOVE_BACKWARD) = p.HeadingTextToEnum.Item(MOVE_BACKWARD)
-    End If
+        Case "b", "back", "backward", "backwards"
+            myHeadingEnum = p.Heading.First
+            myBackward = True
+            
+        Case Else
+        
+            Allow.WhenTrue p.HeadingTextToEnum.HoldsKey(myHeadingStr), MY_TYPENAME & ".Move", Fmt.Text("Unknown heading.  Got {0}", ipHeading)
+        
+            myHeadingEnum = p.HeadingTextToEnum.Item(myHeadingStr)
+            
+            'Rotate Headings to match currentheadings
+            ' so that the new direction is preserved for the next move/turn
+            ' Also set the hasTurned flag
+            If myHeadingEnum = p.Heading.First Then
+                p.HasTurned = False
+            Else
+                p.Heading.RotLeft myHeadingEnum - p.Heading.First
+                p.HasTurned = True
+            End If
+            
+    End Select
+    
+    ' Determine if myHeading is one of the headings allowed by p.Allowedeadings
+    ' if it isn't do one turn clockwise to align p.heading with p.allowedheadings
+    ' this extra rotation is only needed if p.AllowedHeadings is Fourways
+    Select Case p.AllowedHeadings
+        
+        Case e_AllowedHeadings.m_FourwaysNESW
+        
+            Select Case myHeadingStr
+                Case m_NE, m_SE, m_SW, m_NW
+                    p.Heading.RotLeft
+                    
+            End Select
+        
+        Case e_AllowedHeadings.m_FourWaysDiagonals
+            
+            Select Case myHeadingEnum
+                 Case m_North, m_East, m_South, m_West
+                     p.Heading.RotLeft
+                 
+            End Select
+        
+    End Select
     
     If ipSteps = 0 Then
         Exit Function
     End If
     
-    ' Setting the heading or turning will automatically
-    ' update the forward and backward move values
-    Dim myMover As MoveXY
-    
-    If ipSteps > 0 Then
-        Set myMover = p.Moves.Item(MOVE_FORWARD)
-    Else
-        Set myMover = p.Moves.Item(MOVE_BACKWARD)
-    End If
-    
-    Dim myX As Long: myX = p.Location.X
-    Dim myY As Long: myY = p.Location.Y
-    
     Dim myStep As Long
     For myStep = 1 To VBA.Abs(ipSteps)
         
-        p.Moved = False
-    
-        myX = myX + myMover.X
-        myY = myY + myMover.Y
+        Dim myX As Long
+        Dim myY As Long
+        If myBackward Then
         
-        Dim myCoord As String: myCoord = VBA.CStr(myX) & Chars.twComma & VBA.CStr(myY)
-        
-        ' check if new location is out of bounds
-        If p.BoundsInUse Then
-            If myX < p.BoundsArray1To4(m_Minx) Or myX > p.BoundsArray1To4(m_Maxx) Or myY < p.BoundsArray1To4(m_MinY) Or myY > p.BoundsArray1To4(m_MaxY) Then
-                Exit Function
-            End If
+            myX = p.Track.Last.x - p.Moves.Item(p.Heading.First).x
+            myY = p.Track.Last.Y - p.Moves.Item(p.Heading.First).Y
+        Else
+            myX = p.Track.Last.x + p.Moves.Item(myHeadingEnum).x
+            myY = p.Track.Last.Y + p.Moves.Item(myHeadingEnum).y
+        End If
+         
+        'if the next point is out of bounds then exit
+        If Not WithinBounds(myX, myY) Then
+            Exit Function
         End If
         
+        ' check location is not a forbidden point
+        Dim myPoint As PointXY: Set myPoint = PointXY(myX, myY)
         ' is it a forbidden location
-        If p.ForbiddenCoords.HoldsItems Then
-            If p.ForbiddenCoords.HoldsItem(myCoord) Then
-                Exit Function
-            End If
+        If p.ForbiddenCoords.HoldsItem(myPoint) Then
+            Exit Function
         End If
         
-        ' is location a forbidden value
-        If Not VBA.IsEmpty(p.Area) Then
-            If p.ForbiddenValues.HoldsItems Then
-                If p.ForbiddenValues.HoldsItem(p.Area.Item(myY).Item(myX)) Then
-                    Exit Function
-                End If
-            End If
-        End If
-        
-        ' hurrah we can update location
-        p.Moved = True
-        p.Location.X = myX
-        p.Location.Y = myY
-        
+       
+        ' check if we are at an intersection
         p.Intersection = False
         
-        If p.Trail.HoldsItem(myCoord) Then
+        If p.Track.HoldsItem(myPoint) Then
             p.Intersection = True
             
-            If p.Trail.HoldsItem(myCoord) Then
+            If p.Revisits.LacksItem(myPoint) Then
             
-                p.Revisits.Add myCoord, SeqA.Deb
-                p.Intersection = True
+                p.Revisits.Add myPoint, SeqA.Deb
                 
             End If
             
-            p.Revisits.Item(myCoord).Add p.Trail.Count
+            p.Revisits.Item(myPoint).Add p.Track.LastIndex + 1
         
         End If
         
+        ' we can now update SETPS MOVED
+        p.StepsTaken = p.StepsTaken + 1
+
+        ' now we can finally add myPpoint to the track
+        p.Track.Add myPoint
+
     Next
     
 End Function
 
 
+Private Function WithinBounds(ByRef ipX As Long, ByRef ipY As Long) As Boolean
+	
+    WithinBounds = True
+
+    If Not p.BoundsInUse Then
+    	Exit Function
+    End If
+    
+    If ipX < p.BoundsArray1To4(m_Minx) Or ipX > p.BoundsArray1To4(m_Maxx) Or ipY < p.BoundsArray1To4(m_MinY) Or ipY > p.BoundsArray1To4(m_MaxY) Then
+    	WithinBounds = False
+        Exit Function
+    End If
+   
+End Function
+
+
 Public Function Location() As PointXY
-    Set Location = p.Location
+    Set Location = p.Track.Last
 End Function
 
 
 Public Function Steps() As Long
-    Steps = p.Trail.Count - 1
+    Steps = p.Track.Count - 1
 End Function
 
 
-Public Function Trail() As SeqHC
-    Set Trail = p.Trail
+Public Function Track() As SeqHC
+    Set Track = p.Track
 End Function
 
 
@@ -519,48 +496,65 @@ End Function
 
 
 Public Function AtOrigin() As Boolean
-    AtOrigin = (Me.Location.X = Me.Origin.X) And (Me.Location.Y = Me.Origin.Y)
+    AtOrigin = p.Track.First.ToString = p.Track.Last.ToString
 End Function
 
-Public Function Manhatten() As Long
-    Manhatten = Abs(p.Location.X - p.Origin.X) + Abs(p.Location.Y - p.Origin.Y)
+'The manhatten distance between the origin and the current location or the provided location")
+Public Function Manhatten(Optional ByRef ipPoint As PointXY = Nothing) As Long
+    
+    If IsNothing(ipPoint) Then
+        Manhatten = p.Track.First.Manhatten(p.Track.Last)
+    Else
+        Manhatten = (p.Track.First.Manhatten(ipPoint))
+    End If
+    
 End Function
 
 
 Public Function Origin() As PointXY
-    Set Origin = p.Origin
+    Set Origin = p.Track.First
 End Function
 
 Public Function Heading() As e_Heading
-    Heading = p.Heading
+    Heading = p.Heading.First
 End Function
 
 Public Property Get Bounds() As Long()
     Bounds = p.BoundsArray1To4
 End Property
 
-Public Property Let Bounds(ByRef ipBoundsArray1To4() As Long)
-    p.BoundsArray1To4 = VBA.CVar(ipBoundsArray1To4)
-    
+Public Property Let Bounds(Optional ByRef ipBoundsArray1To4 As Variant = Empty)
+	
     If VBA.IsEmpty(ipBoundsArray1To4) Then
         p.BoundsInUse = False
         Exit Property
     End If
     
-    If p.Location.X < p.BoundsArray1To4(m_Minx) Or p.Location.X > p.BoundsArray1To4(m_Maxx) Or p.Location.Y < p.BoundsArray1To4(m_MinY) Or p.Location.Y > p.BoundsArray1To4(m_MaxY) Then
+    If LBound(ipBoundsArray1To4) <> 1 And UBound(ipBoundsArray1To4) <> 4 Then
+        Err.Raise 17 + vbObjectError, _
+            MY_TYPENAME & ".Let_Bounds", _
+            Fmt.Text("Expecting bound of 1 and 4.  Got {0} and {1}", LBound(ipBoundsArray1To4), UBound(ipBoundsArray1To4))
+    End If
+    
+    p.BoundsArray1To4 = VBA.CVar(ipBoundsArray1To4)
+    
+    Dim myCount As Long:myCount = 0
+    Dim myPoints As IterItems: Set myPoints = IterItems(p.Track)
+    Do
+        Dim myPoint As PointXY: Set myPoint = myPoints.CurItem(0)
+
+        If myPoint.X < p.BoundsArray1To4(m_Minx) Or myPoint.X > p.BoundsArray1To4(m_Maxx) Or myPoint.Y < p.BoundsArray1To4(m_MinY) Or myPoint.Y > p.BoundsArray1To4(m_MaxY) Then
+            myCount = myCount + 1
+        End If
+    Loop While myPoints.MoveNext
+    
+    If myCount > 0 Then
         Err.Raise 17 + vbObjectError, _
             "VBALib.PointXT.Let Bounds", _
-            Fmt.Text("The new Bounds of {0} do not include the current coordinates ({1},{2})", ipBoundsArray1To4, p.Location.X, p.Location.Y)
+            Fmt.Text("The new Bounds exclude {0} points in the current track", myCount)
     End If
 
 End Property
-
-'Public Sub SetBounds(ByVal ipMinx As Long, ByVal ipMinY As Long, ByVal ipMaxX As Long, ByVal ipMaxY As Long)
-'    p.MinX = ipMinx
-'    p.MinY = ipMinY
-'    p.MaxX = ipMaxX
-'    p.MaxY = ipMaxY
-'End Sub
 
 Public Function BoundsInUse() As Boolean
     BoundsInUse = p.BoundsInUse
@@ -570,59 +564,42 @@ Public Property Get ForbiddenCoords() As SeqT
     Set ForbiddenCoords = p.ForbiddenCoords
 End Property
 
-Public Property Set ForbiddenCoords(ByVal ipForbiddenCoords As SeqT)
-    Set p.ForbiddenCoords = ipForbiddenCoords
+''@Description("Adds forbiddenpoint if not already in the Track. True if point added.")
+Public Function AddForbiddenCoord(ByRef ipPoint As PointXY) As Boolean
     
-    If ipForbiddenCoords Is Nothing Then
+    AddForbiddenCoord = False
+    If p.Track.HoldsItem(ipPoint) Then
+        Exit Function
+    End If
+    p.ForbiddenCoords.Add ipPoint
+    AddForbiddenCoord = True
+End Function
+
+Public Property Set ForbiddenCoords(ByVal ipForbiddenCoords As SeqT)
+    
+    If IsNothing(ipForbiddenCoords) Then
         p.ForbiddenCoords.Clear
         Exit Property
     End If
     
-    If p.ForbiddenCoords.HoldsItem(VBA.CStr(p.Location.X) & Chars.twComma & VBA.CStr(p.Location.Y)) Then
+    If p.Track.SetOf(m_Common, ipForbiddenCoords).HoldsItems Then
         Err.Raise 17 + vbObjectError, _
              "VBALib.PointXY.Set Forbidden", _
-            Fmt.Text("The new list of forbidden coordinates includes the current coordinate({0},{1})", p.Location.X, p.Location.Y)
+            "The new list of forbidden coordinates includes coordinates in the current track"
     End If
     
     Set p.ForbiddenCoords = ipForbiddenCoords
     
 End Property
 
-Public Function Moved() As Boolean
-    Moved = p.Moved
+Public Function StepsTaken() As Long
+    StepsTaken = p.StepsTaken
 End Function
+
+Public Function HasTurned() As Boolean
+    HasTurned = p.HasTurned
+end function
+
 Public Property Get TypeName() As String
     TypeName = MY_TYPENAME
 End Property
-
-Private Sub AlertOutOfBOunds()
-    Err.Raise 17 + vbObjectError, _
-        "VBALib.PointXY: Out of bounds"
-End Sub
-
-'Public Function ISMove(ByRef ipMove As Mover, Optional ipSteps As Long = 1) As PointXY
-'
-'    Set Move = Me
-'
-'
-'    p.Moved = False
-'
-'    Dim myX As Long: myX = p.X + ipMove.X
-'    Dim myY As Long: myY = p.Y + ipMove.Y
-'
-'    If p.BoundsInUse And (myX < p.Bounds(m_MinX) Or myX > p.Bounds(m_MaxX) Or myY < p.Bounds(m_MinY) Or myY > p.Bounds(m_MaxY)) Then
-'        Exit Function
-'    End If
-'
-'    If p.Forbidden.HoldsItems Then
-'        If p.Forbidden.HoldsItem(VBA.CStr(myX) & Chars.twComma & VBA.CStr(myY)) Then
-'            Exit Function
-'        End If
-'    End If
-'
-'    p.Moved = True
-'    p.X = myX
-'    p.Y = myY
-'
-'End Function
-'

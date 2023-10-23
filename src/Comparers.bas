@@ -2,20 +2,23 @@ Attribute VB_Name = "Comparers"
 '@Folder("Helpers")
 Option Explicit
 ' **Length vs content
-' Comparison of strings in VBA shows that the default behaviour
-' Is based on content then length
+' VBA strings are compared based on   *CONTENT**
+' i.e 'are' is less than 'is' because a is before i
 
 ' To avoid discombobulation the Comparers below should follow the same rule.
 
-' We also need to be aware that in some cases comparing against types
-' classes as admin is a legitimate comparison, e.g. Nothing is an acceptable
-' comparison for  any object.
+' In some cases comparing against admin types is a legitimate comparison,
+' e.g. Nothing is an acceptable comparison for  any object.
 
-' There are also two additional considerations
-' Do comparisons need to be type specific within a type group
-' i.e. Integer2 is not the same as long 2
-' for container classes does the comparison need to respect the order of items
-' i.e. [2,3] is not the same as [3,2].
+' In this module we allow the following comparisons
+' 1). VBA comparisons
+' 2). Group Value = Group Value  i.e. a byte of 4 = long of 4 etc (no cooercion as string numbers to numbers)
+' 3). Type/Value = Type/Value  Bye 4 <> Long 4 because the types do not match
+' 4). Address = Address  - a last chance comparison for objects with no string output.
+
+' As coercions are not allowed it is also neccessary to **arbritrarily** 
+' a hierarchy for comparison of types for > and < comparisons.set
+' The ordering may make no sense but allows simpler code to be written
 
 ' Finally, when using fmt.Text to obtain string representations of objects for comparision purposed
 ' we need to make sure that markup is not used

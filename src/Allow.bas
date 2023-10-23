@@ -11,7 +11,7 @@ Public Enum e_AllowReportBackAction
     m_First = 0
     m_Continue = e_GuardReportBackAction.m_First
     m_RaiseError
-    m_last = m_RaiseError
+    m_Last = m_RaiseError
 End Enum
 
 Public Const MY_LIB                                     As String = "VBALib"
@@ -32,68 +32,207 @@ Public Const MY_LIB                                     As String = "VBALib"
 '    p.ReportBackAction = ipReportBackAction
 'End Property
 
-Public Function IsNumber(ByVal ipNumber As Variant, ByRef ipLocation As String, Optional ByVal ipReportBackaction As e_AllowReportBackAction = m_RaiseError) As Boolean
+Private Sub RaiseAnError(ByRef ipLocation As String, ByVal ipMessage As String)
+
+    Err.Raise 17 + vbObjectError, _
+        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
+        ipMessage
+End Sub
+
+
+Public Function HoldsItems _
+( _
+    ByRef ipContainer As Variant, _
+    ByRef ipLocation As String, _
+    Optional ipMessage As String = vbNullString, _
+    Optional ByVal ipReportBackAction As e_AllowReportBackAction = m_RaiseError _ 
+) As Boolean
+
+    Select Case True
+        Case VBA.IsArray(ipContainer):                  HoldsItems = ArrayOp.HoldsItems(ipContainer)
+        Case GroupInfo.IsContainer(ipContainer):        HoldsItems = ipContainer.holdsItems
+        Case Else:                                      HoldsItems = False
+    End Select
+    
+    If HoldsItems Then
+        Exit Function
+    End If
+    
+    If ipReportBackAction = m_Continue Then
+        Exit Function
+    End If
+    
+    If VBA.Len(ipMessage) = 0 Then
+    	ipMessage = Fmt.Text("Expecting aa Array or Container type.  Got {0}", VBA.TypeName(ipContainer))
+    End If
+        
+    RaiseAnError ipLocation, ipMessage
+    
+End Function
+
+Public Function WhenTrue _
+( _
+    ByVal ipTrue As Boolean, _
+    ByRef ipLocation As String, _
+    Optional ByRef ipMessage As String = vbNullString, _
+    Optional ByVal ipReportBackAction As e_AllowReportBackAction = m_RaiseError _
+) As Boolean
+
+    WhenTrue = ipTrue
+    
+    If WhenTrue Then
+        Exit Function
+    End If
+    
+    If ipReportBackAction = m_Continue Then
+        Exit Function
+    End If
+    
+    If VBA.Len(ipMessage) = 0 Then
+        ipMessage = "Test did not yield 'True'"
+    End If
+     
+    RaiseAnError ipLocation, ipMessage
+        
+End Function
+
+Public Function WhenFalse _
+( _
+    ByVal ipFalse As Boolean, _
+    ByRef ipLocation As String, _
+    Optional ByRef ipMessage As String = vbNullString, _
+    Optional ByVal ipReportBackAction As e_AllowReportBackAction = m_RaiseError _
+) As Boolean
+    
+    WhenFalse = ipFalse
+    
+    If WhenFalse = False Then
+        Exit Function
+    End If
+    
+    If ipReportBackAction = m_Continue Then
+        Exit Function
+    End If
+    
+    If VBA.Len(ipMessage) = 0 Then
+        ipMessage = "Test did not yield 'False'"
+    End If
+     
+    RaiseAnError ipLocation, ipMessage
+        
+End Function
+
+Public Function IsNumber _
+( _
+    ByVal ipNumber As Variant, _
+    ByRef ipLocation As String, _
+    Optional ByVal ipMessage As String = vbNullString, _
+    Optional ByVal ipReportBackAction As e_AllowReportBackAction = m_RaiseError _
+) As Boolean
+
     IsNumber = GroupInfo.IsNumber(ipNumber)
     
     If IsNumber Then
         Exit Function
     End If
     
-    If ipReportBackaction = e_AllowReportBackAction.m_Continue Then
+    If ipReportBackAction = e_AllowReportBackAction.m_Continue Then
         Exit Function
     End If
     
-    Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
-        Fmt.Text("Expecting a number. Got {0}.", VBA.TypeName(ipNumber))
+    If VBA.Len(ipMessage) = 0 Then
+        ipMessage = Fmt.Text("Expecting a number. Got {0}.", VBA.TypeName(ipNumber))
+    End If
+    
+    RaiseAnError ipLocation, ipMessage
     
 End Function
 
-Public Function InRange(ByVal ipTest As Variant, ByVal ipLow As Variant, ByVal ipHigh As Variant, ByRef ipLocation As String, Optional ByVal ipReportBackaction As e_AllowReportBackAction = m_RaiseError) As Boolean
+Public Function InRange _
+( _
+    ByVal ipTest As Variant, _
+    ByVal ipLow As Variant, _
+    ByVal ipHigh As Variant, _
+    ByRef ipLocation As String, _
+    Optional ByRef ipMessage As String = vbNullString, _
+    Optional ByVal ipReportBackAction As e_AllowReportBackAction = m_RaiseError _
+) As Boolean
 
-    Dim myResult As Boolean: myResult = True
-    If Comparers.LT(ipTest, ipLow) Then
-        myResult = False
-    End If
+    InRange = Comparers.MTEQ(ipTest, ipLow)
+    InRange = InRange And Comparers.LTEQ(ipTest, ipHigh)
     
-    If Comparers.MT(ipTest, ipHigh) Then
-        myResult = False
-    End If
-    
-    InRange = myResult
-    
-    If myResult Then
+    If InRange Then
         Exit Function
     End If
     
-    If ipReportBackaction = m_Continue Then
+    If ipReportBackAction = m_Continue Then
         Exit Function
     End If
     
-    Err.Raise 17 + vbObjectError, _
-        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
-        Fmt.Text("Not in range {0} to {1}.  Got {2}.", ipLow, ipHigh, ipTest)
+    If VBA.Len(ipMessage) = 0 Then
+        ipMessage = Fmt.Text("Not in range {0} to {1}.  Got {2}.", ipLow, ipHigh, ipTest)
+    End If
+    
+    RaiseAnError ipLocation, ipMessage
         
 End Function
 
-Public Function IndexExists(ByVal ipIndex As Long, ByVal ipIndexed As Object, ByRef ipLocation As String, Optional ByVal ipReportBackaction As e_AllowReportBackAction = m_RaiseError) As Boolean
+'Public Function IndexExists _(ByVal ipIndex As Long, ByVal ipIndexed As Object, ByRef ipLocation As String, Optional ByVal ipReportBackAction As e_AllowReportBackAction = m_RaiseError) As Boolean
+'
+'    IndexExists = (ipIndex < ipIndexed.FirstIndex) Or (ipIndex > ipIndexed.LastIndex)
+'
+'    If IndexExists Then
+'        Exit Function
+'    End If
+'
+'    If ipReportBackAction = m_ReportBackContinue Then
+'            Exit Function
+'    End If
+'
+'    Err.Raise 17 + vbObjectError, _
+'        Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
+'        Fmt.Text("Expecting a value between {0} and {1}. Got {2}.", ipIndexed.FirstIndex, ipIndexed.LastIndex, ipIndex)
+'
+'End Function
 
-    IndexExists = (ipIndex < ipIndexed.FirstIndex) Or (ipIndex > ipIndexed.LastIndex)
+'@Description("A test for 'no value' that works for all Types")
+Public Function Occupied _
+( _
+    ByVal ipValue As Variant, _
+    ByRef ipLocation As String, _
+    Optional ByRef ipMessage As String = vbNullString, _
+    Optional ByVal ipReportBackAction As e_AllowReportBackAction = m_RaiseError _
+) As Boolean
+Attribute Occupied.VB_Description = "A test for 'no value' that works for all Types"
+
+    Select Case True
+        Case VBA.IsArray(ipValue):          Occupied = ArrayOp.HoldsItems(ipValue)
+        Case VBA.IsObject(ipValue):         Occupied = IsNotNothing(ipValue)
+        Case GroupInfo.IsString(ipValue):   Occupied = VBA.Len(ipValue) <> 0
+        Case GroupInfo.IsNumber(ipValue):   Occupied = ipValue <> 0
+        Case IsEmpty(ipValue):              Occupied = False
+        Case IsNull(ipValue):               Occupied = False
+        Case IsError(ipValue):              Occupied = ipValue.Number <> 0 ' is this legal statement?
+        Case Else:                          Occupied = False
+    End Select
     
-    If IndexExists Then
+    If Occupied Then
         Exit Function
     End If
     
-    If ipReportBackaction = m_ReportBackContinue Then
-            Exit Function
+    If ipReportBackAction = m_Continue Then
+        Exit Function
+    End If
+    
+    If VBA.Len(ipMessage) = 0 Then
+        ipMessage = Fmt.Text("Expecting a 'non nothing' Value. Got {0} of value {1}.", VBA.TypeName(ipValue), ipValue)
     End If
     
     Err.Raise 17 + vbObjectError, _
         Fmt.Text("{0}.{1}", MY_LIB, ipLocation), _
-        Fmt.Text("Expecting a value between {0} and {1}. Got {2}.", ipIndexed.FirstIndex, ipIndexed.LastIndex, ipIndex)
-    
+        ipMessage
+        
 End Function
-
 
 'Public Function IndexOutOfBounds(ByVal ipIndex As Long, ByVal ipKvp As Object, ByRef ipLocation As String, Optional ByRef ipReportBack As Boolean = False) As Boolean
 '
@@ -328,4 +467,3 @@ End Function
 '
 '
 'End Function
-

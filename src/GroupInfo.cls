@@ -26,7 +26,7 @@ Public Enum e_Group
     m_ItemObject
     m_Container
     m_Other
-    m_last = m_Other
+    m_Last = m_Other
 End Enum
 
 

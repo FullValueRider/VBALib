@@ -50,12 +50,7 @@ Option Explicit
 
 Private Const MY_TYPENAME                       As String = "Format"
 Private Type State
-    
-'    ArrayMarkupIsSet                            As Boolean
-'    ObjectMarkupIsSet                           As Boolean
-'    DictionaryItemMarkupIsSet                   As Boolean
-'    ItemSeparatorIsSet                          As Boolean
-'
+
     ' Cannot be a collection because we need the keys array
     FormatFields                                As KvpC
     ToString                                    As Stringifier
@@ -102,7 +97,7 @@ End Function
 
 
 Friend Function ConstructInstance() As Format
-    Set s.ToString = Stringifier.Deb  ' we don't appear to be calling this method.
+    Set s.ToString = Stringifier.Deb
     s.ToString.ResetMarkup
     s.PadLeft = NO_PADDING
     s.PadRight = NO_PADDING
@@ -129,6 +124,8 @@ Private Sub SetFormatFields()
     End With
     
 End Sub
+
+
 '@Description("Sends the formatted output to Debug.Print")
 Public Function Dbg(ByRef ipFormatTemplate As String, ParamArray ipParamarray() As Variant) As String
 Attribute Dbg.VB_Description = "Sends the formatted output to Debug.Print"
@@ -164,27 +161,6 @@ End Function
 
 Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray As Variant) As String
     
-'    If Not s.ToString.Initialised Then  ' when predeclaredId
-'        Set s.ToString = Stringifier.Deb
-'    End If
-
-'    If Not s.ArrayMarkupIsSet Then
-'        s.ToString.SetArrayMarkup
-'    End If
-'
-'    If Not s.DictionaryItemMarkupIsSet Then
-'        s.ToString.SetDictionaryItemMarkup
-'    End If
-'
-'
-'    If Not s.ObjectMarkupIsSet Then
-'        s.ToString.SetObjectMarkup
-'    End If
-'
-'    If Not s.ItemSeparatorIsSet Then
-'        s.ToString.SetItemSeparator
-'    End If
-    
     If VBA.LenB(ipFormatTemplate) = 0 Then
         TextByVar = ipFormatTemplate
         Exit Function
@@ -218,11 +194,6 @@ Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray 
     myReturn = ReplaceFormatFieldWithNoCountByFormatFieldWithCountOfOne(myReturn)
     myReturn = ReplaceFormatFieldWithCountByControlCharacters(myReturn)
     myReturn = ReplaceVariableFieldByVariableString(myReturn, myS)
-    
-'    s.ArrayMarkupIsSet = False
-'    s.ObjectMarkupIsSet = False
-'    s.DictionaryItemMarkupIsSet = False
-'    s.ItemSeparatorIsSet = False
 '
     If s.PadLeft Then
         TextByVar = Strs.PadLeft(myReturn, s.ToSize, s.PadStr)
@@ -255,7 +226,7 @@ End Function
 ' Methods below need to be made public for the test module to run correctly
 '
 '========1=========2=========3=========4=========5=========6=========7=========8=========9=========A=========B=========C
-'@Description("Replace formatting fields of the form '{WithZeroCount}' with NoString")
+'@Description("Replace formatting fields of the form '{X0}' with vbNullString")
 Friend Function ReplaceFormatFieldWithZeroCountByvbNullString(ByVal ipLayoutTemplate As String) As String
 Attribute ReplaceFormatFieldWithZeroCountByvbNullString.VB_Description = "Replace formatting fields of the form '{WithZeroCount}' with NoString"
 
@@ -397,79 +368,93 @@ End Function
 
 
 Public Function ResetMarkup() As Format
-    s.ToString.ArrayMarkup
-    s.ToString.ObjectMarkup
-    s.ToString.DictionaryItemMarkup
-    s.ToString.ItemSeparator
+    s.ToString.SetArrayMarkup
+    s.ToString.SetObjectMarkup
+    s.ToString.SetDictionaryItemMarkup
+    s.ToString.SetItemMarkup
+    s.ToString.SetTypeMarkup
     Set ResetMarkup = Me
     
 End Function
 
 
-Public Function DictionaryItemMarkup _
+Public Function SetDictionaryItemMarkup _
 ( _
     Optional ByVal ipLeft As String = Chars.twSpace & Chars.twPlainSQuote, _
     Optional ByVal ipSeparator As String = Chars.twColon & Chars.twSpace, _
     Optional ByVal ipRight As String = Chars.twPlainSQuote _
 ) As Format
-    s.ToString.DictionaryItemMarkup ipLeft, ipSeparator, ipRight
-    Set DictionaryItemMarkup = Me
+    s.ToString.SetDictionaryItemMarkup ipLeft, ipSeparator, ipRight
+    Set SetDictionaryItemMarkup = Me
 End Function
 
 
-Public Function ArrayMarkup _
+Public Function SetArrayMarkup _
 ( _
     Optional ByVal ipLeft As String = Chars.twLSQB, _
     Optional ByVal ipSeparator As String = Chars.twComma, _
     Optional ByVal ipRight As String = Chars.twRSQB _
 ) As Format
-    s.ToString.ArrayMarkup ipLeft, ipSeparator, ipRight
-    Set ArrayMarkup = Me
+    s.ToString.SetArrayMarkup ipLeft, ipSeparator, ipRight
+    Set SetArrayMarkup = Me
 End Function
 
-Public Function ObjectMarkup _
+Public Function SetObjectMarkup _
 ( _
     Optional ByVal ipLeft As String = Chars.twLCUB, _
     Optional ByVal ipSeparator As String = Chars.twComma, _
     Optional ByVal ipRight As String = Chars.twRCUB _
 ) As Format
-    s.ToString.ObjectMarkup ipLeft, ipSeparator, ipRight
-    Set ObjectMarkup = Me
+    s.ToString.SetObjectMarkup ipLeft, ipSeparator, ipRight
+    Set SetObjectMarkup = Me
 End Function
 
 
-Public Function ItemSeparator(Optional ByVal ipSeparator As String = Chars.twComma) As Format
-    s.ToString.ItemSeparator ipSeparator
-    Set ItemSeparator = Me
+Public Function SetItemMarkup _
+   ( _
+       Optional ByVal ipLeft As String = Chars.twLCUB, _
+       Optional ByVal ipSeparator As String = Chars.twComma, _
+       Optional ByVal ipRight As String = Chars.twRCUB _
+   ) As Format
+    s.ToString.SetItemMarkup ipLeft, ipSeparator, ipRight
+    Set SetItemMarkup = Me
+End Function
+
+Public Function TypeMarkup _
+   ( _
+       Optional ByVal ipLeft As String = Chars.twLCUB, _
+       Optional ByVal ipSeparator As String = Chars.twComma, _
+       Optional ByVal ipRight As String = Chars.twRCUB _
+   ) As Format
+    s.ToString.SetItemMarkup ipLeft, ipSeparator, ipRight
+    Set TypeMarkup = Me
 End Function
 
 
-Public Function ArrayMarkupSeparatorOnly() As Format
-    s.ToString.ArrayMarkup ipLeft:=vbNullString, ipRight:=vbNullString
-    Set ArrayMarkupSeparatorOnly = Me
+Public Function SetArrayMarkupSeparatorOnly() As Format
+    s.ToString.SetArrayMarkup ipLeft:=vbNullString, ipRight:=vbNullString
+    Set SetArrayMarkupSeparatorOnly = Me
 End Function
-Public Function ObjectMarkupSeparatorOnly() As Format
-    s.ToString.ObjectMarkup ipLeft:=vbNullString, ipRight:=vbNullString
-    Set ObjectMarkupSeparatorOnly = Me
+
+Public Function SetObjectMarkupSeparatorOnly() As Format
+    s.ToString.SetObjectMarkup ipLeft:=vbNullString, ipRight:=vbNullString
+    Set SetObjectMarkupSeparatorOnly = Me
 End Function
 
 
-Public Function DictionaryItemMarkupSeparatorOnly() As Format
-    s.ToString.DictionaryItemMarkup vbNullString, Chars.twComma, vbNullString
-    Set DictionaryItemMarkupSeparatorOnly = Me
+Public Function SetDictionaryItemMarkupSeparatorOnly() As Format
+    s.ToString.SetDictionaryItemMarkup vbNullString, Chars.twComma, vbNullString
+    Set SetDictionaryItemMarkupSeparatorOnly = Me
 End Function
-Public Function UseItemSeparatorOnly() As Format
 
-    s.ToString.UseItemSeparatorOnly
-    Set UseItemSeparatorOnly = Me
-    
+Public Function UseItemMarkupOnly() As Format
+    s.ToString.UseItemMarkupOnly
+    Set UseItemMarkupOnly = Me
 End Function
 
 Public Function NoMarkup() As Format
-
     s.ToString.NoMarkup
     Set NoMarkup = Me
-    
 End Function
 
 

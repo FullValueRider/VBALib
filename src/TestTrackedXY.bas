@@ -47,7 +47,7 @@ End Sub
 Public Sub TrackedXYTests()
  
     #If twinbasic Then
-        Debug.Print CurrentProcedureName;
+        Debug.Print CurrentProcedureName ;
     #Else
         GlobalAssert
         VBATesting = True
@@ -56,7 +56,15 @@ Public Sub TrackedXYTests()
 
     Test01_SeqObj
     Test02_Initialised
-    Test03_Move_South_3
+    Test03_HeadingAfterRightTurn
+    Test04_HeadingAfterLeftTurn
+    Test05_MoveSingleStepForward
+    Test06_MoveByThreeByTurnRightForEightways
+    Test07_MoveByThreeByTurnLeftForEightways
+    Test08_MoveByThreeByByHeadingClockwiseForEightways
+    Test09_MoveByThreeByByHeadingAntiClockwiseForEightways
+    Test10_TrailMoveFiveByNorthEast
+    Test10_TrailMoveFiveByNorthEastMovementStats
     
     Debug.Print vbTab, vbTab, vbTab, "Testing completed"
 
@@ -138,7 +146,7 @@ End Sub
 
 
 '@TestMethod("SeqA")
-Private Sub Test03_Move_South_3()
+Private Sub Test03_HeadingAfterRightTurn()
 
     #If twinbasic Then
         myProcedureName = myComponentName & ":" & CurrentProcedureName
@@ -150,28 +158,422 @@ Private Sub Test03_Move_South_3()
     On Error GoTo TestFail
     
     'Arrange:
+    
+    Dim myExpected As Variant: myExpected = Array(1&, 2&, 3&, 4&, 5&, 6&, 7&, 8&, 1&, 2&)
+    ReDim Preserve myExpected(1 To 10)
     Dim myT As TrackedXY
     Set myT = TrackedXY.Deb
-    Dim myExpected As Variant
-    myExpected = Array("0,-3", True, False, e_Heading.m_South, "{{0,0},{0,-1},{0,-2},{0,-3}}")
-    Dim myResult(0 To 3) As Variant
+    
+    Dim myS As SeqA: Set myS = SeqA.Deb
+   
+    Dim myResult As Variant
     
     'Act:
-    myT.Move "South", 3
-'    myresult(0) = myT.Location.ToString
-'    myresult(1) = myT.Moved
-'    myresult(2) = myT.AtOrigin
-'    myresult(3) = myT.Heading
-'    myresult(4) = Fmt.Text("0", myT.Trail)
+    Dim myCount As Long
+    For myCount = 1 To 10
     
-    Debug.Print myT.Location.ToString
-    Debug.Print myT.Moved
-    Debug.Print myT.AtOrigin
-    Debug.Print myT.Heading
-    Debug.Print Fmt.Text("0", myT.Trail)
+        myS.Add myT.Heading
+        myT.Turn "R"
+    Next
+    myResult = myS.ToArray
+    'Assert:
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("TrackedXY")
+Private Sub Test04_HeadingAfterLeftTurn()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    On Error GoTo TestFail
+    
+    'Arrange:
+    
+    Dim myExpected As Variant: myExpected = Array(1&, 8&, 7&, 6&, 5&, 4&, 3&, 2&, 1&, 8&)
+    ReDim Preserve myExpected(1 To 10)
+    Dim myT As TrackedXY
+    Set myT = TrackedXY.Deb
+    
+    Dim myS As SeqA: Set myS = SeqA.Deb
+   
+    Dim myResult As Variant
+    
+    'Act:
+    Dim myCount As Long
+    For myCount = 1 To 10
+    
+        myS.Add myT.Heading
+        myT.Turn "L"
+    Next
+    myResult = myS.ToArray
+    'Assert:
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("TrackedXY")
+Private Sub Test05_MoveSingleStepForward()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    On Error GoTo TestFail
+    
+    'Arrange:
+    
+    Dim myExpected As String: myExpected = "{{0,0},{0,1}}"
+    Dim myT As TrackedXY
+    Set myT = TrackedXY.Deb
+   
+    Dim myResult As Variant
+    
+    'Act:
+    myT.Move
+   
+    myResult = Fmt.Text("{0}", myT.Track)
     
     'Assert:
-    AssertExactSequenceEquals myExpected, myResult, myProcedureName
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("TrackedXY")
+Private Sub Test06_MoveByThreeByTurnRightForEightways()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    On Error GoTo TestFail
+    
+    'Arrange:
+    
+    Dim myExpected As String: myExpected = "{{0,0},{0,3},{3,6},{6,6},{9,3},{9,0},{6,-3},{3,-3},{0,0}}"
+    Dim myT As TrackedXY
+    Set myT = TrackedXY.Deb
+   
+    Dim myResult As String
+    Dim myS As SeqA: Set myS = SeqA.Deb
+    'Act:
+    
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "R"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "R"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "R"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "R"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "R"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "R"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "R"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "R"
+    myS.Add myT.Location
+    
+   
+    myResult = Fmt.Text("{0}", myS)
+    'Assert:
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+
+'@TestMethod("TrackedXY")
+Private Sub Test07_MoveByThreeByTurnLeftForEightways()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    On Error GoTo TestFail
+    
+    'Arrange:
+    
+    Dim myExpected As String: myExpected = "{{0,0},{0,3},{-3,6},{-6,6},{-9,3},{-9,0},{-6,-3},{-3,-3},{0,0}}"
+    Dim myT As TrackedXY
+    Set myT = TrackedXY.Deb
+   
+    Dim myResult As String
+    Dim myS As SeqA: Set myS = SeqA.Deb
+    'Act:
+    
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "L"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "L"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "L"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "L"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "L"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "L"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "L"
+    myS.Add myT.Location
+    myT.Move 3
+    myT.Turn "L"
+    myS.Add myT.Location
+    
+   
+    myResult = Fmt.Text("{0}", myS)
+    'Assert:
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("TrackedXY")
+Private Sub Test08_MoveByThreeByByHeadingClockwiseForEightways()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    On Error GoTo TestFail
+    
+    'Arrange:
+    
+    Dim myExpected As String: myExpected = "{{0,0},{0,3},{3,6},{6,6},{9,3},{9,0},{6,-3},{3,-3},{0,0}}"
+    Dim myT As TrackedXY
+    Set myT = TrackedXY.Deb
+   
+    Dim myResult As String
+    Dim myS As SeqA: Set myS = SeqA.Deb
+    'Act:
+    
+    myS.Add myT.Location
+    myT.Move 3, "North"
+    myS.Add myT.Location
+    myT.Move 3, "NE"
+    myS.Add myT.Location
+    myT.Move 3, "East"
+    myS.Add myT.Location
+    myT.Move 3, "SE"
+    myS.Add myT.Location
+    myT.Move 3, "South"
+    myS.Add myT.Location
+    myT.Move 3, "SW"
+    myS.Add myT.Location
+    myT.Move 3, "West"
+    myS.Add myT.Location
+    myT.Move 3, "NorthWest"
+    myS.Add myT.Location
+    
+    myResult = Fmt.Text("{0}", myS)
+   
+    'Assert:
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("TrackedXY")
+Private Sub Test09_MoveByThreeByByHeadingAntiClockwiseForEightways()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    On Error GoTo TestFail
+    
+    'Arrange:
+
+    Dim myExpected As String: myExpected = "{{0,0},{0,3},{-3,6},{-6,6},{-9,3},{-9,0},{-6,-3},{-3,-3},{0,0}}"
+    Dim myT As TrackedXY
+    Set myT = TrackedXY.Deb
+   
+    Dim myResult As String
+    Dim myS As SeqA: Set myS = SeqA.Deb
+    'Act:
+    
+    myS.Add myT.Location
+    myT.Move 3, "North"
+    myS.Add myT.Location
+    myT.Move 3, "NW"
+    myS.Add myT.Location
+    myT.Move 3, "West"
+    myS.Add myT.Location
+    myT.Move 3, "SW"
+    myS.Add myT.Location
+    myT.Move 3, "South"
+    myS.Add myT.Location
+    myT.Move 3, "SE"
+    myS.Add myT.Location
+    myT.Move 3, "East"
+    myS.Add myT.Location
+    myT.Move 3, "NorthEast"
+    myS.Add myT.Location
+    
+   
+    myResult = Fmt.Text("{0}", myS)
+  
+    'Assert:
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("TrackedXY")
+Private Sub Test10_TrailMoveFiveByNorthEast()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    On Error GoTo TestFail
+    
+    'Arrange:
+
+    Dim myExpected As String: myExpected = "{{0,0},{1,1},{2,2},{3,3},{4,4},{5,5}}"
+    Dim myT As TrackedXY
+    Set myT = TrackedXY.Deb
+   
+    Dim myResult As String
+    
+    'Act:
+    
+   myT.Move(5, "NE")
+    myResult = Fmt.Text("{0}", myT.Track)
+  
+    'Assert:
+    AssertStrictAreEqual myExpected, myResult, myProcedureName
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("TrackedXY")
+Private Sub Test10_TrailMoveFiveByNorthEastMovementStats()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    On Error GoTo TestFail
+    
+    'Arrange:
+
+    Dim myExpected As Variant: myExpected = Array(True, 5&, e_Heading.m_NE, False, False, 10, "5,5")
+    Dim myT As TrackedXY
+    Set myT = TrackedXY.Deb
+   
+    Dim myResult(0 To 6) As Variant
+    
+    
+    'Act:
+    
+    myT.Move(5, "NE")
+    myResult(0) = myT.HasTurned
+    myResult(1) = myT.StepsTaken
+    myResult(2) = myT.Heading
+    myResult(3) = myT.BoundsInUse
+    myResult(4) = myT.AtOrigin
+    myResult(5) = myT.Manhatten
+    myResult(6) = myT.Location.ToString
+  
+    'Assert:
+    AssertStrictSequenceEquals myExpected, myResult, myProcedureName
 TestExit:
     '@Ignore UnhandledOnErrorResumeNext
     On Error Resume Next
