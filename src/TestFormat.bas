@@ -335,3 +335,148 @@ TestFail:
 End Sub
 
 
+'@TestMethod("Stringifier")
+Private Sub Test02_FormatWithTypesNoneItem_SeqC()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
+
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim myExpected As String
+    myExpected = "{1,2,3,4,5,6}"
+    
+    Dim myResult As String
+    
+    'Act:  Again we need to sort The result SeqC to get the matching array
+    Stringifier.ResetMarkup
+    Dim myC As SeqC: Set myC = SeqC(1, 2, 3, 4, 5, 6)
+    myResult = Fmt(e_WithTypes.m_None).ResetMarkup.Text("{0}", myC)
+    'Assert:
+    AssertExactAreEqual myExpected, myResult, myProcedureName
+    
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("Stringifier")
+Private Sub Test02a_FormatWithTypesAll_SeqC()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
+
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim myExpected As String
+    myExpected = "SeqC: {Integer: 1,Integer: 2,Integer: 3,Integer: 4,Integer: 5,Integer: 6}"
+    
+    Dim myResult As String
+    
+    'Act:  Again we need to sort The result SeqC to get the matching array
+    Dim myC As SeqC: Set myC = SeqC(1, 2, 3, 4, 5, 6)
+    myResult = Fmt(e_WithTypes.m_All).ResetMarkup.Text("{0}", myC)
+    'Assert:
+    AssertExactAreEqual myExpected, myResult, myProcedureName
+    
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("Stringifier")
+Private Sub Test02b_FormatWithTypesInner_SeqC()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
+
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim myExpected As String
+    myExpected = "{Integer: 1,Integer: 2,Integer: 3,Integer: 4,Integer: 5,Integer: 6}"
+    
+    Dim myResult As String
+    
+    'Act:  Again we need to sort The result SeqC to get the matching array
+    Dim myC As SeqC: Set myC = SeqC(1, 2, 3, 4, 5, 6)
+    myResult = Fmt(e_WithTypes.m_Inner).ResetMarkup.Text("{0}", myC)
+    'Assert:
+    AssertExactAreEqual myExpected, myResult, myProcedureName
+    
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("Stringifier")
+Private Sub Test02c_FormatWithTypesOuter_SeqC()
+
+    #If twinbasic Then
+        myProcedureName = myComponentName & ":" & CurrentProcedureName
+        myComponentName = CurrentComponentName
+    #Else
+        myProcedureName = ErrEx.LiveCallstack.ModuleName & ":" & ErrEx.LiveCallstack.ProcedureName
+        myComponentName = ErrEx.LiveCallstack.ModuleName
+    #End If
+    
+
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim myExpected As String
+    myExpected = "SeqC: {1,2,3,4,5,6}"
+    
+    Dim myResult As String
+    
+    'Act:  Again we need to sort The result SeqC to get the matching array
+    
+    Dim myC As SeqC: Set myC = SeqC(1, 2, 3, 4, 5, 6)
+    myResult = Fmt(e_WithTypes.m_Outer).ResetMarkup.Text("{0}", myC)
+    'Assert:
+    AssertExactAreEqual myExpected, myResult, myProcedureName
+    
+TestExit:
+    '@Ignore UnhandledOnErrorResumeNext
+    On Error Resume Next
+    
+    Exit Sub
+TestFail:
+    AssertFail myComponentName, myProcedureName, " raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub

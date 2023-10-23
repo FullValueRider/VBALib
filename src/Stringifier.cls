@@ -213,7 +213,7 @@ End Function
 '@Description("Sets the level of type information included in the string")
 Public Function WithTypes(Optional ByVal ipWithTypes As e_WithTypes = e_WithTypes.m_Inner) As Stringifier
 	
-    Allow.InRange ipWithTypes, e_WithTypes.m_First, e_WithTypes.m_Last, "Stringifier"
+    Allow.InRange ipWithTypes, e_WithTypes.m_First, e_WithTypes.m_Last, "Stringifier.WithTypes"
     
     p.WithTypes = ipWithTypes
     Set WithTypes = Me

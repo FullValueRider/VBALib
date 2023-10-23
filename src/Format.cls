@@ -58,6 +58,7 @@ Private Type State
     PadStr                                      As String
     PadRight                                    As Boolean
     PadLeft                                     As Boolean
+    WithTypes                                   As e_WithTypes
 End Type
 
 Private s                                       As State
@@ -88,22 +89,36 @@ Private Const FIELD_COUNT_IS_ONE                As String = "1}"
 Private Const NO_PADDING                        As Boolean = False
 
 '@DefaultMember
-Public Function Deb() As Format
+Public Function Deb(Optional ByVal ipWithTypes As e_WithTypes = e_WithTypes.m_None) As Format
 Attribute Deb.VB_UserMemId = 0
     With New Format
-        Set Deb = .ConstructInstance
+        Set Deb = .ConstructInstance(e_WithTypes.m_None)
     End With
 End Function
 
 
-Friend Function ConstructInstance() As Format
-    Set s.ToString = Stringifier.Deb
+Friend Function ConstructInstance(ByVal ipWithTypes As e_WithTypes) As Format
+ 
+    Allow.InRange ipWithTypes, e_WithTypes.m_First, e_WithTypes.m_Last, "Format"
+    
+    Set s.ToString = Stringifier(ipWithTypes)
     s.ToString.ResetMarkup
     s.PadLeft = NO_PADDING
     s.PadRight = NO_PADDING
     Set ConstructInstance = Me
     
 End Function
+
+'@Description("Sets the level of type information included in the string")
+Public Function WithTypes(Optional ByVal ipWithTypes As e_WithTypes = e_WithTypes.m_Inner) As Stringifier
+    
+    Allow.InRange ipWithTypes, e_WithTypes.m_First, e_WithTypes.m_Last, "Format.WithTypes"
+    
+    s.WithTypes = ipWithTypes
+    Set WithTypes = Me
+    
+End Function
+
 
 Private Sub SetFormatFields()
 
@@ -133,12 +148,6 @@ Attribute Dbg.VB_Description = "Sends the formatted output to Debug.Print"
     Dim myFPA As Variant
     myFPA = ipParamarray
     myFPA = ArrayOp.Splat(myFPA)
-
-
-    ' Dim myIndex As Long
-    ' For myIndex = LBound(myFPA) To UBound(myFPA)
-    '     myFpa(myIndex) =
-    ' Next
 
     Dim myString As String
     myString = TextByVar(ipFormatTemplate, myFPA)
@@ -171,11 +180,6 @@ Private Function TextByVar(ByRef ipFormatTemplate As String, ByRef ipParamarray 
         Exit Function
     End If
     
-    'ipParamarray = ArrayOp.Splat(ipParamarray)
-    '
-    '    Dim myToString As Stringifier
-    '    Set myToString = Stringifier.Deb
-    '
     Dim myS As SeqC
     Set myS = SeqC.Deb
     
